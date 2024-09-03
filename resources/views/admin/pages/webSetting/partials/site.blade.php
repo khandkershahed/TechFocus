@@ -63,38 +63,28 @@
                 @enderror
             </div>
         </div>
-        <div class="col-lg-3">
-            <div class="fv-row mb-3">
-                <label class="form-label">Site Icon</label>
-                <input name="site_icon"
-                    class="form-control form-control-sm form-control-solid @error('site_icon') is-invalid @enderror"
-                    placeholder="Enter Site Icon" type="file" accept="image/*" />
-                @error('site_icon')
-                    <div class="invalid-feedback"> {{ $message }}</div>
-                @enderror
-            </div>
+        <div class="col-lg-4 mb-7">
+            <x-metronic.label for="system_logo_white"
+                class="col-form-label fw-bold fs-6 ">{{ __('Site Logo White (For Colorful Background)') }}
+            </x-metronic.label>
+    
+            <x-metronic.file-input id="system_logo_white" name="system_logo_white" :source="asset('webSetting/systemLogoWhite/' . optional($site)->system_logo_white)"
+                :value="old('system_logo_white', optional($site)->system_logo_white)"></x-metronic.file-input>
         </div>
-        <div class="col-lg-3">
-            <div class="fv-row mb-3">
-                <label class="form-label">System Logo White</label>
-                <input name="system_logo_white"
-                    class="form-control form-control-sm form-control-solid @error('system_logo_white') is-invalid @enderror"
-                    placeholder="Enter System Logo White" type="file" accept="image/*" />
-                @error('system_logo_white')
-                    <div class="invalid-feedback"> {{ $message }}</div>
-                @enderror
-            </div>
+        <div class="col-lg-4 mb-7">
+            <x-metronic.label for="system_logo_black"
+                class="col-form-label fw-bold fs-6 ">{{ __('Site Logo Colorful (For White Background)') }}
+            </x-metronic.label>
+    
+            <x-metronic.file-input id="system_logo_black" name="system_logo_black" :source="asset('webSetting/systemLogoBlack/' . optional($site)->system_logo_black)"
+                :value="old('system_logo_black', optional($site)->system_logo_black)"></x-metronic.file-input>
         </div>
-        <div class="col-lg-3">
-            <div class="fv-row mb-3">
-                <label class="form-label">System Logo Black</label>
-                <input name="system_logo_black"
-                    class="form-control form-control-sm form-control-solid @error('system_logo_black') is-invalid @enderror"
-                    placeholder="Enter System Logo Black" type="file" accept="image/*" />
-                @error('system_logo_black')
-                    <div class="invalid-feedback"> {{ $message }}</div>
-                @enderror
-            </div>
+        <div class="col-lg-4 mb-7">
+            <x-metronic.label for="site_icon" class="col-form-label fw-bold fs-6 ">{{ __('Site Favicon') }}
+            </x-metronic.label>
+    
+            <x-metronic.file-input id="site_icon" type="file" name="site_icon" :source="asset('webSetting/siteIcon/' . optional($site)->site_icon)"
+                :value="old('site_icon', optional($site)->site_icon)"></x-metronic.file-input>
         </div>
         <div class="col-lg-3">
             <div class="fv-row mb-3">
