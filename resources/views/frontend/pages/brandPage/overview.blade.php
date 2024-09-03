@@ -1,5 +1,32 @@
 @extends('frontend.master')
-@section('metadata')
+@section('styles')
+    <meta property="og:title" content="{{ ucfirst($brand->title) }} in TechFocus Ltd.">
+    <meta property="og:image"
+        content="{{ !empty($brand->brandPage->banner_image) && file_exists(public_path('storage/' . $brand->brandPage->banner_image)) ? url('social-image/' . $brand->brandPage->banner_image) : asset('frontend/images/no-banner(1920-330).png') }}" />
+    <meta name="twitter:image"
+        content="{{ !empty($brand->brandPage->banner_image) && file_exists(public_path('storage/' . $brand->brandPage->banner_image)) ? url('social-image/' . $brand->brandPage->banner_image) : asset('frontend/images/no-banner(1920-330).png') }}">
+    <script type="application/ld+json">
+            {
+              "@context": "https://schema.org",
+              "@type": "Article",
+              "headline": "{{ ucfirst($brand->title) }} in TechFocus",
+              "description": "TechFocus Ltd. is a System Integration, Software & Hardware based License Provider & Software development based company established in 2008.",
+              "image": "{{ !empty($brand->brandPage->banner_image) && file_exists(public_path('storage/' . $brand->brandPage->banner_image)) ? url('social-image/' . $brand->brandPage->banner_image) : asset('frontend/images/no-banner(1920-330).png') }}",
+              "author": {
+                "@type": "Organization",
+                "name": "{{ !empty($setting->site_name) ? $setting->site_name : 'TechFocus Ltd.' }}"
+              },
+              "publisher": {
+                "@type": "Organization",
+                "name": "{{ !empty($setting->site_name) ? $setting->site_name : 'TechFocus Ltd.' }}",
+                "logo": {
+                  "@type": "ImageObject",
+                  "url": "{{ !empty($setting->favicon) ? asset('storage/' . $setting->favicon) : url('upload/no_image.jpg') }}"
+                }
+              },
+              "datePublished": "{{ date('d-M-Y') }}"
+            }
+    </script>
 @endsection
 @section('content')
     <style>
@@ -32,10 +59,10 @@
         }
     </style>
     <!--Banner -->
-    
+
+    @include('frontend.pages.brandPage.partials.page_header')
     <!-- content start -->
     <div class="container">
-        @include('frontend.pages.brandPage.partials.page_header')
         <div class="row">
             <div class="col-lg-12 p-0">
                 <div class="card rounded-0 border-0">

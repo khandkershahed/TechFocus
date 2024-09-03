@@ -18,7 +18,8 @@
 <script src="{{ asset('backend/assets/js/custom/utilities/modals/upgrade-plan.js') }}"></script>
 <script src="{{ asset('backend/assets/js/custom/utilities/modals/create-app.js') }}"></script>
 <script src="{{ asset('backend/assets/js/custom/utilities/modals/users-search.js') }}"></script>
-<script src="{{ asset('backend/assets/plugins/custom/ckeditor/ckeditor-classic.bundle.js') }}"></script>
+{{-- <script src="{{ asset('backend/assets/plugins/custom/ckeditor/ckeditor-classic.bundle.js') }}"></script> --}}
+<script src="https://cdn.ckeditor.com/ckeditor5/39.0.0/classic/ckeditor.js"></script>
 
 {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script> --}}
 {{-- <script src="https://kit.fontawesome.com/69b7156a94.js" crossorigin="anonymous"></script> --}}
@@ -46,6 +47,20 @@
 @stack('scripts')
 
 
+<script>
+    document.querySelectorAll('.kt_docs_tinymce_plugins').forEach(element => {
+        if (!element.classList.contains('ck-editor__editable_inline')) {
+            ClassicEditor
+                .create(element)
+                .then(editor => {
+                    console.log('CKEditor initialized:', editor);
+                })
+                .catch(error => {
+                    console.error('CKEditor initialization error:', error);
+                });
+        }
+    });
+</script>
 
 
 <script>

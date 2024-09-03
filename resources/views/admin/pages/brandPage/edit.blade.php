@@ -107,24 +107,40 @@
                                                     </div>
                                                     <div class="col-lg-6">
                                                         <div class="fv-row mb-3">
-                                                            <label class="form-label ">Brand Logo</label>
-                                                            <input name="brand_logo"
-                                                                class="form-control form-control-sm form-control-solid"
-                                                                placeholder="Enter Brand Logo" type="file" />
+                                                            <x-metronic.label for="brand_logo"
+                                                                class="col-form-label fw-bold fs-6 ">{{ __('Brand Logo') }}
+                                                            </x-metronic.label>
+                                                            <x-metronic.file-input id="brand_logo" name="brand_logo"
+                                                                :source="asset(
+                                                                    'storage/brand-page/logo/' .
+                                                                        optional($brandPage)->brand_logo,
+                                                                )" :value="old(
+                                                                    'brand_logo',
+                                                                    optional($brandPage)->brand_logo,
+                                                                )">
+                                                            </x-metronic.file-input>
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-6">
                                                         <div class="fv-row mb-3">
-                                                            <label class="form-label ">Banner Image</label>
-                                                            <input name="banner_image"
-                                                                class="form-control form-control-sm form-control-solid"
-                                                                placeholder="Enter Banner Image" type="file" />
+                                                            <x-metronic.label for="banner_image"
+                                                                class="col-form-label fw-bold fs-6 ">{{ __('Banner Image') }}
+                                                            </x-metronic.label>
+                                                            <x-metronic.file-input id="banner_image" name="banner_image"
+                                                                :source="asset(
+                                                                    'storage/brand-page/banner_image/' .
+                                                                        optional($brandPage)->banner_image,
+                                                                )" :value="old(
+                                                                    'banner_image',
+                                                                    optional($brandPage)->banner_image,
+                                                                )">
+                                                            </x-metronic.file-input>
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-6">
                                                         <div class="fv-row mb-3">
                                                             <label class="form-label ">Banner Header</label>
-                                                            <textarea rows="1" name="header" class="form-control form-control-sm form-control-solid"
+                                                            <textarea rows="3" name="header" class="form-control form-control-sm form-control-solid"
                                                                 placeholder="Enter Banner Header">{{ $brandPage->header }}</textarea>
                                                         </div>
                                                     </div>
@@ -167,7 +183,7 @@
                                                     <div class="col-lg-6">
                                                         <div class="fv-row mb-3">
                                                             <label class="form-label ">Row One Header</label>
-                                                            <textarea rows="1" name="row_one_header" class="form-control form-control-sm form-control-solid"
+                                                            <textarea rows="3" name="row_one_header" class="form-control form-control-sm form-control-solid"
                                                                 placeholder="Enter Row One Header">{{ $brandPage->row_one_header }}</textarea>
                                                         </div>
                                                     </div>
@@ -244,13 +260,21 @@
                                                             <div class="col-lg-12 col-sm-12">
                                                                 <div class="row">
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label required mb-0">Row Image
-                                                                        </label>
-                                                                        <input type="file"
-                                                                            class="form-control form-control-solid form-control-sm"
-                                                                            name="rows_image_four" id="validationCustom01"
-                                                                            placeholder="Enter Row Image">
+                                                                        <x-metronic.label for="rows_image_four"
+                                                                            class="col-form-label fw-bold fs-6 ">{{ __('Row Image') }}
+                                                                        </x-metronic.label>
+                                                                        <x-metronic.file-input id="rows_image_four"
+                                                                            name="rows_image_four" :source="asset(
+                                                                                'storage/row/' .
+                                                                                    optional($brandPage->rowFour)
+                                                                                        ->image
+                                                                            )"
+                                                                            :value="old(
+                                                                                'rows_image_four',
+                                                                                optional($brandPage->rowFour)
+                                                                                    ->image
+                                                                            )">
+                                                                        </x-metronic.file-input>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
                                                                         <label for="validationCustom01"
@@ -369,13 +393,21 @@
                                                             <div class="col-lg-12 col-sm-12">
                                                                 <div class="row">
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label required mb-0">Row Image
-                                                                        </label>
-                                                                        <input type="file"
-                                                                            class="form-control form-control-solid form-control-sm"
-                                                                            name="rows_image_five" id="validationCustom01"
-                                                                            placeholder="Enter Row Image">
+                                                                        <x-metronic.label for="rows_image_five"
+                                                                            class="col-form-label fw-bold fs-6 ">{{ __('Row Image') }}
+                                                                        </x-metronic.label>
+                                                                        <x-metronic.file-input id="rows_image_five"
+                                                                            name="rows_image_five" :source="asset(
+                                                                                'storage/row/' .
+                                                                                    optional($brandPage->rowFive)
+                                                                                        ->image
+                                                                            )"
+                                                                            :value="old(
+                                                                                'rows_image_five',
+                                                                                optional($brandPage->rowFive)
+                                                                                    ->image
+                                                                            )">
+                                                                        </x-metronic.file-input>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
                                                                         <label for="validationCustom01"
@@ -485,16 +517,23 @@
                                                                             placeholder="Enter Title">
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label required mb-0">Image
-                                                                        </label>
-                                                                        <input type="file"
-                                                                            class="form-control form-control-solid form-control-sm"
+                                                                        <x-metronic.label for="solution_card_image_one"
+                                                                            class="col-form-label fw-bold fs-6 ">{{ __('Solution Card One Image') }}
+                                                                        </x-metronic.label>
+                                                                        <x-metronic.file-input id="solution_card_image_one"
                                                                             name="solution_card_image_one"
-                                                                            id="validationCustom01"
-                                                                            placeholder="Enter Image">
-                                                                        <div class="invalid-feedback"> Please Enter Image
-                                                                        </div>
+                                                                            :source="asset(
+                                                                                'storage/solution-card/' .
+                                                                                    optional(
+                                                                                        $brandPage->solutionCardOne,
+                                                                                    )->image
+                                                                            )" :value="old(
+                                                                                'solution_card_image_one',
+                                                                                optional($brandPage->solutionCardOne)
+                                                                                    ->image
+                                                                            )">
+                                                                        </x-metronic.file-input>
+
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
                                                                         <label for="validationCustom01"
@@ -513,7 +552,7 @@
                                                                         <label for="validationCustom01"
                                                                             class="form-label required mb-0">Link
                                                                         </label>
-                                                                        <textarea rows="1" name="solutionCardOneId_link" class="form-control form-control-sm form-control-solid"
+                                                                        <textarea rows="3" name="solutionCardOneId_link" class="form-control form-control-sm form-control-solid"
                                                                             placeholder="Enter Link">{{ $brandPage->solutionCardOne->link }}</textarea>
                                                                     </div>
                                                                     <div class="col-md-12 mb-2">
@@ -557,14 +596,22 @@
                                                                             placeholder="Enter Title">
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label required mb-0">Image
-                                                                        </label>
-                                                                        <input type="file"
-                                                                            class="form-control form-control-solid form-control-sm"
+                                                                        <x-metronic.label for="solution_card_image_two"
+                                                                            class="col-form-label fw-bold fs-6 ">{{ __('Solution Card two Image') }}
+                                                                        </x-metronic.label>
+                                                                        <x-metronic.file-input id="solution_card_image_two"
                                                                             name="solution_card_image_two"
-                                                                            id="validationCustom01"
-                                                                            placeholder="Enter Image">
+                                                                            :source="asset(
+                                                                                'storage/solution-card/' .
+                                                                                    optional(
+                                                                                        $brandPage->solutionCardTwo,
+                                                                                    )->image
+                                                                            )" :value="old(
+                                                                                'solution_card_image_two',
+                                                                                optional($brandPage->solutionCardTwo)
+                                                                                    ->image
+                                                                            )">
+                                                                        </x-metronic.file-input>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
                                                                         <label for="validationCustom01"
@@ -583,7 +630,7 @@
                                                                         <label for="validationCustom01"
                                                                             class="form-label required mb-0">Link
                                                                         </label>
-                                                                        <textarea rows="1" name="solutionCardTwoId_link" class="form-control form-control-sm form-control-solid"
+                                                                        <textarea rows="3" name="solutionCardTwoId_link" class="form-control form-control-sm form-control-solid"
                                                                             placeholder="Enter Link">{{ $brandPage->solutionCardTwo->link }}</textarea>
                                                                     </div>
                                                                     <div class="col-md-12 mb-2">
@@ -627,14 +674,24 @@
                                                                             placeholder="Enter Title">
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label required mb-0">Image
-                                                                        </label>
-                                                                        <input type="file"
-                                                                            class="form-control form-control-solid form-control-sm"
+                                                                        <x-metronic.label for="solution_card_image_three"
+                                                                            class="col-form-label fw-bold fs-6 ">{{ __('Solution Card Three Image') }}
+                                                                        </x-metronic.label>
+                                                                        <x-metronic.file-input
+                                                                            id="solution_card_image_three"
                                                                             name="solution_card_image_three"
-                                                                            id="validationCustom01"
-                                                                            placeholder="Enter Image">
+                                                                            :source="asset(
+                                                                                'storage/solution-card/' .
+                                                                                    optional(
+                                                                                        $brandPage->solutionCardThree,
+                                                                                    )->image
+                                                                            )" :value="old(
+                                                                                'solution_card_image_three',
+                                                                                optional($brandPage->solutionCardThree)
+                                                                                    ->image
+                                                                            )">
+                                                                        </x-metronic.file-input>
+
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
                                                                         <label for="validationCustom01"
@@ -651,7 +708,7 @@
                                                                         <label for="validationCustom01"
                                                                             class="form-label required mb-0">Link
                                                                         </label>
-                                                                        <textarea rows="1" name="solutionCardThreeId_link" class="form-control form-control-sm form-control-solid"
+                                                                        <textarea rows="3" name="solutionCardThreeId_link" class="form-control form-control-sm form-control-solid"
                                                                             placeholder="Enter Link">{{ $brandPage->solutionCardThree->link }}</textarea>
                                                                     </div>
                                                                     <div class="col-md-12 mb-2">
@@ -701,16 +758,18 @@
                                             <div class="fv-row">
                                                 <div class="row">
                                                     <div class="col-md-12 mb-2">
-                                                        <label for="validationCustom01"
-                                                            class="form-label required mb-0">Row Four Background Img
-                                                        </label>
-                                                        <input type="file"
-                                                            class="form-control form-control-solid form-control-sm"
-                                                            name="row_six_image" value="{{ $brandPage->row_six_image }}"
-                                                            id="validationCustom01"
-                                                            placeholder="Enter Row Four Background Img">
-                                                        <div class="invalid-feedback"> Please Enter Row Four Background Img
-                                                        </div>
+                                                        <x-metronic.label for="row_six_image"
+                                                            class="col-form-label fw-bold fs-6 ">{{ __('Row Four Background Image') }}
+                                                        </x-metronic.label>
+                                                        <x-metronic.file-input id="row_six_image" name="row_six_image"
+                                                            :source="asset(
+                                                                'storage/brand-page/row_six_image/' .
+                                                                    optional($brandPage)->row_six_image,
+                                                            )" :value="old(
+                                                                'row_six_image',
+                                                                optional($brandPage)->row_six_image,
+                                                            )">
+                                                        </x-metronic.file-input>
                                                     </div>
                                                 </div>
                                                 <div class="row mt-2 justify-content-end">
@@ -911,14 +970,20 @@
                                                             <div class="col-lg-12 col-sm-12">
                                                                 <div class="row">
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label required mb-0">Row Image
-                                                                        </label>
-                                                                        <input type="file"
-                                                                            class="form-control form-control-solid form-control-sm"
-                                                                            name="rows_image_eight"
-                                                                            id="validationCustom01"
-                                                                            placeholder="Enter Row Image">
+                                                                        <x-metronic.label for="rows_image_eight"
+                                                                            class="col-form-label fw-bold fs-6 ">{{ __('Row Image') }}
+                                                                        </x-metronic.label>
+                                                                        <x-metronic.file-input id="rows_image_eight"
+                                                                            name="rows_image_eight" :source="asset(
+                                                                                'storage/row/' .
+                                                                                    optional($brandPage->rowSeven)
+                                                                                        ->image
+                                                                            )"
+                                                                            :value="old(
+                                                                                'rows_image_eight',
+                                                                                optional($brandPage->rowSeven)->image
+                                                                            )">
+                                                                        </x-metronic.file-input>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
                                                                         <label for="validationCustom01"

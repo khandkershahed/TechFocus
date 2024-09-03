@@ -3,6 +3,32 @@
 
 /* Font Family End*/
 
+.brand-page-banner {
+  box-shadow: 0 3px 3px rgba(0, 0, 0, 0.25);
+  margin-bottom: 27px;
+  /* background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  padding: 50px 0px;
+  height: 234px;
+  width: 100%;
+  */
+}
+
+.brand-page-banner img {
+  height: 100%;
+  width: 100%;
+}
+
+.page_top_banner {
+  height: 7rem;
+}
+
+.page_top_banner {
+  width: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
 
 .sub-font {
   font-family: var(--primary-font);
@@ -11,6 +37,7 @@
 .main-color {
   color: var(--primary-color);
 }
+
 .sub-color {
   color: var(--secondary-color);
 }
@@ -177,6 +204,7 @@ p {
   line-height: 1.4;
   font-weight: 400;
 }
+
 span {
   font-size: 14px;
   font-family: 'Raleway', sans-serif;
@@ -203,9 +231,10 @@ h1,
   line-height: 1.2;
 }
 
-main{
+main {
   margin-top: 5.5rem;
 }
+
 .font-small {
   font-size: 8px;
 }
