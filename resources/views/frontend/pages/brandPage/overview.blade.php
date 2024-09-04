@@ -91,7 +91,8 @@
                                 <div class="col-lg-12">
                                     <div class="devider-wrap">
                                         <h4 class="devider-content">
-                                            <span class="devider-text bg-white">{{ $brand->brandPage->rowFour->badge }}</span>
+                                            <span
+                                                class="devider-text bg-white">{{ $brand->brandPage->rowFour->badge }}</span>
                                         </h4>
                                     </div>
                                 </div>
@@ -120,7 +121,8 @@
                                     <div class="col-lg-6">
                                         <div class="d-flex justify-content-center align-items-center">
                                             <img class="img-fluid shadow-sm"
-                                                src="{{ asset('storage/row/' . $brand->brandPage->rowFour->image) }}" alt="">
+                                                src="{{ asset('storage/row/' . $brand->brandPage->rowFour->image) }}"
+                                                alt="">
                                         </div>
                                     </div>
                                 @endif
@@ -137,7 +139,8 @@
                                     </div>
                                 </div>
                             @endif
-                            <div class="{{ !empty(optional($brand->brandPage->rowFive)->image) ? 'col-lg-6' : 'col-lg-12' }}">
+                            <div
+                                class="{{ !empty(optional($brand->brandPage->rowFive)->image) ? 'col-lg-6' : 'col-lg-12' }}">
                                 @if (!empty(optional($brand->brandPage->rowFive)->title))
                                     <h3 class="title">
                                         {{ optional($brand->brandPage->rowFive)->title }}
@@ -166,7 +169,8 @@
                         @endif
                         {{-- Third Row --}}
                         <div class="row my-5 align-items-center px-5">
-                            <div class="{{ !empty(optional($brand->brandPage->rowSeven)->image) ? 'col-lg-6' : 'col-lg-12' }}">
+                            <div
+                                class="{{ !empty(optional($brand->brandPage->rowSeven)->image) ? 'col-lg-6' : 'col-lg-12' }}">
                                 @if (!empty(optional($brand->brandPage->rowSeven)->title))
                                     <h3 class="title">
                                         {{ optional($brand->brandPage->rowSeven)->title }}
@@ -186,10 +190,39 @@
                                 <div class="col-lg-6">
                                     <div class="d-flex justify-content-center align-items-center">
                                         <img class="img-fluid shadow-sm"
-                                            src="{{ asset('storage/row/' . $brand->brandPage->rowSeven->image) }}" alt="">
+                                            src="{{ asset('storage/row/' . $brand->brandPage->rowSeven->image) }}"
+                                            alt="">
                                     </div>
                                 </div>
                             @endif
+                        </div>
+                        <div class="row my-5 align-items-center px-5">
+                            @if (!empty($brand->brandPage->rowEight->image))
+                                <div class="col-lg-6">
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <img class="img-fluid shadow-sm"
+                                            src="{{ asset('storage/row/' . $brand->brandPage->rowEight->image) }}"
+                                            alt="">
+                                    </div>
+                                </div>
+                            @endif
+                            <div
+                                class="{{ !empty(optional($brand->brandPage->rowEight)->image) ? 'col-lg-6' : 'col-lg-12' }}">
+                                @if (!empty(optional($brand->brandPage->rowEight)->title))
+                                    <h3 class="title">
+                                        {{ optional($brand->brandPage->rowEight)->title }}
+                                    </h3>
+                                @endif
+                                @if (!empty(optional($brand->brandPage->rowEight)->description))
+                                    <p style="text-align: justify;">
+                                        {!! optional($brand->brandPage->rowEight)->description !!}
+                                    </p>
+                                @endif
+                                @if (!empty($row_one->link))
+                                    <a href="{{ optional($brand->brandPage->rowEight)->link }}"
+                                        class="btn common-btn-3 rounded-0 w-25 mt-2">{{ optional($brand->brandPage->rowEight)->btn_name }}</a>
+                                @endif
+                            </div>
                         </div>
                     </div>
                 </div>

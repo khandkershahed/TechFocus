@@ -944,7 +944,7 @@
                                                                         <input type="text"
                                                                             class="form-control form-control-solid form-control-sm"
                                                                             name="rowEightId_badge"
-                                                                            value="{{ $brandPage->rowSeven->badge }}"
+                                                                            value="{{ $brandPage->rowEight->badge }}"
                                                                             id="validationCustom01"
                                                                             placeholder="Enter Badge">
                                                                     </div>
@@ -955,7 +955,7 @@
                                                                         <input type="text"
                                                                             class="form-control form-control-solid form-control-sm"
                                                                             name="rowEightId_title"
-                                                                            value="{{ $brandPage->rowSeven->title }}"
+                                                                            value="{{ $brandPage->rowEight->title }}"
                                                                             id="validationCustom01"
                                                                             placeholder="Enter Title">
                                                                     </div>
@@ -976,12 +976,12 @@
                                                                         <x-metronic.file-input id="rows_image_eight"
                                                                             name="rows_image_eight" :source="asset(
                                                                                 'storage/row/' .
-                                                                                    optional($brandPage->rowSeven)
+                                                                                    optional($brandPage->rowEight)
                                                                                         ->image
                                                                             )"
                                                                             :value="old(
                                                                                 'rows_image_eight',
-                                                                                optional($brandPage->rowSeven)->image
+                                                                                optional($brandPage->rowEight)->image
                                                                             )">
                                                                         </x-metronic.file-input>
                                                                     </div>
@@ -992,7 +992,7 @@
                                                                         <input type="text"
                                                                             class="form-control form-control-solid form-control-sm"
                                                                             name="rowEightId_btn_name"
-                                                                            value="{{ $brandPage->rowSeven->btn_name }}"
+                                                                            value="{{ $brandPage->rowEight->btn_name }}"
                                                                             id="validationCustom01"
                                                                             placeholder="Enter Button Name">
                                                                     </div>
@@ -1003,7 +1003,7 @@
                                                                         <input type="text"
                                                                             class="form-control form-control-solid form-control-sm"
                                                                             name="rowEightId_link"
-                                                                            value="{{ $brandPage->rowSeven->link }}"
+                                                                            value="{{ $brandPage->rowEight->link }}"
                                                                             id="validationCustom01"
                                                                             placeholder="Enter Row Link">
                                                                     </div>
@@ -1023,7 +1023,7 @@
                                                                             class="form-label required ">Description
                                                                         </label>
                                                                         <textarea name="rowEightId_description" class="tox-target kt_docs_tinymce_plugins">
-                                                                           {{ $brandPage->rowSeven->description }}
+                                                                           {{ $brandPage->rowEight->description }}
                                                                         </textarea>
                                                                     </div>
                                                                 </div>
