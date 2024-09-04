@@ -2,9 +2,9 @@
 @section('styles')
     <meta property="og:title" content="{{ ucfirst($brand->title) }} in TechFocus Ltd.">
     <meta property="og:image"
-        content="{{ !empty($brand->brandPage->banner_image) && file_exists(public_path('storage/' . $brand->brandPage->banner_image)) ? url('social-image/' . $brand->brandPage->banner_image) : asset('frontend/images/no-banner(1920-330).png') }}" />
+        content="{{ !empty($brand->brandPage->banner_image) && file_exists(public_path('storage/' . $brand->brandPage->banner_image)) ? url('storage/' . $brand->brandPage->banner_image) : asset('frontend/images/no-banner(1920-330).png') }}" />
     <meta name="twitter:image"
-        content="{{ !empty($brand->brandPage->banner_image) && file_exists(public_path('storage/' . $brand->brandPage->banner_image)) ? url('social-image/' . $brand->brandPage->banner_image) : asset('frontend/images/no-banner(1920-330).png') }}">
+        content="{{ !empty($brand->brandPage->banner_image) && file_exists(public_path('storage/' . $brand->brandPage->banner_image)) ? url('storage/' . $brand->brandPage->banner_image) : asset('frontend/images/no-banner(1920-330).png') }}">
     <script type="application/ld+json">
             {
               "@context": "https://schema.org",
@@ -71,8 +71,8 @@
                             <div class="col-lg-12">
                                 <div class="devider-wrap">
                                     <h4 class="devider-content">
-                                        <span class="devider-text bg-white">TRANSPORTING TECHNOLOGY - LIFT POWERED
-                                            ROLLERBED
+                                        <span class="devider-text bg-white">
+                                            {{ $brand->brandPage->row_one_title }}
                                         </span>
                                     </h4>
                                 </div>
@@ -81,114 +81,115 @@
                         <div class="row px-5">
                             <div class="col-lg-12">
                                 <p>
-                                    Since 1961, the company EXPERT stands for innovation,
-                                    reliability, and precision in automation technology.
-                                </p>
-                                <p>
-                                    EXPERT Maschinenbau GmbH was founded on 23rd of May, 1961
-                                    in the small southern Hessian town Lorsch. The young
-                                    company quickly developed into a globally active group of
-                                    companies. During its peak of growth, EXPERT not only
-                                    offered solutions for welding, handling and transporting
-                                    applications. In addition, EXPERT was also a leading
-                                    supplier of special machines and plant construction for
-                                    the automotive sector all over the world.
-                                </p>
-                                <p>
-                                    In 2006 Tünkers Maschinenbau GmbH from Ratingen took over
-                                    EXPERT Maschinenbau, as a 100% subsidiary. The
-                                    family-owned enterprise in the second generation is well
-                                    known as an international supplier of rotary tables and
-                                    automation technology for serial production. The history
-                                    and knowledge of EXPERT Maschinenbau are continued by the
-                                    renamed company EXPERT-TÜNKERS GmbH.
+                                    {{ $brand->brandPage->row_one_header }}
                                 </p>
                             </div>
                         </div>
-                        <div class="row px-5">
-                            <div class="col-lg-12">
-                                <div class="devider-wrap">
-                                    <h4 class="devider-content">
-                                        <span class="devider-text bg-white">Our values </span>
-                                    </h4>
+                        {{-- @dd($brand->brandPage->rowFour) --}}
+                        @if (!empty($brand->brandPage->rowFour->badge))
+                            <div class="row px-5">
+                                <div class="col-lg-12">
+                                    <div class="devider-wrap">
+                                        <h4 class="devider-content">
+                                            <span class="devider-text bg-white">{{ $brand->brandPage->rowFour->badge }}</span>
+                                        </h4>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        @endif
                         {{-- Fist Row --}}
-                        <div class="row align-items-center px-5">
-                            <div class="col-lg-6">
-                                <h3 class="title ">More Than Your Average Cloud Backup – A Complete Cyber Protection
-                                    Solution</h3>
-                                <p style="text-align: justify;">Maximize the advantages of fortified backup capabilities
-                                    seamlessly integrated with
-                                    advanced cyber protection features. Safeguard your data with confidence, covering over
-                                    20 different workload types. Explore the robust backup and data protection capabilities
-                                    offered by Acronis Cyber Protect Cloud, ensuring comprehensive security.</p>
-                                <p style="text-align: justify;">Maximize the advantages of fortified backup capabilities
-                                    seamlessly integrated with
-                                    advanced cyber protection features. Safeguard your data with confidence, covering over
-                                    20 different workload types. Explore the robust backup and data protection capabilities
-                                    offered by Acronis Cyber Protect Cloud, ensuring comprehensive security.</p>
-                                <a href="guide.html" class="btn common-btn-3 rounded-0 w-25 mt-2">Shop Online</a>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="d-flex justify-content-center align-items-center">
-                                    <img class="img-fluid shadow-sm"
-                                        src="http://ngenitltd.com/storage/ccpLEaB2qKR1OYwK1697888641.jpg" alt="">
+                        @if (!empty($brand->brandPage->rowFour))
+                            <div class="row align-items-center px-5">
+                                <div class="{{ !empty($brand->brandPage->rowFour->image) ? 'col-lg-6' : 'col-lg-12' }}">
+                                    @if (!empty($brand->brandPage->rowFour->title))
+                                        <h3 class="title ">
+                                            {{ $brand->brandPage->rowFour->title }}
+                                        </h3>
+                                    @endif
+                                    @if (!empty($brand->brandPage->rowFour->description))
+                                        <p style="text-align: justify;">
+                                            {!! $brand->brandPage->rowFour->description !!}
+                                        </p>
+                                    @endif
+                                    @if (!empty($row_one->link))
+                                        <a href="{{ $brand->brandPage->rowFour->link }}"
+                                            class="btn common-btn-3 rounded-0 w-25 mt-2">{{ $brand->brandPage->rowFour->btn_name }}</a>
+                                    @endif
                                 </div>
+                                @if (!empty($brand->brandPage->rowFour->image))
+                                    <div class="col-lg-6">
+                                        <div class="d-flex justify-content-center align-items-center">
+                                            <img class="img-fluid shadow-sm"
+                                                src="{{ asset('storage/row/' . $brand->brandPage->rowFour->image) }}" alt="">
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
-                        </div>
+                        @endif
                         {{-- Second Row --}}
                         <div class="row my-5 align-items-center px-5">
-                            <div class="col-lg-6">
-                                <div class="d-flex justify-content-center align-items-center">
-                                    <img class="img-fluid shadow-sm"
-                                        src="http://ngenitltd.com/storage/ccpLEaB2qKR1OYwK1697888641.jpg" alt="">
+                            @if (!empty(optional($brand->brandPage->rowFive)->image))
+                                <div class="col-lg-6">
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <img class="img-fluid shadow-sm"
+                                            src="{{ asset('storage/row/' . optional($brand->brandPage->rowFive)->image) }}"
+                                            alt="">
+                                    </div>
+                                </div>
+                            @endif
+                            <div class="{{ !empty(optional($brand->brandPage->rowFive)->image) ? 'col-lg-6' : 'col-lg-12' }}">
+                                @if (!empty(optional($brand->brandPage->rowFive)->title))
+                                    <h3 class="title">
+                                        {{ optional($brand->brandPage->rowFive)->title }}
+                                    </h3>
+                                @endif
+                                @if (!empty(optional($brand->brandPage->rowFive)->description))
+                                    <p style="text-align: justify;">
+                                        {!! optional($brand->brandPage->rowFive)->description !!}
+                                    </p>
+                                @endif
+                                @if (!empty($row_one->link))
+                                    <a href="{{ optional($brand->brandPage->rowFive)->link }}"
+                                        class="btn common-btn-3 rounded-0 w-25 mt-2">{{ optional($brand->brandPage->rowFive)->btn_name }}</a>
+                                @endif
+                            </div>
+                        </div>
+                        @if (!empty(optional($brand->brandPage)->row_six_image))
+                            <div class="row">
+                                {{-- <div class="col-lg-12 wave-bg"> --}}
+                                <div class="col-lg-12">
+                                    <img class="img-fluid"
+                                        src="{{ asset('storage/brand-page/row/' . optional($brand->brandPage)->row_six_image) }}"
+                                        alt="">
                                 </div>
                             </div>
-                            <div class="col-lg-6">
-                                <h3 class="title ">Achieve Near-Zero RPOs With Continuous Data Protection</h3>
-                                <p style="text-align: justify;">Maximize the advantages of fortified backup capabilities
-                                    seamlessly integrated with
-                                    advanced cyber protection features. Safeguard your data with confidence, covering over
-                                    20 different workload types. Explore the robust backup and data protection capabilities
-                                    offered by Acronis Cyber Protect Cloud, ensuring comprehensive security.</p>
-                                <p style="text-align: justify;">Maximize the advantages of fortified backup capabilities
-                                    seamlessly integrated with
-                                    advanced cyber protection features. Safeguard your data with confidence, covering over
-                                    20 different workload types. Explore the robust backup and data protection capabilities
-                                    offered by Acronis Cyber Protect Cloud, ensuring comprehensive security.</p>
-                                <a href="guide.html" class="btn common-btn-3 rounded-0 w-25 mt-2">Shop Online</a>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-12 wave-bg">
-                                <img class="img-fluid" src="http://ngenitltd.com/storage/G1qAS5TJukJNqepJ1697881966.jpg"
-                                    alt="">
-                            </div>
-                        </div>
+                        @endif
                         {{-- Third Row --}}
                         <div class="row my-5 align-items-center px-5">
-                            <div class="col-lg-6">
-                                <h3 class="title ">Enable Quick And Easy Recovery With Minimal IT Intervention</h3>
-                                <p style="text-align: justify;">Maximize the advantages of fortified backup capabilities
-                                    seamlessly integrated with
-                                    advanced cyber protection features. Safeguard your data with confidence, covering over
-                                    20 different workload types. Explore the robust backup and data protection capabilities
-                                    offered by Acronis Cyber Protect Cloud, ensuring comprehensive security.</p>
-                                <p style="text-align: justify;">Maximize the advantages of fortified backup capabilities
-                                    seamlessly integrated with
-                                    advanced cyber protection features. Safeguard your data with confidence, covering over
-                                    20 different workload types. Explore the robust backup and data protection capabilities
-                                    offered by Acronis Cyber Protect Cloud, ensuring comprehensive security.</p>
-                                <a href="guide.html" class="btn common-btn-3 rounded-0 w-25 mt-2">Shop Online</a>
+                            <div class="{{ !empty(optional($brand->brandPage->rowSeven)->image) ? 'col-lg-6' : 'col-lg-12' }}">
+                                @if (!empty(optional($brand->brandPage->rowSeven)->title))
+                                    <h3 class="title">
+                                        {{ optional($brand->brandPage->rowSeven)->title }}
+                                    </h3>
+                                @endif
+                                @if (!empty(optional($brand->brandPage->rowSeven)->description))
+                                    <p style="text-align: justify;">
+                                        {!! optional($brand->brandPage->rowSeven)->description !!}
+                                    </p>
+                                @endif
+                                @if (!empty($row_one->link))
+                                    <a href="{{ optional($brand->brandPage->rowSeven)->link }}"
+                                        class="btn common-btn-3 rounded-0 w-25 mt-2">{{ optional($brand->brandPage->rowSeven)->btn_name }}</a>
+                                @endif
                             </div>
-                            <div class="col-lg-6">
-                                <div class="d-flex justify-content-center align-items-center">
-                                    <img class="img-fluid shadow-sm"
-                                        src="http://ngenitltd.com/storage/ccpLEaB2qKR1OYwK1697888641.jpg" alt="">
+                            @if (!empty($brand->brandPage->rowSeven->image))
+                                <div class="col-lg-6">
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <img class="img-fluid shadow-sm"
+                                            src="{{ asset('storage/row/' . $brand->brandPage->rowSeven->image) }}" alt="">
+                                    </div>
                                 </div>
-                            </div>
+                            @endif
                         </div>
                     </div>
                 </div>

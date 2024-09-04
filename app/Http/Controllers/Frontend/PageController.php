@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Models\Admin\Brand;
 use Illuminate\Http\Request;
 use App\Models\Admin\Product;
+use Yoeunes\Toastr\Facades\Toastr;
 use App\Http\Controllers\Controller;
 
 class PageController extends Controller
@@ -14,8 +15,13 @@ class PageController extends Controller
         $data = [
             'brand' => Brand::with('brandPage')->where('slug', $slug)->select('id', 'slug', 'title', 'logo')->firstOrFail(),
         ];
+        if (!empty($data['brand']->brandPage)) {
+            return view('frontend.pages.brandPage.overview',$data);
+        } else {
+            Toastr::error('No Details information found for this Brand.');
+            return redirect()->back();
+        }
         
-        return view('frontend.pages.brandPage.overview',$data);
     }
 
     public function brandProducts($slug, Request $request)

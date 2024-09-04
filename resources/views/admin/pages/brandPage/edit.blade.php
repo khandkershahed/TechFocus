@@ -128,7 +128,7 @@
                                                             </x-metronic.label>
                                                             <x-metronic.file-input id="banner_image" name="banner_image"
                                                                 :source="asset(
-                                                                    'storage/brand-page/banner_image/' .
+                                                                    'storage/brand-page/banner-image/' .
                                                                         optional($brandPage)->banner_image,
                                                                 )" :value="old(
                                                                     'banner_image',
@@ -763,7 +763,7 @@
                                                         </x-metronic.label>
                                                         <x-metronic.file-input id="row_six_image" name="row_six_image"
                                                             :source="asset(
-                                                                'storage/brand-page/row_six_image/' .
+                                                                'storage/brand-page/row/' .
                                                                     optional($brandPage)->row_six_image,
                                                             )" :value="old(
                                                                 'row_six_image',

@@ -12,17 +12,16 @@
     }
 </style>
 
-
 <section>
     <div class="brand-page-banner page_top_banner">
-        <img src="{{ !empty($brand->brandPage->banner_image) && file_exists(public_path('storage/' . $brand->brandPage->banner_image)) ? asset('storage/' . $brand->brandPage->banner_image) : asset('frontend/images/no-banner(1920-330).png') }}"
+        <img src="{{ !empty($brand->brandPage->banner_image) && file_exists(public_path('storage/brand-page/banner-image/' . $brand->brandPage->banner_image)) ? asset('storage/brand-page/banner-image/' . $brand->brandPage->banner_image) : asset('frontend/images/no-banner(1920-330).png') }}"
                 alt="">
     </div>
 </section>
 {{-- <div class="swiper bannerSwiper product-banner">
     <div class="swiper-wrapper">
         <div class="swiper-slide">
-            <img src="{{ !empty($brand->brandPage->banner_image) && file_exists(public_path('storage/' . $brand->brandPage->banner_image)) ? asset('storage/' . $brand->brandPage->banner_image) : asset('frontend/images/no-banner(1920-330).png') }}"
+            <img src="{{ !empty($brand->brandPage->banner_image) && file_exists(public_path('storage/brand-page/banner-image/' . $brand->brandPage->banner_image)) ? asset('storage/brand-page/banner-image/' . $brand->brandPage->banner_image) : asset('frontend/images/no-banner(1920-330).png') }}"
                 alt="">
         </div>
     </div>
@@ -53,7 +52,7 @@
                 <div class="d-flex justify-content-around align-items-center">
                     <a href="{{ route('brand.overview', $brand->slug) }}">
                         <img id="stand-logo" class="img-fluid" height=""
-                            src="{{ !empty($brand->brandPage->brand_logo) && file_exists(public_path('storage/' . $brand->brandPage->brand_logo)) ? asset('storage/' . $brand->brandPage->brand_logo) : asset('frontend/images/no-banner(1920-330).png') }}"
+                            src="{{ !empty($brand->brandPage->brand_logo) && file_exists(public_path('storage/brand-page/logo/' . $brand->brandPage->brand_logo)) ? asset('storage/brand-page/logo/' . $brand->brandPage->brand_logo) : asset('frontend/images/no-banner(1920-330).png') }}"
                             alt="{{ $brand->title }} - logo">
                     </a>
                     {{-- <a href="#" type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
@@ -92,7 +91,7 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
                         <img id="stand-logo" class="img-fluid" height=""
-                            src="{{ !empty($brand->brandPage->brand_logo) && file_exists(public_path('storage/' . $brand->brandPage->brand_logo)) ? asset('storage/' . $brand->brandPage->brand_logo) : asset('frontend/images/no-banner(1920-330).png') }}"
+                            src="{{ !empty($brand->brandPage->brand_logo) && file_exists(public_path('storage/brand-page/logo/' . $brand->brandPage->brand_logo)) ? asset('storage/brand-page/logo/' . $brand->brandPage->brand_logo) : asset('frontend/images/no-banner(1920-330).png') }}"
                             alt="{{ $brand->title }} - logo">
                     </div>
                     <div>

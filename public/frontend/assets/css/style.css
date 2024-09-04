@@ -20,14 +20,12 @@
   width: 100%;
 }
 
-.page_top_banner {
-  height: 7rem;
-}
+
 
 .page_top_banner {
   width: 100%;
-  background-size: cover;
-  background-repeat: no-repeat;
+  object-fit: fill;
+  height: 22rem;
 }
 
 .sub-font {
