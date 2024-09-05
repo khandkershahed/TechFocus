@@ -11,7 +11,7 @@
                 <p class="">ALL {{ $brand->title }} PRODUCTS</p>
             </div>
         </div>
-        <div class="row">
+        {{-- <div class="row">
             <div class="col-lg-12">
                 <div class="devider-wrap">
                     <h4 class="devider-content">
@@ -19,16 +19,16 @@
                     </h4>
                 </div>
             </div>
-        </div>
+        </div> --}}
         <div class="row mb-5">
-            @foreach ($brand->brandProducts as $brandProduct) 
+            @foreach ($brand->brandProducts as $product) 
                 <div class="col-lg-2">
                     <a href="{{ route('product.details','articulated-robot') }}">
                         <div class="card projects-card rounded-0">
                             <div>
                                 <p class="video-tag">New</p>
                             </div>
-                            <img src="{{ asset($product->thumbnail) }}"
+                            <img src="{{ asset('storage/'.$product->thumbnail) }}"
                                 class="card-img-top img-fluid rounded-0" alt="{{ $product->name }}" />
                             <div class="card-body mb-5">
                                 <p class="card-text project-para text-center">
