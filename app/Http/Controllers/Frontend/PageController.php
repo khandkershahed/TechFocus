@@ -27,7 +27,8 @@ class PageController extends Controller
     public function brandProducts($slug, Request $request)
     {
         $data = [
-            'brand' => Brand::with('brandPage')->where('slug', $slug)->select('id', 'slug', 'title', 'logo')->firstOrFail(),
+            'brand' => Brand::with('brandPage','brandProducts')->where('slug', $slug)->select('id', 'slug', 'title', 'logo')->firstOrFail(),
+            // 'brandProducts' => Brand::with('brandProducts')->where('slug', $slug)->select('id', 'slug', 'title', 'logo')->firstOrFail(),
         ];
         return view('frontend.pages.brandPage.products',$data);
 

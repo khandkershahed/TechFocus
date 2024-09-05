@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Models\Admin\Category;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\AboutPage;
+use App\Models\Admin\NewsTrend;
+use App\Models\Admin\Product;
 use Illuminate\Support\Facades\Session;
 
 class SiteController extends Controller
@@ -17,6 +19,8 @@ class SiteController extends Controller
     {
         $data = [
             'categories' => Category::with('children.children.children.children.children.children.children.children.children.children')->where('is_parent', '1')->get(['id', 'parent_id', 'name', 'slug']),
+            'products' => Product::with('brand')->where('product_status','product')->where('status','active')->limit(10)->get(),
+            'news_trends' => NewsTrend::where('type','trends')->limit(4)->get(),
         ];
         return view('frontend.pages.home.index', $data);
     }

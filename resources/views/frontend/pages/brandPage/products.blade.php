@@ -8,7 +8,7 @@
 
         <div class="row mb-3 mt-5">
             <div class="col-lg-12">
-                <p class="">ALL STÄUBLI ROBOTICS PRODUCTS</p>
+                <p class="">ALL {{ $brand->title }} PRODUCTS</p>
             </div>
         </div>
         <div class="row">
@@ -21,126 +21,35 @@
             </div>
         </div>
         <div class="row mb-5">
-            <div class="col-lg-2">
-                <a href="{{ route('product.details','articulated-robot') }}">
-                    <div class="card projects-card rounded-0">
-                        <div>
-                            <p class="video-tag">Video</p>
-                        </div>
-                        <img src="https://img.directindustry.com/images_di/photo-m2/19826-12259045.jpg"
-                            class="card-img-top img-fluid rounded-0" alt="..." />
-                        <div class="card-body mb-5">
-                            <p class="card-text project-para text-center">
-                                ISOLATION TRANSFORMER TT1 SERIES
-                            </p>
-                            <div class="text-center">
-                                <span class="product-badge"><i class="fa-solid fa-tag me-1 main-color"></i>Collaborative</span>
-                                <span class="product-badge"><i class="fa-solid fa-tag me-1 main-color"></i>Collaborative</span>
+            @foreach ($brand->brandProducts as $brandProduct) 
+                <div class="col-lg-2">
+                    <a href="{{ route('product.details','articulated-robot') }}">
+                        <div class="card projects-card rounded-0">
+                            <div>
+                                <p class="video-tag">New</p>
+                            </div>
+                            <img src="{{ asset($product->thumbnail) }}"
+                                class="card-img-top img-fluid rounded-0" alt="{{ $product->name }}" />
+                            <div class="card-body mb-5">
+                                <p class="card-text project-para text-center">
+                                    {{ $product->name }}
+                                </p>
+                                <div class="text-center">
+                                    @if (!empty($brand->title)) 
+                                        <span class="product-badge"><i class="fa-solid fa-tag me-1 main-color"></i>Manufacturer : {{ $brand->title }}</span>
+                                    @endif
+                                    @if (!empty($product->sku_code))  
+                                        <span class="product-badge"><i class="fa-solid fa-tag me-1 main-color"></i>SKU #{{ $product->sku_code }}</span>
+                                    @endif
+                                    @if (!empty($product->mf_code))  
+                                        <span class="product-badge"><i class="fa-solid fa-tag me-1 main-color"></i>MF #{{ $product->mf_code }}</span>
+                                    @endif
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-lg-2">
-                <a href="{{ route('product.details','articulated-robot') }}">
-                    <div class="card projects-card rounded-0">
-                        <div>
-                            <p class="video-tag">Video</p>
-                        </div>
-                        <img src="https://img.directindustry.com/images_di/photo-m2/19826-4338393.jpg"
-                            class="card-img-top img-fluid rounded-0" alt="..." />
-                        <div class="card-body mb-5">
-                            <p class="card-text project-para text-center">
-                                ISOLATION TRANSFORMER TTIT SERIES
-                            </p>
-                            <div class="text-center">
-                                <span class="product-badge"><i class="fa-solid fa-tag me-1 main-color"></i>Collaborative</span>
-                                <span class="product-badge"><i class="fa-solid fa-tag me-1 main-color"></i>Collaborative</span>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-lg-2">
-                <a href="{{ route('product.details','articulated-robot') }}">
-                    <div class="card projects-card rounded-0">
-                        <div>
-                            <p class="video-tag">Video</p>
-                        </div>
-                        <img src="https://img.directindustry.com/images_di/photo-m2/19826-7851145.jpg"
-                            class="card-img-top img-fluid rounded-0" alt="..." />
-                        <div class="card-body mb-5">
-                            <p class="card-text project-para text-center">
-                                ISOLATION TRANSFORMER EVKE SERIES
-                            </p>
-                            <div class="text-center">
-                                <span class="product-badge"><i class="fa-solid fa-tag me-1 main-color"></i>Collaborative</span>
-                                <span class="product-badge"><i class="fa-solid fa-tag me-1 main-color"></i>Collaborative</span>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-lg-2">
-                <a href="{{ route('product.details','articulated-robot') }}">
-                    <div class="card projects-card rounded-0">
-                        <div>
-                            <p class="video-tag">Video</p>
-                        </div>
-                        <img src="https://img.directindustry.com/images_di/photo-m2/19826-2651885.jpg"
-                            class="card-img-top img-fluid rounded-0" alt="..." />
-                        <div class="card-body mb-5">
-                            <p class="card-text project-para text-center">
-                                POWER AUTO-TRANSFORMER ESP SERIES
-                            </p>
-                            <div class="text-center">
-                                <span class="product-badge"><i class="fa-solid fa-tag me-1 main-color"></i>Collaborative</span>
-                                <span class="product-badge"><i class="fa-solid fa-tag me-1 main-color"></i>Collaborative</span>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-lg-2">
-                <a href="{{ route('product.details','articulated-robot') }}">
-                    <div class="card projects-card rounded-0">
-                        <div>
-                            <p class="video-tag">Video</p>
-                        </div>
-                        <img src="https://img.directindustry.com/images_di/photo-m2/19826-4337839.jpg"
-                            class="card-img-top img-fluid rounded-0" alt="..." />
-                        <div class="card-body mb-5">
-                            <p class="card-text project-para text-center">
-                                ISOLATION TRANSFORMER RTE SERIES
-                            </p>
-                            <div class="text-center">
-                                <span class="product-badge"><i class="fa-solid fa-tag me-1 main-color"></i>Collaborative</span>
-                                <span class="product-badge"><i class="fa-solid fa-tag me-1 main-color"></i>Collaborative</span>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-lg-2">
-                <a href="{{ route('product.details','articulated-robot') }}">
-                    <div class="card projects-card rounded-0">
-                        <div>
-                            <p class="video-tag">Video</p>
-                        </div>
-                        <img src="https://img.directindustry.com/images_di/photo-m2/19826-4339339.jpg"
-                            class="card-img-top img-fluid rounded-0" alt="..." />
-                        <div class="card-body mb-5">
-                            <p class="card-text project-para text-center">
-                                POWER AUTO-TRANSFORMER PVAT3 SERIES
-                            </p>
-                            <div class="text-center">
-                                <span class="product-badge"><i class="fa-solid fa-tag me-1 main-color"></i>Collaborative</span>
-                                <span class="product-badge"><i class="fa-solid fa-tag me-1 main-color"></i>Collaborative</span>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div>
+                    </a>
+                </div>
+            @endforeach
         </div>
         <!-- Related Search -->
         <div class="container">

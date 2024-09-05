@@ -22,6 +22,10 @@ class Product extends Model
     {
         return $this->belongsToMany(Industry::class, 'industry_products', 'product_id', 'industry_id');
     }
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class);
+    }
 
     // Define the many-to-many relationship with solutions
     public function solutions()
