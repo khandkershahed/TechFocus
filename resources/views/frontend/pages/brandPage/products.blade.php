@@ -28,7 +28,7 @@
                             <div>
                                 <p class="video-tag">New</p>
                             </div>
-                            <img src="{{ asset('storage/'.$product->thumbnail) }}"
+                            <img src="{{ $product->thumbnail }}"
                                 class="card-img-top img-fluid rounded-0" alt="{{ $product->name }}" />
                             <div class="card-body mb-5">
                                 <p class="card-text project-para text-center">
