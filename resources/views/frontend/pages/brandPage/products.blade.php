@@ -21,7 +21,7 @@
             </div>
         </div> --}}
         <div class="row mb-5">
-            @foreach ($brand->brandProducts as $product) 
+            @foreach ($brand->products as $product) 
                 <div class="col-lg-2">
                     <a href="{{ route('product.details','articulated-robot') }}">
                         <div class="card projects-card rounded-0">
