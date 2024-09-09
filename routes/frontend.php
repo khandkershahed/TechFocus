@@ -25,7 +25,7 @@ Route::get('category/{slug}/products', [SiteController::class, 'filterProducts']
 // Brand Pages
 Route::middleware('web')->group(function () {
     Route::get('/{slug}/overview', [PageController::class, 'overview'])->name('brand.overview');
-    Route::get('/{id}/{slug}', [PageController::class, 'productDetails'])->name('product.details');
+    Route::get('/{id}/product/{slug}', [PageController::class, 'productDetails'])->name('product.details');
     Route::get('/{slug}/brochures', [PageController::class, 'brandPdf'])->name('brand.pdf');
     Route::get('/{slug}/products', [PageController::class, 'brandProducts'])->name('brand.products');
     Route::get('/catalogue-pdf/{slug}', [PageController::class, 'pdfDetails'])->name('pdf.details');
