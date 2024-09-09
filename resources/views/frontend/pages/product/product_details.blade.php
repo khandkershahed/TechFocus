@@ -15,7 +15,7 @@
                                 <!-- Main Image Default Show -->
                                 <a data-fancybox-trigger="gallery" href="javascript:;">
                                     @php
-                                        $mainImage = $product->mainImages->isNotEmpty()
+                                        $mainImage = ($product->mainImages->count() > 0)
                                             ? $product->mainImages->first()->photo
                                             : $product->thumbnail;
                                     @endphp
