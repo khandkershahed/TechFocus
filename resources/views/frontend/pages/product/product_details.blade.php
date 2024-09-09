@@ -14,48 +14,67 @@
                             <div class="xzoom-container w-100">
                                 <!-- Main Image Default Show -->
                                 <a data-fancybox-trigger="gallery" href="javascript:;">
-                                    <img class="xzoom" id="xzoom-default"
-                                        src="https://img.directindustry.com/images_di/photo-mg/16788-18842734.webp"
-                                        xoriginal="https://img.directindustry.com/images_di/photo-mg/16788-18842734.webp"
-                                        width="100%" height="100%" />
+                                    @php
+                                        $mainImage = $product->mainImages->isNotEmpty()
+                                            ? $product->mainImages->first()->photo
+                                            : $product->thumbnail;
+                                    @endphp
+                                    <img class="xzoom" id="xzoom-default" src="{{ asset($product->thumbnail) }}"
+                                        xoriginal="{{ asset($product->thumbnail) }}" width="100%" height="100%" />
                                 </a>
                                 <!-- Main Image Default Show End-->
-                                <div class="xzoom-thumbs">
-                                    <a class="popup" data-fancybox="gallery"
-                                        href="https://img.directindustry.com/images_di/photo-mg/16788-18842712.webp"><img
-                                            class="xzoom-gallery"
-                                            src="https://img.directindustry.com/images_di/photo-mg/16788-18842712.webp"
-                                            xpreview="https://img.directindustry.com/images_di/photo-mg/16788-18842712.webp"
-                                            width="80" height="80" /></a>
-                                    <a class="popup" data-fancybox="gallery"
-                                        href="https://img.directindustry.com/images_di/photo-mg/16788-18842722.webp"><img
-                                            class="xzoom-gallery"
-                                            src="https://img.directindustry.com/images_di/photo-mg/16788-18842722.webp"
-                                            xpreview="https://img.directindustry.com/images_di/photo-mg/16788-18842722.webp"
-                                            width="80" height="80" /></a>
-                                    <a class="popup" data-fancybox="gallery"
-                                        href="https://img.directindustry.com/images_di/photo-mg/16788-18842734.webp"><img
-                                            class="xzoom-gallery"
-                                            src="https://img.directindustry.com/images_di/photo-mg/16788-18842734.webp"
-                                            xpreview="https://img.directindustry.com/images_di/photo-mg/16788-18842734.webp"
-                                            width="80" height="80" /></a>
-                                </div>
+                                @if ($product->mainImages->isNotEmpty())
+                                    <div class="xzoom-thumbs">
+                                        @foreach ($$product->mainImages as $multi_image)
+                                            <a class="popup" data-fancybox="gallery"
+                                                href="{{ asset($multi_image->photo) }}"><img class="xzoom-gallery"
+                                                    src="{{ asset($multi_image->photo) }}"
+                                                    xpreview="{{ asset($multi_image->photo) }}" width="80"
+                                                    height="80" />
+                                            </a>
+                                        @endforeach
+                                    </div>
+                                @endif
                             </div>
                         </div>
                         <div class="col-lg-6 col-sm-12">
                             <div>
-                                <h2 class="subtitles fw-bold">
-                                    Pressurization System PRS Series
-                                </h2>
-                                <p class="pt-3">Sold by:</p>
+                                <div class="row gx-0 px-2">
+                                    <h4>{{ $product->name }}</h4>
+                                    <ul class="d-flex align-items-center p-1">
+                                        @if (!empty($product->sku_code))
+                                            <li class="me-2">
+                                                <p class="p-0 m-0" style="color: rgb(134, 134, 134);font-size: 13px;"><i
+                                                        class="fa-solid fa-tag me-1 single-bp-tag"></i><strong>NG #
+                                                    </strong>{{ $product->sku_code }}</p>
+                                            </li>
+                                        @endif
+                                        @if (!empty($product->mf_code))
+                                            <li class="me-2">
+                                                <p class="p-0 m-0" style="color: rgb(134, 134, 134);font-size: 13px;"><i
+                                                        class="fa-solid fa-tag me-1 single-bp-tag"></i><strong>MF #
+                                                    </strong>{{ $product->mf_code }}</p>
+                                            </li>
+                                        @endif
+                                        @if (!empty($product->product_code))
+                                            <li class="me-1">
+                                                <p class="p-0 m-0" style="color: rgb(134, 134, 134);font-size: 13px;"><i
+                                                        class="fa-solid fa-tag me-1 single-bp-tag"></i><strong>SKU #
+                                                    </strong>{{ $product->product_code }}
+                                                </p>
+                                            </li>
+                                        @endif
+                                    </ul>
+                                </div>
+                                <p class="pt-3">Manufactured by:</p>
                                 <div class="d-flex align-items-center fw-bold">
-                                    <h2 class="font-monospace">Refrind s.r.l.</h2>
-                                    <h2 class="ms-3 font-monospace">
+                                    <h2 class="font-monospace">{{ $product->brand->name }}</h2>
+                                    {{-- <h2 class="ms-3 font-monospace">
                                         <i class="fa-solid fa-location-dot text-muted me-2"></i>Italy
-                                    </h2>
+                                    </h2> --}}
                                 </div>
                                 <!-- Rating Area -->
-                                <div class="d-flex align-items-center">
+                                {{-- <div class="d-flex align-items-center">
                                     <div class="popover__wrapper me-2 border rounded-pill w-auto px-2 pt-1">
                                         <a href="#">
                                             <h2 class="popover__title" data-aos="fade-left">
@@ -80,7 +99,7 @@
                                         Feedback on the quality of responses
                                         <span class="main-color">(from 1 buyers)</span>
                                     </p>
-                                </div>
+                                </div> --}}
                                 <!-- Seller Info -->
                                 <div class="pt-2">
                                     <span><i class="fa-regular main-color fa-clock"></i> This
@@ -98,15 +117,7 @@
                                 <!-- Product Short Desc -->
                                 <div class="mt-3">
                                     <p class="text-justify">
-                                        In this environment the seventh axis is used as
-                                        interconnecting conveying element, for automatically
-                                        loading parts into tooling stations or as path
-                                        controlled process axis, i.e. for complex welding
-                                        applications. Especially the path controlled
-                                        applications are demanding increased accuracy and
-                                        repeatability, which is commonly realized by additional
-                                        locking devices attached to the robot carrier unit.for
-                                        automatically loading parts into tooling.
+                                        {!! $product->short_desc !!}
                                     </p>
                                 </div>
                                 <!-- Others Button -->
@@ -125,134 +136,41 @@
             </div>
         </div>
         <!-- Extra Link -->
-        <div class="row pt-3">
+        {{-- <div class="row pt-3">
             <div class="col-lg-12 col-sm-12 text-end font-three">
                 <a href="" class="main-color">Go to the EXPERT-TÜNKERS GmbH website for more information
                     <i class="ms-2 fa-solid fa-arrow-up-right-from-square"></i></a>
             </div>
-        </div>
+        </div> --}}
         <!-- Product Specification & Overview -->
         <div class="row mb-5 mt-5">
-            <div class="col-lg-6">
-                <div class="single-product-description" style="font-size: 16px">
-                    <h2 class="description-title">Specification</h2>
-                    <div class="container pb-3 specification-areas-brand">
-                        <div class="row gx-1 px-2">
-                            <div class="col-lg-4">
-                                <div class="p-1 ps-2">Type</div>
-                            </div>
-                            <div class="col-lg-8">
-                                <div class="p-1 ps-2">articulated</div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="p-1 ps-2 brand-description-area">Function</div>
-                            </div>
-                            <div class="col-lg-8">
-                                <div class="p-1 ps-2 brand-description-area">handling</div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="p-1 ps-2">Application domain</div>
-                            </div>
-                            <div class="col-lg-8">
-                                <div class="p-1 ps-2">for the electronics industry</div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="p-1 ps-2 brand-description-area">Function</div>
-                            </div>
-                            <div class="col-lg-8">
-                                <div class="p-1 ps-2 brand-description-area">handling</div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="p-1 ps-2">Type</div>
-                            </div>
-                            <div class="col-lg-8">
-                                <div class="p-1 ps-2">articulated</div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="p-1 ps-2 brand-description-area">Function</div>
-                            </div>
-                            <div class="col-lg-8">
-                                <div class="p-1 ps-2 brand-description-area">handling</div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="p-1 ps-2">Application domain</div>
-                            </div>
-                            <div class="col-lg-8">
-                                <div class="p-1 ps-2">for the electronics industry</div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="p-1 ps-2 brand-description-area">Function</div>
-                            </div>
-                            <div class="col-lg-8">
-                                <div class="p-1 ps-2 brand-description-area">handling</div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="p-1 ps-2">Application domain</div>
-                            </div>
-                            <div class="col-lg-8">
-                                <div class="p-1 ps-2">for the electronics industry</div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="p-1 ps-2 brand-description-area">Function</div>
-                            </div>
-                            <div class="col-lg-8">
-                                <div class="p-1 ps-2 brand-description-area">handling</div>
+            @if (!empty($product->specification)) 
+                <div class="{{ !empty($product->overview) ? 'col-lg-6' : 'col-lg-12' }}">
+                    <div class="single-product-description" style="font-size: 16px">
+                        <h2 class="description-title">Specification</h2>
+                        <div class="container pb-3 specification-areas-brand">
+                            <div class="row gx-1 px-2">
+                                <p>{!! $product->specification !!}</p>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="single-product-description text-justify" style="font-size: 16px; line-height: 1.5">
-                    <h2 class="description-title">Description</h2>
-                    <div class="container pb-3">
-                        <div class="row ps-2">
-                            <div class="col-lg-12 pe-0">
-                                <div class="sc-3fi1by-1 chZLCL">
-                                    <div class="description-areas-brand">
-                                        High performance in any installation position and in a
-                                        small footprint - the KR 4 AGILUS impresses with its
-                                        compact design and long reach and precision.
-                                        <br />
-                                        KR 4 AGILUS: Compact, flexible robot for various
-                                        applications in the electronics industry The KR 4 AGILUS
-                                        combines ultra-compact, interference-free design with
-                                        optimum performance: with a payload capacity of 4
-                                        kilograms and a reach of 600 mm, the compact robot
-                                        performs a wide variety of tasks, such as handling and
-                                        assembly in the electronics industry or in small
-                                        automation cells. It works reliably and precisely even
-                                        with the shortest cycle times.
-                                        <br />
-                                        Small robotics for the electronics industry: the KR 4
-                                        AGILUS
-                                        <br />
-                                        Maximum flexibility <br />
-                                        Compact, interference contour-free design, flexible
-                                        mounting position and various interfaces for peripheral
-                                        devices
-                                        <br />
-                                        ESD protected The robot is protected as standard against
-                                        uncontrolled electrostatic charging or discharging and
-                                        is thus equipped for the safe handling of sensitive
-                                        electronic components.
-                                        <br />
-                                        High reliability Particularly long service life and low
-                                        service and maintenance requirements, e.g. thanks to
-                                        fewer steps when replacing cables
-                                        <br />
-                                        Easy operation Control via KRC5 micro and operation via
-                                        KUKA smartPAD
-                                    </div>
-                                </div>
+            @endif
+            @if (!empty($product->overview)) 
+                <div class="{{ !empty($product->specification) ? 'col-lg-6' : 'col-lg-12' }}">
+                    <div class="single-product-description text-justify" style="font-size: 16px; line-height: 1.5">
+                        <h2 class="description-title">Description</h2>
+                        <div class="container pb-3">
+                            <div class="row ps-2">
+                                <p>{!! $product->overview !!}</p>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            @endif
         </div>
         <!-- Product Video & Catalog -->
-        <div class="row mb-3">
+        {{-- <div class="row mb-3">
             <div class="col-lg-6">
                 <div class="single-product-description" style="font-size: 14px">
                     <h2 class="description-title">Video</h2>
@@ -307,7 +225,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
         <!-- Extra Link -->
         <div class="row pt-3">
             <div class="col-lg-12 col-sm-12 text-end font-three">
@@ -327,7 +245,7 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+        {{-- <div class="row">
             <div class="col-lg-12">
                 <!-- Related Product Slider -->
                 <div class="swiper relatedProductSwiper my-2">
@@ -696,9 +614,9 @@
                     </figure>
                 </a>
             </div>
-        </div>
+        </div> --}}
         <!-- Related Search -->
-        <div class="row mt-5 mb-5">
+        {{-- <div class="row mt-5 mb-5">
             <div class="col bg-light">
                 <div class="card rounded-0 border-0 shadow-lg">
                     <div class="card-header rounded-0">
@@ -741,6 +659,6 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
     </div>
 @endsection

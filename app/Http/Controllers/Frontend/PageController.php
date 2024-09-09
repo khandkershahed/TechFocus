@@ -105,7 +105,7 @@ class PageController extends Controller
 
     public function productDetails($slug)
     {
-        $data['product'] = Product::where('slug', $slug)->where('product_status', 'product')->firstOrFail();
+        $data['product'] = Product::with('multiImages')->where('slug', $slug)->where('product_status', 'product')->firstOrFail();
         $data = [
             'brand' => Brand::with('brandPage')->where('id', $data['product']->brand_id)->select('id', 'slug', 'title', 'logo')->firstOrFail(),
         ];
