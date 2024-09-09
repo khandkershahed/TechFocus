@@ -14,18 +14,14 @@
                             <div class="xzoom-container w-100">
                                 <!-- Main Image Default Show -->
                                 <a data-fancybox-trigger="gallery" href="javascript:;">
-                                    @php
-                                        $mainImage = ($product->mainImages->count() > 0)
-                                            ? $product->mainImages->first()->photo
-                                            : $product->thumbnail;
-                                    @endphp
+                                    
                                     <img class="xzoom" id="xzoom-default" src="{{ asset($product->thumbnail) }}"
                                         xoriginal="{{ asset($product->thumbnail) }}" width="100%" height="100%" />
                                 </a>
                                 <!-- Main Image Default Show End-->
-                                @if ($product->mainImages->isNotEmpty())
+                                @if ($product->multiImages->isNotEmpty())
                                     <div class="xzoom-thumbs">
-                                        @foreach ($$product->mainImages as $multi_image)
+                                        @foreach ($product->multiImages as $multi_image)
                                             <a class="popup" data-fancybox="gallery"
                                                 href="{{ asset($multi_image->photo) }}"><img class="xzoom-gallery"
                                                     src="{{ asset($multi_image->photo) }}"
