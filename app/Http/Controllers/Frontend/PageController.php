@@ -103,11 +103,11 @@ class PageController extends Controller
         // }
     }
 
-    public function productDetails($id,$slug)
+    public function productDetails($id, $slug)
     {
-        $data['product'] = Product::with('multiImages')->where('slug', $slug)->first();
         $data = [
-            'brand' => Brand::with('brandPage')->where('id', $data['product']->brand_id)->select('id', 'slug', 'title', 'logo')->firstOrFail(),
+            'product' => Product::with('multiImages')->where('slug', $slug)->firstOrFail(),
+            'brand' => Brand::with('brandPage')->where('slug', $id)->select('id', 'slug', 'title', 'logo')->firstOrFail(),
         ];
         return view('frontend.pages.product.product_details',$data);
         // $data['sproduct'] = Product::where('slug', $id)->where('product_status', 'product')->first();
