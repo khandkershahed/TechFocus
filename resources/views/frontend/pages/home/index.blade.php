@@ -23,60 +23,113 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="container">
-                        <div class="row gx-3 my-3">
-                            @if (count($categories) > 0)
-                                @foreach ($categories as $key => $category)
-                                    <div class="col-lg-6 col-sm-12 ps-0">
-                                        <div class="accordion accordion-flush"
-                                            id="accordionFlushExample-{{ $key }}">
-                                            <div class="accordion-item mb-2">
-                                                <h2 class="accordion-header" id="flush-heading-{{ $key }}">
-                                                    <button class="accordion-button p-3 collapsed" type="button"
-                                                        data-bs-toggle="collapse"
-                                                        data-bs-target="#flush-collapse-{{ $key }}"
-                                                        aria-expanded="false"
-                                                        aria-controls="flush-collapse-{{ $key }}">
-                                                        <p class="m-0 accordion-button-area p-2 ps-0">
-                                                            <span class="ms-0"> </span>
-                                                        </p>
-                                                        <div class="d-flex align-items-center w-100">
-                                                            <img src="{{ asset('frontend/assets/img/Icon.svg') }}"
-                                                                alt="" />
-                                                            <p class="mb-0 ms-2">
-                                                                {{ $category->name }}
+                        <div class="row pt-4">
+                            <div class="col-md-6">
+                                @if (count($categories) > 0)
+                                    @foreach ($categories as $key => $category)
+                                        @if ($key % 2 == 0)
+                                            <div class="accordion accordion-flush"
+                                                id="accordionFlushExample-{{ $key }}">
+                                                <div class="accordion-item mb-2">
+                                                    <h2 class="accordion-header" id="flush-heading-{{ $key }}">
+                                                        <button class="accordion-button p-3 collapsed" type="button"
+                                                            data-bs-toggle="collapse"
+                                                            data-bs-target="#flush-collapse-{{ $key }}"
+                                                            aria-expanded="false"
+                                                            aria-controls="flush-collapse-{{ $key }}">
+                                                            <p class="m-0 accordion-button-area p-2 ps-0">
+                                                                <span class="ms-0"> </span>
                                                             </p>
-                                                        </div>
-
-                                                        <p></p>
-                                                    </button>
-                                                </h2>
-                                                <div id="flush-collapse-{{ $key }}"
-                                                    class="accordion-collapse collapse"
-                                                    aria-labelledby="flush-heading-{{ $key }}"
-                                                    data-bs-parent="#accordionFlushExample-{{ $key }}">
-                                                    <div class="accordion-body">
-                                                        <ul class="ps-3">
-                                                            @if (count($category->children) > 0)
-                                                                @foreach ($category->children as $sub_cat)
+                                                            <div class="d-flex align-items-center w-100">
+                                                                <img src="{{ asset('frontend/assets/img/Icon.svg') }}"
+                                                                    alt="" />
+                                                                <p class="mb-0 ms-2">
+                                                                    {{ $category->name }}
+                                                                </p>
+                                                            </div>
+                                                        </button>
+                                                    </h2>
+                                                    <div id="flush-collapse-{{ $key }}"
+                                                        class="accordion-collapse collapse"
+                                                        aria-labelledby="flush-heading-{{ $key }}"
+                                                        data-bs-parent="#accordionFlushExample-{{ $key }}">
+                                                        <div class="accordion-body">
+                                                            <ul class="ps-3">
+                                                                @if (count($category->children) > 0)
+                                                                    @foreach ($category->children as $sub_cat)
+                                                                        <li class="mb-2 menu-single-items">
+                                                                            <a
+                                                                                href="{{ route('category', $sub_cat->slug) }}">{{ $sub_cat->name }}</a>
+                                                                        </li>
+                                                                    @endforeach
+                                                                @else
                                                                     <li class="mb-2 menu-single-items">
-                                                                        <a
-                                                                            href="{{ route('category', $sub_cat->slug) }}">{{ $sub_cat->name }}</a>
+                                                                        <a href="javascript:void(0)">No Content Found!</a>
                                                                     </li>
-                                                                @endforeach
-                                                            @else
-                                                                <li class="mb-2 menu-single-items">
-                                                                    <a href="javascript:void(0)">No Content Found!</a>
-                                                                </li>
-                                                            @endif
-                                                        </ul>
+                                                                @endif
+                                                            </ul>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            @endif
+                                        @endif
+                                    @endforeach
+                                @endif
+                            </div>
+                            <div class="col-md-6">
+                                @if (count($categories) > 0)
+                                    @foreach ($categories as $key => $category)
+                                        @if ($key % 2 != 0)
+                                            <div class="accordion accordion-flush"
+                                                id="accordionFlushExample-{{ $key }}">
+                                                <div class="accordion-item mb-2">
+                                                    <h2 class="accordion-header" id="flush-heading-{{ $key }}">
+                                                        <button class="accordion-button p-3 collapsed" type="button"
+                                                            data-bs-toggle="collapse"
+                                                            data-bs-target="#flush-collapse-{{ $key }}"
+                                                            aria-expanded="false"
+                                                            aria-controls="flush-collapse-{{ $key }}">
+                                                            <p class="m-0 accordion-button-area p-2 ps-0">
+                                                                <span class="ms-0"> </span>
+                                                            </p>
+                                                            <div class="d-flex align-items-center w-100">
+                                                                <img src="{{ asset('frontend/assets/img/Icon.svg') }}"
+                                                                    alt="" />
+                                                                <p class="mb-0 ms-2">
+                                                                    {{ $category->name }}
+                                                                </p>
+                                                            </div>
+                                                        </button>
+                                                    </h2>
+                                                    <div id="flush-collapse-{{ $key }}"
+                                                        class="accordion-collapse collapse"
+                                                        aria-labelledby="flush-heading-{{ $key }}"
+                                                        data-bs-parent="#accordionFlushExample-{{ $key }}">
+                                                        <div class="accordion-body">
+                                                            <ul class="ps-3">
+                                                                @if (count($category->children) > 0)
+                                                                    @foreach ($category->children as $sub_cat)
+                                                                        <li class="mb-2 menu-single-items">
+                                                                            <a
+                                                                                href="{{ route('category', $sub_cat->slug) }}">{{ $sub_cat->name }}</a>
+                                                                        </li>
+                                                                    @endforeach
+                                                                @else
+                                                                    <li class="mb-2 menu-single-items">
+                                                                        <a href="javascript:void(0)">No Content Found!</a>
+                                                                    </li>
+                                                                @endif
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    @endforeach
+                                @endif
+                            </div>
                         </div>
+                        
                     </div>
                 </div>
             </div>
@@ -143,7 +196,7 @@
                                     <!-- <span class="product_badge2">New</span> -->
                                 </div>
                                 <div class="card-body p-0">
-                                    <img class="img-fluid" src="{{ asset('storage/'.$product->thumbnail) }}" />
+                                    <img class="img-fluid" src="{{ asset('storage/' . $product->thumbnail) }}" />
                                 </div>
                                 <div class="card-body p-0">
                                     <div class="px-3">
@@ -151,7 +204,7 @@
                                             <h6 class="pt-3">{{ $product->name }}</h6>
                                         </a>
                                         <div class="mb-3">
-                                            @if (!empty($product->sku_code)) 
+                                            @if (!empty($product->sku_code))
                                                 <p class="p-0 m-0 pb-2">
                                                     <a href="javascript:void(0)">
                                                         <i class="fa-solid fa-paperclip main-color tags-text me-2"></i>
@@ -159,7 +212,7 @@
                                                     </a>
                                                 </p>
                                             @endif
-                                            @if (!empty($product->mf_code)) 
+                                            @if (!empty($product->mf_code))
                                                 <p class="p-0 m-0 pb-2">
                                                     <a href="javascript:void(0)">
                                                         <i class="fa-solid fa-paperclip main-color tags-text me-2"></i>
@@ -213,11 +266,11 @@
                                         <div class="d-flex align-items-center card-body py-0 pt-2">
                                             <div class="icon-box">
                                                 <!-- <img
-                                    width="70px"
-                                    height="55px"
-                                    src="https://www.riverbed.com/riverbed-wp-content/uploads/2022/12/brainstorm_color.png"
-                                    alt=""
-                                  /> -->
+                                        width="70px"
+                                        height="55px"
+                                        src="https://www.riverbed.com/riverbed-wp-content/uploads/2022/12/brainstorm_color.png"
+                                        alt=""
+                                      /> -->
                                                 <i class="fa-brands fa-draft2digital pe-2"></i>
                                             </div>
                                             <div class="text-box">
@@ -239,11 +292,11 @@
                                         <div class="d-flex align-items-center card-body py-0 pt-2">
                                             <div class="icon-box">
                                                 <!-- <img
-                                    width="70px"
-                                    height="55px"
-                                    src="https://www.riverbed.com/riverbed-wp-content/uploads/2022/12/brainstorm_color.png"
-                                    alt=""
-                                  /> -->
+                                        width="70px"
+                                        height="55px"
+                                        src="https://www.riverbed.com/riverbed-wp-content/uploads/2022/12/brainstorm_color.png"
+                                        alt=""
+                                      /> -->
                                                 <i class="fa-regular fa-chess-queen pe-2"></i>
                                             </div>
                                             <div class="text-box">
@@ -265,11 +318,11 @@
                                         <div class="d-flex align-items-center card-body py-0 pt-2">
                                             <div class="icon-box">
                                                 <!-- <img
-                                    width="70px"
-                                    height="55px"
-                                    src="https://www.riverbed.com/riverbed-wp-content/uploads/2022/12/brainstorm_color.png"
-                                    alt=""
-                                  /> -->
+                                        width="70px"
+                                        height="55px"
+                                        src="https://www.riverbed.com/riverbed-wp-content/uploads/2022/12/brainstorm_color.png"
+                                        alt=""
+                                      /> -->
                                                 <i class="fa-brands fa-figma pe-2"></i>
                                             </div>
                                             <div class="text-box">
@@ -291,11 +344,11 @@
                                         <div class="d-flex align-items-center card-body py-0 pt-2">
                                             <div class="icon-box">
                                                 <!-- <img
-                                    width="70px"
-                                    height="55px"
-                                    src="https://www.riverbed.com/riverbed-wp-content/uploads/2022/12/brainstorm_color.png"
-                                    alt=""
-                                  /> -->
+                                        width="70px"
+                                        height="55px"
+                                        src="https://www.riverbed.com/riverbed-wp-content/uploads/2022/12/brainstorm_color.png"
+                                        alt=""
+                                      /> -->
                                                 <i class="fa-regular fa-gem pe-2"></i>
                                             </div>
                                             <div class="text-box">
@@ -326,11 +379,11 @@
                 </div>
             </div>
             <div class="row gx-5">
-                @foreach ($news_trends as $news_trend) 
+                @foreach ($news_trends as $news_trend)
                     <div class="col">
-                        <a href="trends-single.html">
+                        <a href="{{ route('trend.') }}">
                             <div class="card projects-card rounded-0">
-                                <img src="{{ asset('storage/content/'.$news_trend->thumbnail_image) }}"
+                                <img src="{{ asset('storage/content/' . $news_trend->thumbnail_image) }}"
                                     class="card-img-top img-fluid rounded-0" alt="{{ $news_trend->title }}" />
                                 <div class="card-body">
                                     <p class="card-text project-para">{{ $news_trend->title }}</p>
