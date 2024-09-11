@@ -572,9 +572,9 @@
                                                                         <td>
                                                                             <div>
                                                                                 <input name="source_one_price" value="{{ old('source_one_price') }}"
-                                                                                    class="form-control form-control-sm"
+                                                                                    class="form-control form-control-sm" step="0.01"
                                                                                     placeholder="Enter source one price"
-                                                                                    type="text" />
+                                                                                    type="number" />
                                                                             </div>
                                                                         </td>
                                                                         <td>
@@ -638,9 +638,9 @@
                                                                         <td>
                                                                             <div>
                                                                                 <input name="source_two_price" value="{{ old('source_two_price') }}"
-                                                                                    class="form-control form-control-sm"
+                                                                                    class="form-control form-control-sm" step="0.01"
                                                                                     placeholder="Enter source two price"
-                                                                                    type="text" />
+                                                                                    type="number" />
                                                                             </div>
                                                                         </td>
                                                                         <td>
