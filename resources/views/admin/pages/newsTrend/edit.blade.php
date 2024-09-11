@@ -22,8 +22,8 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('admin.news-trend.update',$content->id) }}" class="needs-validation" method="post" enctype="multipart/form-data"
-                            novalidate>
+                        <form action="{{ route('admin.news-trend.update', $content->id) }}" class="needs-validation"
+                            method="post" enctype="multipart/form-data" novalidate>
                             @csrf
                             @method('PUT')
                             <div class="row">
@@ -34,20 +34,35 @@
                                             id="field2" multiple multiselect-search="true" multiselect-select-all="true"
                                             multiselect-max-items="2">
                                             @php
-                                                $brandIds = isset($content->brand_id) ? json_decode($content->brand_id, true) : [];
+                                                $brandIds = isset($newsTrend->brand_id)
+                                                    ? json_decode($newsTrend->brand_id, true)
+                                                    : [];
+                                            @endphp
+                                            @foreach ($brands as $id => $title)
+                                                <option value="{{ $id }}"
+                                                    {{ is_array($brandIds) && in_array($id, $brandIds) ? 'selected' : '' }}>
+                                                    {{ $title }}
+                                                </option>
+                                            @endforeach
+                                            {{-- @php
+                                                $brandIds = isset($content->brand_id)
+                                                    ? json_decode($content->brand_id, true)
+                                                    : [];
                                             @endphp
                                             @foreach ($brands as $id => $title)
                                                 <option value="{{ $id }}"
                                                     {{ in_array($id, $brandIds) ? 'selected' : '' }}>
                                                     {{ $title }}
                                                 </option>
-                                            @endforeach
+                                            @endforeach --}}
                                         </select>
                                         <div class="invalid-feedback"> Please Select Brand.
                                         </div>
                                     </div>
                                     @php
-                                        $categoryIds = isset($product->category_id) ? json_decode($product->category_id, true) : [];
+                                        $categoryIds = isset($product->category_id)
+                                            ? json_decode($product->category_id, true)
+                                            : [];
                                     @endphp
                                     <div class="fv-row mb-3">
                                         <label class="form-label">Category Name</label>
@@ -72,12 +87,13 @@
                                             id="field2" multiple multiselect-search="true" multiselect-select-all="true"
                                             multiselect-max-items="2">
                                             @php
-                                                $industryIds = isset($content->industry_id) ? json_decode($content->industry_id, true) : [];
+                                                $industryIds = isset($content->industry_id)
+                                                    ? json_decode($content->industry_id, true)
+                                                    : [];
                                             @endphp
 
                                             @foreach ($industries as $id => $name)
-                                                <option value="{{ $id }}"
-                                                    {{ in_array($id, $industryIds) ? 'selected' : '' }}>
+                                                <option value="{{ $id }}" {{ is_array($industryIds) && in_array($id, $industryIds) ? 'selected' : '' }}>
                                                     {{ $name }}
                                                 </option>
                                             @endforeach
@@ -91,12 +107,14 @@
                                             id="field2" multiple multiselect-search="true" multiselect-select-all="true"
                                             multiselect-max-items="2">
                                             @php
-                                                $solutionIds = isset($content->solution_id) ? json_decode($content->solution_id, true) : [];
+                                                $solutionIds = isset($content->solution_id)
+                                                    ? json_decode($content->solution_id, true)
+                                                    : [];
                                             @endphp
 
                                             @foreach ($solutions as $id => $name)
                                                 <option value="{{ $id }}"
-                                                    {{ in_array($id, $solutionIds) ? 'selected' : '' }}>
+                                                {{ is_array($solutionIds) && in_array($id, $solutionIds) ? 'selected' : '' }}>
                                                     {{ $name }}
                                                 </option>
                                             @endforeach
