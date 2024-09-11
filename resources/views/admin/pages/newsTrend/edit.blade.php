@@ -42,7 +42,7 @@
                                             @foreach ($brands as $id => $title)
                                                 <option value="{{ $id }}"
                                                     {{ is_array($brandIds) && in_array($id, $brandIds) ? 'selected' : '' }}>
-                                                    {{ htmlspecialchars($title, ENT_QUOTES, 'UTF-8') }}
+                                                    {{ is_string($title) ? htmlspecialchars($title, ENT_QUOTES, 'UTF-8') : '' }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -84,7 +84,7 @@
                                             @foreach ($industries as $id => $name)
                                                 <option value="{{ $id }}"
                                                     {{ is_array($industryIds) && in_array($id, $industryIds) ? 'selected' : '' }}>
-                                                    {{ htmlspecialchars($name, ENT_QUOTES, 'UTF-8') }}
+                                                    {{ is_string($name) ? htmlspecialchars($name, ENT_QUOTES, 'UTF-8') : '' }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -104,7 +104,7 @@
                                             @foreach ($solutions as $id => $name)
                                                 <option value="{{ $id }}"
                                                     {{ is_array($solutionIds) && in_array($id, $solutionIds) ? 'selected' : '' }}>
-                                                    {{ htmlspecialchars($name, ENT_QUOTES, 'UTF-8') }}
+                                                    {{ is_string($name) ? htmlspecialchars($name, ENT_QUOTES, 'UTF-8') : '' }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -234,6 +234,7 @@
                                     </div>
                                 </div>
                             </div>
+
 
                             <div class="row">
                                 <div class="col-lg-12 col-sm-12">
