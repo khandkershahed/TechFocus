@@ -381,7 +381,7 @@
             <div class="row gx-5">
                 @foreach ($news_trends as $news_trend)
                     <div class="col">
-                        <a href="{{ route('trend.') }}">
+                        <a href="{{ route('content.details',$news_trend->slug) }}">
                             <div class="card projects-card rounded-0">
                                 <img src="{{ asset('storage/content/' . $news_trend->thumbnail_image) }}"
                                     class="card-img-top img-fluid rounded-0" alt="{{ $news_trend->title }}" />
