@@ -86,7 +86,7 @@
                                                             <input name="mf_code"
                                                                 class="form-control form-control-sm form-control-solid"
                                                                 placeholder="Eg: MF-2647374" type="text"
-                                                                value="{{ $product->mf_code }}"/>
+                                                                value="{{ $product->mf_code }}" />
                                                             <div class="invalid-feedback"> Please Enter MF Code.</div>
                                                         </div>
                                                     </div>
@@ -98,7 +98,7 @@
                                                             <input name="notification_days"
                                                                 class="form-control form-control-sm form-control-solid"
                                                                 placeholder="Eg:15 days,30 days" type="text"
-                                                                value="{{ $product->notification_days }}" required/>
+                                                                value="{{ $product->notification_days }}" required />
                                                             <div class="invalid-feedback"> Please Enter Notification Days.
                                                             </div>
                                                         </div>
@@ -186,7 +186,29 @@
                                                             <div class="invalid-feedback"> Please Enter Price Status.</div>
                                                         </div>
                                                     </div>
+                                                    <div class="col-lg-3 mb-3">
+                                                        <div class="fv-row mb-3">
+                                                            <div class="rfq_price d-none">
+                                                                <label class="ms-1" for="price_status">SAS Price <span
+                                                                        class="text-danger">*</span></label>
+                                                                <input class="form-control form-control-sm" type="text"
+                                                                    name="sas_price" placeholder="RFQ Price for Sas">
+                                                            </div>
+                                                            <div class="price d-none">
+                                                                <label class="ms-1" for="price_status">SAS Price <span
+                                                                        class="text-danger">*</span></label>
+                                                                <input class="form-control form-control-sm" type="text"
+                                                                    name="sas_price" placeholder="Price for Sas">
+                                                            </div>
+                                                            <div class="offer_price d-none">
+                                                                <label class="ms-1" for="price_status">SAS Price <span
+                                                                        class="text-danger">*</span></label>
+                                                                <input class="form-control form-control-sm" type="text"
+                                                                    name="sas_price" placeholder="Starting Price for Sas">
+                                                            </div>
+                                                        </div>
 
+                                                    </div>
                                                     <div class="col-lg-3 mb-3">
                                                         <div class="fv-row mb-3">
                                                             <label class="form-label required">Brand Name</label>
@@ -1111,17 +1133,17 @@
         });
 
 
-        $('.price_select').on('change', function() {
+        $('.price_status').on('change', function() {
             var price_value = $(this).find(":selected").val();
             if (price_value == 'rfq') {
                 // alert(price_value);
                 $(".rfq_price").removeClass("d-none");
-                $(".offer_price").addClass("d-none");
+                // $(".offer_price").addClass("d-none");
                 $(".price").addClass("d-none");
-            } else if (price_value == 'offer_price') {
-                $(".offer_price").removeClass("d-none");
-                $(".rfq_price").addClass("d-none");
-                $(".price").addClass("d-none");
+            // } else if (price_value == 'offer_price') {
+            //     $(".offer_price").removeClass("d-none");
+            //     $(".rfq_price").addClass("d-none");
+            //     $(".price").addClass("d-none");
             } else {
                 $(".price").removeClass("d-none");
                 $(".offer_price").addClass("d-none");

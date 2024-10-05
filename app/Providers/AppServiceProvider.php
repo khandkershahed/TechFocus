@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Exception;
 use App\Models\Admin;
 use App\Models\HR\Task;
 use App\Models\Admin\Site;
@@ -107,27 +108,28 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        View::share('all_employees', null);
+        View::share('site', null);
+        View::share('dynamic_css', null);
+        View::share('agendas', null);
 
-        if (Schema::hasTable('admins')) {
-            View::share('all_employees', Admin::get());
-        } else {
-            View::share('all_employees', null);
+        try {
+            if (Schema::hasTable('admins')) {
+                View::share('all_employees', Admin::get());
+            }
+            if (Schema::hasTable('sites')) {
+                View::share('site', Site::first());
+            }
+            if (Schema::hasTable('dynamic_csses')) {
+                View::share('dynamic_css', DynamicCss::first());
+            }
+            if (Schema::hasTable('tasks')) {
+                View::share('agendas', Task::where('task_type', 'agenda')->get());
+            }
+        } catch (Exception $e) {
+            // Log the exception if needed
         }
-        if (Schema::hasTable('sites')) {
-            View::share('site', Site::first());
-        } else {
-            View::share('site', null);
-        }
-        if (Schema::hasTable('dynamic_csses')) {
-            View::share('dynamic_css', DynamicCss::first());
-        } else {
-            View::share('dynamic_css', null);
-        }
-        if (Schema::hasTable('tasks')) {
-            View::share('agendas', Task::where('task_type' , 'agenda')->get());
-        } else {
-            View::share('agendas', null);
-        }
+
         Paginator::useBootstrap();
     }
 }

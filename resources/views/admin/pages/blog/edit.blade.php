@@ -22,8 +22,8 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('admin.news-trend.update',$content->id) }}" class="needs-validation" method="post" enctype="multipart/form-data"
-                            novalidate>
+                        <form action="{{ route('admin.news-trend.update', $content->id) }}" class="needs-validation"
+                            method="post" enctype="multipart/form-data" novalidate>
                             @csrf
                             @method('PUT')
                             <div class="row">
@@ -34,20 +34,24 @@
                                             id="field2" multiple multiselect-search="true" multiselect-select-all="true"
                                             multiselect-max-items="2">
                                             @php
-                                                $brandIds = isset($content->brand_id) ? json_decode($content->brand_id, true) : [];
+                                                $brandIds = isset($content->brand_id)
+                                                    ? json_decode($content->brand_id, true)
+                                                    : [];
                                             @endphp
-                                            @foreach ($brands as $id => $title)
-                                                <option value="{{ $id }}"
-                                                    {{ in_array($id, $brandIds) ? 'selected' : '' }}>
-                                                    {{ $title }}
+
+                                            @foreach ($brands as $brand)
+                                                <option value="{{ $brand->id }}"
+                                                    {{ in_array($brand->id, $brandIds) ? 'selected' : '' }}>
+                                                    {{ $brand->name }}
                                                 </option>
                                             @endforeach
                                         </select>
-                                        <div class="invalid-feedback"> Please Select Brand.
-                                        </div>
+                                        <div class="invalid-feedback"> Please Select Brand.</div>
                                     </div>
                                     @php
-                                        $categoryIds = isset($product->category_id) ? json_decode($product->category_id, true) : [];
+                                        $categoryIds = isset($product->category_id)
+                                            ? json_decode($product->category_id, true)
+                                            : [];
                                     @endphp
                                     <div class="fv-row mb-3">
                                         <label class="form-label">Category Name</label>
@@ -72,7 +76,9 @@
                                             id="field2" multiple multiselect-search="true" multiselect-select-all="true"
                                             multiselect-max-items="2">
                                             @php
-                                                $industryIds = isset($content->industry_id) ? json_decode($content->industry_id, true) : [];
+                                                $industryIds = isset($content->industry_id)
+                                                    ? json_decode($content->industry_id, true)
+                                                    : [];
                                             @endphp
 
                                             @foreach ($industries as $id => $name)
@@ -91,7 +97,9 @@
                                             id="field2" multiple multiselect-search="true" multiselect-select-all="true"
                                             multiselect-max-items="2">
                                             @php
-                                                $solutionIds = isset($content->solution_id) ? json_decode($content->solution_id, true) : [];
+                                                $solutionIds = isset($content->solution_id)
+                                                    ? json_decode($content->solution_id, true)
+                                                    : [];
                                             @endphp
 
                                             @foreach ($solutions as $id => $name)
@@ -110,8 +118,9 @@
                                         <div class="col-lg-8 mb-3">
                                             <label for="validationCustom01" class="form-label required ">Badge
                                             </label>
-                                            <input type="text" class="form-control form-control-solid form-control-sm" value="{{ $content->badge }}"
-                                                id="validationCustom01" placeholder="Enter Badge" name="badge" required>
+                                            <input type="text" class="form-control form-control-solid form-control-sm"
+                                                value="{{ $content->badge }}" id="validationCustom01"
+                                                placeholder="Enter Badge" name="badge" required>
                                             <div class="invalid-feedback"> Please Enter Badge </div>
                                         </div>
                                         <div class="col-lg-4 mb-3">

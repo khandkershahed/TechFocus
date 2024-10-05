@@ -64,7 +64,8 @@
                                                             <label class="form-label required">Product Name</label>
                                                             <input name="name"
                                                                 class="form-control form-control-sm form-control-solid"
-                                                                placeholder="Enter Product Name" type="text" value="{{ old('name') }}" required />
+                                                                placeholder="Enter Product Name" type="text"
+                                                                value="{{ old('name') }}" required />
                                                             <div class="invalid-feedback"> Please Enter Product Name.</div>
                                                         </div>
                                                     </div>
@@ -73,7 +74,7 @@
                                                             <label class="form-label required">SKU Code</label>
                                                             <input name="sku_code"
                                                                 class="form-control form-control-sm form-control-solid"
-                                                                placeholder="Eg: NG-2647374" type="text" required/>
+                                                                placeholder="Eg: NG-2647374" type="text" required />
                                                             <div class="invalid-feedback"> Please Enter SKU Code.</div>
                                                         </div>
                                                     </div>
@@ -82,7 +83,8 @@
                                                             <label class="form-label">MF Code</label>
                                                             <input name="mf_code"
                                                                 class="form-control form-control-sm form-control-solid"
-                                                                placeholder="Eg: MF-2647374" type="text" value="{{ old('mf_code') }}" />
+                                                                placeholder="Eg: MF-2647374" type="text"
+                                                                value="{{ old('mf_code') }}" />
                                                             <div class="invalid-feedback"> Please Enter MF Code.</div>
                                                         </div>
                                                     </div>
@@ -93,7 +95,8 @@
                                                             <label class="form-label required">Notification Days</label>
                                                             <input name="notification_days"
                                                                 class="form-control form-control-sm form-control-solid"
-                                                                placeholder="Eg:15 days,30 days" type="text" value="{{ old('notification_days') }}" required />
+                                                                placeholder="Eg:15 days,30 days" type="text"
+                                                                value="{{ old('notification_days') }}" required />
                                                             <div class="invalid-feedback"> Please Enter Notification Days.
                                                             </div>
                                                         </div>
@@ -103,9 +106,8 @@
                                                     <div class="col-lg-2 mb-3">
                                                         <div class="fv-row mb-3">
                                                             <label class="form-label required">Product Type</label>
-                                                            <select class="form-control select"
-                                                                name="product_type" data-control="select2"
-                                                                data-hide-search="true"
+                                                            <select class="form-control select" name="product_type"
+                                                                data-control="select2" data-hide-search="true"
                                                                 data-placeholder="Select an Product Type"
                                                                 data-allow-clear="true" required>
                                                                 <option></option>
@@ -122,8 +124,7 @@
                                                     <div class="col-lg-2 mb-3">
                                                         <div class="fv-row mb-3">
                                                             <label class="form-label required">Stock Status</label>
-                                                            <select
-                                                                class="form-control select stock_select"
+                                                            <select class="form-control select stock_select"
                                                                 name="stock" data-control="select2"
                                                                 data-placeholder="Select Stock Status"
                                                                 data-allow-clear="true" required>
@@ -159,8 +160,7 @@
                                                     <div class="col-lg-2 mb-3">
                                                         <div class="fv-row mb-3">
                                                             <label class="form-label required">Price Status</label>
-                                                            <select class="form-control select"
-                                                                data-control="select2"
+                                                            <select class="form-control select" data-control="select2"
                                                                 data-placeholder="Select Price Status" name="price_status"
                                                                 data-hide-search="true" data-allow-clear="true" required>
                                                                 <option></option>
@@ -171,12 +171,34 @@
                                                             <div class="invalid-feedback"> Please Enter Price Status.</div>
                                                         </div>
                                                     </div>
+                                                    <div class="col-lg-3 mb-3">
+                                                        <div class="fv-row mb-3">
+                                                            <div class="rfq_price d-none">
+                                                                <label class="ms-1" for="price_status">SAS Price <span
+                                                                        class="text-danger">*</span></label>
+                                                                <input class="form-control form-control-sm" type="text"
+                                                                    name="sas_price" placeholder="RFQ Price for Sas">
+                                                            </div>
+                                                            <div class="price d-none">
+                                                                <label class="ms-1" for="price_status">SAS Price <span
+                                                                        class="text-danger">*</span></label>
+                                                                <input class="form-control form-control-sm" type="text"
+                                                                    name="sas_price" placeholder="Price for Sas">
+                                                            </div>
+                                                            <div class="offer_price d-none">
+                                                                <label class="ms-1" for="price_status">SAS Price <span
+                                                                        class="text-danger">*</span></label>
+                                                                <input class="form-control form-control-sm" type="text"
+                                                                    name="sas_price" placeholder="Starting Price for Sas">
+                                                            </div>
+                                                        </div>
 
+                                                    </div>
                                                     <div class="col-lg-3 mb-3">
                                                         <div class="fv-row mb-3">
                                                             <label class="form-label required">Brand Name</label>
-                                                            <select class="form-control select"
-                                                                name="brand_id" data-control="select2"
+                                                            <select class="form-control select" name="brand_id"
+                                                                data-control="select2"
                                                                 data-placeholder="Select an Brand Name"
                                                                 data-allow-clear="true" required>
                                                                 <option></option>
@@ -191,9 +213,9 @@
                                                     <div class="col-lg-3 mb-3">
                                                         <div class="fv-row mb-3">
                                                             <label class="form-label required">Category Name</label>
-                                                            <select class="form-control select"
-                                                                name="category_id[]" id="field2" multiple
-                                                                multiselect-search="true" multiselect-select-all="true">
+                                                            <select class="form-control select" name="category_id[]"
+                                                                id="field2" multiple multiselect-search="true"
+                                                                multiselect-select-all="true">
                                                                 @if (count($categories) > 0)
                                                                     @foreach ($categories->whereNull('parent_id') as $category)
                                                                         @include(
@@ -214,10 +236,9 @@
                                                     <div class="col-lg-3 mb-3">
                                                         <div class="fv-row mb-3">
                                                             <label class="form-label">Industry Name</label>
-                                                            <select class="form-control select"
-                                                                name="industry_id[]" id="field2" multiple
-                                                                multiselect-search="true" multiselect-select-all="true"
-                                                                multiselect-max-items="1">
+                                                            <select class="form-control select" name="industry_id[]"
+                                                                id="field2" multiple multiselect-search="true"
+                                                                multiselect-select-all="true" multiselect-max-items="1">
                                                                 @if (count($industries) > 0)
                                                                     @foreach ($industries as $industry)
                                                                         <option value="{{ $industry->id }}">
@@ -234,10 +255,9 @@
                                                     <div class="col-lg-3 mb-3">
                                                         <div class="fv-row mb-3">
                                                             <label class="form-label">Solution Name</label>
-                                                            <select class="form-control select"
-                                                                name="solution_id[]" id="field2" multiple
-                                                                multiselect-search="true" multiselect-select-all="true"
-                                                                multiselect-max-items="1">
+                                                            <select class="form-control select" name="solution_id[]"
+                                                                id="field2" multiple multiselect-search="true"
+                                                                multiselect-select-all="true" multiselect-max-items="1">
                                                                 @if (count($solutions) > 0)
                                                                     @foreach ($solutions as $solution)
                                                                         <option value="{{ $solution->id }}">
@@ -305,8 +325,8 @@
                                                                     </h5>
                                                                 </div>
                                                             </label>
-                                                            <input type="file" id="files" name="multi_img[]" multiple
-                                                                class="form-control" style="display: none;"
+                                                            <input type="file" id="files" name="multi_img[]"
+                                                                multiple class="form-control" style="display: none;"
                                                                 onchange="console.log(this.selected.value)" />
                                                         </div>
                                                     </div>
@@ -338,18 +358,16 @@
                                                 <div class="row">
                                                     <div class="col-lg-9">
                                                         <label class="form-label">Tags</label>
-                                                        <input type="text" name="tags"
-                                                            value="{{ old('tags') }}"
+                                                        <input type="text" name="tags" value="{{ old('tags') }}"
                                                             class="form-control form-control-sm visually-hidden"
                                                             data-role="tagsinput" placeholder="Product Tags">
                                                     </div>
                                                     <div class="col-lg-3 mb-3">
                                                         <div class="fv-row mb-3">
                                                             <label class="form-label required">Product Colors</label>
-                                                            <select class="form-control select"
-                                                                name="color_id[]" id="field2" multiple
-                                                                multiselect-search="true" multiselect-select-all="true"
-                                                                multiselect-max-items="2">
+                                                            <select class="form-control select" name="color_id[]"
+                                                                id="field2" multiple multiselect-search="true"
+                                                                multiselect-select-all="true" multiselect-max-items="2">
                                                                 @if (count($colors) > 0)
                                                                     @foreach ($colors as $color)
                                                                         <option value="{{ $color->id }}">
@@ -360,15 +378,14 @@
                                                             <div class="invalid-feedback"> Please Enter Product Colors.
                                                             </div>
                                                         </div>
-                                                        
+
                                                     </div>
                                                     <div class="col-lg-6 mb-3">
                                                         <div class="fv-row mb-3">
                                                             <label class="form-label">Parent Products</label>
-                                                            <select class="form-control select"
-                                                                name="parent_id[]" id="field2" multiple
-                                                                multiselect-search="true" multiselect-select-all="true"
-                                                                multiselect-max-items="2">
+                                                            <select class="form-control select" name="parent_id[]"
+                                                                id="field2" multiple multiselect-search="true"
+                                                                multiselect-select-all="true" multiselect-max-items="2">
                                                                 @if (count($products) > 0)
                                                                     @foreach ($products as $parent_product)
                                                                         <option value="{{ $parent_product->id }}">
@@ -383,10 +400,9 @@
                                                     <div class="col-lg-6 mb-3">
                                                         <div class="fv-row mb-3">
                                                             <label class="form-label">Child Products</label>
-                                                            <select class="form-control select"
-                                                                name="child_id[]" id="field2" multiple
-                                                                multiselect-search="true" multiselect-select-all="true"
-                                                                multiselect-max-items="2">
+                                                            <select class="form-control select" name="child_id[]"
+                                                                id="field2" multiple multiselect-search="true"
+                                                                multiselect-select-all="true" multiselect-max-items="2">
                                                                 @if (count($products) > 0)
                                                                     @foreach ($products as $child_product)
                                                                         <option value="{{ $child_product->id }}">
@@ -394,19 +410,20 @@
                                                                     @endforeach
                                                                 @endif
                                                             </select>
-                                                            <div class="invalid-feedback"> Please Enter Child Products.</div>
+                                                            <div class="invalid-feedback"> Please Enter Child Products.
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-3 mb-3">
                                                         <div class="fv-row mb-3">
                                                             <label class="form-label">Currency</label>
-                                                            <select class="form-control select"
-                                                                name="currency_id" data-control="select2"
-                                                                data-placeholder="Select Currency"
+                                                            <select class="form-control select" name="currency_id"
+                                                                data-control="select2" data-placeholder="Select Currency"
                                                                 data-allow-clear="true">
                                                                 <option></option>
                                                                 @foreach ($currencys as $currency)
-                                                                    <option value="{{ $currency->id }}">{{ $currency->name }}
+                                                                    <option value="{{ $currency->id }}">
+                                                                        {{ $currency->name }}
                                                                     </option>
                                                                 @endforeach
                                                             </select>
@@ -555,7 +572,8 @@
                                                                     <tr>
                                                                         <td>
                                                                             <div>
-                                                                                <input name="source_one_name" value="{{ old('source_one_name') }}"
+                                                                                <input name="source_one_name"
+                                                                                    value="{{ old('source_one_name') }}"
                                                                                     class="form-control form-control-sm"
                                                                                     placeholder="Enter source one Name"
                                                                                     type="text" />
@@ -563,7 +581,8 @@
                                                                         </td>
                                                                         <td>
                                                                             <div>
-                                                                                <input name="source_one_link" value="{{ old('source_one_link') }}"
+                                                                                <input name="source_one_link"
+                                                                                    value="{{ old('source_one_link') }}"
                                                                                     class="form-control form-control-sm"
                                                                                     placeholder="Enter source one link"
                                                                                     type="text" />
@@ -571,15 +590,18 @@
                                                                         </td>
                                                                         <td>
                                                                             <div>
-                                                                                <input name="source_one_price" value="{{ old('source_one_price') }}"
-                                                                                    class="form-control form-control-sm" step="0.01"
+                                                                                <input name="source_one_price"
+                                                                                    value="{{ old('source_one_price') }}"
+                                                                                    class="form-control form-control-sm"
+                                                                                    step="0.01"
                                                                                     placeholder="Enter source one price"
                                                                                     type="number" />
                                                                             </div>
                                                                         </td>
                                                                         <td>
                                                                             <div>
-                                                                                <input name="source_one_estimate_time" value="{{ old('source_one_estimate_time') }}"
+                                                                                <input name="source_one_estimate_time"
+                                                                                    value="{{ old('source_one_estimate_time') }}"
                                                                                     class="form-control form-control-sm"
                                                                                     placeholder="Enter source one estimate_time"
                                                                                     type="text" />
@@ -587,7 +609,8 @@
                                                                         </td>
                                                                         <td>
                                                                             <div>
-                                                                                <input name="source_one_principal_time" value="{{ old('source_one_principal_time') }}"
+                                                                                <input name="source_one_principal_time"
+                                                                                    value="{{ old('source_one_principal_time') }}"
                                                                                     class="form-control form-control-sm"
                                                                                     placeholder="Enter source one principal_time"
                                                                                     type="text" />
@@ -595,7 +618,8 @@
                                                                         </td>
                                                                         <td>
                                                                             <div>
-                                                                                <input name="source_one_shipping_time" value="{{ old('source_one_shipping_time') }}"
+                                                                                <input name="source_one_shipping_time"
+                                                                                    value="{{ old('source_one_shipping_time') }}"
                                                                                     class="form-control form-control-sm"
                                                                                     placeholder="Enter source one shipping_time"
                                                                                     type="text" />
@@ -603,7 +627,8 @@
                                                                         </td>
                                                                         <td>
                                                                             <div>
-                                                                                <input name="source_one_location" value="{{ old('source_one_location') }}"
+                                                                                <input name="source_one_location"
+                                                                                    value="{{ old('source_one_location') }}"
                                                                                     class="form-control form-control-sm"
                                                                                     placeholder="Enter source one location"
                                                                                     type="text" />
@@ -611,7 +636,8 @@
                                                                         </td>
                                                                         <td>
                                                                             <div>
-                                                                                <input name="source_one_country" value="{{ old('source_one_country') }}"
+                                                                                <input name="source_one_country"
+                                                                                    value="{{ old('source_one_country') }}"
                                                                                     class="form-control form-control-sm"
                                                                                     placeholder="Enter source one country"
                                                                                     type="text" />
@@ -621,7 +647,8 @@
                                                                     <tr>
                                                                         <td>
                                                                             <div>
-                                                                                <input name="source_two_name" value="{{ old('source_two_name') }}"
+                                                                                <input name="source_two_name"
+                                                                                    value="{{ old('source_two_name') }}"
                                                                                     class="form-control form-control-sm"
                                                                                     placeholder="Enter source two name"
                                                                                     type="text" />
@@ -629,7 +656,8 @@
                                                                         </td>
                                                                         <td>
                                                                             <div>
-                                                                                <input name="source_two_link" value="{{ old('source_two_link') }}"
+                                                                                <input name="source_two_link"
+                                                                                    value="{{ old('source_two_link') }}"
                                                                                     class="form-control form-control-sm"
                                                                                     placeholder="Enter source two link"
                                                                                     type="text" />
@@ -637,15 +665,18 @@
                                                                         </td>
                                                                         <td>
                                                                             <div>
-                                                                                <input name="source_two_price" value="{{ old('source_two_price') }}"
-                                                                                    class="form-control form-control-sm" step="0.01"
+                                                                                <input name="source_two_price"
+                                                                                    value="{{ old('source_two_price') }}"
+                                                                                    class="form-control form-control-sm"
+                                                                                    step="0.01"
                                                                                     placeholder="Enter source two price"
                                                                                     type="number" />
                                                                             </div>
                                                                         </td>
                                                                         <td>
                                                                             <div>
-                                                                                <input name="source_two_estimate_time" value="{{ old('source_two_estimate_time') }}"
+                                                                                <input name="source_two_estimate_time"
+                                                                                    value="{{ old('source_two_estimate_time') }}"
                                                                                     class="form-control form-control-sm"
                                                                                     placeholder="Enter source two estimate_time"
                                                                                     type="text" />
@@ -653,7 +684,8 @@
                                                                         </td>
                                                                         <td>
                                                                             <div>
-                                                                                <input name="source_two_principal_time" value="{{ old('source_two_principal_time') }}"
+                                                                                <input name="source_two_principal_time"
+                                                                                    value="{{ old('source_two_principal_time') }}"
                                                                                     class="form-control form-control-sm"
                                                                                     placeholder="Enter source two principal_time"
                                                                                     type="text" />
@@ -661,7 +693,8 @@
                                                                         </td>
                                                                         <td>
                                                                             <div>
-                                                                                <input name="source_two_shipping_time" value="{{ old('source_two_shipping_time') }}"
+                                                                                <input name="source_two_shipping_time"
+                                                                                    value="{{ old('source_two_shipping_time') }}"
                                                                                     class="form-control form-control-sm"
                                                                                     placeholder="Enter source two shipping_time"
                                                                                     type="text" />
@@ -669,7 +702,8 @@
                                                                         </td>
                                                                         <td>
                                                                             <div>
-                                                                                <input name="source_two_location" value="{{ old('source_two_location') }}"
+                                                                                <input name="source_two_location"
+                                                                                    value="{{ old('source_two_location') }}"
                                                                                     class="form-control form-control-sm"
                                                                                     placeholder="Enter source two location"
                                                                                     type="text" />
@@ -677,7 +711,8 @@
                                                                         </td>
                                                                         <td>
                                                                             <div>
-                                                                                <input name="source_two_country" value="{{ old('source_two_country') }}"
+                                                                                <input name="source_two_country"
+                                                                                    value="{{ old('source_two_country') }}"
                                                                                     class="form-control form-control-sm"
                                                                                     placeholder="Enter source two country"
                                                                                     type="text" />
@@ -704,7 +739,8 @@
                                                                     <tr>
                                                                         <td>
                                                                             <div>
-                                                                                <input name="competitor_one_name" value="{{ old('competitor_one_name') }}"
+                                                                                <input name="competitor_one_name"
+                                                                                    value="{{ old('competitor_one_name') }}"
                                                                                     class="form-control form-control-sm"
                                                                                     placeholder="Enter Product Name"
                                                                                     type="text" />
@@ -712,7 +748,8 @@
                                                                         </td>
                                                                         <td>
                                                                             <div>
-                                                                                <input name="competitor_one_link" value="{{ old('competitor_one_link') }}"
+                                                                                <input name="competitor_one_link"
+                                                                                    value="{{ old('competitor_one_link') }}"
                                                                                     class="form-control form-control-sm"
                                                                                     placeholder="Enter Product Name"
                                                                                     type="text" />
@@ -720,7 +757,8 @@
                                                                         </td>
                                                                         <td>
                                                                             <div>
-                                                                                <input name="competitor_one_price" value="{{ old('competitor_one_price') }}"
+                                                                                <input name="competitor_one_price"
+                                                                                    value="{{ old('competitor_one_price') }}"
                                                                                     class="form-control form-control-sm"
                                                                                     placeholder="Enter Product Name"
                                                                                     type="text" />
@@ -730,7 +768,8 @@
                                                                     <tr>
                                                                         <td>
                                                                             <div>
-                                                                                <input name="competitor_two_name" value="{{ old('competitor_two_name') }}"
+                                                                                <input name="competitor_two_name"
+                                                                                    value="{{ old('competitor_two_name') }}"
                                                                                     class="form-control form-control-sm"
                                                                                     placeholder="Enter Product Name"
                                                                                     type="text" />
@@ -738,7 +777,8 @@
                                                                         </td>
                                                                         <td>
                                                                             <div>
-                                                                                <input name="competitor_two_link" value="{{ old('competitor_two_link') }}"
+                                                                                <input name="competitor_two_link"
+                                                                                    value="{{ old('competitor_two_link') }}"
                                                                                     class="form-control form-control-sm"
                                                                                     placeholder="Enter Product Name"
                                                                                     type="text" />
@@ -746,7 +786,8 @@
                                                                         </td>
                                                                         <td>
                                                                             <div>
-                                                                                <input name="competitor_two_price" value="{{ old('competitor_two_price') }}"
+                                                                                <input name="competitor_two_price"
+                                                                                    value="{{ old('competitor_two_price') }}"
                                                                                     class="form-control form-control-sm"
                                                                                     placeholder="Enter Product Name"
                                                                                     type="text" />
@@ -759,8 +800,8 @@
                                                     </div>
                                                     <div class="col-lg-3">
                                                         <label class="form-label mb-0">Source Contact</label>
-                                                        <textarea rows="1" name="source_contact" value="{{ old('source_contact') }}" class="form-control form-control-sm form-control-solid"
-                                                            placeholder="Enter Source Contact"></textarea>
+                                                        <textarea rows="1" name="source_contact" value="{{ old('source_contact') }}"
+                                                            class="form-control form-control-sm form-control-solid" placeholder="Enter Source Contact"></textarea>
                                                     </div>
                                                     <div class="col-lg-5">
                                                         <div class="table-responsive">
@@ -785,8 +826,9 @@
                                                                                 <div
                                                                                     class="form-check form-check-custom form-check-solid mb-5 me-2">
                                                                                     <input class="form-check-input me-2"
-                                                                                        name="solid_source" value="yes" type="radio"
-                                                                                         id="kt_docs_formvalidation_radio_option_1" />
+                                                                                        name="solid_source" value="yes"
+                                                                                        type="radio"
+                                                                                        id="kt_docs_formvalidation_radio_option_1" />
 
                                                                                     <label class="form-check-label"
                                                                                         for="kt_docs_formvalidation_radio_option_1">
@@ -799,8 +841,9 @@
                                                                                 <div
                                                                                     class="form-check form-check-custom form-check-solid mb-5 me-2">
                                                                                     <input class="form-check-input me-2"
-                                                                                        name="solid_source" value="no" type="radio"
-                                                                                         id="kt_docs_formvalidation_radio_option_2" />
+                                                                                        name="solid_source" value="no"
+                                                                                        type="radio"
+                                                                                        id="kt_docs_formvalidation_radio_option_2" />
 
                                                                                     <label class="form-check-label"
                                                                                         for="kt_docs_formvalidation_radio_option_2">
@@ -823,8 +866,9 @@
                                                                                 <div
                                                                                     class="form-check form-check-custom form-check-solid mb-5 me-2">
                                                                                     <input class="form-check-input me-2"
-                                                                                        name="direct_principal" value="yes"
-                                                                                        type="radio" id="kt_docs_formvalidation_radio_option_1" />
+                                                                                        name="direct_principal"
+                                                                                        value="yes" type="radio"
+                                                                                        id="kt_docs_formvalidation_radio_option_1" />
 
                                                                                     <label class="form-check-label"
                                                                                         for="kt_docs_formvalidation_radio_option_1">
@@ -837,8 +881,9 @@
                                                                                 <div
                                                                                     class="form-check form-check-custom form-check-solid mb-5 me-2">
                                                                                     <input class="form-check-input me-2"
-                                                                                        name="direct_principal" value="no"
-                                                                                        type="radio" id="kt_docs_formvalidation_radio_option_2" />
+                                                                                        name="direct_principal"
+                                                                                        value="no" type="radio"
+                                                                                        id="kt_docs_formvalidation_radio_option_2" />
 
                                                                                     <label class="form-check-label"
                                                                                         for="kt_docs_formvalidation_radio_option_2">
@@ -861,7 +906,8 @@
                                                                                 <div
                                                                                     class="form-check form-check-custom form-check-solid mb-5 me-2">
                                                                                     <input class="form-check-input me-2"
-                                                                                        name="agreement" value="yes" type="radio"
+                                                                                        name="agreement" value="yes"
+                                                                                        type="radio"
                                                                                         id="kt_docs_formvalidation_radio_option_1" />
 
                                                                                     <label class="form-check-label"
@@ -875,7 +921,8 @@
                                                                                 <div
                                                                                     class="form-check form-check-custom form-check-solid mb-5 me-2">
                                                                                     <input class="form-check-input me-2"
-                                                                                        name="agreement" value="no" type="radio"
+                                                                                        name="agreement" value="no"
+                                                                                        type="radio"
                                                                                         id="kt_docs_formvalidation_radio_option_2" />
 
                                                                                     <label class="form-check-label"
@@ -895,13 +942,17 @@
                                                                                 data-placeholder="Select Source Type.."
                                                                                 class="form-control select">
                                                                                 <option></option>
-                                                                                <option class="form-control" value="principal">
+                                                                                <option class="form-control"
+                                                                                    value="principal">
                                                                                     Principal</option>
-                                                                                <option class="form-control" value="distributor">
+                                                                                <option class="form-control"
+                                                                                    value="distributor">
                                                                                     Distributor</option>
-                                                                                <option class="form-control" value="supplier">
+                                                                                <option class="form-control"
+                                                                                    value="supplier">
                                                                                     Supplier</option>
-                                                                                <option class="form-control" value="retailer">
+                                                                                <option class="form-control"
+                                                                                    value="retailer">
                                                                                     Retailer</option>
                                                                             </select>
                                                                         </td>
@@ -949,7 +1000,7 @@
             });
         });
     </script>
-    
+
     <script>
         //---------Sidebar list Show Hide----------
         $(document).ready(function() {
@@ -977,17 +1028,17 @@
         });
 
 
-        $('.price_select').on('change', function() {
+        $('.price_status').on('change', function() {
             var price_value = $(this).find(":selected").val();
             if (price_value == 'rfq') {
                 // alert(price_value);
                 $(".rfq_price").removeClass("d-none");
-                $(".offer_price").addClass("d-none");
+                // $(".offer_price").addClass("d-none");
                 $(".price").addClass("d-none");
-            } else if (price_value == 'offer_price') {
-                $(".offer_price").removeClass("d-none");
-                $(".rfq_price").addClass("d-none");
-                $(".price").addClass("d-none");
+            // } else if (price_value == 'offer_price') {
+            //     $(".offer_price").removeClass("d-none");
+            //     $(".rfq_price").addClass("d-none");
+            //     $(".price").addClass("d-none");
             } else {
                 $(".price").removeClass("d-none");
                 $(".offer_price").addClass("d-none");
@@ -1009,7 +1060,9 @@
             addRemoveLinks: true,
             accept: function(file, done) {
                 console.log(file);
-                $('#productForm').append('<input type="hidden" name="document[ value="{{ old('document') }}"]" value="' + file.file + '">');
+                $('#productForm').append(
+                    '<input type="hidden" name="document[ value="{{ old('document') }}"]" value="' + file
+                    .file + '">');
                 done();
             },
             method: "post",
@@ -1140,7 +1193,7 @@
                 validateAndSwitchTab(targetTabId);
             });
         });
-    </script>
 
-   
+        
+    </script>
 @endpush
