@@ -36,10 +36,10 @@
                                             @php
                                                 $brandIds = isset($content->brand_id) ? json_decode($content->brand_id, true) : [];
                                             @endphp
-                                            @foreach ($brands as $id => $title)
-                                                <option value="{{ $id }}"
-                                                    {{ in_array($id, $brandIds) ? 'selected' : '' }}>
-                                                    {{ $title }}
+                                            @foreach ($brands as $brand)
+                                                <option value="{{ $brand->id }}"
+                                                    {{ in_array($brand->id, $brandIds) ? 'selected' : '' }}>
+                                                    {{ $brand->title }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -75,10 +75,10 @@
                                                 $industryIds = isset($content->industry_id) ? json_decode($content->industry_id, true) : [];
                                             @endphp
 
-                                            @foreach ($industries as $id => $name)
-                                                <option value="{{ $id }}"
-                                                    {{ in_array($id, $industryIds) ? 'selected' : '' }}>
-                                                    {{ $name }}
+                                            @foreach ($industries as $industry)
+                                                <option value="{{ $industry->id }}"
+                                                    {{ in_array($industry->id, $industryIds) ? 'selected' : '' }}>
+                                                    {{ $industry->name }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -94,10 +94,10 @@
                                                 $solutionIds = isset($content->solution_id) ? json_decode($content->solution_id, true) : [];
                                             @endphp
 
-                                            @foreach ($solutions as $id => $name)
-                                                <option value="{{ $id }}"
-                                                    {{ in_array($id, $solutionIds) ? 'selected' : '' }}>
-                                                    {{ $name }}
+                                            @foreach ($solutions as $solution)
+                                                <option value="{{ $solution->id }}"
+                                                    {{ in_array($solution->id, $solutionIds) ? 'selected' : '' }}>
+                                                    {{ $solution->name }}
                                                 </option>
                                             @endforeach
                                         </select>

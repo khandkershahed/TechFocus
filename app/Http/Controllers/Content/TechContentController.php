@@ -14,7 +14,7 @@ class TechContentController extends Controller
     public function index()
     {
         return view('admin.pages.techContent.index', [
-            'contents' => NewsTrend::byType('tech_contents')->latest('id')->get(['title','author','added_by','type','id']),
+            'contents' => NewsTrend::byType('tech_contents')->with('addedBy')->latest('id')->get(['title','author','added_by','type','id']),
         ]);
     }
 

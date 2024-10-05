@@ -14,7 +14,7 @@ class ClientStoryController extends Controller
     public function index()
     {
         return view('admin.pages.story.index', [
-            'contents' => NewsTrend::byType('client_stories')->latest('id')->get(['title','author','added_by','type','id']),
+            'contents' => NewsTrend::byType('client_stories')->with('addedBy')->latest('id')->get(['title','author','added_by','type','id']),
         ]);
     }
 
