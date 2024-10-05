@@ -42,7 +42,7 @@
                                             @foreach ($brands as $brand)
                                                 <option value="{{ $brand->id }}"
                                                     {{ in_array($brand->id, $brandIds) ? 'selected' : '' }}>
-                                                    {{ $brand->name }}
+                                                    {{ $brand->title }}
                                                 </option>
                                             @endforeach
                                         </select>
