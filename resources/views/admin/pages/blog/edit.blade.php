@@ -81,10 +81,10 @@
                                                     : [];
                                             @endphp
 
-                                            @foreach ($industries as $id => $name)
-                                                <option value="{{ $id }}"
-                                                    {{ in_array($id, $industryIds) ? 'selected' : '' }}>
-                                                    {{ $name }}
+                                            @foreach ($industries as $industry)
+                                                <option value="{{ $industry->id }}"
+                                                    {{ in_array($industry->id, $industryIds) ? 'selected' : '' }}>
+                                                    {{ $industry->name }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -102,10 +102,10 @@
                                                     : [];
                                             @endphp
 
-                                            @foreach ($solutions as $id => $name)
-                                                <option value="{{ $id }}"
-                                                    {{ in_array($id, $solutionIds) ? 'selected' : '' }}>
-                                                    {{ $name }}
+                                            @foreach ($solutions as $solution)
+                                                <option value="{{ $solution->id }}"
+                                                    {{ in_array($solution->id, $solutionIds) ? 'selected' : '' }}>
+                                                    {{ $solution->name }}
                                                 </option>
                                             @endforeach
                                         </select>
