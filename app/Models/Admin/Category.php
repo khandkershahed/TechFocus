@@ -20,13 +20,24 @@ class Category extends Model
 
     protected $slugSourceColumn = 'name';
 
+    public function parent()
+    {
+        return $this->belongsTo(Category::class, 'parent_id');
+    }
+
     public function children()
     {
         return $this->hasMany(Category::class, 'parent_id');
     }
 
-    public function parentName()
+    public function parentName(): ?string
     {
-        return Category::where('id', $this->parent_id)->value('name');
+        return $this->parent ? $this->parent->name : null;
+    }
+
+    public function products()
+    {
+        // return Product::whereJsonContains('category_id', (string) $this->id);
+        return Product::whereJsonContains('category_id', json_encode($this->id));
     }
 }

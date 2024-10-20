@@ -20,7 +20,8 @@ class SiteController extends Controller
     {
         $data = [
             'categories'    => Category::with('children.children.children.children.children.children.children.children.children.children')->where('is_parent', '1')->get(['id', 'parent_id', 'name', 'slug']),
-            'products'      => Product::with('brand')->where('product_status','product')->where('status','active')->inRandomOrder()->limit(5)->get(),
+            'products'      => Product::with('brand')->where('status','active')->inRandomOrder()->limit(5)->get(),
+            // 'products'      => Product::with('brand')->where('product_status','product')->where('status','active')->inRandomOrder()->limit(5)->get(),
             'news_trends'   => NewsTrend::where('type','trends')->limit(4)->get(),
             'solutions'     => SolutionDetail::latest()->limit(4)->get(),
         ];
@@ -35,7 +36,10 @@ class SiteController extends Controller
     }
     public function category($slug)
     {
-        return view('frontend.pages.category.category');
+        $data = [
+            'category'     => Category::where('slug' , $slug)->first(),
+        ];
+        return view('frontend.pages.category.category',$data);
     }
     public function filterProducts($slug)
     {

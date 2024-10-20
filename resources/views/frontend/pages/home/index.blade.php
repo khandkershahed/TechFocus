@@ -191,8 +191,8 @@
                             <div class="card rounded-0 border-0">
                                 <div class="card-header bg-white d-flex justify-content-between">
                                     <span class="product_badge">New</span>
-                                    <img src="{{ asset('storage/brand/logo/' . $product->brand->logo) }}" height="20px"
-                                        alt="{{ $product->brand->title }}" loading="lazy" />
+                                    <img src="{{ asset('storage/brand/logo/' . optional($product->brand)->logo) }}" height="20px"
+                                        alt="{{ optional($product->brand)->title }}" loading="lazy" />
                                     <!-- <span class="product_badge2">New</span> -->
                                 </div>
                                 <div class="card-body p-0">
@@ -200,9 +200,10 @@
                                 </div>
                                 <div class="card-body p-0">
                                     <div class="px-3">
-                                        <a href="">
+                                        <a href="{{ route('product.details', ['id' => optional($product->brand)->id, 'slug' => optional($product)->slug]) }}">
                                             <h6 class="pt-3">{{ $product->name }}</h6>
                                         </a>
+                                        
                                         <div class="mb-3">
                                             @if (!empty($product->sku_code))
                                                 <p class="p-0 m-0 pb-2">

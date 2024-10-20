@@ -26,7 +26,10 @@ class Product extends Model
     {
         return $this->belongsTo(Brand::class);
     }
-
+    public function categories()
+    {
+        return Category::whereIn('id', $this->category_id)->get();
+    }
     // Define the many-to-many relationship with solutions
     public function solutions()
     {
