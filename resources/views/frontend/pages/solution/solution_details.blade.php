@@ -18,7 +18,7 @@
 
     <section>
         <div class="brand-page-banner page_top_banner">
-            <img src="{{ !empty(optional($solution)->banner_image) && file_exists(public_path('storage/solution-details/banner-image/' . optional($solution)->banner_image)) ? asset('storage/solution-details/banner-image/' . optional($solution)->banner_image) : asset('frontend/images/no-banner(1920-330).png') }}"
+            <img src="{{ !empty(optional($solution)->banner_image) && file_exists(public_path('storage/solution-details/' . optional($solution)->banner_image)) ? asset('storage/solution-details/' . optional($solution)->banner_image) : asset('frontend/images/no-banner(1920-330).png') }}"
                 alt="">
         </div>
     </section>
