@@ -237,7 +237,6 @@
                                                             <select class="form-select form-select-solid form-select-sm"
                                                                 id="category_id" name="category_id[]" multiple
                                                                 multiselect-search="true" multiselect-select-all="true"
-                                                                data-control="select2" data-placeholder="Select an option"
                                                                 data-allow-clear="true">
                                                                 @php
                                                                     $categoryIds = is_string($product->category_id)
@@ -1144,10 +1143,10 @@
                 $(".rfq_price").removeClass("d-none");
                 // $(".offer_price").addClass("d-none");
                 $(".price").addClass("d-none");
-                // } else if (price_value == 'offer_price') {
-                //     $(".offer_price").removeClass("d-none");
-                //     $(".rfq_price").addClass("d-none");
-                //     $(".price").addClass("d-none");
+            // } else if (price_value == 'offer_price') {
+            //     $(".offer_price").removeClass("d-none");
+            //     $(".rfq_price").addClass("d-none");
+            //     $(".price").addClass("d-none");
             } else {
                 $(".price").removeClass("d-none");
                 $(".offer_price").addClass("d-none");
