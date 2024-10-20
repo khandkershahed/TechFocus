@@ -48,18 +48,23 @@
                             <ul class="category-grouplist category-list">
                                 @foreach (optional($category)->children as $subcat)
                                     <li>
-                                        <div class="imgSubCat {{ $loop->first ?? 'hidden' }}">
+                                        <div class="imgSubCat {{ $loop->first ? '' : 'hidden' }}">
                                             <img src="{{ !empty($subcat->image) && file_exists(public_path('storage/category/image/' . $subcat->image)) ? asset('storage/category/image/' . $subcat->image) : asset('frontend/images/no-brand-img.png') }}"
                                                 alt="{{ $subcat->name }}" />
                                         </div>
-                                        <a href="{{ route('category', optional($subcat)->slug) }}">
-                                            {{ $subcat->name }}
-                                        </a>
-                                        {{-- <a href="{{ route('filtering.products', 'laptop-computers') }}">
-                                            {{ $subcat->name }}
-                                        </a> --}}
+
+                                        @if ($subcat->children->isNotEmpty())
+                                            <a href="{{ route('category', optional($subcat)->slug) }}">
+                                                {{ $subcat->name }} 
+                                            </a>
+                                        @else
+                                            <a href="{{ route('filtering.products', optional($subcat)->slug) }}">
+                                                {{ $subcat->name }}
+                                            </a>
+                                        @endif
                                     </li>
                                 @endforeach
+
                             </ul>
                         </div>
                     </div>
@@ -67,17 +72,20 @@
                         <div class="row mb-3">
                             <h5>Products</h5>
                             <hr class="pb-0 mb-0">
-                            @if (optional($category)->products()->count() > 0) 
-                                @foreach (optional($category)->products() as $product)
+                            @php
+                                $products = $category->products()->get();
+                            @endphp
+                            @if ($products->count() > 0)
+                                @foreach ($products as $product)
                                     <div class="col-lg-4 mb-2">
                                         <a
                                             href="{{ route('product.details', ['id' => optional($product->brand)->slug, 'slug' => optional($product)->slug]) }}">
-                                            <img class="img-fluid w-100" src="{{  $product->thumbnail }}"
+                                            <img class="img-fluid w-100" src="{{ $product->thumbnail }}"
                                                 alt="{{ $product->name }}">
                                         </a>
                                     </div>
                                 @endforeach
-                            @else 
+                            @else
                                 <p class="mb-2 text-center">No Products Found !</p>
                             @endif
                         </div>

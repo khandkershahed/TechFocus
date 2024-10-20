@@ -239,15 +239,16 @@
                                                                 multiselect-search="true" multiselect-select-all="true"
                                                                 data-allow-clear="true">
                                                                 @php
-                                                                    $categoryIds = is_string($product->category_id)
-                                                                        ? json_decode($product->category_id, true) // Convert JSON string to array
-                                                                        : $product->category_id;
+                                                                    $categoryIds = isset($product->category_id) &&
+                                                                    is_string($product->category_id)
+                                                                        ? json_decode($product->category_id, true)
+                                                                        : [];
                                                                 @endphp
 
                                                                 @if (count($categories) > 0)
                                                                     @foreach ($categories as $category)
                                                                         <option value="{{ $category->id }}"
-                                                                            {{ in_array($category->id, $categoryIds) ? 'selected' : '' }}>
+                                                                            {{ is_array($categoryIds) && in_array($category->id, $categoryIds) ? 'selected' : '' }}>
                                                                             {{ $category->name }}
                                                                         </option>
                                                                     @endforeach
@@ -1143,10 +1144,10 @@
                 $(".rfq_price").removeClass("d-none");
                 // $(".offer_price").addClass("d-none");
                 $(".price").addClass("d-none");
-            // } else if (price_value == 'offer_price') {
-            //     $(".offer_price").removeClass("d-none");
-            //     $(".rfq_price").addClass("d-none");
-            //     $(".price").addClass("d-none");
+                // } else if (price_value == 'offer_price') {
+                //     $(".offer_price").removeClass("d-none");
+                //     $(".rfq_price").addClass("d-none");
+                //     $(".price").addClass("d-none");
             } else {
                 $(".price").removeClass("d-none");
                 $(".offer_price").addClass("d-none");

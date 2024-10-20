@@ -198,7 +198,6 @@ class ComposerStaticInit477449c53aa665b91ea8dae4c20eebd4
         'B' => 
         array (
             'Brick\\Math\\' => 11,
-            'BeyondCode\\QueryDetector\\' => 25,
             'Barryvdh\\LaravelIdeHelper\\' => 26,
         ),
         'A' => 
@@ -620,10 +619,6 @@ class ComposerStaticInit477449c53aa665b91ea8dae4c20eebd4
         array (
             0 => __DIR__ . '/..' . '/brick/math/src',
         ),
-        'BeyondCode\\QueryDetector\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/beyondcode/laravel-query-detector/src',
-        ),
         'Barryvdh\\LaravelIdeHelper\\' => 
         array (
             0 => __DIR__ . '/..' . '/barryvdh/laravel-ide-helper/src',
@@ -971,18 +966,6 @@ class ComposerStaticInit477449c53aa665b91ea8dae4c20eebd4
         'Barryvdh\\Reflection\\DocBlock\\Tag\\VarTag' => __DIR__ . '/..' . '/barryvdh/reflection-docblock/src/Barryvdh/Reflection/DocBlock/Tag/VarTag.php',
         'Barryvdh\\Reflection\\DocBlock\\Tag\\VersionTag' => __DIR__ . '/..' . '/barryvdh/reflection-docblock/src/Barryvdh/Reflection/DocBlock/Tag/VersionTag.php',
         'Barryvdh\\Reflection\\DocBlock\\Type\\Collection' => __DIR__ . '/..' . '/barryvdh/reflection-docblock/src/Barryvdh/Reflection/DocBlock/Type/Collection.php',
-        'BeyondCode\\QueryDetector\\Events\\QueryDetected' => __DIR__ . '/..' . '/beyondcode/laravel-query-detector/src/Events/QueryDetected.php',
-        'BeyondCode\\QueryDetector\\LumenQueryDetectorServiceProvider' => __DIR__ . '/..' . '/beyondcode/laravel-query-detector/src/LumenQueryDetectorServiceProvider.php',
-        'BeyondCode\\QueryDetector\\Outputs\\Alert' => __DIR__ . '/..' . '/beyondcode/laravel-query-detector/src/Outputs/Alert.php',
-        'BeyondCode\\QueryDetector\\Outputs\\Clockwork' => __DIR__ . '/..' . '/beyondcode/laravel-query-detector/src/Outputs/Clockwork.php',
-        'BeyondCode\\QueryDetector\\Outputs\\Console' => __DIR__ . '/..' . '/beyondcode/laravel-query-detector/src/Outputs/Console.php',
-        'BeyondCode\\QueryDetector\\Outputs\\Debugbar' => __DIR__ . '/..' . '/beyondcode/laravel-query-detector/src/Outputs/Debugbar.php',
-        'BeyondCode\\QueryDetector\\Outputs\\Json' => __DIR__ . '/..' . '/beyondcode/laravel-query-detector/src/Outputs/Json.php',
-        'BeyondCode\\QueryDetector\\Outputs\\Log' => __DIR__ . '/..' . '/beyondcode/laravel-query-detector/src/Outputs/Log.php',
-        'BeyondCode\\QueryDetector\\Outputs\\Output' => __DIR__ . '/..' . '/beyondcode/laravel-query-detector/src/Outputs/Output.php',
-        'BeyondCode\\QueryDetector\\QueryDetector' => __DIR__ . '/..' . '/beyondcode/laravel-query-detector/src/QueryDetector.php',
-        'BeyondCode\\QueryDetector\\QueryDetectorMiddleware' => __DIR__ . '/..' . '/beyondcode/laravel-query-detector/src/QueryDetectorMiddleware.php',
-        'BeyondCode\\QueryDetector\\QueryDetectorServiceProvider' => __DIR__ . '/..' . '/beyondcode/laravel-query-detector/src/QueryDetectorServiceProvider.php',
         'Brick\\Math\\BigDecimal' => __DIR__ . '/..' . '/brick/math/src/BigDecimal.php',
         'Brick\\Math\\BigInteger' => __DIR__ . '/..' . '/brick/math/src/BigInteger.php',
         'Brick\\Math\\BigNumber' => __DIR__ . '/..' . '/brick/math/src/BigNumber.php',

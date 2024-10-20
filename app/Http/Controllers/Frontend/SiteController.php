@@ -20,9 +20,9 @@ class SiteController extends Controller
     {
         $data = [
             'categories'    => Category::with('children.children.children.children.children.children.children.children.children.children')->where('is_parent', '1')->get(['id', 'parent_id', 'name', 'slug']),
-            'products'      => Product::with('brand')->where('status','active')->inRandomOrder()->limit(5)->get(),
+            'products'      => Product::with('brand')->where('status', 'active')->inRandomOrder()->limit(5)->get(),
             // 'products'      => Product::with('brand')->where('product_status','product')->where('status','active')->inRandomOrder()->limit(5)->get(),
-            'news_trends'   => NewsTrend::where('type','trends')->limit(4)->get(),
+            'news_trends'   => NewsTrend::where('type', 'trends')->limit(4)->get(),
             'solutions'     => SolutionDetail::latest()->limit(4)->get(),
         ];
         return view('frontend.pages.home.index', $data);
@@ -30,24 +30,45 @@ class SiteController extends Controller
     public function solutionDetails($slug)
     {
         $data = [
-            'solution'     => SolutionDetail::where('slug' , $slug)->first(),
+            'solution'     => SolutionDetail::where('slug', $slug)->first(),
         ];
-        return view('frontend.pages.solution.solution_details',$data);
+        return view('frontend.pages.solution.solution_details', $data);
     }
     public function category($slug)
     {
         $data = [
-            'category'     => Category::where('slug' , $slug)->first(),
+            'category'     => Category::with('children')->where('slug', $slug)->first(),
         ];
-        return view('frontend.pages.category.category',$data);
+        return view('frontend.pages.category.category', $data);
     }
     public function filterProducts($slug)
     {
-        // if (Category::where('slug' , $slug)->) {
-        //     # code...
-        // }
-        return view('frontend.pages.shop.filterProducts');
+        $category = Category::where('slug', $slug)->first();
+
+        // Check if category exists
+        if (!$category) {
+            Session::flash('warning', 'Category not found.');
+            return redirect()->back();
+        }
+
+        // Get products associated with the category
+        $products = $category->products()->get();
+
+        // Check if there are products
+        if ($products->isEmpty()) {
+            Session::flash('warning', 'No Products Found for this Category');
+            return redirect()->back();
+        }
+
+        $data = [
+            'category' => $category,
+            'products' => $products,
+            'brands'   => Brand::latest()->get(),
+        ];
+
+        return view('frontend.pages.shop.filterProducts', $data);
     }
+
     public function faq()
     {
         return view('frontend.pages.others.faq');
@@ -86,7 +107,7 @@ class SiteController extends Controller
                 'brands' => $brands,
             ]);
         } else {
-            Session::flash('warning','The Page is now in Construction Mode. Please Try again later.');
+            Session::flash('warning', 'The Page is now in Construction Mode. Please Try again later.');
             return redirect()->back();
         }
     }

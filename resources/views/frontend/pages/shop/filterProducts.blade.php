@@ -32,30 +32,32 @@
             <div class="col-lg-12">
                 <div class="breadcrumbs">
                     <div>
-                        <a href="index.html" class="">Home</a> &gt;
-                        <span class="txt-mcl">Detection - Measurement </span>&gt;
-                        <span class="txt-mcl">Flow, Pressure and Level Measurements </span>&gt;
-                        <span class="txt-mcl active"> Pressure sensor</span>
+                        <a href="{{ route('homepage') }}" class="fw-bold">Home</a> &gt;
+                        @if (optional($category)->parent_id != null)
+                            <a href="{{ route('category', optional($category->parent)->slug) }}"
+                                class="txt-mcl active">{{ optional($category->parent)->name }}</a>
+                            &gt;
+                        @endif
+                        <span class="txt-mcl active fw-bold">{{ optional($category)->name }}</span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="container ">
+    <div class="container my-3">
         <div class="row mt-5 bg-white p-3 mx-4">
             <div class="col-lg-12 d-flex align-items-center justify-content-between">
                 <div class="info-area d-flex align-items-center">
-                    <h3 class="">Pressure sensors</h3>
+                    <h3 class="">{{ optional($category)->name }}</h3>
                     <div class="ms-4">
                         <i class="fa-solid fa-circle-question"></i>
                         <span>Do you need help making a decision?</span>
                     </div>
                 </div>
                 <div class="counting-area pt-3">
-                    <p>
-                        <span class="main-color">196 </span>companies |
-                        <span class="main-color">659</span> products
-                    </p>
+                    <h6>
+                        <span class="main-color">{{ $products->count() }}</span> products
+                    </h6>
                 </div>
             </div>
         </div>
@@ -98,205 +100,24 @@
                                     <!-- Menu -->
                                     <div class="mt-3 scroll-menu-container" style="height: 150px; overflow: auto">
                                         <ul class="m-0 p-0">
-                                            <p class="pb-1 mb-0 pt-1 fw-bold main-color">(</p>
-                                            <li>
-                                                <div class="checkbox-wrapper-15">
-                                                    <input class="inp-cbx" id="cbx-2" type="checkbox"
-                                                        style="display: none" />
-                                                    <label title="Althen Sensors & Controls" class="cbx" for="cbx-2">
-                                                        <span>
-                                                            <svg width="12px" height="9px" viewbox="0 0 12 9">
-                                                                <polyline points="1 5 4 8 11 1"></polyline>
-                                                            </svg>
-                                                        </span>
-                                                        <span class="font-two">Althen Sensors & Controls
-                                                        </span>
-                                                    </label>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="checkbox-wrapper-15">
-                                                    <input class="inp-cbx" id="cbx-3" type="checkbox"
-                                                        style="display: none" />
-                                                    <label title="AMOT" class="cbx" for="cbx-3">
-                                                        <span>
-                                                            <svg width="12px" height="9px" viewbox="0 0 12 9">
-                                                                <polyline points="1 5 4 8 11 1"></polyline>
-                                                            </svg>
-                                                        </span>
-                                                        <span class="font-two">AMOT </span> (1)
-                                                    </label>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="checkbox-wrapper-15">
-                                                    <input class="inp-cbx" id="cbx-4" type="checkbox"
-                                                        style="display: none" />
-                                                    <label title="Amphenol" class="cbx" for="cbx-4">
-                                                        <span>
-                                                            <svg width="12px" height="9px" viewbox="0 0 12 9">
-                                                                <polyline points="1 5 4 8 11 1"></polyline>
-                                                            </svg>
-                                                        </span>
-                                                        <span class="font-two">Amphenol </span> (1)
-                                                    </label>
-                                                </div>
-                                            </li>
-                                            <p class="pb-1 mb-0 pt-1 fw-bold main-color">A</p>
-                                            <li>
-                                                <div class="checkbox-wrapper-15">
-                                                    <input class="inp-cbx" id="cbx-5" type="checkbox"
-                                                        style="display: none" />
-                                                    <label title="Althen Sensors & Controls" class="cbx"
-                                                        for="cbx-5">
-                                                        <span>
-                                                            <svg width="12px" height="9px" viewbox="0 0 12 9">
-                                                                <polyline points="1 5 4 8 11 1"></polyline>
-                                                            </svg>
-                                                        </span>
-                                                        <span class="font-two">Althen Sensors & Controls
-                                                        </span>
-                                                    </label>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="checkbox-wrapper-15">
-                                                    <input class="inp-cbx" id="cbx-6" type="checkbox"
-                                                        style="display: none" />
-                                                    <label title="AMOT" class="cbx" for="cbx-6">
-                                                        <span>
-                                                            <svg width="12px" height="9px" viewbox="0 0 12 9">
-                                                                <polyline points="1 5 4 8 11 1"></polyline>
-                                                            </svg>
-                                                        </span>
-                                                        <span class="font-two">AMOT </span> (1)
-                                                    </label>
-                                                </div>
-                                            </li>
-                                            <p class="pb-1 mb-0 pt-1 fw-bold main-color">B</p>
-                                            <li>
-                                                <div class="checkbox-wrapper-15">
-                                                    <input class="inp-cbx" id="cbx-7" type="checkbox"
-                                                        style="display: none" />
-                                                    <label title="Althen Sensors & Controls" class="cbx"
-                                                        for="cbx-7">
-                                                        <span>
-                                                            <svg width="12px" height="9px" viewbox="0 0 12 9">
-                                                                <polyline points="1 5 4 8 11 1"></polyline>
-                                                            </svg>
-                                                        </span>
-                                                        <span class="font-two">Althen Sensors & Controls
-                                                        </span>
-                                                    </label>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="accordion accordion-flush" id="accordionFlushExample">
-                                                    <div class="accordion-item">
-                                                        <h2 class="accordion-header" id="flush-headingThree">
-                                                            <button class="accordion-button collapsed p-0 m-0"
-                                                                type="button" data-bs-toggle="collapse"
-                                                                data-bs-target="#flush-collapseThree"
-                                                                aria-expanded="false" aria-controls="flush-collapseThree">
-                                                                <div class="checkbox-wrapper-15">
-                                                                    <input class="inp-cbx" id="cbx-8" type="checkbox"
-                                                                        style="display: none" />
-                                                                    <label title="AMOT" class="cbx" for="cbx-8">
-                                                                        <span>
-                                                                            <svg width="12px" height="9px"
-                                                                                viewbox="0 0 12 9">
-                                                                                <polyline points="1 5 4 8 11 1"></polyline>
-                                                                            </svg>
-                                                                        </span>
-                                                                        <span class="font-two">AMOT </span> (1)
-                                                                    </label>
-                                                                </div>
-                                                            </button>
-                                                        </h2>
-                                                        <div id="flush-collapseThree" class="accordion-collapse collapse"
-                                                            aria-labelledby="flush-headingThree"
-                                                            data-bs-parent="#accordionFlushExample">
-                                                            <div class="accordion-body">
-                                                                <div class="checkbox-wrapper-15">
-                                                                    <input class="inp-cbx" id="cbx-9" type="checkbox"
-                                                                        style="display: none" />
-                                                                    <label title="AMOT" class="cbx" for="cbx-9">
-                                                                        <span>
-                                                                            <svg width="12px" height="9px"
-                                                                                viewbox="0 0 12 9">
-                                                                                <polyline points="1 5 4 8 11 1"></polyline>
-                                                                            </svg>
-                                                                        </span>
-                                                                        <span class="font-two">AMOT </span> (1)
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                                            <p class="pb-1 mb-0 pt-1 fw-bold main-color"></p>
+                                            @foreach ($brands as $brand)
+                                                <li class="p-2">
+                                                    <div class="checkbox-wrapper-15">
+                                                        <input class="inp-cbx" id="cbx-2" type="checkbox"
+                                                            style="display: none" />
+                                                        <label title="{{ $brand->title }}" class="cbx" for="cbx-2">
+                                                            <span>
+                                                                <svg width="12px" height="9px" viewbox="0 0 12 9">
+                                                                    <polyline points="1 5 4 8 11 1"></polyline>
+                                                                </svg>
+                                                            </span>
+                                                            <span class="font-six">{{ $brand->title }}
+                                                            </span>
+                                                        </label>
                                                     </div>
-                                                </div>
-                                            </li>
-                                            <p class="pb-1 mb-0 pt-1 fw-bold main-color">C</p>
-                                            <li>
-                                                <div class="checkbox-wrapper-15">
-                                                    <input class="inp-cbx" id="cbx-10" type="checkbox"
-                                                        style="display: none" />
-                                                    <label title="Althen Sensors & Controls" class="cbx"
-                                                        for="cbx-10">
-                                                        <span>
-                                                            <svg width="12px" height="9px" viewbox="0 0 12 9">
-                                                                <polyline points="1 5 4 8 11 1"></polyline>
-                                                            </svg>
-                                                        </span>
-                                                        <span class="font-two">Althen Sensors & Controls
-                                                        </span>
-                                                    </label>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="checkbox-wrapper-15">
-                                                    <input class="inp-cbx" id="cbx-11" type="checkbox"
-                                                        style="display: none" />
-                                                    <label title="AMOT" class="cbx" for="cbx-11">
-                                                        <span>
-                                                            <svg width="12px" height="9px" viewbox="0 0 12 9">
-                                                                <polyline points="1 5 4 8 11 1"></polyline>
-                                                            </svg>
-                                                        </span>
-                                                        <span class="font-two">AMOT </span> (1)
-                                                    </label>
-                                                </div>
-                                            </li>
-                                            <p class="pb-1 mb-0 pt-1 fw-bold main-color">D</p>
-                                            <li>
-                                                <div class="checkbox-wrapper-15">
-                                                    <input class="inp-cbx" id="cbx-12" type="checkbox"
-                                                        style="display: none" />
-                                                    <label title="Althen Sensors & Controls" class="cbx"
-                                                        for="cbx-12">
-                                                        <span>
-                                                            <svg width="12px" height="9px" viewbox="0 0 12 9">
-                                                                <polyline points="1 5 4 8 11 1"></polyline>
-                                                            </svg>
-                                                        </span>
-                                                        <span class="font-two">Althen Sensors & Controls
-                                                        </span>
-                                                    </label>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="checkbox-wrapper-15">
-                                                    <input class="inp-cbx" id="cbx-13" type="checkbox"
-                                                        style="display: none" />
-                                                    <label title="AMOT" class="cbx" for="cbx-13">
-                                                        <span>
-                                                            <svg width="12px" height="9px" viewbox="0 0 12 9">
-                                                                <polyline points="1 5 4 8 11 1"></polyline>
-                                                            </svg>
-                                                        </span>
-                                                        <span class="font-two">AMOT </span> (1)
-                                                    </label>
-                                                </div>
-                                            </li>
+                                                </li>
+                                            @endforeach
                                         </ul>
                                     </div>
                                 </div>
@@ -304,7 +125,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- TECHNOLOGIES -->
+                {{-- <!-- TECHNOLOGIES -->
                 <div class="bg-white p-2 mb-2 mt-3 category-border-top">
                     <div class="accordion accordion-flush" id="accordionFlushExample">
                         <div class="accordion-item">
@@ -575,7 +396,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
             </div>
             <!-- Main Category End-->
             <div class="col-lg-10 col-sm-12">
@@ -586,10 +407,10 @@
                                 height="25px" alt="" />
                         </div>
                         <h6 class="ms-2 pt-3">
-                            Pressure sensors | Choosing the right pressure sensor
+                            {{ $category->name }} | Choosing the right {{ $category->name }}
                         </h6>
                     </div>
-                    <div class="card-body">
+                    {{-- <div class="card-body">
                         <p style="line-height: 1.1">
                             Measuring pressure is necessary in the control of most
                             industrial processes. A pressure sensor converts pressure
@@ -601,276 +422,73 @@
                             synonyms, the term “pressure transmitter” refers to a...
                         </p>
                         <a href="" class="btn signin rounded-0 w-auto mt-2">Read More</a>
-                    </div>
+                    </div> --}}
                 </div>
-                <div class="row mt-3">
-                    <div class="col-lg-3 col-sm-12">
-                        <div class="card border-0 card-news-trends" style="height: 360px">
-                            <div class="content">
-                                <div class="front">
-                                    <img class="profile" width="100%"
-                                        src="https://img.directindustry.com/images_di/photo-m2/11846-4731465.jpg"
-                                        alt="...." />
-                                    <div class="d-flex align-items-center justify-content-between p-2">
-                                        <h2 class="text-center font-four pt-5">
-                                            New Onair Laser
-                                        </h2>
-                                        <!-- Brand Logo -->
-                                        <br />
-                                        <a href="#" class="mt-5">
-                                            <img class="lazyLoaded logo right"
-                                                src="https://img.directindustry.com/images_di/logo-pp/L11846.gif"
-                                                title="Adicomp Srl" />
-                                        </a>
+                <div class="row my-3">
+                    @foreach ($products as $product)
+                        <div class="col-lg-3 col-sm-12">
+                            <div class="card border-0 card-news-trends" style="height: 360px">
+                                <div class="content">
+                                    <div class="front">
+                                        <img class="profile" width="100%" src="{{ $product->thumbnail }}"
+                                            alt={{ $product->name }}" />
+                                        <div class="d-flex align-items-center justify-content-between p-2">
+                                            <a
+                                                href="{{ route('product.details', ['id' => optional($product->brand)->slug, 'slug' => optional($product)->slug]) }}">
+                                                <h2 class="text-center font-four pt-5">
+                                                    {{ $product->name }}
+                                                </h2>
+                                            </a>
+
+                                            <!-- Brand Logo -->
+                                            <br />
+                                            <a href="#" class="mt-5">
+                                                <img class="lazyLoaded logo right"
+                                                    src="{{ asset('storage/brand/logo/' . optional($product->brand)->logo) }}"
+                                                    title="{{ optional($product->brand)->title }}" />
+                                            </a>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="back from-bottom text-start">
-                                    <span class="font-two pt-3 text-muted">
-                                        <a href="" class="btn signin w-auto rounded-0">Contact</a>
-                                    </span>
-                                    <br />
-                                    <p class="pt-3 pb-2 m-0 font-two">
-                                        Differential pressure sensor CP 110
-                                    </p>
-                                    <p class="subtitles"></p>
-                                    <p class="font-two pt-2 pb-3 text-justify">
-                                        The LASER series compression units are designed for
-                                        intensive use, and are known for their high efficiency.
-                                        Compact and quiet, they have been specifically designed
-                                        for laser cutting industrial environments, which
-                                        therefore require air flow rates at high operating
-                                        pressures. Use of the LASER series Onair systems
-                                        therefore allows to cut by air, thus avoiding the use of
-                                        nit...
-                                    </p>
-                                    <p class="pt-3 pb-2 m-0 text-center" style="border-top: 1px solid #eee">
-                                        <a href="">
-                                            <span class="news-link">
-                                                <i class="fa-solid fa-window-restore me-2"></i>Compare This Product
-                                            </span>
-                                        </a>
-                                    </p>
+                                    <div class="back from-bottom text-start">
+                                        <span class="font-three pt-3 text-muted text-center">
+                                            <a href="{{ route('product.details', ['id' => optional($product->brand)->slug, 'slug' => optional($product)->slug]) }}"
+                                                class="btn signin w-auto rounded-0">Detals</a>
+                                        </span>
+                                        <br />
+                                        <p class="pt-3 m-0 font-five">
+                                            {{ $product->name }}
+                                        </p>
+                                        <p class="subtitles"></p>
+                                        <p class="p-1 text-justify mb-0">
+                                            {!! Str::words( $product->short_desc , 10) !!}
+                                        </p>
+                                        {{-- <p class="pt-3 pb-2 m-0 text-center" style="border-top: 1px solid #eee">
+                                            <a href="">
+                                                <span class="news-link">
+                                                    <i class="fa-solid fa-window-restore me-2"></i>Compare This Product
+                                                </span>
+                                            </a>
+                                        </p> --}}
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-lg-3 col-sm-12">
-                        <div class="card border-0 card-news-trends" style="height: 360px">
-                            <div class="content">
-                                <div class="front">
-                                    <img class="profile" width="100%"
-                                        src="https://img.directindustry.com/images_di/photo-m2/544-11946002.jpg"
-                                        alt="...." />
-                                    <div class="d-flex align-items-center justify-content-between p-2">
-                                        <h2 class="text-center font-four pt-5">
-                                            New Onair Laser
-                                        </h2>
-                                        <!-- Brand Logo -->
-                                        <br />
-                                        <a href="#" class="mt-5">
-                                            <img class="lazyLoaded logo right"
-                                                src="https://img.directindustry.com/images_di/logo-pp/L11846.gif"
-                                                title="Adicomp Srl" />
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="back from-bottom text-start">
-                                    <span class="font-two pt-3 text-muted">
-                                        <a href="" class="btn signin w-auto rounded-0">Contact</a>
-                                    </span>
-                                    <br />
-                                    <p class="pt-3 pb-2 m-0 font-two">
-                                        Differential pressure sensor CP 110
-                                    </p>
-                                    <p class="subtitles"></p>
-                                    <p class="font-two pt-2 pb-3 text-justify">
-                                        The LASER series compression units are designed for
-                                        intensive use, and are known for their high efficiency.
-                                        Compact and quiet, they have been specifically designed
-                                        for laser cutting industrial environments, which
-                                        therefore require air flow rates at high operating
-                                        pressures. Use of the LASER series Onair systems
-                                        therefore allows to cut by air, thus avoiding the use of
-                                        nit...
-                                    </p>
-                                    <p class="pt-3 pb-2 m-0 text-center" style="border-top: 1px solid #eee">
-                                        <a href="#" class="mt-5">
-                                            <span class="news-link">
-                                                <i class="fa-solid fa-window-restore me-2"></i>Compare This Product
-                                            </span>
-                                        </a>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-sm-12">
-                        <div class="card border-0 card-news-trends" style="height: 360px">
-                            <div class="content">
-                                <div class="front">
-                                    <img class="profile" width="100%"
-                                        src="https://img.directindustry.com/images_di/photo-m2/6196-8440793.jpg"
-                                        alt="...." />
-                                    <div class="d-flex align-items-center justify-content-between p-2">
-                                        <h2 class="text-center font-four pt-5">
-                                            New Onair Laser
-                                        </h2>
-                                        <!-- Brand Logo -->
-                                        <br />
-                                        <a href="#" class="mt-5">
-                                            <img class="lazyLoaded logo right"
-                                                src="https://img.directindustry.com/images_di/logo-pp/L11846.gif"
-                                                title="Adicomp Srl" />
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="back from-bottom text-start">
-                                    <span class="font-two pt-3 text-muted">
-                                        <a href="" class="btn signin w-auto rounded-0">Contact</a>
-                                    </span>
-                                    <br />
-                                    <p class="pt-3 pb-2 m-0 font-two">
-                                        Differential pressure sensor CP 110
-                                    </p>
-                                    <p class="subtitles"></p>
-                                    <p class="font-two pt-2 pb-3 text-justify">
-                                        The LASER series compression units are designed for
-                                        intensive use, and are known for their high efficiency.
-                                        Compact and quiet, they have been specifically designed
-                                        for laser cutting industrial environments, which
-                                        therefore require air flow rates at high operating
-                                        pressures. Use of the LASER series Onair systems
-                                        therefore allows to cut by air, thus avoiding the use of
-                                        nit...
-                                    </p>
-                                    <p class="pt-3 pb-2 m-0 text-center" style="border-top: 1px solid #eee">
-                                        <a href="">
-                                            <span class="news-link">
-                                                <i class="fa-solid fa-window-restore me-2"></i>Compare This Product
-                                            </span>
-                                        </a>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-sm-12">
-                        <div class="card border-0 card-news-trends" style="height: 360px">
-                            <div class="content">
-                                <div class="front">
-                                    <img class="profile" width="100%"
-                                        src="https://img.directindustry.com/images_di/photo-m2/6196-8723419.jpg"
-                                        alt="...." />
-                                    <div class="d-flex align-items-center justify-content-between p-2">
-                                        <h2 class="text-center font-four pt-5">
-                                            New Onair Laser
-                                        </h2>
-                                        <!-- Brand Logo -->
-                                        <br />
-                                        <a href="#" class="mt-5">
-                                            <img class="lazyLoaded logo right"
-                                                src="https://img.directindustry.com/images_di/logo-pp/L11846.gif"
-                                                title="Adicomp Srl" />
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="back from-bottom text-start">
-                                    <span class="font-two pt-3 text-muted">
-                                        <a href="" class="btn signin w-auto rounded-0">Contact</a>
-                                    </span>
-                                    <br />
-                                    <p class="pt-3 pb-2 m-0 font-two">
-                                        Differential pressure sensor CP 110
-                                    </p>
-                                    <p class="subtitles"></p>
-                                    <p class="font-two pt-2 pb-3 text-justify">
-                                        The LASER series compression units are designed for
-                                        intensive use, and are known for their high efficiency.
-                                        Compact and quiet, they have been specifically designed
-                                        for laser cutting industrial environments, which
-                                        therefore require air flow rates at high operating
-                                        pressures. Use of the LASER series Onair systems
-                                        therefore allows to cut by air, thus avoiding the use of
-                                        nit...
-                                    </p>
-                                    <p class="pt-3 pb-2 m-0 text-center" style="border-top: 1px solid #eee">
-                                        <a href="">
-                                            <span class="news-link">
-                                                <i class="fa-solid fa-window-restore me-2"></i>Compare This Product
-                                            </span>
-                                        </a>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    @endforeach
                 </div>
-                <div class="row mt-5">
+                {{-- <div class="row mt-5">
                     <div class="col-lg-12">
-                        <p class="text-center">CHOOSE BY COMPANY NAME</p>
+                        <p class="text-center">Choose By Page</p>
                         <div class="d-flex justify-content-center">
                             <div class="pagination">
-                                <a href="">0-9</a>
-                                <span>-</span>
-                                <a href="#">A</a>
-                                <span>-</span>
-                                <a href="#">B</a>
-                                <span>-</span>
-                                <a href="#">C</a>
-                                <span>-</span>
-                                <a href="#">D</a>
-                                <span>-</span>
-                                <a href="#">E</a>
-                                <span>-</span>
-                                <a href="#">F</a>
-                                <span>-</span>
-                                <a href="#">G</a>
-                                <span>-</span>
-                                <a href="#">H</a>
-                                <span>-</span>
-                                <a href="#">I</a>
-                                <span>-</span>
-                                <a href="#">J</a>
-                                <span>-</span>
-                                <a href="#">K</a>
-                                <span>-</span>
-                                <a href="#">L</a>
-                                <span>-</span>
-                                <a href="#">M</a>
-                                <span>-</span>
-                                <a href="#">N</a>
-                                <span>-</span>
-                                <a href="#">O</a>
-                                <span>-</span>
-                                <a href="#">P</a>
-                                <span>-</span>
-                                <a href="#">Q</a>
-                                <span>-</span>
-                                <a href="#">R</a>
-                                <span>-</span>
-                                <a href="#">S</a>
-                                <span>-</span>
-                                <a href="#">T</a>
-                                <span>-</span>
-                                <a href="#">U</a>
-                                <span>-</span>
-                                <a href="#">V</a>
-                                <span>-</span>
-                                <a href="#">W</a>
-                                <span>-</span>
-                                <a href="#">X</a>
-                                <span>-</span>
-                                <a href="#">Y</a>
-                                <span>-</span>
-                                <a href="#">Z</a>
+
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
             </div>
         </div>
     </div>
-    <div class="container">
+    {{-- <div class="container">
         <div class="row bg-white">
             <p class="my-3">HOW TO CHOOSE THIS PRODUCT</p>
             <div class="col-lg-3">
@@ -949,5 +567,5 @@
                 </p>
             </div>
         </div>
-    </div>
+    </div> --}}
 @endsection
