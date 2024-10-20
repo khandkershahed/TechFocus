@@ -223,15 +223,15 @@
             </div>
         </div> --}}
         <!-- Extra Link -->
-        <div class="row pt-3">
+        {{-- <div class="row pt-3">
             <div class="col-lg-12 col-sm-12 text-end font-three">
-                <a href="" class="main-color">Go to the EXPERT-TÜNKERS GmbH website for more information
+                <a href="" class="main-color">Go to the {{ $product->brand->name }} website for more information
                     <i class="ms-2 fa-solid fa-arrow-up-right-from-square"></i></a>
             </div>
         </div>
         <!-- Others Related Product-->
         <div class="row mt-3 mb-2">
-            <h1 class="extra-titles">OTHER EXPERT-TÜNKERS GMBH PRODUCTS</h1>
+            <h1 class="extra-titles">OTHER {{ $product->brand->name }} PRODUCTS</h1>
             <div class="col-lg-12">
                 <div class="devider-wrap">
                     <h4 class="devider-content">
@@ -240,7 +240,7 @@
                     </h4>
                 </div>
             </div>
-        </div>
+        </div> --}}
         {{-- <div class="row">
             <div class="col-lg-12">
                 <!-- Related Product Slider -->
