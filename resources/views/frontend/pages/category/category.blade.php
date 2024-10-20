@@ -70,7 +70,7 @@
                             @foreach (optional($category)->products() as $product)
                                 <div class="col-lg-4 mb-2">
                                     <a
-                                        href="{{ route('product.details', ['id' => optional($product->brand)->id, 'slug' => optional($product)->slug]) }}">
+                                        href="{{ route('product.details', ['id' => optional($product->brand)->slug, 'slug' => optional($product)->slug]) }}">
                                         <img class="img-fluid w-100" src="{{  $product->thumbnail }}"
                                             alt="{{ $product->name }}">
                                     </a>

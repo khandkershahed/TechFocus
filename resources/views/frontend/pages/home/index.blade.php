@@ -200,7 +200,7 @@
                                 </div>
                                 <div class="card-body p-0">
                                     <div class="px-3">
-                                        <a href="{{ route('product.details', ['id' => optional($product->brand)->id, 'slug' => optional($product)->slug]) }}">
+                                        <a href="{{ route('product.details', ['id' => optional($product->brand)->slug, 'slug' => optional($product)->slug]) }}">
                                             <h6 class="pt-3">{{ $product->name }}</h6>
                                         </a>
                                         
