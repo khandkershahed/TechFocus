@@ -18,7 +18,7 @@
 
     <section>
         <div class="brand-page-banner page_top_banner">
-            <img src="{{ !empty(optional($solution)->banner_image) && file_exists(public_path('storage/solution-details/' . optional($solution)->banner_image)) ? asset('storage/solution-details/' . optional($solution)->banner_image) : asset('frontend/images/no-banner(1920-330).png') }}"
+            <img src="{{ !empty(optional($solution)->banner_image) && file_exists(public_path('storage/solution-details/banner-image/' . optional($solution)->banner_image)) ? asset('storage/solution-details/banner-image/' . optional($solution)->banner_image) : asset('frontend/images/no-banner(1920-330).png') }}"
                 alt="">
         </div>
     </section>
@@ -119,7 +119,7 @@
                         <div class="col-lg-3 col-sm-12">
                             <div class="card border-0 shadow-none rounded-2 solution-feature-container mx-auto">
                                 <img class="card-img-top"
-                                    src="{{ !empty($card->image) && file_exists(public_path('storage/' . $card->image)) ? asset('storage/' . $card->image) : asset('frontend/images/brandPage-logo-no-img(217-55).jpg') }}"
+                                    src="{{ !empty($card->image) && file_exists(public_path('storage/solution-card/' . $card->image)) ? asset('storage/solution-card/' . $card->image) : asset('frontend/images/brandPage-logo-no-img(217-55).jpg') }}"
                                     alt="Card image cap" width="150px" height="150px">
                                 <div class="card-body rounded-2 w-sm-100 solution-feature-cards">
                                     <h5 class="card-title text-center main_color">{{ $card->title }}</h5>
@@ -160,7 +160,7 @@
                         </div>
                         <div class="col-lg-6 col-sm-12">
                             {{-- <img class="img-fluid rounded" src="{{ asset('storage/' . $solution->rowFour->image) }}" alt="" width="540px" height="338px"> --}} <img class="img-fluid"
-                                src="{{ !empty($solution->rowFour->image) && file_exists(public_path('storage/' . $solution->rowFour->image)) ? asset('storage/' . $solution->rowFour->image) : asset('frontend/images/no-row-img(580-326).png') }}"
+                                src="{{ !empty($solution->rowFour->image) && file_exists(public_path('storage/row/' . $solution->rowFour->image)) ? asset('storage/row/' . $solution->rowFour->image) : asset('frontend/images/no-row-img(580-326).png') }}"
                                 alt="" width="540px" height="338px"
                                 style="    border-top-right-radius: 60px !important;
                               border-bottom-left-radius: 60px !important;">
@@ -184,7 +184,7 @@
                         <div class="col-lg-4 col-sm-12 product_veiw_details_item mb-3">
                             <!-- image -->
                             <img class="rounded-circle img-fluid"
-                                src="{{ !empty($cardsection2->image) && file_exists(public_path('storage/' . $cardsection2->image)) ? asset('storage/' . $cardsection2->image) : asset('frontend/images/no-brand-img.png') }}"
+                                src="{{ !empty($cardsection2->image) && file_exists(public_path('storage/solution-card/' . $cardsection2->image)) ? asset('storage/solution-card/' . $cardsection2->image) : asset('frontend/images/no-brand-img.png') }}"
                                 alt="" style="width: 150px; height: 150px;">
                             <!-- content -->
                             <div class="product_veiw_details_item_content">
