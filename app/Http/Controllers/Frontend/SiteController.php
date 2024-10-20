@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Admin\AboutPage;
 use App\Models\Admin\NewsTrend;
 use App\Models\Admin\Product;
+use App\Models\Admin\SolutionDetail;
 use Illuminate\Support\Facades\Session;
 
 class SiteController extends Controller
@@ -18,15 +19,19 @@ class SiteController extends Controller
     public function homePage()
     {
         $data = [
-            'categories' => Category::with('children.children.children.children.children.children.children.children.children.children')->where('is_parent', '1')->get(['id', 'parent_id', 'name', 'slug']),
-            'products' => Product::with('brand')->where('product_status','product')->where('status','active')->inRandomOrder()->limit(5)->get(),
-            'news_trends' => NewsTrend::where('type','trends')->limit(4)->get(),
+            'categories'    => Category::with('children.children.children.children.children.children.children.children.children.children')->where('is_parent', '1')->get(['id', 'parent_id', 'name', 'slug']),
+            'products'      => Product::with('brand')->where('product_status','product')->where('status','active')->inRandomOrder()->limit(5)->get(),
+            'news_trends'   => NewsTrend::where('type','trends')->limit(4)->get(),
+            'solutions'     => SolutionDetail::latest()->limit(4)->get(),
         ];
         return view('frontend.pages.home.index', $data);
     }
-    public function solutionDetails()
+    public function solutionDetails($slug)
     {
-        return view('frontend.pages.solution.solution_details');
+        $data = [
+            'solution'     => SolutionDetail::where('slug' , $slug)->first(),
+        ];
+        return view('frontend.pages.solution.solution_details',$data);
     }
     public function category($slug)
     {

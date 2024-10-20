@@ -18,7 +18,7 @@
         <div class="swiper-pagination"></div>
     </div>
     <!-- Content Menu -->
-    <div class="container p-0">
+    <div class="container p-0 my-3">
         <div class="mt-2 mb-2">
             <div class="row">
                 <div class="col-lg-12">
@@ -129,7 +129,7 @@
                                 @endif
                             </div>
                         </div>
-                        
+
                     </div>
                 </div>
             </div>
@@ -241,128 +241,46 @@
         <!-- New Product -->
         <div>
             <div class="card border-0 bg-primary mb-3"
-                style="
-            border-top-right-radius: 40px;
-            border-bottom-left-radius: 40px;
-            background: linear-gradient(90deg, #0069bf 0%, #38b6ff 100%);
-          ">
+                style="border-top-right-radius: 40px; border-bottom-left-radius: 40px; background: linear-gradient(90deg, #0069bf 0%, #38b6ff 100%);">
                 <div class="card-header border-0 bg-transparent">
                     <div class="row px-5">
                         <div class="col-lg-12">
                             <div class="py-5 d-flex justify-content-start text-white">
-                                <h3>Alluvio Solutions</h3>
-                                <h3 class="px-3">|</h3>
-                                <h3>Full-fidelity, No Sampling</h3>
+                                <h3>Solutions</h3>
+                                {{-- <h3 class="px-3">|</h3>
+                                <h3>Full-fidelity, No Sampling</h3> --}}
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="card-body bg-white" style="border-bottom-left-radius: 40px">
                     <div class="row gx-5 special_solution_box px-5">
-                        <div class="col-md-3">
-                            <div>
-                                <a href="">
-                                    <div class="card border-0 rounded-0 solution_cards shadow-sm p-3">
-                                        <div class="d-flex align-items-center card-body py-0 pt-2">
-                                            <div class="icon-box">
-                                                <!-- <img
-                                        width="70px"
-                                        height="55px"
-                                        src="https://www.riverbed.com/riverbed-wp-content/uploads/2022/12/brainstorm_color.png"
-                                        alt=""
-                                      /> -->
-                                                <i class="fa-brands fa-draft2digital pe-2"></i>
+                        @foreach ($solutions as $solution)
+                            <div class="col-md-3">
+                                <div>
+                                    <a href="{{ route('solution.details', $solution->slug) }}">
+                                        <div class="card border-0 rounded-0 solution_cards shadow-sm p-3">
+                                            <div class="d-flex align-items-center card-body py-0 pt-2">
+                                                <div class="icon-box">
+                                                    {{-- <img width="70px" height="55px"
+                                                        src="https://www.riverbed.com/riverbed-wp-content/uploads/2022/12/brainstorm_color.png"
+                                                        alt="" /> --}}
+                                                    <i class="fa-brands fa-draft2digital pe-2"></i>
+                                                </div>
+                                                <div class="text-box">
+                                                    <p class="p-0 m-0 ps-2 w-75">
+                                                        {{ Str::words($solution->name, 5) }}
+                                                    </p>
+                                                </div>
                                             </div>
-                                            <div class="text-box">
-                                                <p class="p-0 m-0 ps-2 w-75">
-                                                    Digital Experience Management
-                                                </p>
-                                            </div>
+                                            <a href="{{ route('solution.details', $solution->slug) }}" class="text-end pb-2 main-color mt-0 pt-0 pe-1">
+                                                <i class="fa-solid fa-plus"></i>
+                                                </a>
                                         </div>
-                                        <a href="" class="text-end pb-2 main-color mt-0 pt-0 pe-1"><i
-                                                class="fa-solid fa-plus"></i></a>
-                                    </div>
-                                </a>
+                                    </a>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="bg-primary">
-                                <a href="">
-                                    <div class="card border-0 rounded-0 solution_cards shadow-sm p-3">
-                                        <div class="d-flex align-items-center card-body py-0 pt-2">
-                                            <div class="icon-box">
-                                                <!-- <img
-                                        width="70px"
-                                        height="55px"
-                                        src="https://www.riverbed.com/riverbed-wp-content/uploads/2022/12/brainstorm_color.png"
-                                        alt=""
-                                      /> -->
-                                                <i class="fa-regular fa-chess-queen pe-2"></i>
-                                            </div>
-                                            <div class="text-box">
-                                                <p class="p-0 m-0 ps-2 w-75">
-                                                    Digital Experience Management
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <a href="" class="text-end pb-2 main-color mt-0 pt-0 pe-1"><i
-                                                class="fa-solid fa-plus"></i></a>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="bg-primary">
-                                <a href="">
-                                    <div class="card border-0 rounded-0 solution_cards shadow-sm p-3">
-                                        <div class="d-flex align-items-center card-body py-0 pt-2">
-                                            <div class="icon-box">
-                                                <!-- <img
-                                        width="70px"
-                                        height="55px"
-                                        src="https://www.riverbed.com/riverbed-wp-content/uploads/2022/12/brainstorm_color.png"
-                                        alt=""
-                                      /> -->
-                                                <i class="fa-brands fa-figma pe-2"></i>
-                                            </div>
-                                            <div class="text-box">
-                                                <p class="p-0 m-0 ps-2 w-75">
-                                                    Digital Experience Management
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <a href="" class="text-end pb-2 main-color mt-0 pt-0 pe-1"><i
-                                                class="fa-solid fa-plus"></i></a>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="bg-primary">
-                                <a href="">
-                                    <div class="card border-0 rounded-0 solution_cards shadow-sm p-3">
-                                        <div class="d-flex align-items-center card-body py-0 pt-2">
-                                            <div class="icon-box">
-                                                <!-- <img
-                                        width="70px"
-                                        height="55px"
-                                        src="https://www.riverbed.com/riverbed-wp-content/uploads/2022/12/brainstorm_color.png"
-                                        alt=""
-                                      /> -->
-                                                <i class="fa-regular fa-gem pe-2"></i>
-                                            </div>
-                                            <div class="text-box">
-                                                <p class="p-0 m-0 ps-2 w-75">
-                                                    Digital Experience Management
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <a href="" class="text-end pb-2 main-color mt-0 pt-0 pe-1"><i
-                                                class="fa-solid fa-plus"></i></a>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
+                        @endforeach
                     </div>
                 </div>
             </div>
@@ -381,7 +299,7 @@
             <div class="row gx-5">
                 @foreach ($news_trends as $news_trend)
                     <div class="col">
-                        <a href="{{ route('content.details',$news_trend->slug) }}">
+                        <a href="{{ route('content.details', $news_trend->slug) }}">
                             <div class="card projects-card rounded-0">
                                 <img src="{{ asset('storage/content/' . $news_trend->thumbnail_image) }}"
                                     class="card-img-top img-fluid rounded-0" alt="{{ $news_trend->title }}" />

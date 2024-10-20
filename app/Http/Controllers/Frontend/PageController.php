@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Models\Admin\Brand;
 use Illuminate\Http\Request;
 use App\Models\Admin\Product;
+use App\Models\Admin\NewsTrend;
 use Yoeunes\Toastr\Facades\Toastr;
 use App\Http\Controllers\Controller;
 
@@ -229,7 +230,8 @@ class PageController extends Controller
     public function contentDetails($slug)
     {
         $data = [
-            'brand' => Brand::with('brandPage')->where('slug', $slug)->select('id', 'slug', 'title', 'logo')->firstOrFail(),
+            'content' => NewsTrend::where('slug', $slug)->first(),
+            // 'brand' => Brand::with('brandPage')->where('slug', $slug)->select('id', 'slug', 'title', 'logo')->firstOrFail(),
         ];
         return view('frontend.pages.brandPage.content_details',$data);
     }

@@ -27,7 +27,7 @@
                             @csrf
                             <div class="row">
                                 <div class="col-lg-3">
-                                    <div class="fv-row mb-3">
+                                    <div class="fv-row mb-3"> 
                                         <label class="form-label">Brand Name</label>
                                         <select class="form-select form-select-solid form-select-sm" name="brand_id[]"
                                             id="field2" multiple multiselect-search="true" multiselect-select-all="true"
@@ -117,12 +117,12 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-lg-6 mb-2">
-                                            <label for="validationCustom01" class="form-label required">Author
+                                            <label for="validationCustom01" class="form-label required">Source
                                                 Name</label>
                                             <input type="text" class="form-control form-control-solid form-control-sm"
-                                                id="validationCustom01" placeholder="Enter Author Name" name="author"
+                                                id="validationCustom01" placeholder="Enter Source Name" name="author"
                                                 required>
-                                            <div class="invalid-feedback"> Please Enter Author Name</div>
+                                            <div class="invalid-feedback"> Please Enter Source Name</div>
                                         </div>
                                         <div class="col-lg-6 mb-3">
                                             <label for="validationCustom01" class="form-label">Source URL</label>
@@ -202,10 +202,10 @@
                                         </div>
                                         <div class="col-lg-6 mb-3">
                                             <label for="validationCustom010"
-                                                class="form-label required mb-0">Address</label>
+                                                class="form-label required mb-0">Source Address</label>
                                             <textarea rows="1" name="address" class="form-control form-control-sm form-control-solid"
-                                                placeholder="Enter Address" required></textarea>
-                                            <div class="invalid-feedback"> Please Enter Address</div>
+                                                placeholder="Enter Source Address" required></textarea>
+                                            <div class="invalid-feedback"> Please Enter Source Address</div>
                                         </div>
 
                                         <div class="col-lg-6 mb-3">

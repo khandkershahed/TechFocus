@@ -148,18 +148,6 @@
                                         <li>
                                             <a class="dropdown-item top-dropdown" href="#">English</a>
                                         </li>
-                                        <li>
-                                            <a class="dropdown-item top-dropdown" href="#">France</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item top-dropdown" href="#">Spanish</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item top-dropdown" href="#">German</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item top-dropdown" href="#">Russian</a>
-                                        </li>
                                     </ul>
                                 </div>
                                 <!-- <div class="m-1" data-aos="fade-left">
@@ -184,7 +172,7 @@
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item dropdown">
+                    {{-- <li class="nav-item dropdown">
                         <a class="nav-link custom-nav dropdown-toggle" href="#" id="navbarDropdown"
                             role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                             data-aos="fade-right">
@@ -333,12 +321,16 @@
                                 </div>
                             </div>
                         </div>
+                    </li> --}}
+                    <li class="nav-item">
+                        <a class="nav-link custom-nav" data-aos="fade-right"
+                            href="{{ route('homepage') }}">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link custom-nav" data-aos="fade-right"
                             href="{{ route('catalog.all') }}">Catalog</a>
                     </li>
-                    <li class="nav-item dropdown">
+                    {{-- <li class="nav-item dropdown">
                         <a class="nav-link custom-nav dropdown-toggle" href="news-trends.html" id="navbarDropdown"
                             role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                             data-aos="fade-right">
@@ -487,7 +479,7 @@
                                 </div>
                             </div>
                         </div>
-                    </li>
+                    </li> --}}
                     <li class="nav-item">
                         <a class="nav-link custom-nav" data-aos="fade-right" href="{{ route('rfq') }}">RFQ</a>
                     </li>

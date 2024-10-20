@@ -5,7 +5,7 @@ use App\Http\Controllers\Frontend\SiteController;
 use App\Http\Controllers\Frontend\PageController;
 
 Route::get('/', [SiteController::class, 'homePage'])->name('homepage');
-Route::get('solution/details', [SiteController::class, 'solutionDetails'])->name('solution.details');
+Route::get('solution/{slug}', [SiteController::class, 'solutionDetails'])->name('solution.details');
 Route::get('category/{slug}', [SiteController::class, 'category'])->name('category');
 Route::get('catalog/all', [SiteController::class, 'allCatalog'])->name('catalog.all');
 Route::get('faq', [SiteController::class, 'faq'])->name('faq');
@@ -30,6 +30,6 @@ Route::middleware('web')->group(function () {
     Route::get('/{slug}/products', [PageController::class, 'brandProducts'])->name('brand.products');
     Route::get('/catalogue-pdf/{slug}', [PageController::class, 'pdfDetails'])->name('pdf.details');
     Route::get('/{slug}/contents', [PageController::class, 'content'])->name('brand.content');
-    Route::get('/contents/{slug}', [PageController::class, 'contentDetails'])->name('content.details');
+    Route::get('/contents/details/{slug}', [PageController::class, 'contentDetails'])->name('content.details');
     // Route::get('/{slug}/products', [PageController::class, 'ajaxBrandProductsPagination'])->name('brand.products.pagination');
 });

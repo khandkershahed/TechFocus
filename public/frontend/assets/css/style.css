@@ -474,3 +474,149 @@ textarea {
   position: relative;
   top: -15px;
 }
+
+.product_veiw_details_item {
+  text-align: center;
+}
+
+.product_veiw_details_item img {
+  max-width: 100%;
+  display: block;
+  margin: 0px auto;
+}
+
+.product_veiw_details_item_content p {
+  font-size: 21px;
+  color: var(--heading-);
+  font-weight: 300;
+}
+
+.industry_single_help_list {
+  padding-left: 60px;
+}
+
+.industry_single_help_list h5 {
+  font-size: 24px;
+  font-weight: 500;
+  padding-top: 20px;
+}
+
+.industry_single_help_list ul {
+  margin: 0;
+  padding: 0;
+  margin-top: 20px;
+}
+
+.industry_single_help_list ul li {
+  list-style-type: none;
+  margin-bottom: 20px;
+}
+
+.gradient_bg {
+  background-image: linear-gradient(to right top, #3a49cb, #2440dd, #092c9f, #082298, #081d91, #0216c7, #02349f, #0a3097, #082a98, #09319f, #0a34a7, #0a30ae);
+}
+
+.call_to_action_text {
+  padding: 60px !important;
+  /* background-attachment: fixed;
+  */
+}
+
+.call_to_action_text h4 {
+  font-size: 40px;
+  margin-bottom: 25px;
+  font-weight: 400;
+  color: white;
+  text-align: center;
+}
+
+.call_to_action_text p {
+  font-size: 18px;
+  line-height: 24px;
+  margin-bottom: 30px;
+  font-weight: 300;
+  text-align: center;
+  color: white;
+}
+
+/* .solution-feature-container {
+  width: 18rem;
+} */
+
+.section_text_wrapper h4 {
+  margin: 10px 0px;
+}
+
+.section_title {
+  font-family: var(--primary-font);
+  opacity: 0.9;
+  font-size: 32px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.title_top_heading {
+  font-size: 36px;
+  line-height: 48px;
+  color: var(--heading-color);
+  margin-bottom: 14px;
+  font-weight: 100;
+}
+
+.section_text_wrapper p {
+  font-size: 20px;
+  line-height: 1.4;
+  color: var(--navColor);
+}
+
+.section_text_wrapper a {
+  color: #ae0a46;
+}
+
+.section_text_wrapper a:hover {
+  color: #850635;
+}
+
+@media screen and (max-width: 767px) {
+  .solutions-titles {
+    text-align: center !important;
+  }
+
+  .solution-feature-cards {
+    height: 100% !important;
+  }
+
+  .solution-feature-container {
+    margin-bottom: 10px;
+  }
+
+  .product_veiw_details_item {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .solution_para {
+    width: 100% !important;
+  }
+
+  .solution_title {
+    font-size: 22px;
+    font-weight: 800;
+  }
+
+  .industry_single_help_list {
+    padding-left: 30px !important;
+  }
+
+  .section_text_wrapper {
+    text-align: center;
+    margin: 20px;
+  }
+
+  .section_text_wrapper p {
+    font-size: 1rem;
+    text-align: center;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+}

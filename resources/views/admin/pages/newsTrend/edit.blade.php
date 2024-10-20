@@ -34,15 +34,15 @@
                                             id="field2" multiple multiselect-search="true" multiselect-select-all="true"
                                             multiselect-max-items="2">
                                             @php
-                                                $brandIds =
-                                                    isset($newsTrend->brand_id) && is_string($newsTrend->brand_id)
-                                                        ? json_decode($newsTrend->brand_id, true)
+                                                $brandIds = isset($content->brand_id) && is_string($content->brand_id)
+                                                        ? json_decode($content->brand_id, true)
                                                         : [];
                                             @endphp
-                                            @foreach ($brands as $id => $title)
-                                                <option value="{{ $id }}"
-                                                    {{ is_array($brandIds) && in_array($id, $brandIds) ? 'selected' : '' }}>
-                                                    {{ is_string($title) ? htmlspecialchars($title, ENT_QUOTES, 'UTF-8') : '' }}
+                                            @foreach ($brands as $brand)
+                                                <option value="{{ $brand->id }}"
+                                                    {{ is_array($brandIds) && in_array($brand->id, $brandIds) ? 'selected' : '' }}>
+                                                    {{ $brand->title}}
+                                                    {{-- {{ is_string($title) ? htmlspecialchars($title, ENT_QUOTES, 'UTF-8') : '' }} --}}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -142,11 +142,11 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-lg-6 mb-2">
-                                            <label for="validationCustom01" class="form-label required">Author Name</label>
+                                            <label for="validationCustom01" class="form-label required">Source Name</label>
                                             <input type="text" class="form-control form-control-solid form-control-sm"
-                                                id="validationCustom01" placeholder="Enter Author Name" name="author"
+                                                id="validationCustom01" placeholder="Enter Source Name" name="author"
                                                 value="{{ old('author', $content->author) }}" required>
-                                            <div class="invalid-feedback"> Please Enter Author Name</div>
+                                            <div class="invalid-feedback"> Please Enter Source Name</div>
                                         </div>
                                         <div class="col-lg-6 mb-3">
                                             <label for="validationCustom01" class="form-label">Source URL</label>
@@ -196,11 +196,11 @@
                                         <div class="invalid-feedback"> Please Select Type. </div>
                                     </div>
                                     <div class="row gx-1 mb-3">
-                                        <label for="validationCustom01" class="form-label required">Thumbnail
+                                        <label for="validationCustom01" class="form-label">Thumbnail
                                             Image</label>
                                         <div class="col-10">
                                             <input type="file" class="form-control form-control-solid form-control-sm"
-                                                id="validationCustom01" name="thumbnail_image" required>
+                                                id="validationCustom01" name="thumbnail_image">
                                         </div>
                                         <div class="col-2">
                                             <img src="{{ asset('storage/content/' . ($content->thumbnail_image ?? 'default-thumbnail.png')) }}"
@@ -209,10 +209,10 @@
                                         <div class="invalid-feedback"> Please Enter Thumbnail Image </div>
                                     </div>
                                     <div class="row gx-1 mb-3">
-                                        <label for="validationCustom01" class="form-label required">Banner Image</label>
+                                        <label for="validationCustom01" class="form-label">Banner Image</label>
                                         <div class="col-10">
                                             <input type="file" class="form-control form-control-solid form-control-sm"
-                                                id="validationCustom01" name="banner_image" required>
+                                                id="validationCustom01" name="banner_image">
                                         </div>
                                         <div class="col-2">
                                             <img src="{{ asset('storage/content/' . ($content->banner_image ?? 'default-banner.png')) }}"
@@ -221,10 +221,10 @@
                                         <div class="invalid-feedback"> Please Enter Banner Image </div>
                                     </div>
                                     <div class="row gx-1 mb-3">
-                                        <label for="validationCustom01" class="form-label required">Source Image</label>
+                                        <label for="validationCustom01" class="form-label">Source Image</label>
                                         <div class="col-10">
                                             <input type="file" class="form-control form-control-solid form-control-sm"
-                                                id="validationCustom01" name="source_image" required>
+                                                id="validationCustom01" name="source_image">
                                         </div>
                                         <div class="col-2">
                                             <img src="{{ asset('storage/content/' . ($content->source_image ?? 'default-source.png')) }}"
@@ -248,10 +248,10 @@
                                         </div>
                                         <div class="col-lg-6 mb-3">
                                             <label for="validationCustom010"
-                                                class="form-label required mb-0">Address</label>
+                                                class="form-label required mb-0">Source Address</label>
                                             <textarea rows="1" name="address" class="form-control form-control-sm form-control-solid"
-                                                placeholder="Enter Address" required>{{ $content->address }}</textarea>
-                                            <div class="invalid-feedback"> Please Enter Address</div>
+                                                placeholder="Enter Source Address" required>{{ $content->address }}</textarea>
+                                            <div class="invalid-feedback"> Please Enter Source Address</div>
                                         </div>
 
                                         <div class="col-lg-6 mb-3">
