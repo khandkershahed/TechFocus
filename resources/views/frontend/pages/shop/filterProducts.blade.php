@@ -431,22 +431,24 @@
                                 <div class="content">
                                     <div class="front">
                                         <img class="profile" width="100%" src="{{ $product->thumbnail }}"
-                                            alt={{ $product->name }}" />
+                                            alt="{{ $product->name }}" />
                                         <div class="d-flex align-items-center justify-content-between p-2">
-                                            <a
-                                                href="{{ route('product.details', ['id' => optional($product->brand)->slug, 'slug' => optional($product)->slug]) }}">
-                                                <h2 class="text-center font-four pt-5">
-                                                    {{ $product->name }}
-                                                </h2>
-                                            </a>
+                                            <div>
+                                                <a href="{{ route('product.details', ['id' => optional($product->brand)->slug, 'slug' => optional($product)->slug]) }}">
+                                                    <h2 class="text-center font-five">
+                                                        {{ $product->name }}
+                                                    </h2>
+                                                </a>
+                                            </div>
 
                                             <!-- Brand Logo -->
-                                            <br />
-                                            <a href="#" class="mt-5">
-                                                <img class="lazyLoaded logo right"
-                                                    src="{{ asset('storage/brand/logo/' . optional($product->brand)->logo) }}"
-                                                    title="{{ optional($product->brand)->title }}" />
-                                            </a>
+                                            <div>
+                                                <a href="{{ route('brand.overview',optional($product->brand)->slug) }}" class="">
+                                                    <img class="lazyLoaded logo right" style="width: 100px;"
+                                                        src="{{ asset('storage/brand/logo/' . optional($product->brand)->logo) }}"
+                                                        title="{{ optional($product->brand)->title }}" />
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="back from-bottom text-start">
