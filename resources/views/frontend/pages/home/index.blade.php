@@ -196,7 +196,7 @@
                                     <!-- <span class="product_badge2">New</span> -->
                                 </div>
                                 <div class="card-body p-0">
-                                    <img class="img-fluid" src="{{ asset('storage/' . $product->thumbnail) }}" />
+                                    <img class="img-fluid" src="{{$product->thumbnail}}" />
                                 </div>
                                 <div class="card-body p-0">
                                     <div class="px-3">
