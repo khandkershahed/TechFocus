@@ -211,7 +211,7 @@ class ProductController extends Controller
         } catch (\Exception $e) {
             DB::rollback();
             // \Log::error('Error occurred while creating product: ' . $e->getMessage());
-            return redirect()->back()->withInput()->with('error', 'An error occurred while creating the Product.');
+            return redirect()->back()->withInput()->with('error', $e->getMessage());
         }
     }
 
