@@ -213,16 +213,7 @@
                                                     <div class="col-lg-3 mb-3">
                                                         <div class="fv-row mb-3">
                                                             <label class="form-label required">Category Name</label>
-                                                            <select class="form-control select" id="category_id"
-                                                                class="form-control select mb-2" name="category_id[]"
-                                                                multiple multiselect-search="true"
-                                                                multiselect-select-all="true" data-control="select2"
-                                                                data-placeholder="Select an option"
-                                                                data-allow-clear="true">
-                                                                {!! $categoriesOptions !!}
-                                                            </select>
-                                                            <div class="invalid-feedback"> Please Enter Category Name.
-                                                                {{-- <select class="form-control select" name="category_id[]"
+                                                            <select class="form-control select" name="category_id[]"
                                                                 id="field2" multiple multiselect-search="true"
                                                                 multiselect-select-all="true">
                                                                 @if (count($categories) > 0)
@@ -237,7 +228,7 @@
                                                                     @endforeach
                                                                 @endif
                                                             </select>
-                                                            <div class="invalid-feedback"> Please Enter Category Name. --}}
+                                                            <div class="invalid-feedback"> Please Enter Category Name.
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1044,10 +1035,10 @@
                 $(".rfq_price").removeClass("d-none");
                 // $(".offer_price").addClass("d-none");
                 $(".price").addClass("d-none");
-                // } else if (price_value == 'offer_price') {
-                //     $(".offer_price").removeClass("d-none");
-                //     $(".rfq_price").addClass("d-none");
-                //     $(".price").addClass("d-none");
+            // } else if (price_value == 'offer_price') {
+            //     $(".offer_price").removeClass("d-none");
+            //     $(".rfq_price").addClass("d-none");
+            //     $(".price").addClass("d-none");
             } else {
                 $(".price").removeClass("d-none");
                 $(".offer_price").addClass("d-none");
@@ -1202,5 +1193,7 @@
                 validateAndSwitchTab(targetTabId);
             });
         });
+
+        
     </script>
 @endpush
