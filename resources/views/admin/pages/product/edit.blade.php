@@ -427,10 +427,13 @@
                                                                 name="parent_id[]" id="field2" multiple
                                                                 multiselect-search="true" multiselect-select-all="true"
                                                                 multiselect-max-items="2">
+
                                                                 @if (!empty($product->parent_id))
                                                                     @php
                                                                         $parentIds = isset($product->parent_id)
-                                                                            ? json_decode($product->parent_id, true)
+                                                                            ? (is_string($product->parent_id)
+                                                                                ? json_decode($product->parent_id, true)
+                                                                                : $product->parent_id)
                                                                             : [];
                                                                         $parents = App\Models\Admin\Product::pluck(
                                                                             'name',
@@ -459,7 +462,9 @@
                                                                 @if (!empty($product->child_id))
                                                                     @php
                                                                         $childIds = isset($product->child_id)
-                                                                            ? json_decode($product->child_id, true)
+                                                                            ? (is_string($product->child_id)
+                                                                                ? json_decode($product->child_id, true)
+                                                                                : $product->child_id)
                                                                             : [];
                                                                         $childs = App\Models\Admin\Product::pluck(
                                                                             'name',
