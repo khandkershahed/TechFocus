@@ -18,6 +18,12 @@ class Product extends Model
      */
     protected $guarded = [];
     protected $slugSourceColumn = 'name';
+    protected $casts = [
+        'category_id' => 'array',
+        'color_id'    => 'array',
+        'parent_id'   => 'array',
+        'child_id'    => 'array',
+    ];
     public function industries()
     {
         return $this->belongsToMany(Industry::class, 'industry_products', 'product_id', 'industry_id');

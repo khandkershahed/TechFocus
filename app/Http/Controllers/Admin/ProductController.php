@@ -127,14 +127,10 @@ class ProductController extends Controller
                 'deal'                      => $request->deal,
                 'refurbished'               => $request->refurbished,
                 'product_type'              => $request->product_type,
-                'category_id'               => $request->input('category_id'),
-                // 'category_id'               => json_encode($request->category_id),
-                'color_id'                  => $request->color_id,
-                'parent_id'                 => $request->parent_id,
-                'child_id'                  => $request->child_id,
-                // 'color_id'                  => json_encode($request->color_id),
-                // 'parent_id'                 => json_encode($request->parent_id),
-                // 'child_id'                  => json_encode($request->child_id),
+                'category_id'               => $request->has('category_id') ? json_encode($request->category_id) : null,  // Ensure this is encoded
+                'color_id'                  => $request->has('color_id') ? json_encode($request->color_id) : null,  // Ensure this is encoded
+                'parent_id'                 => $request->has('parent_id') ? json_encode($request->parent_id) : null,  // Ensure this is encoded
+                'child_id'                  => $request->has('child_id') ? json_encode($request->child_id) : null,  // Ensure this is encoded
                 'brand_id'                  => $request->brand_id,
                 'source_one_name'           => $request->source_one_name,
                 'source_one_link'           => $request->source_one_link,
@@ -172,6 +168,7 @@ class ProductController extends Controller
                 'product_status'            => 'sourcing',
                 'created_at'                => Carbon::now(),
             ];
+
 
             $product = Product::create($productData);
 
@@ -300,11 +297,10 @@ class ProductController extends Controller
             'deal'                      => $request->deal,
             'refurbished'               => $request->refurbished,
             'product_type'              => $request->product_type,
-            'category_id'               => $request->input('category_id'),
-            // 'category_id'               => json_encode($request->category_id),
-            'color_id'                  => json_encode($request->color_id),
-            'parent_id'                 => json_encode($request->parent_id),
-            'child_id'                  => json_encode($request->child_id),
+            'category_id'               => json_encode($request->input('category_id')), // Convert to JSON
+            'color_id'                  => json_encode($request->input('color_id')), // Convert to JSON
+            'parent_id'                 => json_encode($request->input('parent_id')), // Convert to JSON
+            'child_id'                  => json_encode($request->input('child_id')), // Convert to JSON
             'brand_id'                  => $request->brand_id,
             'source_one_name'           => $request->source_one_name,
             'source_one_link'           => $request->source_one_link,
@@ -336,10 +332,8 @@ class ProductController extends Controller
             'agreement'                 => $request->agreement,
             'source_type'               => $request->source_type,
             'source_contact'            => $request->source_contact,
-            'added_by'                  => Auth::user()->name,
+            'added_by'                  => Auth::guard('admin')->user()->name,
             'updated_at'                => Carbon::now(),
-            // 'action_status'             => ($request->action == 'save') ? 'save' : 'listed',
-            // 'product_status'            => 'sourcing',
         ]);
 
 
