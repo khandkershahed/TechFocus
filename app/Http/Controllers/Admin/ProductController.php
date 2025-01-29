@@ -56,8 +56,6 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $categories = $this->buildCategories(Category::active()->get());
-        $categoriesOptions = $this->buildCategoriesOptions($categories);
         
         $data = [
             'products'   => DB::table('products')->select('id', 'name')->get(),
