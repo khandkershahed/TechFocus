@@ -228,7 +228,9 @@
                                                     </div>
                                                     @php
                                                         $categoryIds = isset($product->category_id)
-                                                            ? json_decode($product->category_id, true)
+                                                            ? (is_string($product->category_id)
+                                                                ? json_decode($product->category_id, true)
+                                                                : $product->category_id)
                                                             : [];
                                                     @endphp
                                                     <div class="col-lg-3 mb-3">
@@ -238,21 +240,14 @@
                                                                 id="category_id" name="category_id[]" multiple
                                                                 multiselect-search="true" multiselect-select-all="true"
                                                                 data-allow-clear="true">
-                                                                @php
-                                                                    $categoryIds = isset($product->category_id) &&
-                                                                    is_string($product->category_id)
-                                                                        ? json_decode($product->category_id, true)
-                                                                        : [];
-                                                                @endphp
 
-                                                                @if (count($categories) > 0)
-                                                                    @foreach ($categories as $category)
-                                                                        <option value="{{ $category->id }}"
-                                                                            {{ is_array($categoryIds) && in_array($category->id, $categoryIds) ? 'selected' : '' }}>
-                                                                            {{ $category->name }}
-                                                                        </option>
-                                                                    @endforeach
-                                                                @endif
+
+                                                                @foreach ($categories as $category)
+                                                                    <option value="{{ $category->id }}"
+                                                                        {{ in_array($category->id, $categoryIds) ? 'selected' : '' }}>
+                                                                        {{ $category->name }}
+                                                                    </option>
+                                                                @endforeach
                                                             </select>
                                                             <div class="invalid-feedback"> Please Enter Category Name.
                                                             </div>
