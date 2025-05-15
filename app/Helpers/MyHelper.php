@@ -3,6 +3,7 @@
 use App\Models\City;
 use App\Models\State;
 use App\Models\Country;
+use Illuminate\Support\Str;
 use App\Models\Admin\Address;
 use App\Models\Admin\Company;
 use App\Models\Admin\Contact;
@@ -11,6 +12,7 @@ use App\Models\Admin\ProductSas;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
 use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * The function `customUpload` uploads a file to a specified path and resizes it if it is an image.
@@ -93,6 +95,55 @@ if (!function_exists('customUpload')) {
         }
     }
 }
+
+if (!function_exists('fileUpload')) {
+    function fileUpload(UploadedFile $mainFile, string $uploadPath, ?int $reqWidth = null, ?int $reqHeight = null): array
+    {
+        try {
+            $originalName = pathinfo($mainFile->getClientOriginalName(), PATHINFO_FILENAME);
+            $fileExtention = $mainFile->getClientOriginalExtension();
+            $currentTime = Str::random(10) . time();
+            $name = Str::limit($originalName, 100);
+            $fileName = $currentTime . '.' . $fileExtention;
+            $fullUploadPath = "public/$uploadPath";
+            // Ensure directory exists
+            if (!Storage::exists($fullUploadPath)) {
+                // Create directory
+                $localPath = storage_path("app/$fullUploadPath");
+                if (!mkdir($localPath, 0755, true)) {
+                    abort(404, "Failed to create the directory: $fullUploadPath");
+                }
+                // Ensure directory permissions are set correctly
+                chmod($localPath, 0755);
+            }
+
+            // Store the file
+            try {
+                $mainFile->storeAs($fullUploadPath, $fileName);
+                $filePath = "$uploadPath/$fileName";
+            } catch (\Exception $e) {
+                abort(500, "Failed to store the file: " . $e->getMessage());
+            }
+
+            $output = [
+                'status'         => 1,
+                'file_name'      => $fileName,
+                'file_extension' => $mainFile->getClientOriginalExtension(),
+                'file_size'      => $mainFile->getSize(),
+                'file_type'      => $mainFile->getMimeType(),
+                'file_path'      => $filePath,
+            ];
+
+            return array_map('htmlspecialchars', $output);
+        } catch (\Exception $e) {
+            return [
+                'status' => 0,
+                'error_message' => $e->getMessage(),
+            ];
+        }
+    }
+}
+
 
 if (!function_exists('generateRefUniqueCode')) {
     /**

@@ -1,8 +1,8 @@
 @props(['id' => '', 'name', 'source' => ''])
 
 <div class="row gx-1">
-    <div class="col-9">
-        <input id="{{ $id ?? 'file-input' }}" type="file" class="form-control form-control-solid @error($name)is-invalid @enderror"
+    <div class="col-10">
+        <input id="{{ $id ?? 'file-input' }}" type="file" class="form-control @error($name)is-invalid @enderror"
             name="{{ $name }}" accept="image/*" {{ $attributes }} onchange="previewFile(this)" />
 
         @error($name)
@@ -11,10 +11,9 @@
             </div>
         @enderror
     </div>
-    <div class="col-3 mt-n7">
+    <div class="col-2 mt-n7">
         <img id="{{ $id ?? 'file-input' }}-preview" src="{{ !empty($source) ? $source : asset('images/no_image.png') }}"
-            alt="Image Preview" class="img-thumbnail" style="display: {{ !empty($source) ? 'block' : 'none' }};" width="100%"
-            height="100%">
+            alt="Image Preview" class="img-thumbnail" style="display: {{ !empty($source) ? 'block' : 'none' }};height: 65px;">
     </div>
 </div>
 

@@ -24,6 +24,7 @@ return new class extends Migration
             $table->foreignId('content_id')->nullable()->constrained('news_trends')->cascadeOnDelete();
             $table->string('page_name')->nullable();
             $table->string('page_title')->nullable();
+            
             $table->string('banner_one_name')->nullable();
             $table->string('banner_two_name')->nullable();
             $table->string('banner_three_name')->nullable();

@@ -10,10 +10,12 @@ use App\Models\Admin\Product;
 use App\Models\Admin\Category;
 use App\Models\Admin\Industry;
 use App\Models\Admin\NewsTrend;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BannerRequest;
 use App\Models\Admin\SolutionDetail;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class BannerController extends Controller
 {
@@ -54,69 +56,64 @@ class BannerController extends Controller
      */
     public function store(BannerRequest $request)
     {
-        $mainFileBannerOne = $request->file('banner_one_image');
-        $mainFileBannerTwo = $request->file('banner_two_image');
-        $mainFileBannerThree = $request->file('banner_three_image');
+        DB::beginTransaction();
 
-        $mainFileMetaImage = $request->file('meta_image');
+        try {
+            $files = [
+                'banner_one_image'   => $request->file('banner_one_image'),
+                'banner_two_image'   => $request->file('banner_two_image'),
+                'banner_three_image' => $request->file('banner_three_image'),
+                'meta_image'         => $request->file('meta_image'),
+            ];
+            $uploadedFiles = [];
+            foreach ($files as $key => $file) {
+                if (! empty($file)) {
+                    $filePath            = 'banner/' . $key;
+                    $uploadedFiles[$key] = fileUpload($file, $filePath);
+                    if ($uploadedFiles[$key]['status'] === 0) {
+                        return redirect()->back()->with('error', $uploadedFiles[$key]['error_message']);
+                    }
+                } else {
+                    $uploadedFiles[$key] = ['status' => 0];
+                }
+            }
 
-        $filePathBannerOne = storage_path('app/public/banner/one/');
-        $filePathBannerTwo = storage_path('app/public/banner/two/');
-        $filePathBannerThree = storage_path('app/public/banner/three/');
+            // Create the Offer model instance
+            Banner::create([
+                'category'           => $request->category,
+                'brand_id'           => $request->brand_id,
+                'category_id'        => $request->category_id,
+                'product_id'         => $request->product_id,
+                'solution_id'        => $request->solution_id,
+                'industry_id'        => $request->industry_id,
+                'content_id'         => $request->content_id,
+                'page_name'          => $request->page_name,
+                'page_title'         => $request->page_title,
+                'banner_one_name'    => $request->banner_one_name,
+                'banner_two_name'    => $request->banner_two_name,
+                'banner_three_name'  => $request->banner_three_name,
+                'banner_one_slug'    => Str::slug($request->banner_one_name),
+                'banner_two_slug'    => Str::slug($request->banner_two_name),
+                'banner_three_slug'  => Str::slug($request->banner_three_name),
+                'banner_one_image'   => $uploadedFiles['banner_one_image']['status'] == 1 ? $uploadedFiles['banner_one_image']['file_path'] :  null,
+                'banner_two_image'   => $uploadedFiles['banner_two_image']['status'] == 1 ? $uploadedFiles['banner_two_image']['file_path'] : null,
+                'banner_three_image' => $uploadedFiles['banner_three_image']['status'] == 1 ? $uploadedFiles['banner_three_image']['file_path'] : null,
+                'meta_image'         => $uploadedFiles['meta_image']['status'] == 1 ? $uploadedFiles['meta_image']['file_path'] : null,
+                'banner_one_link'    => $request->banner_one_link,
+                'banner_two_link'    => $request->banner_two_link,
+                'banner_three_link'  => $request->banner_three_link,
+                'meta_title'         => $request->meta_title,
+                'meta_description'   => $request->meta_description,
+                'meta_tags'          => $request->meta_tags,
+                'status'             => $request->status,
+            ]);
 
-        $filePathMetaImage  = storage_path('app/public/banner/meta-image/');
-
-        if (!empty($mainFileBannerOne)) {
-            $globalFunBannerOne = customUpload($mainFileBannerOne, $filePathBannerOne);
-        } else {
-            $globalFunBannerOne = ['status' => 0];
+            DB::commit();
+            return redirect()->route('admin.banner.index')->with('success', 'Data created successfully');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->withInput()->with('error', 'An error occurred while creating the Offer: ' . $e->getMessage());
         }
-        if (!empty($mainFileBannerTwo)) {
-            $globalFunBannerTwo = customUpload($mainFileBannerTwo, $filePathBannerTwo);
-        } else {
-            $globalFunBannerTwo = ['status' => 0];
-        }
-        if (!empty($mainFileBannerThree)) {
-            $globalFunBannerThree = customUpload($mainFileBannerThree, $filePathBannerThree);
-        } else {
-            $globalFunBannerThree = ['status' => 0];
-        }
-        if (!empty($mainFileMetaImage)) {
-            $globalFunMetaImage = customUpload($mainFileMetaImage, $filePathMetaImage);
-        } else {
-            $globalFunMetaImage = ['status' => 0];
-        }
-
-        Banner::create([
-            'category'           => $request->category,
-            'brand_id'           => $request->brand_id,
-            'category_id'        => $request->category_id,
-            'product_id'         => $request->product_id,
-            'solution_id'        => $request->solution_id,
-            'industry_id'        => $request->industry_id,
-            'content_id'         => $request->content_id,
-            'page_name'          => $request->page_name,
-            'page_title'         => $request->page_title,
-            'banner_one_name'    => $request->banner_one_name,
-            'banner_two_name'    => $request->banner_two_name,
-            'banner_three_name'  => $request->banner_three_name,
-            'banner_one_slug'    => Str::slug($request->banner_one_name),
-            'banner_two_slug'    => Str::slug($request->banner_two_name),
-            'banner_three_slug'  => Str::slug($request->banner_three_name),
-            'banner_one_image'   => $globalFunBannerOne['status']   == 1 ? $globalFunBannerOne['file_name']  : null,
-            'banner_two_image'   => $globalFunBannerTwo['status']   == 1 ? $globalFunBannerTwo['file_name']  : null,
-            'banner_three_image' => $globalFunBannerThree['status'] == 1 ? $globalFunBannerThree['file_name'] : null,
-            'banner_one_link'    => $request->banner_one_link,
-            'banner_two_link'    => $request->banner_two_link,
-            'banner_three_link'  => $request->banner_three_link,
-            'meta_title'         => $request->meta_title,
-            'meta_description'   => $request->meta_description,
-            'meta_tags'          => $request->meta_tags,
-            'meta_image'         => $globalFunMetaImage['status']   == 1 ? $globalFunMetaImage['file_name']  : null,
-            'status'             => $request->status,
-        ]);
-
-        return redirect()->back()->with('success', 'Data has been saved successfully!');
     }
 
     /**
@@ -158,103 +155,72 @@ class BannerController extends Controller
      */
     public function update(BannerRequest $request, $id)
     {
-        $banner = Banner::find($id);
+        DB::beginTransaction();
 
-        $mainFileBannerOne = $request->file('banner_one_image');
-        $mainFileBannerTwo = $request->file('banner_two_image');
-        $mainFileBannerThree = $request->file('banner_three_image');
+        try {
+            $banner = Banner::findOrFail($id);
 
-        $mainFileMetaImage = $request->file('meta_image');
-
-        $filePathBannerOne = storage_path('app/public/banner/one/');
-        $filePathBannerTwo = storage_path('app/public/banner/two/');
-        $filePathBannerThree = storage_path('app/public/banner/three/');
-
-        $filePathMetaImage  = storage_path('app/public/banner/meta-image/');
-
-        if (!empty($mainFileBannerOne)) {
-            $globalFunBannerOne = customUpload($mainFileBannerOne, $filePathBannerOne);
-            $paths = [
-                storage_path("app/public/banner/one/{$banner->banner_one_image}"),
+            $files = [
+                'banner_one_image'   => $request->file('banner_one_image'),
+                'banner_two_image'   => $request->file('banner_two_image'),
+                'banner_three_image' => $request->file('banner_three_image'),
+                'meta_image'         => $request->file('meta_image'),
             ];
-            foreach ($paths as $path) {
-                if (File::exists($path)) {
-                    File::delete($path);
+
+            $uploadedFiles = [];
+            foreach ($files as $key => $file) {
+                if (! empty($file)) {
+                    $filePath = 'banner/' . $key;
+
+                    // Delete old file if exists
+                    if ($banner->$key) {
+                        Storage::delete($banner->$key);
+                    }
+
+                    $uploadedFiles[$key] = customUpload($file, $filePath);
+                    if ($uploadedFiles[$key]['status'] === 0) {
+                        return redirect()->back()->with('error', $uploadedFiles[$key]['error_message']);
+                    }
+                } else {
+                    $uploadedFiles[$key] = ['status' => 0];
                 }
             }
-        } else {
-            $globalFunBannerOne = ['status' => 0];
-        }
-        if (!empty($mainFileBannerTwo)) {
-            $globalFunBannerTwo = customUpload($mainFileBannerTwo, $filePathBannerTwo);
-            $paths = [
-                storage_path("app/public/banner/two/{$banner->banner_two_image}"),
-            ];
-            foreach ($paths as $path) {
-                if (File::exists($path)) {
-                    File::delete($path);
-                }
-            }
-        } else {
-            $globalFunBannerTwo = ['status' => 0];
-        }
-        if (!empty($mainFileBannerThree)) {
-            $globalFunBannerThree = customUpload($mainFileBannerThree, $filePathBannerThree);
-            $paths = [
-                storage_path("app/public/banner/three/{$banner->banner_three_image}"),
-            ];
-            foreach ($paths as $path) {
-                if (File::exists($path)) {
-                    File::delete($path);
-                }
-            }
-        } else {
-            $globalFunBannerThree = ['status' => 0];
-        }
-        if (!empty($mainFileMetaImage)) {
-            $globalFunMetaImage = customUpload($mainFileMetaImage, $filePathMetaImage);
-            $paths = [
-                storage_path("app/public/banner/meta-image/{$banner->meta_image}"),
-            ];
-            foreach ($paths as $path) {
-                if (File::exists($path)) {
-                    File::delete($path);
-                }
-            }
-        } else {
-            $globalFunMetaImage = ['status' => 0];
-        }
 
-        $banner->update([
-            'category'           => $request->category,
-            'brand_id'           => $request->brand_id,
-            'category_id'        => $request->category_id,
-            'product_id'         => $request->product_id,
-            'solution_id'        => $request->solution_id,
-            'industry_id'        => $request->industry_id,
-            'content_id'         => $request->content_id,
-            'page_name'          => $request->page_name,
-            'page_title'         => $request->page_title,
-            'banner_one_name'    => $request->banner_one_name,
-            'banner_two_name'    => $request->banner_two_name,
-            'banner_three_name'  => $request->banner_three_name,
-            'banner_one_slug'    => Str::slug($request->banner_one_name),
-            'banner_two_slug'    => Str::slug($request->banner_two_name),
-            'banner_three_slug'  => Str::slug($request->banner_three_name),
-            'banner_one_image'   => $globalFunBannerOne['status']   == 1 ? $globalFunBannerOne['file_name']  :  $banner->banner_one_image,
-            'banner_two_image'   => $globalFunBannerTwo['status']   == 1 ? $globalFunBannerTwo['file_name']  :  $banner->banner_two_image,
-            'banner_three_image' => $globalFunBannerThree['status'] == 1 ? $globalFunBannerThree['file_name'] :  $banner->banner_three_image,
-            'banner_one_link'    => $request->banner_one_link,
-            'banner_two_link'    => $request->banner_two_link,
-            'banner_three_link'  => $request->banner_three_link,
-            'meta_title'         => $request->meta_title,
-            'meta_description'   => $request->meta_description,
-            'meta_tags'          => $request->meta_tags,
-            'meta_image'         => $globalFunMetaImage['status']   == 1 ? $globalFunMetaImage['file_name']  :  $banner->meta_image,
-            'status'             => $request->status,
-        ]);
+            $banner->update([
+                'category'           => $request->category,
+                'brand_id'           => $request->brand_id,
+                'category_id'        => $request->category_id,
+                'product_id'         => $request->product_id,
+                'solution_id'        => $request->solution_id,
+                'industry_id'        => $request->industry_id,
+                'content_id'         => $request->content_id,
+                'page_name'          => $request->page_name,
+                'page_title'         => $request->page_title,
+                'banner_one_name'    => $request->banner_one_name,
+                'banner_two_name'    => $request->banner_two_name,
+                'banner_three_name'  => $request->banner_three_name,
+                'banner_one_slug'    => Str::slug($request->banner_one_name),
+                'banner_two_slug'    => Str::slug($request->banner_two_name),
+                'banner_three_slug'  => Str::slug($request->banner_three_name),
+                'banner_one_image'   => $uploadedFiles['banner_one_image']['status'] == 1 ? $uploadedFiles['banner_one_image']['file_path'] :  $banner->banner_one_image,
+                'banner_two_image'   => $uploadedFiles['banner_two_image']['status'] == 1 ? $uploadedFiles['banner_two_image']['file_path'] : $banner->banner_two_image,
+                'banner_three_image' => $uploadedFiles['banner_three_image']['status'] == 1 ? $uploadedFiles['banner_three_image']['file_path'] : $banner->banner_three_image,
+                'meta_image'         => $uploadedFiles['meta_image']['status'] == 1 ? $uploadedFiles['meta_image']['file_path'] : $banner->meta_image,
+                'banner_one_link'    => $request->banner_one_link,
+                'banner_two_link'    => $request->banner_two_link,
+                'banner_three_link'  => $request->banner_three_link,
+                'meta_title'         => $request->meta_title,
+                'meta_description'   => $request->meta_description,
+                'meta_tags'          => $request->meta_tags,
+                'status'             => $request->status,
+            ]);
 
-        return redirect()->back()->with('success', 'Data has been saved successfully!');
+            DB::commit();
+            return redirect()->route('admin.banner.index')->with('success', 'Data updated successfully');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->withInput()->with('error', 'An error occurred while updating the Offer: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -265,18 +231,16 @@ class BannerController extends Controller
      */
     public function destroy($id)
     {
-        $banner = Banner::find($id);
-
-        $paths = [
-            storage_path("app/public/banner/one/{$banner->banner_one_image}"),
-            storage_path("app/public/banner/two/{$banner->banner_two_image}"),
-            storage_path("app/public/banner/three/{$banner->banner_three_image}"),
-            storage_path("app/public/banner/meta-image/{$banner->meta_image}"),
+        $banner = Banner::findOrFail($id);
+        $files = [
+            'image'    => $banner->image,
         ];
-
-        foreach ($paths as $path) {
-            if (File::exists($path)) {
-                File::delete($path);
+        foreach ($files as $key => $file) {
+            if (!empty($file)) {
+                $oldFile = $banner->$key ?? null;
+                if ($oldFile) {
+                    Storage::delete("public/" . $oldFile);
+                }
             }
         }
         $banner->delete();

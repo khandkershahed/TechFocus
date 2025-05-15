@@ -14,6 +14,7 @@
                 class="menu-item menu-accordion {{ request()->routeIs($route['activePattern']) ? 'menu-item-active' : '' }}">
                 <span class="menu-link">
                     <span class="menu-icon">
+
                         <!--begin::Svg Icon | path: icons/duotune/ecommerce/ecm002.svg-->
                         <span class="svg-icon svg-icon-2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -29,6 +30,7 @@
                                     fill="currentColor" />
                             </svg>
                         </span>
+
                         <!--end::Svg Icon-->
                     </span>
                     <span class="menu-title">{{ ucfirst($route['title']) }}</span>
