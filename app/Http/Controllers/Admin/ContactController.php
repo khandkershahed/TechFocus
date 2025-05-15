@@ -50,7 +50,7 @@ class ContactController extends Controller
      */
     public function store(ContactRequest $request)
     {
-        $data = array_merge($request->only(['country_id', 'name', 'email', 'phone', 'subject', 'message', 'status']), [
+        $data = array_merge($request->only(['country_id', 'name', 'phone', 'email', 'subject', 'message', 'status']), [
             'code' => generate_unique_code(),
             'ip_address' => $request->ip(),
         ]);

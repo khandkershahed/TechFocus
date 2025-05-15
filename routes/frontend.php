@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ContactController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Frontend\SiteController;
 use App\Http\Controllers\Frontend\PageController;
@@ -11,6 +12,7 @@ Route::get('catalog/all', [SiteController::class, 'allCatalog'])->name('catalog.
 Route::get('faq', [SiteController::class, 'faq'])->name('faq');
 Route::get('rfq', [SiteController::class, 'rfq'])->name('rfq');
 Route::get('contact', [SiteController::class, 'contact'])->name('contact');
+Route::post('contact-store', [ContactController::class, 'store'])->name('contact.add');
 Route::get('terms', [SiteController::class, 'terms'])->name('terms');
 Route::get('about-us', [SiteController::class, 'about'])->name('about');
 Route::get('services', [SiteController::class, 'service'])->name('service');

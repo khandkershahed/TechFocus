@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Admin\Category;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\AboutPage;
+use App\Models\Admin\Banner;
 use App\Models\Admin\NewsTrend;
 use App\Models\Admin\Product;
 use App\Models\Admin\SolutionDetail;
@@ -92,7 +93,10 @@ class SiteController extends Controller
     }
     public function contact()
     {
-        return view('frontend.pages.crm.contact');
+        $data = [
+            'banner' => Banner::where('category','page')->where('page_name', 'contact_page')->first(),
+        ];
+        return view('frontend.pages.crm.contact',$data);
     }
 
     public function about()
