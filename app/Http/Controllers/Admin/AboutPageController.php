@@ -47,12 +47,12 @@ class AboutPageController extends Controller
         $mainFileSectionTwoMainImage          = $request->file('section_two_main_image');
         $mainFileSectionTwoSecondaryImage     = $request->file('section_two_secondary_image');
         $mainFileSectionFourBannerMiddleImage = $request->file('section_four_banner_middle_image');
-        $mainFileSectionFourCeoSign           = $request->file('section_four_ceo_sign');
+        $mainFileSectionFiveCeoSign           = $request->file('section_five_ceo_sign');
 
         $filePathSectionTwoMainImage          = storage_path('app/public/about-us/');
         $filePathSectionTwoSecondaryImage     = storage_path('app/public/about-us/');
         $filePathSectionFourBannerMiddleImage = storage_path('app/public/about-us/');
-        $filePathSectionFourCeoSign           = storage_path('app/public/about-us/');
+        $filePathSectionFiveCeoSign           = storage_path('app/public/about-us/');
 
         if (!empty($mainFileSectionTwoMainImage)) {
             $globalFunSectionTwoMainImage = customUpload($mainFileSectionTwoMainImage, $filePathSectionTwoMainImage);
@@ -69,10 +69,10 @@ class AboutPageController extends Controller
         } else {
             $globalFunSectionFourBannerMiddleImage = ['status' => 0];
         }
-        if (!empty($mainFileSectionFourCeoSign)) {
-            $globalFunSectionFourCeoSign = customUpload($mainFileSectionFourCeoSign, $filePathSectionFourCeoSign);
+        if (!empty($mainFileSectionFiveCeoSign)) {
+            $globalFunSectionFiveCeoSign = customUpload($mainFileSectionFiveCeoSign, $filePathSectionFiveCeoSign);
         } else {
-            $globalFunSectionFourCeoSign = ['status' => 0];
+            $globalFunSectionFiveCeoSign = ['status' => 0];
         }
 
         AboutPage::create([
@@ -138,7 +138,7 @@ class AboutPageController extends Controller
             'section_four_banner_middle_image'                           => $globalFunSectionFourBannerMiddleImage['status'] == 1 ? $globalFunSectionFourBannerMiddleImage['file_name'] : null,
             'section_five_col_one_description'                   => $request->section_five_col_one_description,
             'section_five_col_one_title'             => $request->section_five_col_one_title,
-            'section_five_ceo_sign'                                   => $globalFunSectionFourCeoSign['status']           == 1 ? $globalFunSectionFourCeoSign['file_name']          : null,
+            'section_five_ceo_sign'                                   => $globalFunSectionFiveCeoSign['status']           == 1 ? $globalFunSectionFiveCeoSign['file_name']          : null,
             'section_five_ceo_name'                    => $request->section_five_ceo_name,
             'section_five_ceo_designation'             => $request->section_five_ceo_designation,
             'section_five_ceo_facebook_account_link'   => $request->section_five_ceo_facebook_account_link,
@@ -212,12 +212,12 @@ class AboutPageController extends Controller
         $mainFileSectionTwoMainImage          = $request->file('section_two_main_image');
         $mainFileSectionTwoSecondaryImage     = $request->file('section_two_secondary_image');
         $mainFileSectionFourBannerMiddleImage = $request->file('section_four_banner_middle_image');
-        $mainFileSectionFourCeoSign           = $request->file('section_four_ceo_sign');
+        $mainFileSectionFiveCeoSign           = $request->file('section_five_ceo_sign');
 
         $filePathSectionTwoMainImage          = storage_path('app/public/about-us/');
         $filePathSectionTwoSecondaryImage     = storage_path('app/public/about-us/');
         $filePathSectionFourBannerMiddleImage = storage_path('app/public/about-us/');
-        $filePathSectionFourCeoSign           = storage_path('app/public/about-us/');
+        $filePathSectionFiveCeoSign           = storage_path('app/public/about-us/');
 
         if (!empty($mainFileSectionTwoMainImage)) {
             $globalFunSectionTwoMainImage = customUpload($mainFileSectionTwoMainImage, $filePathSectionTwoMainImage);
@@ -258,10 +258,10 @@ class AboutPageController extends Controller
         } else {
             $globalFunSectionFourBannerMiddleImage = ['status' => 0];
         }
-        if (!empty($mainFileSectionFourCeoSign)) {
-            $globalFunSectionFourCeoSign = customUpload($mainFileSectionFourCeoSign, $filePathSectionFourCeoSign);
+        if (!empty($mainFileSectionFiveCeoSign)) {
+            $globalFunSectionFiveCeoSign = customUpload($mainFileSectionFiveCeoSign, $filePathSectionFiveCeoSign);
             $paths = [
-                storage_path("app/public/about-us/{$aboutPage->section_four_ceo_sign}"),
+                storage_path("app/public/about-us/{$aboutPage->section_five_ceo_sign}"),
             ];
             foreach ($paths as $path) {
                 if (File::exists($path)) {
@@ -269,7 +269,7 @@ class AboutPageController extends Controller
                 }
             }
         } else {
-            $globalFunSectionFourCeoSign = ['status' => 0];
+            $globalFunSectionFiveCeoSign = ['status' => 0];
         }
 
         $aboutPage->update([
@@ -335,7 +335,7 @@ class AboutPageController extends Controller
             'section_four_banner_middle_image'             => $globalFunSectionFourBannerMiddleImage['status'] == 1 ? $globalFunSectionFourBannerMiddleImage['file_name'] : $aboutPage->section_four_banner_middle_image,
             // 'section_four_col_one_title'                   => $request->section_four_col_one_title,
             // 'section_four_col_one_description'             => $request->section_four_col_one_description,
-            'section_four_ceo_sign'                        => $globalFunSectionFourCeoSign['status']           == 1 ? $globalFunSectionFourCeoSign['file_name']          : $aboutPage->section_four_ceo_sign,
+            'section_five_ceo_sign'                    => $globalFunSectionFiveCeoSign['status']           == 1 ? $globalFunSectionFiveCeoSign['file_name']          : $aboutPage->section_five_ceo_sign,
             'section_five_ceo_name'                    => $request->section_five_ceo_name,
             'section_five_ceo_designation'             => $request->section_five_ceo_designation,
             'section_five_ceo_facebook_account_link'   => $request->section_five_ceo_facebook_account_link,
@@ -386,7 +386,7 @@ class AboutPageController extends Controller
             storage_path("app/public/about-us/{$aboutPage->section_two_main_image}"),
             storage_path("app/public/about-us/{$aboutPage->section_two_secondary_image}"),
             storage_path("app/public/about-us/{$aboutPage->section_four_banner_middle_image}"),
-            storage_path("app/public/about-us/{$aboutPage->section_four_ceo_sign}"),
+            storage_path("app/public/about-us/{$aboutPage->section_five_ceo_sign}"),
         ];
 
         foreach ($paths as $path) {
