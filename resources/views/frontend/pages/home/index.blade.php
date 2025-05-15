@@ -1,7 +1,28 @@
-@extends('frontend.master')
-@section('metadata')
-@endsection
-@section('content')
+<x-frontend-layout :title="'Tech Focus Limited'">
+    @push('metadata')
+        <title>Tech Focus Limited | Home</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description"
+            content="Welcome to Your Website Name – your go-to source for [brief value proposition or service]. Discover more today.">
+        <meta name="keywords" content="keyword1, keyword2, keyword3">
+        <meta name="author" content="Your Company or Name">
+
+        <!-- Open Graph for social sharing -->
+        <meta property="og:title" content="Tech Focus Limited | Home">
+        <meta property="og:description"
+            content="Welcome to Your Website Name – your go-to source for [brief value proposition].">
+        <meta property="og:image" content="https://yourwebsite.com/images/og-image.jpg">
+        <meta property="og:url" content="https://yourwebsite.com/">
+        <meta property="og:type" content="website">
+
+        <!-- Twitter Card -->
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="Tech Focus Limited | Home">
+        <meta name="twitter:description"
+            content="Welcome to Your Website Name – your go-to source for [brief value proposition].">
+        <meta name="twitter:image" content="https://yourwebsite.com/images/twitter-card.jpg">
+    @endpush
     <!-- Banner -->
     <div class="swiper bannerSwiper">
         <div class="swiper-wrapper">
@@ -9,7 +30,8 @@
                 <a href=""><img src="https://i.ibb.co/72jrMpF/54667.jpg" class="img-fluid" alt="" /></a>
             </div>
             <div class="swiper-slide">
-                <a href=""><img src="https://i.ibb.co/pfYZQK4/54574v2.jpg" class="img-fluid" alt="" /></a>
+                <a href=""><img src="https://i.ibb.co/pfYZQK4/54574v2.jpg" class="img-fluid"
+                        alt="" /></a>
             </div>
             <div class="swiper-slide">
                 <a href=""><img src="https://i.ibb.co/W3X5G2H/54361.jpg" class="img-fluid" alt="" /></a>
@@ -64,7 +86,8 @@
                                                                     @endforeach
                                                                 @else
                                                                     <li class="mb-2 menu-single-items">
-                                                                        <a href="javascript:void(0)">No Content Found!</a>
+                                                                        <a href="javascript:void(0)">No Content
+                                                                            Found!</a>
                                                                     </li>
                                                                 @endif
                                                             </ul>
@@ -83,7 +106,8 @@
                                             <div class="accordion accordion-flush"
                                                 id="accordionFlushExample-{{ $key }}">
                                                 <div class="accordion-item mb-2">
-                                                    <h2 class="accordion-header" id="flush-heading-{{ $key }}">
+                                                    <h2 class="accordion-header"
+                                                        id="flush-heading-{{ $key }}">
                                                         <button class="accordion-button p-3 collapsed" type="button"
                                                             data-bs-toggle="collapse"
                                                             data-bs-target="#flush-collapse-{{ $key }}"
@@ -116,7 +140,8 @@
                                                                     @endforeach
                                                                 @else
                                                                     <li class="mb-2 menu-single-items">
-                                                                        <a href="javascript:void(0)">No Content Found!</a>
+                                                                        <a href="javascript:void(0)">No Content
+                                                                            Found!</a>
                                                                     </li>
                                                                 @endif
                                                             </ul>
@@ -191,19 +216,21 @@
                             <div class="card rounded-0 border-0">
                                 <div class="card-header bg-white d-flex justify-content-between">
                                     <span class="product_badge">New</span>
-                                    <img src="{{ asset('storage/brand/logo/' . optional($product->brand)->logo) }}" height="20px"
-                                        alt="{{ optional($product->brand)->title }}" loading="lazy" />
+                                    <img src="{{ asset('storage/brand/logo/' . optional($product->brand)->logo) }}"
+                                        height="20px" alt="{{ optional($product->brand)->title }}"
+                                        loading="lazy" />
                                     <!-- <span class="product_badge2">New</span> -->
                                 </div>
                                 <div class="card-body p-0">
-                                    <img class="img-fluid" src="{{$product->thumbnail}}" />
+                                    <img class="img-fluid" src="{{ $product->thumbnail }}" />
                                 </div>
                                 <div class="card-body p-0">
                                     <div class="px-3">
-                                        <a href="{{ route('product.details', ['id' => optional($product->brand)->slug, 'slug' => optional($product)->slug]) }}">
+                                        <a
+                                            href="{{ route('product.details', ['id' => optional($product->brand)->slug, 'slug' => optional($product)->slug]) }}">
                                             <h6 class="pt-3">{{ $product->name }}</h6>
                                         </a>
-                                        
+
                                         <div class="mb-3">
                                             @if (!empty($product->sku_code))
                                                 <p class="p-0 m-0 pb-2">
@@ -274,9 +301,10 @@
                                                     </p>
                                                 </div>
                                             </div>
-                                            <a href="{{ route('solution.details', $solution->slug) }}" class="text-end pb-2 main-color mt-0 pt-0 pe-1">
+                                            <a href="{{ route('solution.details', $solution->slug) }}"
+                                                class="text-end pb-2 main-color mt-0 pt-0 pe-1">
                                                 <i class="fa-solid fa-plus"></i>
-                                                </a>
+                                            </a>
                                         </div>
                                     </a>
                                 </div>
@@ -748,21 +776,23 @@
             </div>
         </div> --}}
     </div>
-@endsection
 
-@push('scripts')
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            var accordions = document.querySelectorAll('.accordion');
 
-            accordions.forEach(function(accordion) {
-                accordion.addEventListener('show.bs.collapse', function(event) {
-                    var currentlyOpen = accordion.querySelector('.show');
-                    if (currentlyOpen && currentlyOpen !== event.target) {
-                        bootstrap.Collapse.getInstance(currentlyOpen).hide();
-                    }
+    @push('scripts')
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                var accordions = document.querySelectorAll('.accordion');
+
+                accordions.forEach(function(accordion) {
+                    accordion.addEventListener('show.bs.collapse', function(event) {
+                        var currentlyOpen = accordion.querySelector('.show');
+                        if (currentlyOpen && currentlyOpen !== event.target) {
+                            bootstrap.Collapse.getInstance(currentlyOpen).hide();
+                        }
+                    });
                 });
             });
-        });
-    </script>
-@endpush
+        </script>
+    @endpush
+
+</x-frontend-layout>
