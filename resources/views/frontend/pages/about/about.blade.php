@@ -495,7 +495,7 @@
             <div class="customer-logos slider">
                 @foreach ($brands as $brand)
                     <div class="slide">
-                        {{ !empty($brand->logo) && file_exists(public_path('app/public/about-us/' . $brand->logo)) ? asset('app/public/about-us/' . $brand->logo) : asset('backend/images/no-image-available.png') }}
+                        <img src="{{ !empty($brand->logo) && file_exists(public_path('storage/brand/logo/' . $brand->logo)) ? asset('storage/brand/logo/' . $brand->logo) : asset('backend/images/no-image-available.png') }}" alt="">
                     </div>
                 @endforeach
             </div>
