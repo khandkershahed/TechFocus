@@ -36,8 +36,7 @@
                                             data-placeholder="Select Category" data-allow-clear="true">
                                             <option></option>
                                             @foreach (['brand', 'solution', 'industry', 'category', 'product', 'content', 'page'] as $option)
-                                                <option value="{{ $option }}"
-                                                    @if (old('category', $currentCategory) == $option) selected @endif>{{ ucfirst($option) }}
+                                                <option value="{{ $option }}" @seleted(old('category', $banner->category) == $option)>{{ ucfirst($option) }}
                                                 </option>
                                             @endforeach
                                         </select>
