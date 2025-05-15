@@ -218,9 +218,9 @@
                                                     <div class="col-lg-9">
                                                         <div class="fv-row mb-3">
                                                             <label class="form-label">Section Two Description</label>
-                                                            <textarea rows="1" name="section_two_description" value="{{ $aboutPage->section_two_description }}"
+                                                            <textarea rows="1" name="section_two_description"
                                                                 class="form-control form-control-sm form-control-solid @error('section_two_description') is-invalid @enderror"
-                                                                placeholder="Enter Section Two Description"></textarea>
+                                                                placeholder="Enter Section Two Description">{{ $aboutPage->section_two_description }}</textarea>
                                                             @error('section_two_description')
                                                                 <div class="invalid-feedback d-block">{{ $message }}
                                                                 </div>
@@ -1774,10 +1774,16 @@
                                                                 multiselect-search="true" multiselect-select-all="true"
                                                                 multiselect-max-items="2"
                                                                 onchange="console.log(this.selectedOptions)">
+                                                                
+                                                                @php
+                                                                    $selectedBrands =
+                                                                        json_decode($aboutPage->brand_id, true) ?? [];
+                                                                @endphp
                                                                 @foreach (json_decode($brands) as $brand)
-                                                                    <option @selected($brand->id == $aboutPage->brand_id)
-                                                                        value="{{ $brand->id }}">
-                                                                        {{ $brand->title }}</option>
+                                                                    <option value="{{ $brand->id }}"
+                                                                        @if (in_array($brand->id, $selectedBrands)) selected @endif>
+                                                                        {{ $brand->title }}
+                                                                    </option>
                                                                 @endforeach
                                                             </select>
                                                             @error('brand_id')

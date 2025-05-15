@@ -114,7 +114,7 @@ class AboutPageRequest extends FormRequest
             'section_six_card_four_count' => 'required|string|max:230',
             'section_six_card_four_icon' => 'nullable|string|max:230',
             'section_six_card_four_short_description' => 'required|string',
-            'brand_id' => 'required|array',
+            'brand_id' => 'nullable|array',
             'status' => 'nullable|in:active,inactive',
         ];
     }
