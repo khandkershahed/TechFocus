@@ -1,4 +1,4 @@
-a@extends('frontend.master')
+@extends('frontend.master')
 @section('metadata')
 @endsection
 @section('content')
@@ -39,13 +39,13 @@ a@extends('frontend.master')
         </section>
     @endif
     <section>
-        <div class="container custom-spacer">
+        <div class="container custom-spacer mt-4">
             <div class="row">
                 <div class="col-lg-6">
                     <div class="mb-4">
                         <p class="main-color mb-0 fw-bold">CONTACT INFO</p>
-                        <h1 class="pt-4 fw-bold" style="font-size: 42px;"><span class="main-color">Hotline :</span> +84 1900
-                            8198</h1>
+                        <h2 class="pt-4 fw-bold" style="font-size: 32px;"><span class="main-color">Hotline :</span> +84 1900
+                            8198</h2>
                         <ul class="ms-0 ps-0">
                             <li class="pt-3">
                                 <a href=""><i
