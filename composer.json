@@ -12,6 +12,7 @@
         "laravel/framework": "^11.0",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.8",
+        "php-flasher/flasher-laravel": "^1.15",
         "rats/zkteco": "^002.0",
         "wildside/userstamps": "^2.3",
         "yoeunes/toastr": "^2.3"
