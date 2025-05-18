@@ -2,50 +2,69 @@
 @section('metadata')
 @endsection
 @section('content')
-    <style>
-        .container,
-        .container-lg,
-        .container-md,
-        .container-sm,
-        .container-xl,
-        .container-xxl {
-            max-width: 1450px;
-        }
-    </style>
     @if (!empty($banner->banner_one_image) || !empty($banner->banner_two_image) || !empty($banner->banner_three_image))
         <section class="ban_sec">
             <div class="swiper bannerSwiper">
                 <div class="swiper-wrapper">
                     @if ($banner && !empty($banner->banner_one_image))
                         <div class="swiper-slide">
-                            <a href=""><img src="{{ asset('storage/' . $banner->banner_one_image) }}" class="img-fluid"
-                                    alt="" /></a>
+                            <a href="">
+                                <img src="{{ asset('storage/' . $banner->banner_one_image) }}" class="img-fluid"
+                                    alt="Banner One"
+                                    onerror="this.onerror=null;this.src='https://templates.thememodern.com/industris/images/subheader-about.jpg';" />
+                            </a>
                         </div>
                     @endif
                     @if ($banner && !empty($banner->banner_two_image))
                         <div class="swiper-slide">
-                            <a href=""><img src="{{ asset('storage/' . $banner->banner_two_image) }}" class="img-fluid"
-                                    alt="" /></a>
+                            <a href="">
+                                <img src="{{ asset('storage/' . $banner->banner_two_image) }}" class="img-fluid"
+                                    alt="Banner Two"
+                                    onerror="this.onerror=null;this.src='https://templates.thememodern.com/industris/images/subheader-about.jpg';" />
+                            </a>
                         </div>
                     @endif
                     @if ($banner && !empty($banner->banner_three_image))
                         <div class="swiper-slide">
-                            <a href=""><img src="{{ asset('storage/' . $banner->banner_three_image) }}"
-                                    class="img-fluid" alt="" /></a>
+                            <a href="">
+                                <img src="{{ asset('storage/' . $banner->banner_three_image) }}" class="img-fluid"
+                                    alt="Banner Three"
+                                    onerror="this.onerror=null;this.src='https://templates.thememodern.com/industris/images/subheader-about.jpg';" />
+                            </a>
                         </div>
                     @endif
                 </div>
             </div>
         </section>
     @endif
+    <section class="ban_sec section_one">
+        <div class="p-0 container-fluid">
+            <div class="ban_img">
+                <img src="https://templates.thememodern.com/industris/images/subheader-about.jpg" alt="banner"
+                    border="0">
+                <div class="ban_text">
+                    <strong>
+                        Contact Us
+                    </strong>
+                    <ul class="mt-5 d-flex align-items-center ps-0">
+                        <li class="text-white"><a href="#" class="">Home</a></li>
+                        <li class="text-white"><span class="me-2 ms-2">/</span></li>
+                        <li class="main-color"><a href="#">About Us</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
     <section>
-        <div class="container custom-spacer mt-4">
-            <div class="row">
+        <div class="container mt-4 custom-spacer">
+            <div class="row align-items-center">
                 <div class="col-lg-6">
                     <div class="mb-4">
-                        <p class="main-color mb-0 fw-bold">CONTACT INFO</p>
-                        <h2 class="pt-4 fw-bold" style="font-size: 32px;"><span class="main-color">Hotline :</span> +84 1900
-                            8198</h2>
+                        <h1 class="mb-0">Contact Info</h1>
+                        <h5 class="pt-4 fw-bold">
+                            <span class="main-color">Hotline :</span>
+                            +84 1900 8198
+                        </h5>
                         <ul class="ms-0 ps-0">
                             <li class="pt-3">
                                 <a href=""><i
@@ -59,55 +78,50 @@
                     </div>
                 </div>
                 <div class="col-lg-6">
-                    <div class="border-top pt-3">
-                        <div>
-                            <h2 class="py-3">Contact Form</h2>
-                            <div>
-                                <form action="{{ route('contact.add') }}" method="post" class="needs-validation" novalidate
-                                    enctype="multipart/form-data">
-                                    @csrf
-                                    <div class="row">
-                                        <div class="col-lg-4">
-                                            <div class="mb-3">
-                                                <input type="text" class="form-control rounded-0 p-3"
-                                                    id="exampleFormControlInput1" placeholder="Your Name" name="name"
-                                                    required>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-4">
-                                            <div class="mb-3">
-                                                <input type="number" class="form-control rounded-0 p-3"
-                                                    id="exampleFormControlInput1" placeholder="Your Phone Number"
-                                                    name="phone" required>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-4">
-                                            <div class="mb-3">
-                                                <input type="email" class="form-control rounded-0 p-3"
-                                                    id="exampleFormControlInput1" placeholder="Your Email Address"
-                                                    name="email" required>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-12">
-                                            <div class="mb-3">
-                                                <textarea class="form-control rounded-0 p-3" id="exampleFormControlTextarea1" rows="10" placeholder="Your Message"
-                                                    name="message" required></textarea>
-                                            </div>
-                                        </div>
+                    <div>
+                        <form action="{{ route('contact.add') }}" method="post" class="needs-validation" novalidate
+                            enctype="multipart/form-data">
+                            @csrf
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="mb-3">
+                                        <input type="text" class="p-3 form-control rounded-0"
+                                            id="exampleFormControlInput1" placeholder="Your Name" name="name" required>
                                     </div>
-                                    <div style="width: 15%;">
-                                        <button type="submit" class="common-btn-3 mx-auto p-3">Submit</button>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="mb-3">
+                                        <input type="number" class="p-3 form-control rounded-0"
+                                            id="exampleFormControlInput1" placeholder="Your Phone Number" name="phone"
+                                            required>
                                     </div>
-                                </form>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="mb-3">
+                                        <input type="email" class="p-3 form-control rounded-0"
+                                            id="exampleFormControlInput1" placeholder="Your Email Address" name="email"
+                                            required>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="mb-3">
+                                        <textarea class="p-3 form-control rounded-0" id="exampleFormControlTextarea1" rows="10" placeholder="Your Message"
+                                            name="message" required></textarea>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                            <div style="width: 20%;">
+                                <button type="submit" class="p-3 mx-auto common-btn-3">Submit <i
+                                        class="fas fa-paper-plane"></i></button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </section>
     <section>
-        <div class="container-fluid p-0">
+        <div class="p-0 container-fluid">
             <div class="row">
                 <div class="col-lg-12">
                     <iframe
@@ -120,55 +134,56 @@
     <section>
         <div class="container custom-spacer">
             <div class="row">
-                <div class="col-lg-12 text-center mb-5">
-                    <h1 class="fw-bold"><span style="border-top: 2px solid var(--primary-color);">Get</span> in Touch</h1>
-                    <p class="w-50 mx-auto">TechFocus strives to provide the best service possible with every contact! Fill
+                <div class="mb-5 text-center col-lg-12">
+                    <h1 class="fw-bold"><span
+                            style="border-top: 2px solid var(--primary-color); font-size: 38px;">Get</span> in Touch</h1>
+                    <p class="mx-auto w-50">TechFocus strives to provide the best service possible with every contact! Fill
                         the online forms to get
                         the info you're looking for right now!</p>
                 </div>
                 <div class="col-lg-4">
-                    <div class="contact-card card border-0 p-3"
+                    <div class="p-3 border-0 contact-card card"
                         style=" background-color: var(--secondary-deep-color); box-shadow: var(--custom-shadow)">
                         <img class="mx-auto" width="150px"
                             src="https://www.cosmed.com/images/08_icons/get_in_touch/register_product.svg"
                             class="card-img-top" alt="...">
-                        <div class="card-body text-center">
-                            <h3 class="card-title text-white">Partner Registration</h3>
-                            <p class="card-text text-white py-2 w-75 mx-auto">Fill the online form to get software upgrades
+                        <div class="text-center card-body">
+                            <h3 class="text-white card-title">Partner Registration</h3>
+                            <p class="py-2 mx-auto text-white card-text w-75">Fill the online form to get software upgrades
                                 and more
                                 advantages</p>
-                            <a href="guide.html" class="btn common-btn-2 mt-2 rounded-0 bg-white border w-50 mx-auto">
+                            <a href="guide.html" class="mx-auto mt-2 bg-white border btn common-btn-2 rounded-0 w-50">
                                 <span class="text-gradient">Register Now</span></a>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-4">
-                    <div class="contact-card card border-0 p-3" style=" box-shadow: var(--custom-shadow)">
+                    <div class="p-3 border-0 contact-card card" style=" box-shadow: var(--custom-shadow)">
                         <img class="mx-auto" width="150px"
                             src="https://www.cosmed.com/images/08_icons/get_in_touch/request_information.svg"
                             class="card-img-top" alt="...">
-                        <div class="card-body text-center">
+                        <div class="text-center card-body">
                             <h3 class="card-title">Get Support Now</h3>
-                            <p class="card-text py-2 w-75 mx-auto">Fill the online form to get software upgrades
+                            <p class="py-2 mx-auto card-text w-75">Fill the online form to get software upgrades
                                 and more
                                 advantages</p>
-                            <a href="guide.html" class="btn common-btn-3 mt-2 rounded-0 border w-50 mx-auto">Contact
+                            <a href="guide.html" class="mx-auto mt-2 border btn common-btn-3 rounded-0 w-50">Contact
                                 Us</a>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-4">
-                    <div class="contact-card card border-0 p-3"
+                    <div class="p-3 border-0 contact-card card"
                         style=" background-color: var(--secondary-deep-color); box-shadow: var(--custom-shadow)">
                         <img class="mx-auto" width="150px"
                             src="https://www.cosmed.com/images/08_icons/get_in_touch/register_product.svg"
                             class="card-img-top" alt="...">
-                        <div class="card-body text-center">
-                            <h3 class="card-title text-white">Get Support Now</h3>
-                            <p class="card-text text-white py-2 w-75 mx-auto">Fill the online form to get software upgrades
+                        <div class="text-center card-body">
+                            <h3 class="text-white card-title">Get Support Now</h3>
+                            <p class="py-2 mx-auto text-white card-text w-75">Fill the online form to get software upgrades
                                 and more
                                 advantages</p>
-                            <a href="guide.html" class="btn common-btn-2 mt-2 rounded-0 bg-white border w-50 mx-auto">
+                            <a href="guide.html" class="mx-auto mt-2 bg-white border btn common-btn-2 rounded-0 w-50">
                                 <span class="text-gradient">Contact Us</span></a>
                         </div>
                     </div>
@@ -180,73 +195,43 @@
     <section class="bg-white">
         <div class="container pb-5">
             <div class="row">
-                <div class="col-lg-12 text-center my-5">
+                <div class="my-5 text-center col-lg-12">
                     <h1 class="fw-bold"><span class=""
-                            style="border-top: 2px solid var(--primary-color);">Our</span> Office Location
+                            style="border-top: 2px solid var(--primary-color); font-size: 38px;">Our</span> Office Location
                     </h1>
                 </div>
                 <div class="col-lg-4">
                     <div class="p-3">
-                        <h4>Company In <span class=""
-                                style="border-top: 3px solid var(--primary-color)">Por</span>tugal</h4>
-                        <p class="m-0"><i class="fa-solid fa-location-crosshairs main-color pe-2"></i>Probal Housing,
-                            Ring
-                            Road,</p>
+                        <h4> <span class=""
+                                style="border-top: 3px solid var(--primary-color); font-size: 22px;">APA</span>C (Asia and
+                            Pacific )</h4>
+                        <p class="m-0"><i class="fa-solid fa-location-dot main-color pe-2"></i>36-37, Probal
+                            Housing, Ring Road</p>
                         <p class="m-0 ps-4">Mohammadpur, Dhaka-1207, Bangladesh</p>
+                        <p class="m-0"><i class="fa-solid fa-mobile-screen main-color pe-2"></i>+880 1714-243446</p>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="p-3">
+                        <h4><span class=""
+                                style="border-top: 3px solid var(--primary-color); font-size: 22px;">EME</span>A (Europe,
+                            Middle East, Africa)</h4>
+                        <p class="m-0"><i class="fa-solid fa-location-dot main-color pe-2"></i> 10, Anson Road,
+                            #21-07 International Plaza, </p>
+                        <p class="m-0 ps-4">Singapore 079903</p>
                         <p class="m-0"><i class="fa-solid fa-mobile-screen main-color pe-2"></i>+44 7423 060208</p>
                     </div>
                 </div>
                 <div class="col-lg-4">
                     <div class="p-3">
-                        <h4>Company In <span class=""
-                                style="border-top: 3px solid var(--primary-color)">Por</span>tugal</h4>
-                        <p class="m-0"><i class="fa-solid fa-location-crosshairs main-color pe-2"></i> Probal Housing,
-                            Ring Road,</p>
-                        <p class="m-0 ps-4">Mohammadpur, Dhaka-1207, Bangladesh</p>
-                        <p class="m-0"><i class="fa-solid fa-mobile-screen main-color pe-2"></i>+44 7423 060208</p>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="p-3">
-                        <h4>Company In <span class=""
-                                style="border-top: 3px solid var(--primary-color)">Por</span>tugal</h4>
-                        <p class="m-0"><i class="fa-solid fa-location-crosshairs main-color pe-2"></i>36-37, Probal
+                        <h4><span class=""
+                                style="border-top: 3px solid var(--primary-color); font-size: 22px;">SEA</span>N (South
+                            East Asia, Australia)</h4>
+                        <p class="m-0"><i class="fa-solid fa-location-dot main-color pe-2"></i>36-37, Probal
                             Housing,
                             Ring Road,</p>
                         <p class="m-0 ps-4">Mohammadpur, Dhaka-1207, Bangladesh</p>
-                        <p class="m-0"><i class="fa-solid fa-mobile-screen main-color pe-2"></i>+44 7423 060208</p>
-                    </div>
-                </div>
-                <hr class="mt-3">
-                <div class="col-lg-4">
-                    <div class="p-3">
-                        <h4>Company In <span class=""
-                                style="border-top: 3px solid var(--primary-color)">Por</span>tugal</h4>
-                        <p class="m-0">36-37, Probal Housing, Ring Road,</p>
-                        <p class="m-0 ps-4">Mohammadpur, Dhaka-1207, Bangladesh</p>
-                        <p class="m-0"><i class="fa-solid fa-mobile-screen main-color pe-2"></i>+44 7423 060208</p>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="p-3">
-                        <h4>Company In <span class=""
-                                style="border-top: 3px solid var(--primary-color)">Por</span>tugal</h4>
-                        <p class="m-0"><i class="fa-solid fa-location-crosshairs main-color pe-2"></i>36-37, Probal
-                            Housing,
-                            Ring Road,</p>
-                        <p class="m-0 ps-4">Mohammadpur, Dhaka-1207, Bangladesh</p>
-                        <p class="m-0"><i class="fa-solid fa-mobile-screen main-color pe-2"></i>+44 7423 060208</p>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="p-3">
-                        <h4>Company In <span class=""
-                                style="border-top: 3px solid var(--primary-color)">Por</span>tugal</h4>
-                        <p class="m-0"><i class="fa-solid fa-location-crosshairs main-color pe-2"></i>36-37, Probal
-                            Housing,
-                            Ring Road,</p>
-                        <p class="m-0 ps-4">Mohammadpur, Dhaka-1207, Bangladesh</p>
-                        <p class="m-0"><i class="fa-solid fa-mobile-screen main-color pe-2"></i>+44 7423 060208</p>
+                        <p class="m-0"><i class="fa-solid fa-mobile-screen main-color pe-2"></i>+65 9747 1974</p>
                     </div>
                 </div>
             </div>

@@ -8,7 +8,7 @@
         <!-- Product Details -->
         <div class="row align-items-center">
             <div class="col-lg-12 col-sm-12">
-                <div class="card rounded-0 p-5 border-0">
+                <div class="p-5 border-0 card rounded-0">
                     <div class="row">
                         <div class="col-lg-6 col-sm-12">
                             <div class="xzoom-container w-100">
@@ -35,9 +35,9 @@
                         </div>
                         <div class="col-lg-6 col-sm-12">
                             <div>
-                                <div class="row gx-0 px-2">
+                                <div class="px-2 row gx-0">
                                     <h4>{{ $product->name }}</h4>
-                                    <ul class="d-flex align-items-center p-1">
+                                    <ul class="p-1 d-flex align-items-center">
                                         @if (!empty($product->sku_code))
                                             <li class="me-2">
                                                 <p class="p-0 m-0" style="color: rgb(134, 134, 134);font-size: 13px;"><i
@@ -71,7 +71,7 @@
                                 </div>
                                 <!-- Rating Area -->
                                 {{-- <div class="d-flex align-items-center">
-                                    <div class="popover__wrapper me-2 border rounded-pill w-auto px-2 pt-1">
+                                    <div class="w-auto px-2 pt-1 border popover__wrapper me-2 rounded-pill">
                                         <a href="#">
                                             <h2 class="popover__title" data-aos="fade-left">
                                                 <div>
@@ -106,7 +106,7 @@
                                     <button class="btn btn-outline-danger rounded-0">
                                         $ Request Price Options
                                     </button>
-                                    <button class="btn signin w-auto rounded-0">
+                                    <button class="w-auto btn signin rounded-0">
                                         $ Request Price Options
                                     </button>
                                 </div>
@@ -117,7 +117,7 @@
                                     </p>
                                 </div>
                                 <!-- Others Button -->
-                                <div class="d-flex main-color mt-4">
+                                <div class="mt-4 d-flex main-color">
                                     <a href="">
                                         <i class="fa-solid fa-heart me-1"></i> Add to
                                         favorites</a>
@@ -132,20 +132,20 @@
             </div>
         </div>
         <!-- Extra Link -->
-        {{-- <div class="row pt-3">
+        {{-- <div class="pt-3 row">
             <div class="col-lg-12 col-sm-12 text-end font-three">
                 <a href="" class="main-color">Go to the EXPERT-TÜNKERS GmbH website for more information
                     <i class="ms-2 fa-solid fa-arrow-up-right-from-square"></i></a>
             </div>
         </div> --}}
         <!-- Product Specification & Overview -->
-        <div class="row mb-5 mt-5">
+        <div class="mt-5 mb-5 row">
             @if (!empty($product->specification)) 
                 <div class="{{ !empty($product->overview) ? 'col-lg-6' : 'col-lg-12' }}">
                     <div class="single-product-description" style="font-size: 16px">
                         <h2 class="description-title">Specification</h2>
                         <div class="container pb-3 specification-areas-brand">
-                            <div class="row gx-1 px-2">
+                            <div class="px-2 row gx-1">
                                 <p>{!! $product->specification !!}</p>
                             </div>
                         </div>
@@ -154,7 +154,7 @@
             @endif
             @if (!empty($product->overview)) 
                 <div class="{{ !empty($product->specification) ? 'col-lg-6' : 'col-lg-12' }}">
-                    <div class="single-product-description text-justify" style="font-size: 16px; line-height: 1.5">
+                    <div class="text-justify single-product-description" style="font-size: 16px; line-height: 1.5">
                         <h2 class="description-title">Description</h2>
                         <div class="container pb-3">
                             <div class="row ps-2">
@@ -166,7 +166,7 @@
             @endif
         </div>
         <!-- Product Video & Catalog -->
-        {{-- <div class="row mb-3">
+        {{-- <div class="mb-3 row">
             <div class="col-lg-6">
                 <div class="single-product-description" style="font-size: 14px">
                     <h2 class="description-title">Video</h2>
@@ -180,14 +180,14 @@
                 <div class="single-product-description" style="font-size: 14px">
                     <h2 class="description-title">CATALOGS</h2>
                     <div class="container pb-3">
-                        <div class="row mt-3">
+                        <div class="mt-3 row">
                             <div class="col">
                                 <a href="">
                                     <div>
                                         <img src="https://img.directindustry.com/pdf/repository_di/17587/kr-agilus-waterproof-519707_1m.jpg"
                                             height="190px" width="100%" alt="" />
-                                        <div class="catalog-details text-center">
-                                            <p class="m-0 p-1">KR AGILUS Waterproof</p>
+                                        <div class="text-center catalog-details">
+                                            <p class="p-1 m-0">KR AGILUS Waterproof</p>
                                             <p class="p-1 m-0">2 Pages</p>
                                         </div>
                                     </div>
@@ -198,8 +198,8 @@
                                     <div>
                                         <img src="https://img.directindustry.com/pdf/repository_di/17587/kr-agilus-waterproof-519707_1m.jpg"
                                             height="190px" width="100%" alt="" />
-                                        <div class="catalog-details text-center">
-                                            <p class="m-0 p-1">KR AGILUS Waterproof</p>
+                                        <div class="text-center catalog-details">
+                                            <p class="p-1 m-0">KR AGILUS Waterproof</p>
                                             <p class="p-1 m-0">2 Pages</p>
                                         </div>
                                     </div>
@@ -210,8 +210,8 @@
                                     <div>
                                         <img src="https://img.directindustry.com/pdf/repository_di/17587/kr-agilus-waterproof-519707_1m.jpg"
                                             height="190px" width="100%" alt="" />
-                                        <div class="catalog-details text-center">
-                                            <p class="m-0 p-1">KR AGILUS Waterproof</p>
+                                        <div class="text-center catalog-details">
+                                            <p class="p-1 m-0">KR AGILUS Waterproof</p>
                                             <p class="p-1 m-0">2 Pages</p>
                                         </div>
                                     </div>
@@ -223,14 +223,14 @@
             </div>
         </div> --}}
         <!-- Extra Link -->
-        {{-- <div class="row pt-3">
+        {{-- <div class="pt-3 row">
             <div class="col-lg-12 col-sm-12 text-end font-three">
                 <a href="" class="main-color">Go to the {{ $product->brand->name }} website for more information
                     <i class="ms-2 fa-solid fa-arrow-up-right-from-square"></i></a>
             </div>
         </div>
         <!-- Others Related Product-->
-        <div class="row mt-3 mb-2">
+        <div class="mt-3 mb-2 row">
             <h1 class="extra-titles">OTHER {{ $product->brand->name }} PRODUCTS</h1>
             <div class="col-lg-12">
                 <div class="devider-wrap">
@@ -244,16 +244,16 @@
         {{-- <div class="row">
             <div class="col-lg-12">
                 <!-- Related Product Slider -->
-                <div class="swiper relatedProductSwiper my-2">
+                <div class="my-2 swiper relatedProductSwiper">
                     <div class="swiper-wrapper">
                         <div class="swiper-slide">
                             <a href="#" class="url-box">
                                 <figure class="newsCard news-Slide-up rounded-0">
                                     <img class="img-fluid"
                                         src="https://img.directindustry.com/images_di/photo-mg/5693-18628211.jpg" />
-                                    <div class="newsCaption px-4">
+                                    <div class="px-4 newsCaption">
                                         <div class="d-flex align-items-center justify-content-between cnt-title">
-                                            <h5 class="newsCaption-title text-white m-0">
+                                            <h5 class="m-0 text-white newsCaption-title">
                                                 3D scanner
                                             </h5>
                                             <a href="asdasd">
@@ -265,7 +265,7 @@
                                                 <i class="fas fa-arrow-alt-circle-right"></i>
                                             </a>
                                         </div>
-                                        <div class="newsCaption-content mt-2">
+                                        <div class="mt-2 newsCaption-content">
                                             <p class="col-10">ABIS III</p>
                                             <!-- Individual Content-->
                                             <div>
@@ -297,9 +297,9 @@
                                 <figure class="newsCard news-Slide-up rounded-0">
                                     <img class="img-fluid"
                                         src="https://img.directindustry.com/images_di/photo-mg/5693-18628211.jpg" />
-                                    <div class="newsCaption px-4">
+                                    <div class="px-4 newsCaption">
                                         <div class="d-flex align-items-center justify-content-between cnt-title">
-                                            <h5 class="newsCaption-title text-white m-0">
+                                            <h5 class="m-0 text-white newsCaption-title">
                                                 3D scanner
                                             </h5>
                                             <a href="asdasd">
@@ -311,7 +311,7 @@
                                                 <i class="fas fa-arrow-alt-circle-right"></i>
                                             </a>
                                         </div>
-                                        <div class="newsCaption-content mt-2">
+                                        <div class="mt-2 newsCaption-content">
                                             <p class="col-10">ABIS III</p>
                                             <!-- Individual Content-->
                                             <div>
@@ -343,9 +343,9 @@
                                 <figure class="newsCard news-Slide-up rounded-0">
                                     <img class="img-fluid"
                                         src="https://img.directindustry.com/images_di/photo-mg/5693-18628211.jpg" />
-                                    <div class="newsCaption px-4">
+                                    <div class="px-4 newsCaption">
                                         <div class="d-flex align-items-center justify-content-between cnt-title">
-                                            <h5 class="newsCaption-title text-white m-0">
+                                            <h5 class="m-0 text-white newsCaption-title">
                                                 3D scanner
                                             </h5>
                                             <a href="asdasd">
@@ -357,7 +357,7 @@
                                                 <i class="fas fa-arrow-alt-circle-right"></i>
                                             </a>
                                         </div>
-                                        <div class="newsCaption-content mt-2">
+                                        <div class="mt-2 newsCaption-content">
                                             <p class="col-10">ABIS III</p>
                                             <!-- Individual Content-->
                                             <div>
@@ -389,9 +389,9 @@
                                 <figure class="newsCard news-Slide-up rounded-0">
                                     <img class="img-fluid"
                                         src="https://img.directindustry.com/images_di/photo-mg/5693-18628211.jpg" />
-                                    <div class="newsCaption px-4">
+                                    <div class="px-4 newsCaption">
                                         <div class="d-flex align-items-center justify-content-between cnt-title">
-                                            <h5 class="newsCaption-title text-white m-0">
+                                            <h5 class="m-0 text-white newsCaption-title">
                                                 3D scanner
                                             </h5>
                                             <a href="asdasd">
@@ -403,7 +403,7 @@
                                                 <i class="fas fa-arrow-alt-circle-right"></i>
                                             </a>
                                         </div>
-                                        <div class="newsCaption-content mt-2">
+                                        <div class="mt-2 newsCaption-content">
                                             <p class="col-10">ABIS III</p>
                                             <!-- Individual Content-->
                                             <div>
@@ -435,9 +435,9 @@
                                 <figure class="newsCard news-Slide-up rounded-0">
                                     <img class="img-fluid"
                                         src="https://img.directindustry.com/images_di/photo-mg/5693-18628211.jpg" />
-                                    <div class="newsCaption px-4">
+                                    <div class="px-4 newsCaption">
                                         <div class="d-flex align-items-center justify-content-between cnt-title">
-                                            <h5 class="newsCaption-title text-white m-0">
+                                            <h5 class="m-0 text-white newsCaption-title">
                                                 3D scanner
                                             </h5>
                                             <a href="asdasd">
@@ -449,7 +449,7 @@
                                                 <i class="fas fa-arrow-alt-circle-right"></i>
                                             </a>
                                         </div>
-                                        <div class="newsCaption-content mt-2">
+                                        <div class="mt-2 newsCaption-content">
                                             <p class="col-10">ABIS III</p>
                                             <!-- Individual Content-->
                                             <div>
@@ -481,9 +481,9 @@
                                 <figure class="newsCard news-Slide-up rounded-0">
                                     <img class="img-fluid"
                                         src="https://img.directindustry.com/images_di/photo-mg/5693-18628211.jpg" />
-                                    <div class="newsCaption px-4">
+                                    <div class="px-4 newsCaption">
                                         <div class="d-flex align-items-center justify-content-between cnt-title">
-                                            <h5 class="newsCaption-title text-white m-0">
+                                            <h5 class="m-0 text-white newsCaption-title">
                                                 3D scanner
                                             </h5>
                                             <a href="asdasd">
@@ -495,7 +495,7 @@
                                                 <i class="fas fa-arrow-alt-circle-right"></i>
                                             </a>
                                         </div>
-                                        <div class="newsCaption-content mt-2">
+                                        <div class="mt-2 newsCaption-content">
                                             <p class="col-10">ABIS III</p>
                                             <!-- Individual Content-->
                                             <div>
@@ -534,7 +534,7 @@
                 <!-- History Section Start -->
             </div>
         </div>
-        <div class="row mt-3 mb-2">
+        <div class="mt-3 mb-2 row">
             <h1 class="extra-titles">OTHER EXPERT-TÜNKERS GMBH PRODUCTS</h1>
             <div class="col-lg-12">
                 <div class="devider-wrap">
@@ -547,21 +547,21 @@
         <div class="row">
             <div class="col-lg-12">
                 <a href="#" class="d-flex justify-content-end">
-                    <span class="border rounded-pill p-2" style="font-size: 12px"><i class="fa fa-close me-2"
+                    <span class="p-2 border rounded-pill" style="font-size: 12px"><i class="fa fa-close me-2"
                             aria-hidden="true"></i> Clear
                         History</span>
                 </a>
             </div>
         </div>
-        <div class="row mt-2">
+        <div class="mt-2 row">
             <div class="col-lg-3">
                 <a href="#" class="url-box">
                     <figure class="newsCard news-Slide-up rounded-0">
                         <p class="p-2 m-0">Lorem ipsum dolor sit amet.</p>
                         <img class="img-fluid"
                             src="https://img.directindustry.com/images_di/photo-mg/5693-18628211.jpg" />
-                        <div class="newsCaption px-4">
-                            <div class="newsCaption-content mt-5 text-center">
+                        <div class="px-4 newsCaption">
+                            <div class="mt-5 text-center newsCaption-content">
                                 <a href=""> <i class="fa-regular fa-circle-xmark"></i></a>
                             </div>
                         </div>
@@ -574,8 +574,8 @@
                         <p class="p-2 m-0">Lorem ipsum dolor sit amet.</p>
                         <img class="img-fluid"
                             src="https://img.directindustry.com/images_di/photo-mg/5693-18628211.jpg" />
-                        <div class="newsCaption px-4">
-                            <div class="newsCaption-content mt-5 text-center">
+                        <div class="px-4 newsCaption">
+                            <div class="mt-5 text-center newsCaption-content">
                                 <a href=""> <i class="fa-regular fa-circle-xmark"></i></a>
                             </div>
                         </div>
@@ -588,8 +588,8 @@
                         <p class="p-2 m-0">Lorem ipsum dolor sit amet.</p>
                         <img class="img-fluid"
                             src="https://img.directindustry.com/images_di/photo-mg/5693-18628211.jpg" />
-                        <div class="newsCaption px-4">
-                            <div class="newsCaption-content mt-5 text-center">
+                        <div class="px-4 newsCaption">
+                            <div class="mt-5 text-center newsCaption-content">
                                 <a href=""> <i class="fa-regular fa-circle-xmark"></i></a>
                             </div>
                         </div>
@@ -602,8 +602,8 @@
                         <p class="p-2 m-0">Lorem ipsum dolor sit amet.</p>
                         <img class="img-fluid"
                             src="https://img.directindustry.com/images_di/photo-mg/5693-18628211.jpg" />
-                        <div class="newsCaption px-4">
-                            <div class="newsCaption-content mt-5 text-center">
+                        <div class="px-4 newsCaption">
+                            <div class="mt-5 text-center newsCaption-content">
                                 <a href=""> <i class="fa-regular fa-circle-xmark"></i></a>
                             </div>
                         </div>
@@ -612,9 +612,9 @@
             </div>
         </div> --}}
         <!-- Related Search -->
-        {{-- <div class="row mt-5 mb-5">
+        {{-- <div class="mt-5 mb-5 row">
             <div class="col bg-light">
-                <div class="card rounded-0 border-0 shadow-lg">
+                <div class="border-0 shadow-lg card rounded-0">
                     <div class="card-header rounded-0">
                         <h4 class="pt-2 text-center">Related Searches</h4>
                     </div>

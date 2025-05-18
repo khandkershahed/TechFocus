@@ -4,14 +4,14 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description"
-            content="Welcome to Your Website Name – your go-to source for [brief value proposition or service]. Discover more today.">
+            content="Welcome to Your Website Name your go-to source for [brief value proposition or service]. Discover more today.">
         <meta name="keywords" content="keyword1, keyword2, keyword3">
         <meta name="author" content="Your Company or Name">
 
         <!-- Open Graph for social sharing -->
         <meta property="og:title" content="Tech Focus Limited | Home">
         <meta property="og:description"
-            content="Welcome to Your Website Name – your go-to source for [brief value proposition].">
+            content="Welcome to Your Website Name your go-to source for [brief value proposition].">
         <meta property="og:image" content="https://yourwebsite.com/images/og-image.jpg">
         <meta property="og:url" content="https://yourwebsite.com/">
         <meta property="og:type" content="website">
@@ -20,7 +20,7 @@
         <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:title" content="Tech Focus Limited | Home">
         <meta name="twitter:description"
-            content="Welcome to Your Website Name – your go-to source for [brief value proposition].">
+            content="Welcome to Your Website Name your go-to source for [brief value proposition].">
         <meta name="twitter:image" content="https://yourwebsite.com/images/twitter-card.jpg">
     @endpush
     <!-- Banner -->
@@ -43,166 +43,108 @@
     <div class="container p-0 my-3">
         <div class="mt-2 mb-2">
             <div class="row">
+                @php
+                    $chunks = $categories->chunk(4); // Split into 3 chunks of 4 items each
+                @endphp
+
                 <div class="col-lg-12">
                     <div class="container">
-                        <div class="row pt-4">
-                            <div class="col-md-6">
-                                @if (count($categories) > 0)
-                                    @foreach ($categories as $key => $category)
-                                        @if ($key % 2 == 0)
-                                            <div class="accordion accordion-flush"
-                                                id="accordionFlushExample-{{ $key }}">
-                                                <div class="accordion-item mb-2">
-                                                    <h2 class="accordion-header" id="flush-heading-{{ $key }}">
-                                                        <button class="accordion-button p-3 collapsed" type="button"
-                                                            data-bs-toggle="collapse"
-                                                            data-bs-target="#flush-collapse-{{ $key }}"
-                                                            aria-expanded="false"
-                                                            aria-controls="flush-collapse-{{ $key }}">
-                                                            <p class="m-0 accordion-button-area p-2 ps-0">
-                                                                <span class="ms-0"> </span>
+                        <div class="pt-4 row">
+                            @foreach ($chunks as $chunkKey => $chunk)
+                                <div class="col-md-4 {{ $chunkKey == 0 ? 'ps-0' : 'pe-0' }}">
+                                    @foreach ($chunk as $key => $category)
+                                        <div class="accordion accordion-flush"
+                                            id="accordionFlushExample-{{ $chunkKey }}-{{ $key }}">
+                                            <div class="mb-2 accordion-item">
+                                                <h2 class="accordion-header"
+                                                    id="flush-heading-{{ $chunkKey }}-{{ $key }}">
+                                                    <button class="p-3 accordion-button collapsed" type="button"
+                                                        data-bs-toggle="collapse"
+                                                        data-bs-target="#flush-collapse-{{ $chunkKey }}-{{ $key }}"
+                                                        aria-expanded="false"
+                                                        aria-controls="flush-collapse-{{ $chunkKey }}-{{ $key }}">
+                                                        <p class="p-2 m-0 accordion-button-area ps-0">
+                                                            <span class="ms-0"> </span>
+                                                        </p>
+                                                        <div class="d-flex align-items-center w-100">
+                                                            <img src="{{ asset('frontend/assets/img/Icon.svg') }}"
+                                                                alt="" />
+                                                            <p class="mb-0 ms-2">
+                                                                {{ $category->name }}
                                                             </p>
-                                                            <div class="d-flex align-items-center w-100">
-                                                                <img src="{{ asset('frontend/assets/img/Icon.svg') }}"
-                                                                    alt="" />
-                                                                <p class="mb-0 ms-2">
-                                                                    {{ $category->name }}
-                                                                </p>
-                                                            </div>
-                                                        </button>
-                                                    </h2>
-                                                    <div id="flush-collapse-{{ $key }}"
-                                                        class="accordion-collapse collapse"
-                                                        aria-labelledby="flush-heading-{{ $key }}"
-                                                        data-bs-parent="#accordionFlushExample-{{ $key }}">
-                                                        <div class="accordion-body">
-                                                            <ul class="ps-3">
-                                                                @if (count($category->children) > 0)
-                                                                    @foreach ($category->children as $sub_cat)
-                                                                        <li class="mb-2 menu-single-items">
-                                                                            <a
-                                                                                href="{{ route('category', $sub_cat->slug) }}">{{ $sub_cat->name }}</a>
-                                                                        </li>
-                                                                    @endforeach
-                                                                @else
-                                                                    <li class="mb-2 menu-single-items">
-                                                                        <a href="javascript:void(0)">No Content
-                                                                            Found!</a>
-                                                                    </li>
-                                                                @endif
-                                                            </ul>
                                                         </div>
+                                                    </button>
+                                                </h2>
+                                                <div id="flush-collapse-{{ $chunkKey }}-{{ $key }}"
+                                                    class="accordion-collapse collapse"
+                                                    aria-labelledby="flush-heading-{{ $chunkKey }}-{{ $key }}"
+                                                    data-bs-parent="#accordionFlushExample-{{ $chunkKey }}-{{ $key }}">
+                                                    <div class="accordion-body">
+                                                        <ul class="ps-3">
+                                                            @if (count($category->children) > 0)
+                                                                @foreach ($category->children as $sub_cat)
+                                                                    <li class="mb-2 menu-single-items">
+                                                                        <a
+                                                                            href="{{ route('category', $sub_cat->slug) }}">{{ $sub_cat->name }}</a>
+                                                                    </li>
+                                                                @endforeach
+                                                            @else
+                                                                <li class="mb-2 menu-single-items">
+                                                                    <a href="javascript:void(0)">No Content Found!</a>
+                                                                </li>
+                                                            @endif
+                                                        </ul>
                                                     </div>
                                                 </div>
                                             </div>
-                                        @endif
+                                        </div>
                                     @endforeach
-                                @endif
-                            </div>
-                            <div class="col-md-6">
-                                @if (count($categories) > 0)
-                                    @foreach ($categories as $key => $category)
-                                        @if ($key % 2 != 0)
-                                            <div class="accordion accordion-flush"
-                                                id="accordionFlushExample-{{ $key }}">
-                                                <div class="accordion-item mb-2">
-                                                    <h2 class="accordion-header"
-                                                        id="flush-heading-{{ $key }}">
-                                                        <button class="accordion-button p-3 collapsed" type="button"
-                                                            data-bs-toggle="collapse"
-                                                            data-bs-target="#flush-collapse-{{ $key }}"
-                                                            aria-expanded="false"
-                                                            aria-controls="flush-collapse-{{ $key }}">
-                                                            <p class="m-0 accordion-button-area p-2 ps-0">
-                                                                <span class="ms-0"> </span>
-                                                            </p>
-                                                            <div class="d-flex align-items-center w-100">
-                                                                <img src="{{ asset('frontend/assets/img/Icon.svg') }}"
-                                                                    alt="" />
-                                                                <p class="mb-0 ms-2">
-                                                                    {{ $category->name }}
-                                                                </p>
-                                                            </div>
-                                                        </button>
-                                                    </h2>
-                                                    <div id="flush-collapse-{{ $key }}"
-                                                        class="accordion-collapse collapse"
-                                                        aria-labelledby="flush-heading-{{ $key }}"
-                                                        data-bs-parent="#accordionFlushExample-{{ $key }}">
-                                                        <div class="accordion-body">
-                                                            <ul class="ps-3">
-                                                                @if (count($category->children) > 0)
-                                                                    @foreach ($category->children as $sub_cat)
-                                                                        <li class="mb-2 menu-single-items">
-                                                                            <a
-                                                                                href="{{ route('category', $sub_cat->slug) }}">{{ $sub_cat->name }}</a>
-                                                                        </li>
-                                                                    @endforeach
-                                                                @else
-                                                                    <li class="mb-2 menu-single-items">
-                                                                        <a href="javascript:void(0)">No Content
-                                                                            Found!</a>
-                                                                    </li>
-                                                                @endif
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @endif
-                                    @endforeach
-                                @endif
-                            </div>
+                                </div>
+                            @endforeach
                         </div>
+                    </div>
+                </div>
 
+            </div>
+            <div>
+                <div class="mt-1 mb-3 row">
+                    <div class="col-lg-12">
+                        <div class="devider-wrap">
+                            <h4 class="devider-content">
+                                <span class="devider-text">WHAT WE DO</span>
+                            </h4>
+                        </div>
                     </div>
                 </div>
-            </div>
-            {{-- <div>
-            <div class="row mt-1 mb-3">
-                <div class="col-lg-12">
-                    <div class="devider-wrap">
-                        <h4 class="devider-content">
-                            <span class="devider-text">WHAT WE DO</span>
-                        </h4>
-                    </div>
-                </div>
-            </div>
-            <div class="row bg-white mb-5 mx-1" style="
-                border-top-right-radius: 40px;
-                border-bottom-left-radius: 40px;
-                background-image: url(https://www.riverbed.com/riverbed-wp-content/uploads/2022/12/lady-with-laptop.png);
-                background-repeat: no-repeat;
-                background-size: cover;
-                padding: 3rem 0rem 3rem;
-              ">
-                <div class="col-lg-12 p-5 mb-3">
-                    <div class="row align-items-center">
-                        <div class="col-lg-6">
-                            <div class="holder-main-text">
-                                <h6 style="width: 23%; line-height: 25px">
-                                    WHY YOU NEED US ?
-                                </h6>
-                                <h2 class="pt-3 mb-0 pb-2 w-75">
-                                    Modernize IT for Digital and Cloud Success
-                                </h2>
-                                <p class="py-3 mt-0 w-75" style="text-align: justify">
-                                    To take advantage of digital and cloud technologies that
-                                    fuel transformation, organizations must modernize their IT
-                                    infrastructure. But this doesn’t happen overnight. Whatever
-                                    the pace, Riverbed can help IT teams make the transition in
-                                    the most performant, cost-effective, and secure way.
-                                </p>
-                                <a href="guide.html" class="btn common-btn-3 rounded-0 w-25">Learn More</a>
+                <div class="mx-1 mb-5 bg-white row what-we-do"
+                    style="background-image: url(https://www.riverbed.com/riverbed-wp-content/uploads/2022/12/lady-with-laptop.png);">
+                    <div class="p-5 mb-3 col-lg-12">
+                        <div class="row align-items-center">
+                            <div class="col-lg-6">
+                                <div class="holder-main-text">
+                                    <h6 style="width: 28%; line-height: 1.4;">
+                                        WHY YOU NEED US ?
+                                    </h6>
+                                    <h2 class="pb-2 mb-0 w-75">
+                                        Modernize IT for Digital and Cloud Success
+                                    </h2>
+                                    <p class="py-3 mt-0 w-75" style="text-align: justify">
+                                        To take advantage of digital and cloud technologies that
+                                        fuel transformation, organizations must modernize their IT
+                                        infrastructure. But this doesn’t happen overnight. Whatever
+                                        the pace, Riverbed can help IT teams make the transition in
+                                        the most performant, cost-effective, and secure way.
+                                    </p>
+                                    <a href="guide.html" class="btn common-btn-3 rounded-0 w-25">Learn More</a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div> --}}
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="devider-wrap mb-lg-5">
+                    <div class="devider-wrap">
                         <h4 class="devider-content">
                             <span class="devider-text">New products</span>
                         </h4>
@@ -213,27 +155,27 @@
                 @foreach ($products as $product)
                     <div class="col">
                         <div class="url-box">
-                            <div class="card rounded-0 border-0">
-                                <div class="card-header bg-white d-flex justify-content-between">
+                            <div class="border-0 card rounded-0 h-product">
+                                <div class="bg-white card-header d-flex justify-content-between">
                                     <span class="product_badge">New</span>
                                     <img src="{{ asset('storage/brand/logo/' . optional($product->brand)->logo) }}"
                                         height="20px" alt="{{ optional($product->brand)->title }}"
                                         loading="lazy" />
                                     <!-- <span class="product_badge2">New</span> -->
                                 </div>
-                                <div class="card-body p-0">
-                                    <img class="img-fluid" src="{{ $product->thumbnail }}" />
-                                </div>
-                                <div class="card-body p-0">
+                                <div class="p-0 card-body">
+                                    <div class="">
+                                        <img class="img-fluid h-product-img" src="{{ $product->thumbnail }}" />
+                                    </div>
                                     <div class="px-3">
-                                        <a
+                                        <a class="title"
                                             href="{{ route('product.details', ['id' => optional($product->brand)->slug, 'slug' => optional($product)->slug]) }}">
                                             <h6 class="pt-3">{{ $product->name }}</h6>
                                         </a>
 
                                         <div class="mb-3">
                                             @if (!empty($product->sku_code))
-                                                <p class="p-0 m-0 pb-2">
+                                                <p class="p-0 pb-2 m-0">
                                                     <a href="javascript:void(0)">
                                                         <i class="fa-solid fa-paperclip main-color tags-text me-2"></i>
                                                         <span class="tags-text">SKU #{{ $product->sku_code }}</span>
@@ -241,7 +183,7 @@
                                                 </p>
                                             @endif
                                             @if (!empty($product->mf_code))
-                                                <p class="p-0 m-0 pb-2">
+                                                <p class="p-0 pb-2 m-0">
                                                     <a href="javascript:void(0)">
                                                         <i class="fa-solid fa-paperclip main-color tags-text me-2"></i>
                                                         <span class="tags-text">MF #{{ $product->mf_code }}</span>
@@ -258,8 +200,8 @@
             </div>
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="devider-wrap mt-2">
-                        <h4 class="devider-content pt-4">
+                    <div class="mt-2 devider-wrap">
+                        <h4 class="pt-4 devider-content">
                             <span class="devider-text">New Solution</span>
                         </h4>
                     </div>
@@ -268,12 +210,12 @@
         </div>
         <!-- New Product -->
         <div>
-            <div class="card border-0 bg-primary mb-3"
+            <div class="mb-3 border-0 card bg-primary"
                 style="border-top-right-radius: 40px; border-bottom-left-radius: 40px; background: linear-gradient(90deg, #0069bf 0%, #38b6ff 100%);">
-                <div class="card-header border-0 bg-transparent">
-                    <div class="row px-5">
+                <div class="bg-transparent border-0 card-header">
+                    <div class="px-5 row">
                         <div class="col-lg-12">
-                            <div class="py-5 d-flex justify-content-start text-white">
+                            <div class="py-5 text-white d-flex justify-content-start">
                                 <h3>Solutions</h3>
                                 {{-- <h3 class="px-3">|</h3>
                                 <h3>Full-fidelity, No Sampling</h3> --}}
@@ -281,14 +223,14 @@
                         </div>
                     </div>
                 </div>
-                <div class="card-body bg-white" style="border-bottom-left-radius: 40px">
-                    <div class="row gx-5 special_solution_box px-5">
+                <div class="bg-white card-body" style="border-bottom-left-radius: 40px">
+                    <div class="px-5 row gx-5 special_solution_box">
                         @foreach ($solutions as $solution)
                             <div class="col-md-3">
                                 <div>
                                     <a href="{{ route('solution.details', $solution->slug) }}">
-                                        <div class="card border-0 rounded-0 solution_cards shadow-sm p-3">
-                                            <div class="d-flex align-items-center card-body py-0 pt-2">
+                                        <div class="p-3 border-0 shadow-sm card rounded-0 solution_cards">
+                                            <div class="py-0 pt-2 d-flex align-items-center card-body">
                                                 <div class="icon-box">
                                                     {{-- <img width="70px" height="55px"
                                                         src="https://www.riverbed.com/riverbed-wp-content/uploads/2022/12/brainstorm_color.png"
@@ -302,7 +244,7 @@
                                                 </div>
                                             </div>
                                             <a href="{{ route('solution.details', $solution->slug) }}"
-                                                class="text-end pb-2 main-color mt-0 pt-0 pe-1">
+                                                class="pt-0 pb-2 mt-0 text-end main-color pe-1">
                                                 <i class="fa-solid fa-plus"></i>
                                             </a>
                                         </div>
@@ -316,7 +258,7 @@
         </div>
         <!-- New Trends -->
         <div>
-            <div class="row mt-3">
+            <div class="mt-3 row">
                 <div class="col-lg-12">
                     <div class="devider-wrap">
                         <h4 class="devider-content">
@@ -342,58 +284,58 @@
             </div>
         </div>
         <!-- Exhibitions -->
-        {{-- <div>
-            <div class="mt-5 mb-3 mx-4">
+        <div>
+            <div class="mx-4 mt-5 mb-3">
                 <div class="mt-3">
-                    <div class="row gx-5 bg-white develop-business-2 align-items-center">
-                        <div class="col p-2">
+                    <div class="bg-white row gx-5 develop-business-2 align-items-center">
+                        <div class="p-2 col">
                             <div class="main-color d-flex">
                                 <a href="">
                                     <h6 class="mb-0 ps-4">Develop Your Business!</h6>
                                 </a>
                             </div>
                         </div>
-                        <div class="col p-2">
+                        <div class="p-2 col">
                             <a href="">
                                 <div class="main-color d-flex align-items-center">
                                     <p class="p-0 m-0">
                                         <i class="fa-solid fa-phone-volume"></i>
                                     </p>
-                                    <p class="ms-2 p-0 m-0">
+                                    <p class="p-0 m-0 ms-2">
                                         <span class="text-muted">Contact Us</span>
                                     </p>
                                 </div>
                             </a>
                         </div>
-                        <div class="col p-2">
+                        <div class="p-2 col">
                             <a href="">
                                 <div class="main-color d-flex align-items-center">
                                     <p class="p-0 m-0">
                                         <i class="fa-solid fa-cart-shopping"></i>
                                     </p>
-                                    <p class="ms-2 p-0 m-0">
+                                    <p class="p-0 m-0 ms-2">
                                         <span class="text-muted">Start Selling Online</span>
                                     </p>
                                 </div>
                             </a>
                         </div>
-                        <div class="col p-2">
+                        <div class="p-2 col">
                             <a href="">
                                 <div class="main-color d-flex align-items-center">
                                     <p class="p-0 m-0">
                                         <i class="fa-solid fa-box-open"></i>
                                     </p>
-                                    <p class="ms-2 p-0 m-0">
+                                    <p class="p-0 m-0 ms-2">
                                         <span class="text-muted">Exhibit Your Products</span>
                                     </p>
                                 </div>
                             </a>
                         </div>
-                        <div class="col p-2 special-exhibit-2 m-0">
+                        <div class="p-2 m-0 col special-exhibit-2">
                             <a href="">
-                                <div class="text-center p-3">
-                                    <h4 class="text-white mb-0">Exhibit With Us</h4>
-                                    <p class="ms-2 p-0 m-0 text-white" style="font-size: 12px">
+                                <div class="p-3 text-center">
+                                    <h4 class="mb-0 text-white">Exhibit With Us</h4>
+                                    <p class="p-0 m-0 text-white ms-2" style="font-size: 12px">
                                         Sign up in 2 minutes
                                     </p>
                                 </div>
@@ -402,10 +344,10 @@
                     </div>
                 </div>
             </div>
-        </div> --}}
+        </div>
         <!-- Our Buying Guides -->
         {{-- <div>
-            <div class="row gx-5 mt-3">
+            <div class="mt-3 row gx-5">
                 <div class="col-lg-12">
                     <div class="devider-wrap">
                         <h4 class="devider-content">
@@ -414,12 +356,12 @@
                     </div>
                 </div>
             </div>
-        </div> --}}
+        </div>
         <!-- Guides -->
-        {{-- <div class="overflow-hidden">
+        <div class="overflow-hidden">
             <div class="row gx-3">
                 <div class="col-lg-4 col-sm-12">
-                    <div class="bg-white p-4 buying-area">
+                    <div class="p-4 bg-white buying-area">
                         <div class="ms-1">
                             <img src="https://img.directindustry.com/buyingguide/di/en/501.jpg"
                                 alt="Choosing the Right Pressure Gauge" class="img-fluid" width="800px" />
@@ -437,13 +379,13 @@
                                 term pressure indicator may also be used. In industry,
                                 pressure is certainly the [...]
                             </p>
-                            <!-- <a href="guide.html" class="btn signin mt-2 rounded-0">Learn More</a> -->
-                            <a href="guide.html" class="btn common-btn-4 mt-2 rounded-0">Learn More</a>
+                            <!-- <a href="guide.html" class="mt-2 btn signin rounded-0">Learn More</a> -->
+                            <a href="guide.html" class="mt-2 btn common-btn-4 rounded-0">Learn More</a>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-4 col-sm-12">
-                    <div class="bg-white p-4 buying-area">
+                    <div class="p-4 bg-white buying-area">
                         <div class="ms-1">
                             <img src="https://img.directindustry.com/buyingguide/di/en/480.jpg"
                                 alt="Choosing the Right Pressure Gauge" class="img-fluid" width="800px" />
@@ -461,13 +403,13 @@
                                 term pressure indicator may also be used. In industry,
                                 pressure is certainly the [...]
                             </p>
-                            <!-- <a href="guide.html" class="btn signin mt-2 rounded-0">Learn More</a> -->
-                            <a href="guide.html" class="btn common-btn-4 mt-2 rounded-0">Learn More</a>
+                            <!-- <a href="guide.html" class="mt-2 btn signin rounded-0">Learn More</a> -->
+                            <a href="guide.html" class="mt-2 btn common-btn-4 rounded-0">Learn More</a>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-4 col-sm-12">
-                    <div class="bg-white p-4 buying-area">
+                    <div class="p-4 bg-white buying-area">
                         <div class="ms-1">
                             <img src="https://img.directindustry.com/buyingguide/di/en/444.jpg"
                                 alt="Choosing the Right Pressure Gauge" class="img-fluid" width="800px" />
@@ -485,20 +427,20 @@
                                 term pressure indicator may also be used. In industry,
                                 pressure is certainly the [...]
                             </p>
-                            <!-- <a href="guide.html" class="btn signin mt-2 rounded-0">Learn More</a> -->
-                            <a href="guide.html" class="btn common-btn-4 mt-2 rounded-0">Learn More</a>
+                            <!-- <a href="guide.html" class="mt-2 btn signin rounded-0">Learn More</a> -->
+                            <a href="guide.html" class="mt-2 btn common-btn-4 rounded-0">Learn More</a>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-12 text-end mt-3">
+                <div class="mt-3 col-lg-12 text-end">
                     <a class="main-color" href="https://projects.directindustry.com/">See
                         All Projects <i class="fa fa-angle-right"></i>
                     </a>
                 </div>
             </div>
-        </div>
+        </div> --}}
         <div>
             <div class="row">
                 <div class="col-lg-12">
@@ -509,15 +451,16 @@
                     </div>
                 </div>
             </div>
-            <div class="row bg-white mb-5 mx-1" style="border-top-right-radius: 40px; border-bottom-left-radius: 40px">
-                <div class="col-lg-12 p-5 mb-3">
+            <div class="mx-1 mb-5 bg-white row"
+                style="border-top-right-radius: 40px; border-bottom-left-radius: 40px">
+                <div class="p-5 mb-3 col-lg-12">
                     <div class="row align-items-center">
                         <div class="col-lg-6">
                             <div class="holder-main-text">
                                 <h6 style="width: 23%; line-height: 25px">
                                     WHY YOU NEED US?
                                 </h6>
-                                <h2 class="pt-3 mb-0 pb-2 w-75 text-capitalize">
+                                <h2 class="pt-3 pb-2 mb-0 w-75 text-capitalize">
                                     Maximize Visibility and Performance
                                 </h2>
                                 <p class="pt-2 mt-0 w-75" style="text-align: justify">
@@ -526,20 +469,20 @@
                                     expanded cyber security risks—all while improving your
                                     ability to be agile and resilient.
                                 </p>
-                                <a href="guide.html" class="btn common-btn-3 mt-4 rounded-0 w-25">Learn More</a>
+                                <a href="guide.html" class="mt-4 btn common-btn-3 rounded-0 w-25">Learn More</a>
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="row">
                                 <div class="col-lg-6">
                                     <a href="">
-                                        <div class="card mt-2 shadow-lg common-gradient"
+                                        <div class="mt-2 shadow-lg card common-gradient"
                                             style="
                           border-top-right-radius: 40px;
                           border-bottom-left-radius: 40px;
                           border: 0px solid #fff;
                         ">
-                                            <div class="card-body border-0">
+                                            <div class="border-0 card-body">
                                                 <div class="icon-holder">
                                                     <?xml version="1.0" encoding="UTF-8"?>
                                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80">
@@ -574,12 +517,12 @@
                                                 </div>
                                                 <div class="solution-card-box">
                                                     <h5>Unified Observability</h5>
-                                                    <div class="row text-white">
+                                                    <div class="text-white row">
                                                         <div class="col-lg-12">
                                                             <a href="#"
-                                                                class="learn_more_btn d-flex justify-content-between mt-1 mb-3">
-                                                                <p class="p-0 m-0 pb-2">Learn More</p>
-                                                                <p class="p-0 m-0 pb-2">
+                                                                class="mt-1 mb-3 learn_more_btn d-flex justify-content-between">
+                                                                <p class="p-0 pb-2 m-0">Learn More</p>
+                                                                <p class="p-0 pb-2 m-0">
                                                                     <i class="fa-solid fa-plus"></i>
                                                                 </p>
                                                             </a>
@@ -592,13 +535,13 @@
                                 </div>
                                 <div class="col-lg-6">
                                     <a href="">
-                                        <div class="card mt-2 shadow-lg common-gradient"
+                                        <div class="mt-2 shadow-lg card common-gradient"
                                             style="
                           border-top-right-radius: 40px;
                           border-bottom-left-radius: 40px;
                           border: 0px solid #fff;
                         ">
-                                            <div class="card-body border-0">
+                                            <div class="border-0 card-body">
                                                 <div class="icon-holder">
                                                     <?xml version="1.0" encoding="UTF-8"?>
                                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80">
@@ -633,12 +576,12 @@
                                                 </div>
                                                 <div class="solution-card-box">
                                                     <h5>Unified Observability</h5>
-                                                    <div class="row text-white">
+                                                    <div class="text-white row">
                                                         <div class="col-lg-12">
                                                             <a href="#"
-                                                                class="learn_more_btn d-flex justify-content-between mt-1 mb-3">
-                                                                <p class="p-0 m-0 pb-2">Learn More</p>
-                                                                <p class="p-0 m-0 pb-2">
+                                                                class="mt-1 mb-3 learn_more_btn d-flex justify-content-between">
+                                                                <p class="p-0 pb-2 m-0">Learn More</p>
+                                                                <p class="p-0 pb-2 m-0">
                                                                     <i class="fa-solid fa-plus"></i>
                                                                 </p>
                                                             </a>
@@ -650,16 +593,16 @@
                                     </a>
                                 </div>
                             </div>
-                            <div class="row mt-3">
+                            <div class="mt-3 row">
                                 <div class="col-lg-6">
                                     <a href="">
-                                        <div class="card mt-2 shadow-lg common-gradient"
+                                        <div class="mt-2 shadow-lg card common-gradient"
                                             style="
                           border-top-right-radius: 40px;
                           border-bottom-left-radius: 40px;
                           border: 0px solid #fff;
                         ">
-                                            <div class="card-body border-0">
+                                            <div class="border-0 card-body">
                                                 <div class="icon-holder">
                                                     <?xml version="1.0" encoding="UTF-8"?>
                                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80">
@@ -694,12 +637,12 @@
                                                 </div>
                                                 <div class="solution-card-box">
                                                     <h5>Unified Observability</h5>
-                                                    <div class="row text-white">
+                                                    <div class="text-white row">
                                                         <div class="col-lg-12">
                                                             <a href="#"
-                                                                class="learn_more_btn d-flex justify-content-between mt-1 mb-3">
-                                                                <p class="p-0 m-0 pb-2">Learn More</p>
-                                                                <p class="p-0 m-0 pb-2">
+                                                                class="mt-1 mb-3 learn_more_btn d-flex justify-content-between">
+                                                                <p class="p-0 pb-2 m-0">Learn More</p>
+                                                                <p class="p-0 pb-2 m-0">
                                                                     <i class="fa-solid fa-plus"></i>
                                                                 </p>
                                                             </a>
@@ -712,13 +655,13 @@
                                 </div>
                                 <div class="col-lg-6">
                                     <a href="">
-                                        <div class="card mt-2 shadow-lg common-gradient"
+                                        <div class="mt-2 shadow-lg card common-gradient"
                                             style="
                           border-top-right-radius: 40px;
                           border-bottom-left-radius: 40px;
                           border: 0px solid #fff;
                         ">
-                                            <div class="card-body border-0">
+                                            <div class="border-0 card-body">
                                                 <div class="icon-holder">
                                                     <?xml version="1.0" encoding="UTF-8"?>
                                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80">
@@ -753,12 +696,12 @@
                                                 </div>
                                                 <div class="solution-card-box">
                                                     <h5>Unified Observability</h5>
-                                                    <div class="row text-white">
+                                                    <div class="text-white row">
                                                         <div class="col-lg-12">
                                                             <a href="#"
-                                                                class="learn_more_btn d-flex justify-content-between mt-1 mb-3">
-                                                                <p class="p-0 m-0 pb-2">Learn More</p>
-                                                                <p class="p-0 m-0 pb-2">
+                                                                class="mt-1 mb-3 learn_more_btn d-flex justify-content-between">
+                                                                <p class="p-0 pb-2 m-0">Learn More</p>
+                                                                <p class="p-0 pb-2 m-0">
                                                                     <i class="fa-solid fa-plus"></i>
                                                                 </p>
                                                             </a>
@@ -774,7 +717,7 @@
                     </div>
                 </div>
             </div>
-        </div> --}}
+        </div>
     </div>
 
 
