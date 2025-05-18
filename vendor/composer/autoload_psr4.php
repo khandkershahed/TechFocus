@@ -8,7 +8,6 @@ $baseDir = dirname($vendorDir);
 return array(
     'voku\\' => array($vendorDir . '/voku/portable-ascii/src/voku'),
     'browner12\\helpers\\' => array($vendorDir . '/browner12/helpers/src'),
-    'Yoeunes\\Toastr\\' => array($vendorDir . '/yoeunes/toastr/src'),
     'Wildside\\Userstamps\\' => array($vendorDir . '/wildside/userstamps/src'),
     'Whoops\\' => array($vendorDir . '/filp/whoops/src/Whoops'),
     'Webmozart\\Assert\\' => array($vendorDir . '/webmozart/assert/src'),
@@ -85,8 +84,6 @@ return array(
     'GuzzleHttp\\' => array($vendorDir . '/guzzlehttp/guzzle/src'),
     'GrahamCampbell\\ResultType\\' => array($vendorDir . '/graham-campbell/result-type/src'),
     'Fruitcake\\Cors\\' => array($vendorDir . '/fruitcake/php-cors/src'),
-    'Flasher\\Prime\\' => array($vendorDir . '/php-flasher/flasher'),
-    'Flasher\\Laravel\\' => array($vendorDir . '/php-flasher/flasher-laravel'),
     'Faker\\' => array($vendorDir . '/fakerphp/faker/src/Faker'),
     'Egulias\\EmailValidator\\' => array($vendorDir . '/egulias/email-validator/src'),
     'Dotenv\\' => array($vendorDir . '/vlucas/phpdotenv/src'),
