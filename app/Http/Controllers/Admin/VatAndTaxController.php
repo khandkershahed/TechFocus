@@ -61,7 +61,7 @@ class VatAndTaxController extends Controller
         ];
         $this->vatAndTaxRepository->storeVatAndTax($data);
 
-        toastr()->success('Data has been saved successfully!');
+        session()->flash('success', 'Data has been saved successfully!');
         return redirect()->back();
     }
 
@@ -109,7 +109,7 @@ class VatAndTaxController extends Controller
 
         $this->vatAndTaxRepository->updateVatAndTax($data, $id);
 
-        toastr()->success('Data has been updated successfully!');
+        session()->flash('success', 'Data has been saved successfully!');
         return redirect()->back();
     }
 

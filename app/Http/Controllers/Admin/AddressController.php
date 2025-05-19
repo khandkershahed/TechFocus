@@ -64,7 +64,7 @@ class AddressController extends Controller
         ];
         $this->addressRepository->storeAddress($data);
 
-        toastr()->success('Data has been saved successfully!');
+        session()->flash('success', 'Data has been saved successfully!');
         return redirect()->back();
     }
 
@@ -114,7 +114,7 @@ class AddressController extends Controller
 
         $this->addressRepository->updateAddress($data, $id);
 
-        toastr()->success('Data has been updated successfully!');
+        session()->flash('success', 'Data has been saved successfully!');
         return redirect()->back();
     }
 

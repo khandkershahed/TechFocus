@@ -158,7 +158,7 @@ class BrandController extends Controller
 
         $this->brandRepository->updateBrand($data, $id);
 
-        // toastr()->success('Data has been updated successfully!');
+        // session()->flash('success', 'Data has been saved successfully!');
         return redirect()->route('admin.brand.index')->with('message', 'Data updated Successfully');
     }
 

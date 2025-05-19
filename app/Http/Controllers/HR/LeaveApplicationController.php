@@ -126,7 +126,7 @@ class LeaveApplicationController extends Controller
         ];
         $this->leaveApplicationRepository->storeLeaveApplication($data);
 
-        toastr()->success('Data has been saved successfully!');
+        session()->flash('success', 'Data has been saved successfully!');
         return redirect()->back();
     }
 
@@ -287,7 +287,7 @@ class LeaveApplicationController extends Controller
 
         $this->leaveApplicationRepository->updateLeaveApplication($data, $id);
 
-        toastr()->success('Data has been updated successfully!');
+        session()->flash('success', 'Data has been saved successfully!');
         return redirect()->back();
     }
 

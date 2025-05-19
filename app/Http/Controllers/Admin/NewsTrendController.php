@@ -119,7 +119,7 @@ class NewsTrendController extends Controller
         ];
         $this->newsTrendRepository->storeNewsTrend($data);
 
-        toastr()->success('Data has been saved successfully!');
+        session()->flash('success', 'Data has been saved successfully!');
         return redirect()->back();
     }
 
@@ -240,7 +240,7 @@ class NewsTrendController extends Controller
 
         $this->newsTrendRepository->updateNewsTrend($data, $id);
 
-        toastr()->success('Data has been updated successfully!');
+        session()->flash('success', 'Data has been saved successfully!');
         return redirect()->back();
     }
 

@@ -65,7 +65,7 @@ class BankingController extends Controller
         ];
         $this->bankingRepository->storeBanking($data);
 
-        toastr()->success('Data has been saved successfully!');
+        session()->flash('success', 'Data has been saved successfully!');
         return redirect()->back();
     }
 
@@ -118,7 +118,7 @@ class BankingController extends Controller
 
         $this->bankingRepository->updateBanking($data, $id);
 
-        toastr()->success('Data has been updated successfully!');
+        session()->flash('success', 'Data has been saved successfully!');
         return redirect()->back();
     }
 

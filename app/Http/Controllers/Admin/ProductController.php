@@ -94,8 +94,7 @@ class ProductController extends Controller
 
         if ($validator->fails()) {
             foreach ($validator->messages()->all() as $message) {
-                toastr()->error($message, 'Failed', ['timeOut' => 30000]);
-            }
+                session()->flash('error', $message, 'Failed', ['timeOut' => 30000]);
             return redirect()->back()->withInput();
         }
 
@@ -207,7 +206,7 @@ class ProductController extends Controller
             }
 
             DB::commit();
-            toastr()->success('Data Inserted Successfully');
+            session()->flash('success', 'Data has been saved successfully!');;
             return redirect()->back();
         } catch (\Exception $e) {
             DB::rollback();
@@ -215,7 +214,7 @@ class ProductController extends Controller
             return redirect()->back()->withInput()->with('error', $e->getMessage());
         }
     }
-
+    }
 
 
 

@@ -63,7 +63,7 @@ class HrPolicyController extends Controller
         ];
         $this->hrPolicyRepository->storeHrPolicy($data);
 
-        toastr()->success('Data has been saved successfully!');
+        session()->flash('success', 'Data has been saved successfully!');
         return redirect()->back();
     }
 
@@ -111,7 +111,7 @@ class HrPolicyController extends Controller
 
         $this->hrPolicyRepository->updateHrPolicy($data, $id);
 
-        toastr()->success('Data has been updated successfully!');
+        session()->flash('success', 'Data has been saved successfully!');
         return redirect()->back();
     }
 

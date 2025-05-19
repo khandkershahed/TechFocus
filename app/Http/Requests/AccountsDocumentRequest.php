@@ -80,7 +80,7 @@ class AccountsDocumentRequest extends FormRequest
     //     $errorMessages = $validator->errors()->all();
 
     //     foreach ($errorMessages as $errorMessage) {
-    //         toastr()->error($errorMessage);
+    //         session()->flash('error', $errorMessage);
     //     }
     // }
 }

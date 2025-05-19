@@ -54,7 +54,7 @@ class ProductAttributeController extends Controller
         ];
         $this->productAttributeRepository->storeProductAttribute($data);
 
-        toastr()->success('Data has been saved successfully!');
+        session()->flash('success', 'Data has been saved successfully!');
         return redirect()->back();
     }
 
@@ -97,7 +97,7 @@ class ProductAttributeController extends Controller
 
         $this->productAttributeRepository->updateProductAttribute($data, $id);
 
-        toastr()->success('Data has been updated successfully!');
+        session()->flash('success', 'Data has been saved successfully!');
         return redirect()->back();
     }
 

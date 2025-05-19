@@ -55,7 +55,7 @@ class AttendanceController extends Controller
         ];
         Attendance::create($data);
 
-        toastr()->success('Data has been saved successfully!');
+        session()->flash('success', 'Data has been saved successfully!');
         return redirect()->back();
     }
 
@@ -104,7 +104,7 @@ class AttendanceController extends Controller
             'status'      => $request->status,
         ]);
 
-        toastr()->success('Data has been updated successfully!');
+        session()->flash('success', 'Data has been saved successfully!');
         return redirect()->back();
     }
 

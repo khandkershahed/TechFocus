@@ -141,7 +141,7 @@ class CompanyRequest extends FormRequest
         $errorMessages = $validator->errors()->all();
         Session::flash('error', $errorMessages);
         // foreach ($errorMessages as $errorMessage) {
-        //     toastr()->error($errorMessage);
+        //     session()->flash('error', $errorMessage);
         // }
     }
 }

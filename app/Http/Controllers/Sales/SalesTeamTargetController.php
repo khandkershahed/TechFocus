@@ -66,7 +66,7 @@ class SalesTeamTargetController extends Controller
         ];
         $this->salesTeamTargetRepository->storeSalesTeamTarget($data);
 
-        toastr()->success('Data has been saved successfully!');
+        session()->flash('success', 'Data has been saved successfully!');
         return redirect()->back();
     }
 
@@ -117,7 +117,7 @@ class SalesTeamTargetController extends Controller
 
         $this->salesTeamTargetRepository->updateSalesTeamTarget($data, $id);
 
-        toastr()->success('Data has been updated successfully!');
+        session()->flash('success', 'Data has been saved successfully!');
         return redirect()->back();
     }
 

@@ -58,7 +58,7 @@ class EmployeeDepartmentController extends Controller
         ];
         $this->employeeDepartmentRepository->storeEmployeeDepartment($data);
 
-        toastr()->success('Data has been saved successfully!');
+        session()->flash('success', 'Data has been saved successfully!');
         return redirect()->back();
     }
 
@@ -101,7 +101,7 @@ class EmployeeDepartmentController extends Controller
         ];
         $this->employeeDepartmentRepository->updateEmployeeDepartment($data, $id);
 
-        toastr()->success('Data has been saved successfully!');
+        session()->flash('success', 'Data has been saved successfully!');
         return redirect()->back();
     }
 

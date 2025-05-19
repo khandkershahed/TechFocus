@@ -75,7 +75,7 @@ class SalesYearTargetController extends Controller
         ];
         $this->salesYearTargetRepository->storeSalesYearTarget($data);
 
-        toastr()->success('Data has been saved successfully!');
+        session()->flash('success', 'Data has been saved successfully!');
         return redirect()->back();
     }
 
@@ -136,7 +136,7 @@ class SalesYearTargetController extends Controller
 
         $this->salesYearTargetRepository->updateSalesYearTarget($data, $id);
 
-        toastr()->success('Data has been updated successfully!');
+        session()->flash('success', 'Data has been saved successfully!');
         return redirect()->back();
     }
 

@@ -167,7 +167,7 @@ class EmployeeRequest extends FormRequest
 
         foreach ($errorMessages as $errorMessage) {
             Session::flash('error', $errorMessage);
-            // toastr()->error($errorMessage);
+            // session()->flash('error', $errorMessage);
         }
     }
 }

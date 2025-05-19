@@ -57,7 +57,7 @@ class ContactController extends Controller
 
         $this->contactRepository->storeContact($data);
 
-        toastr()->success('Data has been saved successfully!');
+        session()->flash('success', 'Data has been saved successfully!');
         return redirect()->back();
     }
 

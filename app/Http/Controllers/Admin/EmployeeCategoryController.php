@@ -67,7 +67,7 @@ class EmployeeCategoryController extends Controller
 
         $this->employeeCategoryRepository->storeEmployeeCategory($data);
 
-        toastr()->success('Data has been saved successfully!');
+        session()->flash('success', 'Data has been saved successfully!');
         return redirect()->back();
     }
 
@@ -118,7 +118,7 @@ class EmployeeCategoryController extends Controller
 
         $this->employeeCategoryRepository->updateEmployeeCategory($data, $id);
 
-        toastr()->success('Data has been updated successfully!');
+        session()->flash('success', 'Data has been saved successfully!');
         return redirect()->back();
     }
 

@@ -80,7 +80,7 @@ class CompanyController extends Controller
         ];
         $this->companyRepository->storeCompany($data);
 
-        // toastr()->success('Data has been saved successfully!');
+        // session()->flash('success', 'Data has been saved successfully!');
         return redirect()->back()->with('success', 'Data has been saved successfully!')->withInput();
     }
 
@@ -164,7 +164,7 @@ class CompanyController extends Controller
 
         $this->companyRepository->updateCompany($data, $id);
 
-        toastr()->success('Data has been updated successfully!');
+        session()->flash('success', 'Data has been saved successfully!');
         return redirect()->back();
     }
 
