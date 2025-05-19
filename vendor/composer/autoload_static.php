@@ -16,9 +16,13 @@ class ComposerStaticInit477449c53aa665b91ea8dae4c20eebd4
         '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
         '662a729f963d39afe703c9d9b7ab4a8c' => __DIR__ . '/..' . '/symfony/polyfill-php83/bootstrap.php',
         'f598d06aa772fa33d905e87be6398fb1' => __DIR__ . '/..' . '/symfony/polyfill-intl-idn/bootstrap.php',
+        '1c9051359cc4715f5f9b335dba6482da' => __DIR__ . '/..' . '/php-flasher/flasher/functions.php',
+        'da91a01b5badbe5394c83814ef5982ea' => __DIR__ . '/..' . '/php-flasher/flasher/helpers.php',
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
         '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         '35a6ad97d21e794e7e22a17d806652e4' => __DIR__ . '/..' . '/nunomaduro/termwind/src/Functions.php',
+        'ea5fe30a29a003841e935d35db82069e' => __DIR__ . '/..' . '/php-flasher/flasher-toastr/functions.php',
+        '8c15924acd8bcdca7d143b74c5c435ae' => __DIR__ . '/..' . '/php-flasher/flasher-toastr/helpers.php',
         '3bd81c9b8fcc150b69d8b63b4d2ccf23' => __DIR__ . '/..' . '/spatie/flare-client-php/src/helpers.php',
         '2203a247e6fda86070a5e4e07aed533a' => __DIR__ . '/..' . '/symfony/clock/Resources/now.php',
         '09f6b20656683369174dd6fa83b7e5fb' => __DIR__ . '/..' . '/symfony/polyfill-uuid/bootstrap.php',
@@ -26,8 +30,6 @@ class ComposerStaticInit477449c53aa665b91ea8dae4c20eebd4
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
         '47e1160838b5e5a10346ac4084b58c23' => __DIR__ . '/..' . '/laravel/prompts/src/helpers.php',
         '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
-        '1c9051359cc4715f5f9b335dba6482da' => __DIR__ . '/..' . '/php-flasher/flasher/functions.php',
-        'da91a01b5badbe5394c83814ef5982ea' => __DIR__ . '/..' . '/php-flasher/flasher/helpers.php',
         '801c31d8ed748cfa537fa45402288c95' => __DIR__ . '/..' . '/psy/psysh/src/functions.php',
         'e39a8b23c42d4e1452234d762b03835a' => __DIR__ . '/..' . '/ramsey/uuid/src/functions.php',
         '476ca15b8d69b04665cd879be9cb4c68' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Collections/functions.php',
@@ -162,6 +164,8 @@ class ComposerStaticInit477449c53aa665b91ea8dae4c20eebd4
         'F' => 
         array (
             'Fruitcake\\Cors\\' => 15,
+            'Flasher\\Toastr\\Prime\\' => 21,
+            'Flasher\\Toastr\\Laravel\\' => 23,
             'Flasher\\Prime\\' => 14,
             'Flasher\\Laravel\\' => 16,
             'Faker\\' => 6,
@@ -515,6 +519,14 @@ class ComposerStaticInit477449c53aa665b91ea8dae4c20eebd4
         'Fruitcake\\Cors\\' => 
         array (
             0 => __DIR__ . '/..' . '/fruitcake/php-cors/src',
+        ),
+        'Flasher\\Toastr\\Prime\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/php-flasher/flasher-toastr',
+        ),
+        'Flasher\\Toastr\\Laravel\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/php-flasher/flasher-toastr-laravel',
         ),
         'Flasher\\Prime\\' => 
         array (
@@ -1924,6 +1936,12 @@ class ComposerStaticInit477449c53aa665b91ea8dae4c20eebd4
         'Flasher\\Prime\\Translation\\Language\\Spanish' => __DIR__ . '/..' . '/php-flasher/flasher/Translation/Language/Spanish.php',
         'Flasher\\Prime\\Translation\\Messages' => __DIR__ . '/..' . '/php-flasher/flasher/Translation/Messages.php',
         'Flasher\\Prime\\Translation\\TranslatorInterface' => __DIR__ . '/..' . '/php-flasher/flasher/Translation/TranslatorInterface.php',
+        'Flasher\\Toastr\\Laravel\\Facade\\Toastr' => __DIR__ . '/..' . '/php-flasher/flasher-toastr-laravel/Facade/Toastr.php',
+        'Flasher\\Toastr\\Laravel\\FlasherToastrServiceProvider' => __DIR__ . '/..' . '/php-flasher/flasher-toastr-laravel/FlasherToastrServiceProvider.php',
+        'Flasher\\Toastr\\Prime\\Toastr' => __DIR__ . '/..' . '/php-flasher/flasher-toastr/Toastr.php',
+        'Flasher\\Toastr\\Prime\\ToastrBuilder' => __DIR__ . '/..' . '/php-flasher/flasher-toastr/ToastrBuilder.php',
+        'Flasher\\Toastr\\Prime\\ToastrInterface' => __DIR__ . '/..' . '/php-flasher/flasher-toastr/ToastrInterface.php',
+        'Flasher\\Toastr\\Prime\\ToastrPlugin' => __DIR__ . '/..' . '/php-flasher/flasher-toastr/ToastrPlugin.php',
         'Fruitcake\\Cors\\CorsService' => __DIR__ . '/..' . '/fruitcake/php-cors/src/CorsService.php',
         'Fruitcake\\Cors\\Exceptions\\InvalidOptionException' => __DIR__ . '/..' . '/fruitcake/php-cors/src/Exceptions/InvalidOptionException.php',
         'GrahamCampbell\\ResultType\\Error' => __DIR__ . '/..' . '/graham-campbell/result-type/src/Error.php',
