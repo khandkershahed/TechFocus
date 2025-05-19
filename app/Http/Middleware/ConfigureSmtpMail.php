@@ -20,7 +20,7 @@ class ConfigureSmtpMail
     {
         // Fetch active SMTP settings from the database
         $smtp = Smtp::where('status', 'active')->first();
-
+        dd($smtp);
         // If SMTP settings are found, set the mail configuration dynamically
         if ($smtp) {
             Config::set('mail.mailers.smtp.host', $smtp->host);
