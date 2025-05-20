@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Admin;
 
+use Illuminate\Support\Facades\Session;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 
@@ -272,7 +273,8 @@ class ProductRequest extends FormRequest
         $errorMessages = $validator->errors()->all();
 
         foreach ($errorMessages as $errorMessage) {
-            session()->flash('error', $errorMessage);
+            Session::flash('error', $errorMessage);
+            // session()->flash('error', $errorMessage);
         }
     }
 }
