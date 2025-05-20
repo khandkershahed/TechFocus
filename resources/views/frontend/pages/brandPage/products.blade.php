@@ -34,8 +34,8 @@
                         <div class="card-body mb-4">
                             <a
                                 href="{{ route('product.details', ['id' => $product->brand->slug, 'slug' => $product->slug]) }}">
-                                <p class="card-text project-para text-center" style="font-size: 15px">
-                                    {{ Str::words($product->name, 15) }}
+                                <p class="card-text project-para text-center" style="font-size: 14px">
+                                    {{ Str::words($product->name, 10) }}
                                 </p>
                             </a>
                             <div class="text-center">
@@ -48,7 +48,7 @@
                                             <br>
                                     @endif
                                     @if (!empty($product->sku_code))
-                                        <span class="product-badge" style="font-size: 13px"><i class="fa-solid fa-tag me-1 main-color"></i>SKU
+                                        <span class="product-badge" style="font-size: 12px"><i class="fa-solid fa-tag me-1 main-color"></i>SKU
                                             #{{ $product->sku_code }}</span>
                                     @endif
                                     @if (!empty($product->mf_code))
