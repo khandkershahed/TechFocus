@@ -8,6 +8,7 @@ use App\Models\Admin\Product;
 use App\Models\Admin\NewsTrend;
 use Yoeunes\Toastr\Facades\Toastr;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Session;
 
 class PageController extends Controller
 {
@@ -19,7 +20,8 @@ class PageController extends Controller
         if (!empty($data['brand']->brandPage)) {
             return view('frontend.pages.brandPage.overview',$data);
         } else {
-            Toastr::error('No Details information found for this Brand.');
+            Session::flash('warning', 'No Details information found for this Brand');
+            // Toastr::error('No Details information found for this Brand.');
             return redirect()->back();
         }
         
