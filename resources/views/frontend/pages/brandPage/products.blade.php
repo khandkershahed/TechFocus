@@ -21,33 +21,43 @@
             </div>
         </div> --}}
         <div class="row mb-5">
-            @foreach ($brand->products as $product) 
+            @foreach ($brand->products as $product)
                 <div class="col-lg-3 mb-4">
-                    <a href="{{ route('product.details', ['id' => $product->brand->slug, 'slug' => $product->slug]) }}">
-                        <div class="card projects-card rounded-0">
-                            <div>
-                                <p class="video-tag">New</p>
-                            </div>
-                            <img src="{{ $product->thumbnail }}"
-                                class="card-img-top img-fluid rounded-0" alt="{{ $product->name }}" />
-                            <div class="card-body mb-4">
+                    <div class="card projects-card rounded-0">
+                        <div>
+                            <p class="video-tag">New</p>
+                        </div>
+                        <a href="{{ route('product.details', ['id' => $product->brand->slug, 'slug' => $product->slug]) }}">
+                            <img src="{{ $product->thumbnail }}" class="card-img-top img-fluid rounded-0"
+                                alt="{{ $product->name }}" />
+                        </a>
+                        <div class="card-body mb-4">
+                            <a
+                                href="{{ route('product.details', ['id' => $product->brand->slug, 'slug' => $product->slug]) }}">
                                 <p class="card-text project-para text-center" style="font-size: 15px">
                                     {{ Str::words($product->name, 15) }}
                                 </p>
-                                <div class="text-center">
-                                    @if (!empty($brand->title)) 
-                                        <span class="product-badge"><i class="fa-solid fa-tag me-1 main-color"></i>Manufacturer : {{ $brand->title }}</span>
+                            </a>
+                            <div class="text-center">
+                                <a
+                                    href="{{ route('product.details', ['id' => $product->brand->slug, 'slug' => $product->slug]) }}">
+                                    @if (!empty($brand->title))
+                                        <span class="product-badge"><i
+                                                class="fa-solid fa-tag me-1 main-color"></i>Manufacturer
+                                            : {{ $brand->title }}</span>
                                     @endif
-                                    @if (!empty($product->sku_code))  
-                                        <span class="product-badge"><i class="fa-solid fa-tag me-1 main-color"></i>SKU #{{ $product->sku_code }}</span>
+                                    @if (!empty($product->sku_code))
+                                        <span class="product-badge"><i class="fa-solid fa-tag me-1 main-color"></i>SKU
+                                            #{{ $product->sku_code }}</span>
                                     @endif
-                                    @if (!empty($product->mf_code))  
-                                        <span class="product-badge"><i class="fa-solid fa-tag me-1 main-color"></i>MF #{{ $product->mf_code }}</span>
+                                    @if (!empty($product->mf_code))
+                                        <span class="product-badge"><i class="fa-solid fa-tag me-1 main-color"></i>MF
+                                            #{{ $product->mf_code }}</span>
                                     @endif
-                                </div>
+                                </a>
                             </div>
                         </div>
-                    </a>
+                    </div>
                 </div>
             @endforeach
         </div>
@@ -100,7 +110,8 @@
         </div>
         <div class="row p-3">
             <div class="col-lg-12 col-sm-12">
-                <p class="sub-color text-center w-75 mx-auto"> *Prices are pre-tax. They exclude delivery charges and customs duties
+                <p class="sub-color text-center w-75 mx-auto"> *Prices are pre-tax. They exclude delivery charges and
+                    customs duties
                     and
                     do not include additional charges for installation or activation options. Prices are indicative only and
                     may

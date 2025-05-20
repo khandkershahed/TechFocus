@@ -135,7 +135,7 @@
                                         the pace, Riverbed can help IT teams make the transition in
                                         the most performant, cost-effective, and secure way.
                                     </p>
-                                    <a href="guide.html" class="btn common-btn-3 rounded-0 w-25">Learn More</a>
+                                    <a href="javascript:void(0)" class="btn common-btn-3 rounded-0 w-25">Learn More</a>
                                 </div>
                             </div>
                         </div>
@@ -170,7 +170,7 @@
                                     <div class="px-3">
                                         <a class="title"
                                             href="{{ route('product.details', ['id' => optional($product->brand)->slug, 'slug' => optional($product)->slug]) }}">
-                                            <h6 class="pt-3">{{ $product->name }}</h6>
+                                            <h6 class="pt-3">{{ Str::words($product->name, 15) }}</h6>
                                         </a>
 
                                         <div class="mb-3">
