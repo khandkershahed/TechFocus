@@ -22,7 +22,7 @@ class PageController extends Controller
         } else {
             Session::flash('warning', 'No Details information found for this Brand');
             // Toastr::error('No Details information found for this Brand.');
-            return redirect()->back();
+            return redirect()->back()->with('warning', 'No Details information found for this Brand');
         }
         
     }

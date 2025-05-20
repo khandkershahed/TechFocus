@@ -271,10 +271,8 @@ class ProductRequest extends FormRequest
     protected function recordErrorMessages(Validator $validator)
     {
         $errorMessages = $validator->errors()->all();
+        $allErrors = implode(' ', $errorMessages);
 
-        foreach ($errorMessages as $errorMessage) {
-            Session::flash('error', $errorMessage);
-            // session()->flash('error', $errorMessage);
-        }
+        return redirect()->back()->with('error', $allErrors)->withInput();
     }
 }
