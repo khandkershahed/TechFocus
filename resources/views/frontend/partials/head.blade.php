@@ -14,6 +14,7 @@
 <link rel="stylesheet" href="{{ asset('frontend/assets/css/aos.css') }}" />
 <!-- *********************************CSS End*********************************** -->
 @include('frontend.partials.root_css')
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
 <link rel="stylesheet" href="{{ asset('frontend/assets/css/style.css') }}" />
 <link rel="stylesheet" href="{{ asset('frontend/assets/css/global.css') }}" />
 <link rel="stylesheet" href="{{ asset('frontend/assets/css/responsive.css') }}" />
