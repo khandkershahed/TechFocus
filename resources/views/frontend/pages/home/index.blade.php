@@ -170,7 +170,7 @@
                                     <div class="px-3">
                                         <a class="title"
                                             href="{{ route('product.details', ['id' => optional($product->brand)->slug, 'slug' => optional($product)->slug]) }}">
-                                            <h6 class="pt-3">{{ Str::words($product->name, 15) }}</h6>
+                                            <h6 class="pt-3" style="font-size: 15px;">{{ Str::words($product->name, 15) }}</h6>
                                         </a>
 
                                         <div class="mb-3">
