@@ -45,13 +45,14 @@
                                         <span class="product-badge"><i
                                                 class="fa-solid fa-tag me-1 main-color"></i>Manufacturer
                                             : {{ $brand->title }}</span>
+                                            <br>
                                     @endif
                                     @if (!empty($product->sku_code))
-                                        <span class="product-badge"><i class="fa-solid fa-tag me-1 main-color"></i>SKU
+                                        <span class="product-badge" style="font-size: 13px"><i class="fa-solid fa-tag me-1 main-color"></i>SKU
                                             #{{ $product->sku_code }}</span>
                                     @endif
                                     @if (!empty($product->mf_code))
-                                        <span class="product-badge"><i class="fa-solid fa-tag me-1 main-color"></i>MF
+                                        <span class="product-badge" style="font-size: 13px"><i class="fa-solid fa-tag me-1 main-color"></i>MF
                                             #{{ $product->mf_code }}</span>
                                     @endif
                                 </a>
