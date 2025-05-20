@@ -22,7 +22,7 @@
         </div> --}}
         <div class="row mb-5">
             @foreach ($brand->products as $product) 
-                <div class="col-lg-3">
+                <div class="col-lg-3 mb-5">
                     <a href="{{ route('product.details', ['id' => $product->brand->slug, 'slug' => $product->slug]) }}">
                         <div class="card projects-card rounded-0">
                             <div>
@@ -31,8 +31,8 @@
                             <img src="{{ $product->thumbnail }}"
                                 class="card-img-top img-fluid rounded-0" alt="{{ $product->name }}" />
                             <div class="card-body mb-5">
-                                <p class="card-text project-para text-center">
-                                    {{ $product->name }}
+                                <p class="card-text project-para text-center" style="font-size: 15px">
+                                    {{ Str::words($product->name, 15) }}
                                 </p>
                                 <div class="text-center">
                                     @if (!empty($brand->title)) 
