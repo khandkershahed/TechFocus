@@ -1,12 +1,80 @@
 /* Extra small devices (phones, 575px and down) */
 @media only screen and (max-width: 576px) {
+  .card-news-trends {
+    border-radius: 0px;
+    box-shadow: var(--custom-shadow);
+    height: 280px;
+    text-align: center;
+    background-color: var(--white);
+    cursor: pointer;
+  }
+  .trend-img {
+    height: 335px;
+    width: 100%;
+    object-fit: contain;
+  }
+  .card-news-trends {
+    margin-bottom: 10px;
+    height: 400px;
+  }
+  .inset-img {
+    display: flex;
+    align-items: center;
+    height: 220px;
+    justify-content: center;
+    padding: 80px;
+  }
+  .page_top_banner {
+    width: 100%;
+    object-fit: fill;
+    height: 100%;
+  }
+  .stand-header-nav {
+    display: flex;
+    flex-direction: column;
+  }
+  .stand-header-nav li {
+    border-right: 0;
+  }
+  .border-left-side {
+    border-right: 0px solid #c8c4c4;
+  }
+  #meny {
+    display: none;
+  }
+  /* Prevent horizontal and vertical scroll */
+  body {
+    margin: 0;
+    padding: 0px;
+    overflow-x: hidden;
+    overflow-y: hidden; /* or auto, if you want vertical scroll */
+  }
+
+  /* Ensure the html element doesn't cause overflow */
+  html {
+    overflow-x: hidden;
+  }
   .main_header {
     display: none;
   }
-
+  .develop-business-2 {
+    display: none;
+  }
+  .holder-main-text h6 {
+    width: 50% !important;
+  }
+  .holder-main-text p {
+    width: 100% !important;
+  }
+  .holder-main-text h2 {
+    width: 100% !important;
+  }
+  .common-btn-3 {
+    width: 150px !important;
+  }
   .swiper {
     width: 100%;
-    height: 12rem;
+    height: 100%;
   }
 
   .swiper-slide img {
@@ -25,6 +93,7 @@
     box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
     padding: 0px 10px;
     background-color: #fff;
+    display: none;
   }
 
   .popover__content:before {
@@ -59,7 +128,6 @@
     padding: 7px 5px;
     z-index: 999999;
   }
-
 
   main {
     margin-top: 6.6rem;
@@ -96,7 +164,6 @@
 
 /* Custom media query (992px - 1400px) */
 @media only screen and (min-width: 992px) and (max-width: 1400px) {
-
   .container,
   .container-lg,
   .container-md,

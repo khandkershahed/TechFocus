@@ -51,7 +51,7 @@
                     <div class="container">
                         <div class="pt-4 row">
                             @foreach ($chunks as $chunkKey => $chunk)
-                                <div class="col-md-4 {{ $chunkKey == 0 ? 'ps-0' : 'pe-0' }}">
+                                <div class="col-md-4 {{ $chunkKey == 0 ? 'pe-3' : 'pe-3' }}">
                                     @foreach ($chunk as $key => $category)
                                         <div class="accordion accordion-flush"
                                             id="accordionFlushExample-{{ $chunkKey }}-{{ $key }}">
@@ -70,7 +70,7 @@
                                                             <img src="{{ asset('frontend/assets/img/Icon.svg') }}"
                                                                 alt="" />
                                                             <p class="mb-0 ms-2">
-                                                                {{ $category->name }}
+                                                                {{ $category->name }} 
                                                             </p>
                                                         </div>
                                                     </button>
@@ -120,7 +120,7 @@
                     style="background-image: url(https://www.riverbed.com/riverbed-wp-content/uploads/2022/12/lady-with-laptop.png);">
                     <div class="p-5 mb-3 col-lg-12">
                         <div class="row align-items-center">
-                            <div class="col-lg-6">
+                            <div class="col-lg-6 col-sm-12">
                                 <div class="holder-main-text">
                                     <h6 style="width: 28%; line-height: 1.4;">
                                         WHY YOU NEED US ?
@@ -153,8 +153,8 @@
             </div>
             <div class="row">
                 @foreach ($products as $product)
-                    <div class="col">
-                        <div class="url-box">
+                    <div class="col-lg-3 col-12">
+                        <div class="mb-4 url-box">
                             <div class="border-0 card rounded-0 h-product">
                                 <div class="bg-white card-header d-flex justify-content-between">
                                     <span class="product_badge">New</span>
@@ -269,7 +269,7 @@
             </div>
             <div class="row gx-5">
                 @foreach ($news_trends as $news_trend)
-                    <div class="col">
+                    <div class="col-lg-3 col-md-12">
                         <a href="{{ route('content.details', $news_trend->slug) }}">
                             <div class="card projects-card rounded-0">
                                 <img src="{{ asset('storage/content/' . $news_trend->thumbnail_image) }}"
