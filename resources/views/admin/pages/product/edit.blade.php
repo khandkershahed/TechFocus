@@ -244,7 +244,8 @@
 
                                                                 @foreach ($categories as $category)
                                                                     <option value="{{ $category->id }}"
-                                                                        {{ in_array($category->id, $categoryIds) ? 'selected' : '' }}>
+                                                                        {{ in_array($category->id, (array) $categoryIds) ? 'selected' : '' }}>
+                                                                        {{-- {{ in_array($category->id, $categoryIds) ? 'selected' : '' }}> --}}
                                                                         {{ $category->name }}
                                                                     </option>
                                                                 @endforeach
