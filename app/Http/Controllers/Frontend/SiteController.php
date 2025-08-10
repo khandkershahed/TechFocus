@@ -4,13 +4,14 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Models\Admin\Brand;
 use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use App\Models\Admin\Category;
-use App\Http\Controllers\Controller;
-use App\Models\Admin\AboutPage;
 use App\Models\Admin\Banner;
-use App\Models\Admin\NewsTrend;
+use Illuminate\Http\Request;
 use App\Models\Admin\Product;
+use App\Models\Admin\Category;
+use App\Models\Admin\Industry;
+use App\Models\Admin\AboutPage;
+use App\Models\Admin\NewsTrend;
+use App\Http\Controllers\Controller;
 use App\Models\Admin\SolutionDetail;
 use Illuminate\Support\Facades\Session;
 
@@ -155,4 +156,64 @@ class SiteController extends Controller
     {
         return view('frontend.pages.manufacturer.account');
     }
+    public function globalSearch(Request $request)
+    {
+        try {
+            $query = $request->get('term', '');
+
+            $data['products'] = Product::join('brands', 'products.brand_id', '=', 'brands.id')
+                ->where('products.name', 'LIKE', '%' . $query . '%')
+                ->where('products.product_status', 'product')
+                ->where('brands.status', 'active')
+                ->limit(10)
+                ->get(['products.id', 'products.name', 'products.slug', 'products.thumbnail', 'products.price', 'products.discount', 'products.sku_code', 'products.rfq', 'products.qty', 'products.stock']);
+
+            $data['solutions'] = SolutionDetail::where('name', 'LIKE', '%' . $query . '%')
+                // ->where('status', 'active')
+                ->limit(5)
+                ->get(['id', 'name', 'slug']);
+
+            $data['industries'] = Industry::where('name', 'LIKE', '%' . $query . '%')
+                ->limit(5)
+                ->get(['id', 'name', 'slug']);
+
+            $data['blogs'] = NewsTrend::where('title', 'LIKE', '%' . $query . '%')
+                ->limit(5)
+                ->get(['id', 'title']);
+
+            $data['categorys'] = Category::where('title', 'LIKE', '%' . $query . '%')
+                ->limit(2)
+                ->get(['id', 'title', 'slug']);
+
+            $data['subcategorys'] = SubCategory::where('title', 'LIKE', '%' . $query . '%')
+                ->limit(2)
+                ->get(['id', 'title', 'slug']);
+
+            $data['subsubcategorys'] = SubSubCategory::where('title', 'LIKE', '%' . $query . '%')
+                ->limit(1)
+                ->get(['id', 'title', 'slug']);
+
+            $data['brands'] = Brand::where('title', 'LIKE', '%' . $query . '%')
+                ->where('status', 'active')
+                ->limit(5)
+                ->get(['id', 'title', 'slug']);
+
+            $data['storys'] = ClientStory::where('title', 'LIKE', '%' . $query . '%')
+                ->limit(5)
+                ->get(['id', 'title', 'slug']);
+
+            $data['tech_glossys'] = TechGlossy::where('title', 'LIKE', '%' . $query . '%')
+                ->limit(5)
+                ->get(['id', 'title']);
+
+            return response()->json(view('frontend.partials.search', $data)->render());
+        } catch (\Exception $e) {
+            // Log the error for debugging
+            return response()->json([
+                'error' => 'Global search error: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    
 }

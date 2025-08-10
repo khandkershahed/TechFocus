@@ -23,6 +23,9 @@ Route::get('buying/guide', [SiteController::class, 'buyingGuide'])->name('buying
 Route::get('exhibit', [SiteController::class, 'exhibit'])->name('exhibit');
 Route::get('manufacturer/account', [SiteController::class, 'manufacturerAccount'])->name('manufacturer.account');
 Route::get('category/{slug}/products', [SiteController::class, 'filterProducts'])->name('filtering.products');
+// Search
+Route::get('/search', [SiteController::class, 'ProductSearch'])->name('product.search');
+Route::post('/global-search', [SiteController::class, 'globalSearch'])->name('global.search');
 
 // Brand Pages
 Route::middleware('web')->group(function () {
