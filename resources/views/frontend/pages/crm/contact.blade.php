@@ -70,9 +70,12 @@
                                 <a href=""><i
                                         class="fa-solid fa-envelope pe-2 main-color"></i>Info.industris@gmail.com</a>
                             </li>
-                            <li class="pt-3"><i class="fa-solid fa-location-dot pe-2 main-color"></i> Crows Nest Apt 69
-                                Sydney,
-                                Australia <a href="" class="main-color">(View map)</a> Info.industris@gmail.com</a>
+                            <li class="pt-3">
+                                <i class="fa-solid fa-location-dot pe-2 main-color"></i>
+                                Crows Nest Apt 69, Sydney, Australia
+                                <a href="https://www.google.com/maps?q=Crows+Nest+Apt+69,+Sydney,+Australia" target="_blank"
+                                    class="main-color">(View map)</a>
+                                Info.industris@gmail.com
                             </li>
                         </ul>
                     </div>
@@ -152,7 +155,7 @@
                             <p class="py-2 mx-auto text-white card-text w-75">Fill the online form to get software upgrades
                                 and more
                                 advantages</p>
-                            <a href="guide.html" class="mx-auto mt-2 bg-white border btn common-btn-2 rounded-0 w-50">
+                            <a href="{{ route('register') }}" class="mx-auto mt-2 bg-white border btn common-btn-2 rounded-0 w-50">
                                 <span class="text-gradient">Register Now</span></a>
                         </div>
                     </div>
@@ -167,7 +170,7 @@
                             <p class="py-2 mx-auto card-text w-75">Fill the online form to get software upgrades
                                 and more
                                 advantages</p>
-                            <a href="guide.html" class="mx-auto mt-2 border btn common-btn-3 rounded-0 w-50">Contact
+                            <a href="{{ route('buying.guide') }}" class="mx-auto mt-2 border btn common-btn-3 rounded-0 w-50">Contact
                                 Us</a>
                         </div>
                     </div>
@@ -183,7 +186,7 @@
                             <p class="py-2 mx-auto text-white card-text w-75">Fill the online form to get software upgrades
                                 and more
                                 advantages</p>
-                            <a href="guide.html" class="mx-auto mt-2 bg-white border btn common-btn-2 rounded-0 w-50">
+                            <a href="{{ route('buying.guide') }}" class="mx-auto mt-2 bg-white border btn common-btn-2 rounded-0 w-50">
                                 <span class="text-gradient">Contact Us</span></a>
                         </div>
                     </div>

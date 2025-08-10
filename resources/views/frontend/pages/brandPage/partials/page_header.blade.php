@@ -43,8 +43,8 @@
 <section class="header d-lg-block d-sm-none" id="myHeader">
     <div class="container brand-page-header-container ">
         <!-- Tabbing Section Start -->
-        <div class="row bg-white mb-4  align-items-center header" id="myHeader">
-            <div class="col-lg-2">
+        <div class="mb-4 bg-white row align-items-center header" id="myHeader">
+            <div class="col-lg-2 col-sm-12">
                 {{-- <img id="stand-logo"
                     src="{{ !empty($brand->logo) && file_exists(public_path('storage/brand/logo/' . $brand->logo)) ? asset('storage/brand/logo/' . $brand->logo) : asset('backend/images/no-image-available.png') }}"
                     class="img-fluid" /> --}}
@@ -59,8 +59,8 @@
                             src="http://ngenitltd.com/frontend/images/no-video-icon.png" alt=""> </a> --}}
                 </div>
             </div>
-            <div class="col-lg-10">
-                <ul class="d-flex justify-content-start align-items-center pt-4 product-tabbing-menu stand-header-nav">
+            <div class="col-lg-10 col-sm-12">
+                <ul class="pt-0 pt-lg-4 ps-0 ps-lg-3 d-flex justify-content-start align-items-center product-tabbing-menu stand-header-nav">
                     <li>
                         <a href="{{ route('brand.overview', $brand->slug) }}"
                             class="{{ Route::current()->getName() == 'brand.overview' ? 'product-tabbing-menu-active' : '' }}">Company</a>
@@ -84,7 +84,7 @@
 </section>
 
 <section class="header d-lg-none d-sm-block" id="mobileHeader">
-    <div class="mobile-brand-page-header-container container">
+    <div class="container mobile-brand-page-header-container">
         <div class="row d-lg-flex align-items-center">
             <div class="col-lg-12">
                 <div class="d-flex justify-content-between align-items-center">
