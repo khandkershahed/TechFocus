@@ -249,6 +249,8 @@
                                                                         {{ $category->name }}
                                                                     </option>
                                                                 @endforeach
+
+                                                                
                                                             </select>
                                                             <div class="invalid-feedback"> Please Enter Category Name.
                                                             </div>

@@ -35,6 +35,8 @@ class PageController extends Controller
         ];
         return view('frontend.pages.brandPage.products',$data);
 
+        
+
         // $data['brandpage'] = BrandPage::where('brand_id', $data['brand']->id)->first(['id', 'banner_image', 'brand_logo', 'header']);
 
         // if (!empty($data['brandpage'])) {
