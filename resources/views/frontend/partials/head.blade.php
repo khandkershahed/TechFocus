@@ -15,13 +15,15 @@
 <!-- *********************************CSS End*********************************** -->
 @include('frontend.partials.root_css')
 <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
-<link rel="stylesheet" href="{{ asset('frontend/assets/css/style.css') }}" />
-<link rel="stylesheet" href="{{ asset('frontend/assets/css/global.css') }}" />
-<link rel="stylesheet" href="{{ asset('frontend/assets/css/responsive.css') }}" />
+
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xzoom@1.0.14/src/xzoom.css" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
 <link rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/css/ion.rangeSlider.min.css" />
+
+<link rel="stylesheet" href="{{ asset('frontend/assets/css/style.css?v=' . time()) }}" />
+<link rel="stylesheet" href="{{ asset('frontend/assets/css/global.css?v=' . time()) }}" />
+<link rel="stylesheet" href="{{ asset('frontend/assets/css/responsive.css?v=' . time()) }}" />
 @stack('styles')
 
 <style>

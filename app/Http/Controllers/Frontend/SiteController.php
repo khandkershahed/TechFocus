@@ -185,7 +185,7 @@ class SiteController extends Controller
                 ->limit(2)
                 ->get(['id', 'title', 'slug']);
 
-            $data['subcategorys'] = SubCategory::where('title', 'LIKE', '%' . $query . '%')
+            $data['subcategorys'] = Category::where('title', 'LIKE', '%' . $query . '%')
                 ->limit(2)
                 ->get(['id', 'title', 'slug']);
 
