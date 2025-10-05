@@ -1,19 +1,24 @@
 <?php
 
 namespace App\Http\Controllers\Frontend;
-
+use App\Models\Admin\Product; 
 use App\Models\Admin\Brand;
 use Illuminate\Support\Str;
 use App\Models\Admin\Banner;
 use Illuminate\Http\Request;
-use App\Models\Admin\Product;
+
 use App\Models\Admin\Category;
 use App\Models\Admin\Industry;
 use App\Models\Admin\AboutPage;
 use App\Models\Admin\NewsTrend;
 use App\Http\Controllers\Controller;
+use App\Models\Admin\Catalog;
 use App\Models\Admin\SolutionDetail;
 use Illuminate\Support\Facades\Session;
+use App\Models\Admin\SubSubCategory;
+use App\Models\Admin\ClientStory;    
+use App\Models\Admin\TechGlossy;     
+
 
 class SiteController extends Controller
 {
@@ -80,13 +85,21 @@ class SiteController extends Controller
         return view('frontend.pages.others.terms');
     }
 
-    public function allCatalog()
-    {
-        $data = [
-            'categories' => Category::with('children.children.children.children.children.children.children.children.children.children')->where('is_parent', '1')->get(['id', 'parent_id', 'name', 'slug']),
-        ];
-        return view('frontend.pages.catalog.allCatalog', $data);
-    }
+public function allCatalog()
+{
+    // Get all parent categories with nested children and their catalogs
+    $categories = Category::with([
+        'children.children.children.children',
+        'catalogs.attachments' // Eager load catalogs and their attachments
+    ])
+    ->where('is_parent', 1)
+    ->get(['id', 'parent_id', 'name', 'slug']);
+
+    // Get all catalogs for the "All" tab with attachments
+    $allCatalogs = Catalog::with('attachments')->get();
+
+    return view('frontend.pages.catalog.allCatalog', compact('categories', 'allCatalogs'));
+}
 
     public function rfq()
     {
@@ -214,6 +227,51 @@ class SiteController extends Controller
             ], 500);
         }
     }
+public function ProductSearch(Request $request)
+{
+    $searchTerm = $request->input('q');
 
+    $products = Product::with('brand')
+        ->where('name', 'LIKE', '%' . $searchTerm . '%')
+        ->where('status', 'active')
+        ->paginate(12);
+
+    // Add the missing shared variables used by the blade
+    $categories = Category::with('children.children.children.children.children.children.children.children.children.children')
+        ->where('is_parent', '1')
+        ->get(['id', 'parent_id', 'name', 'slug']);
+
+    $solutions = SolutionDetail::latest()->limit(4)->get();
+    $news_trends = NewsTrend::where('type', 'trends')->limit(4)->get();
+
+    return view('frontend.pages.search.index', compact('products', 'searchTerm', 'categories', 'solutions', 'news_trends'));
+}
+public function show($slug)
+{
+    // Get the product by slug
+    $product = Product::with('brand')->where('slug', $slug)->first();
     
+    // Check if product exists
+    if (!$product) {
+        abort(404, 'Product not found');
+    }
+
+    $categories = Category::with('children')->where('is_parent', 1)->get();
+    $solutions = SolutionDetail::latest()->limit(4)->get();
+    $news_trends = NewsTrend::where('type', 'trends')->limit(4)->get();
+
+    return view('frontend.pages.product.show', compact('product', 'categories', 'solutions', 'news_trends'));
+}
+public function newsDetails($slug)
+{
+    $news = NewsTrend::where('slug', $slug)->firstOrFail();
+
+    $categories = Category::with('children')->where('is_parent', 1)->get();
+    $solutions = SolutionDetail::latest()->limit(4)->get();
+    $news_trends = NewsTrend::where('type', 'trends')->limit(4)->get();
+
+    return view('frontend.pages.news.details', compact('news', 'categories', 'solutions', 'news_trends'));
+}
+
+     
 }

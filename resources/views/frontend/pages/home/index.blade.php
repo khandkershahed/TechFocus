@@ -656,14 +656,14 @@
                                 <div class="col-lg-6">
                                     <a href="">
                                         <div class="mt-2 shadow-lg card common-gradient"
-                                            style="
-                          border-top-right-radius: 40px;
-                          border-bottom-left-radius: 40px;
-                          border: 0px solid #fff;
-                        ">
-                                            <div class="border-0 card-body">
-                                                <div class="icon-holder">
-                                                    <?xml version="1.0" encoding="UTF-8"?>
+                                                        style="
+                                    border-top-right-radius: 40px;
+                                    border-bottom-left-radius: 40px;
+                                    border: 0px solid #fff;
+                                    ">
+                                                        <div class="border-0 card-body">
+                                                            <div class="icon-holder">
+                                                                <?xml version="1.0" encoding="UTF-8"?>
                                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80">
                                                         <defs>
                                                             <style>

@@ -4,7 +4,7 @@ use App\Http\Controllers\Admin\ContactController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Frontend\SiteController;
 use App\Http\Controllers\Frontend\PageController;
-
+use App\Http\Controllers\Rfq\RfqController;
 Route::get('/', [SiteController::class, 'homePage'])->name('homepage');
 Route::get('solution/{slug}', [SiteController::class, 'solutionDetails'])->name('solution.details');
 Route::get('category/{slug}', [SiteController::class, 'category'])->name('category');
@@ -24,8 +24,10 @@ Route::get('exhibit', [SiteController::class, 'exhibit'])->name('exhibit');
 Route::get('manufacturer/account', [SiteController::class, 'manufacturerAccount'])->name('manufacturer.account');
 Route::get('category/{slug}/products', [SiteController::class, 'filterProducts'])->name('filtering.products');
 // Search
-Route::get('/search', [SiteController::class, 'ProductSearch'])->name('product.search');
+Route::get('/search', [SiteController::class, 'ProductSearch'])->name('search.products'); // 
 Route::post('/global-search', [SiteController::class, 'globalSearch'])->name('global.search');
+Route::get('/product/{slug}', [SiteController::class, 'show'])->name('product.show');
+
 
 // Brand Pages
 Route::middleware('web')->group(function () {
@@ -38,3 +40,15 @@ Route::middleware('web')->group(function () {
     Route::get('/contents/details/{slug}', [PageController::class, 'contentDetails'])->name('content.details');
     // Route::get('/{slug}/products', [PageController::class, 'ajaxBrandProductsPagination'])->name('brand.products.pagination');
 });
+
+
+Route::get('/product/{slug}', [SiteController::class, 'show'])->name('product.show');
+
+
+// Product search page
+Route::get('/search', [SiteController::class, 'ProductSearch'])->name('search.products');
+Route::get('/news/{slug}', [SiteController::class, 'newsDetails'])->name('news.details');
+
+Route::get('/product-details/{slug}', [SiteController::class, 'productDetails'])->name('product.product_details');
+
+Route::post('/rfq/submit', [RfqController::class, 'store'])->name('rfq.submit');

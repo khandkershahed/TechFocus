@@ -441,14 +441,17 @@
                     </li>
                 </ul>
                 <!-- Search Box Start -->
-                <div class="ms-auto">
-                    <div class="search-2">
-                        <input type="text" class="searchTerm" placeholder="What are you looking for?" />
-                        <button type="submit" class="searchButton-2">
-                            <i class="fa fa-search"></i>
-                        </button>
-                    </div>
-                </div>
+            <!-- Search Box Start -->
+                                                <div class="ms-auto">
+                                                                        <form action="{{ route('search.products') }}" method="GET" class="d-flex">
+                                        <input type="text" name="q" class="form-control me-2" placeholder="Search products..." required>
+                                        <button class="btn btn-primary" type="submit">Search</button>
+                                    </form>
+
+                                    </div>
+
+                                 
+                <!-- Search Box End -->
                 <!-- Search Box End -->
             </div>
         </div>
