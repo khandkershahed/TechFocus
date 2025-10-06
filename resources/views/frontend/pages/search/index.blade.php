@@ -36,7 +36,7 @@
                                         <a href="{{ route('product.details', ['id' => optional($product->brand)->slug, 'slug' => optional($product)->slug]) }}"
                                             class="btn btn-sm btn-primary mt-auto">
                                             View Details
-                                        </a>
+                                        </a> 
                                     </div>
                                 </div>
                             </div>

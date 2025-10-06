@@ -12,30 +12,15 @@
                     <div class="row ps-0">
                         <div class="col-lg-12 ps-0">
                             <div class="d-flex justify-content-end align-items-center px-1">
-                                <div class="dropdown">
-                                    <button class="dropdown-toggle me-4" type="button" id="dropdownMenuButton1"
-                                        data-bs-toggle="dropdown" aria-expanded="false" data-aos="fade-left">
-                                        English
-                                    </button>
-                                    <ul class="dropdown-menu extra-dropdown" aria-labelledby="dropdownMenuButton1">
-                                        <li>
-                                            <a class="dropdown-item top-dropdown" href="#">English</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item top-dropdown" href="#">France</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item top-dropdown" href="#">Spanish</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item top-dropdown" href="#">German</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item top-dropdown" href="#">Russian</a>
-                                        </li>
-                                    </ul>
+                                <!-- RFQ Link -->
+                                <div class="me-4" data-aos="fade-left">
+                                    <a class="nav-link custom-nav" data-aos="fade-right" href="{{ route('rfq') }}">
+                                        RFQ
+                                    </a>
                                 </div>
-                                <div class="popover__wrapper me-5">
+
+                                <!-- My Techfocus -->
+                                <div class="popover__wrapper">
                                     <a href="#">
                                         <h2 class="popover__title mb-1 fw-bold" data-aos="fade-left">
                                             <span>
@@ -92,20 +77,6 @@
                                         </ul>
                                     </div>
                                 </div>
-                                <div class="dropdown">
-                                    <button class="dropdown-toggle me-3" type="button" id="dropdownMenuButton1"
-                                        data-bs-toggle="dropdown" aria-expanded="false" data-aos="fade-left">
-                                        EUR - €
-                                    </button>
-                                    <ul class="dropdown-menu extra-dropdown" aria-labelledby="dropdownMenuButton1">
-                                        <li>
-                                            <a class="dropdown-item top-dropdown" href="#">English</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <!-- <div class="m-1" data-aos="fade-left">
-                                      <a href="exhibit.html" class="rounded-pill p-1 exhibition-btn">Exhibition With Us</a>
-                                    </div> -->
                             </div>
                         </div>
                     </div>
@@ -113,6 +84,7 @@
             </div>
         </div>
     </div>
+
     <!-- Top Bar End -->
     <nav class="navbar navbar-expand-lg navbar-dark main-menu px-3">
         <div class="container-fluid">
@@ -442,13 +414,17 @@
                 </ul>
                 <!-- Search Box Start -->
             <!-- Search Box Start -->
-                                                <div class="ms-auto">
-                                                                        <form action="{{ route('search.products') }}" method="GET" class="d-flex">
-                                        <input type="text" name="q" class="form-control me-2" placeholder="Search products..." required>
-                                        <button class="btn btn-primary" type="submit">Search</button>
-                                    </form>
-
-                                    </div>
+                 <div class="ms-auto">
+    <form action="{{ route('search.products') }}" method="GET" class="d-flex">
+        <!-- Input field -->
+        <input type="text" name="q" class="form-control me-2 border-primary text-primary" placeholder="Search products..." required>
+        
+        <!-- Submit button -->
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-search"></i>
+        </button>
+    </form>
+</div>
 
                                  
                 <!-- Search Box End -->
@@ -458,7 +434,7 @@
     </nav>
 </section>
 
-<section class="fixed-top mobile_header">
+ <section class="fixed-top mobile_header">
     <div class="container px-0">
         <div class="mobile_top_bar">
             <div class="d-flex justify-content-end align-items-center px-1" data-aos="fade-right">
@@ -733,7 +709,7 @@
             </div>
         </div>
     </div>
-</section>
+</section> 
 
 
 

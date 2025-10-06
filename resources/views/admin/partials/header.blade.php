@@ -440,14 +440,17 @@
                         <a class="nav-link custom-nav" href="{{ route('contact') }}">Contact Us</a>
                     </li>
                 </ul>
+              
                 <!-- Search Box Start -->
-                                                <div class="ms-auto">
-                                                                        <form action="{{ route('search.products') }}" method="GET" class="d-flex">
-                                        <input type="text" name="q" class="form-control me-2" placeholder="Search products..." required>
-                                        <button class="btn btn-primary" type="submit">Search</button>
-                                    </form>
+                 <div class="ms-auto">
+                    <form action="{{ route('search.products') }}" method="GET" class="d-flex">
+                        <input type="text" name="q" class="form-control me-2" placeholder="Search products..." required>
+                        <button type="submit" class="btn btn-outline-secondary">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </form>
+                </div>
 
-                                    </div>
 
                                  
                 <!-- Search Box End -->

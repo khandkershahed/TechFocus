@@ -1,13 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+
 	<!--begin::Head-->
 	<head>
         @include('admin.partials.head')
+		   <!-- Add this to ensure proper cookie handling -->
+    <meta name="csrf-param" content="_token">
+	 <meta name="csrf-token" content="{{ csrf_token() }}">
 	</head>
 	<!--end::Head-->
 	<!--begin::Body-->
 	<body id="kt_body" class="header-fixed header-tablet-and-mobile-fixed toolbar-enabled toolbar-fixed aside-enabled aside-fixed">
 		<!--begin::Main-->
+		    <!-- Also include CSRF token as hidden input for backup -->
+    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+    
+    @yield('content')
+    
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 		<!--begin::Root-->
 		<div class="d-flex flex-column flex-root">
 			<!--begin::Page-->
@@ -60,6 +72,7 @@
 		<!--begin::Javascript-->
         @include('admin.partials.script')
 		<!--end::Javascript-->
+		
 	</body>
 	<!--end::Body-->
 </html>

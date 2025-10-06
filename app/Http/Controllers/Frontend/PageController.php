@@ -24,6 +24,7 @@ class PageController extends Controller
             // Toastr::error('No Details information found for this Brand.');
             return redirect()->back()->with('warning', 'No Details information found for this Brand');
         }
+             
         
     }
 
@@ -206,10 +207,19 @@ class PageController extends Controller
 
     public function content($slug)
     {
-        $data = [
-            'brand' => Brand::with('brandPage')->where('slug', $slug)->select('id', 'slug', 'title', 'logo')->firstOrFail(),
-        ];
-        return view('frontend.pages.brandPage.contents',$data);
+            $brand = Brand::with('brandPage')
+        ->where('slug', $slug)
+        ->select('id', 'slug', 'title', 'logo')
+        ->firstOrFail();
+
+    // Fetch trends for this brand
+    $trends = NewsTrend::forBrand($brand->id)
+        ->orderByDesc('featured')    // featured first
+        ->orderByDesc('created_at')  // newest first
+        ->paginate(12);
+
+    // Pass both brand and trends to view
+    return view('frontend.pages.brandPage.contents', compact('brand', 'trends'));
         // $data['brand'] = Brand::where('slug', $id)->select('id', 'slug', 'title', 'image')->first();
         // $data['brandpage'] = BrandPage::where('brand_id', $data['brand']->id)->first(['id', 'banner_image', 'brand_logo', 'header']);
         // $id = json_encode($data['brand']->id);

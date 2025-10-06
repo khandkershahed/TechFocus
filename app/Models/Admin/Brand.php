@@ -2,58 +2,27 @@
 
 namespace App\Models\Admin;
 
-use App\Traits\HasSlug;
-use Wildside\Userstamps\Userstamps;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Admin\NewsTrend;
 
 class Brand extends Model
 {
-    use HasFactory, HasSlug, Userstamps;
+    protected $fillable = ['title', 'slug', 'logo', 'image', 'status'];
 
     /**
-     * The attributes that aren't mass assignable.
-     *
-     * @var array
+     * Brand page relationship
      */
-    protected $guarded = [];
-
-    protected $slugSourceColumn = 'title';
-
-
-    public function scopeByCategory($query, $category)
-    {
-        return $query->where('category', $category);
-    }
-    // Usage
-    // $topProducts = Brand::byCategory('Top')->get();
-    // $featuredProducts = Brand::byCategory('Featured')->get();
-    public function brandProducts($productType = null)
-    {
-        $query = $this->hasMany(Product::class, 'brand_id')
-            ->where('product_status', 'product');
-
-        if ($productType) {
-            $query->where('product_type', $productType);
-        }
-
-        return $query;
-    }
-    // Usage
-    // $softwareProducts = $brand->brandProducts('software')->get();
-    // $hardwareProducts = $brand->brandProducts('hardware')->get();
-    public function products()
-    {
-        return $this->hasMany(Product::class, 'brand_id');
-    }
-
-    public static function getProductByBrand($slug)
-    {
-        return Brand::with('brandProducts')->where('slug', $slug)->firstOrFail();
-    }
-
     public function brandPage()
     {
         return $this->hasOne(BrandPage::class);
+    }
+
+    /**
+     * Get all news/trends that reference this brand in JSON
+     * Returns a query builder, not a collection
+     */
+    public function newsTrends()
+    {
+        return NewsTrend::whereJsonContains('brand_id', $this->id);
     }
 }

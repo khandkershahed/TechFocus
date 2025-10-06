@@ -81,8 +81,9 @@
                     </div>
                 </div>
                 <div class="col-lg-6">
-                    <div>
-                        <form action="{{ route('contact.add') }}" method="post" class="needs-validation" novalidate
+                             
+
+                 <form action="{{ route('contact.add') }}" method="post" class="needs-validation" novalidate
                             enctype="multipart/form-data">
                             @csrf
                             <div class="row">

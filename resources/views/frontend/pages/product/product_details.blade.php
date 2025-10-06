@@ -97,18 +97,28 @@
                                     </p>
                                 </div> --}}
                                 <!-- Seller Info -->
+                                <!-- Add this form to your page -->
+                            <form id="cart-form-{{ $product->id }}" method="POST" action="{{ route('cart.add') }}" style="display: none;">
+                                @csrf
+                                <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                <input type="hidden" name="quantity" value="1">
+                            </form>
                                 <div class="pt-2">
                                     <span><i class="fa-regular main-color fa-clock"></i> This
                                         seller generally responds in under 48 hours</span>
                                 </div>
                                 <!-- Button Area -->
                                 <div class="mt-5">
-                                    <button class="btn btn-outline-danger rounded-0">
+                                         <button class="btn btn-outline-danger rounded-0 add-to-cart-btn" 
+                                                data-product-id="{{ $product->id }}"
+                                                data-product-name="{{ $product->name }}"
+                                                data-product-price="{{ $product->sas_price ?? 0 }}"
+                                                data-product-thumbnail="{{ asset($product->thumbnail) }}">
+                                            <i class="fas fa-shopping-cart me-2"></i> $ Request Price Options
+                                                                                </button>
+                                                                {{-- <button class="w-auto btn signin rounded-0">
                                         $ Request Price Options
-                                    </button>
-                                    <button class="w-auto btn signin rounded-0">
-                                        $ Request Price Options
-                                    </button>
+                                    </button> --}}
                                 </div>
                                 <!-- Product Short Desc -->
                                 <div class="mt-3">
@@ -657,4 +667,134 @@
             </div>
         </div> --}}
     </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+$(document).ready(function() {
+    console.log('Cart system initialized');
+
+    // Test the debug endpoint first
+    function testCartSystem() {
+        console.log('Testing cart system...');
+        $.get('{{ route("cart.debug") }}', function(response) {
+            console.log('Debug test result:', response);
+        }).fail(function(xhr) {
+            console.error('Debug test failed:', xhr);
+        });
+    }
+
+    // Run test on page load
+    testCartSystem();
+
+    $('.add-to-cart-btn').click(function(e) {
+        e.preventDefault();
+        console.log('Add to cart clicked');
+        
+        const button = $(this);
+        const productId = button.data('product-id');
+        const productName = button.data('product-name');
+        const originalHtml = button.html();
+        
+        console.log('Product details:', { id: productId, name: productName });
+        
+        // Show loading
+        button.html('<i class="fa fa-spinner fa-spin"></i> Adding...');
+        button.prop('disabled', true);
+        
+        // Simple AJAX request
+        $.ajax({
+            url: '{{ route("cart.add") }}',
+            method: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}', // Use Blade to output token directly
+                product_id: productId,
+                quantity: 1
+            },
+            success: function(response) {
+                console.log('Success response:', response);
+                
+                if (response.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: response.message,
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    
+                    // Update cart count
+                    if (response.cart_count !== undefined) {
+                        $('.cart-count, #cart-count').text(response.cart_count);
+                        console.log('Cart count updated to:', response.cart_count);
+                    }
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: response.message
+                    });
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX Error Details:', {
+                    status: xhr.status,
+                    statusText: xhr.statusText,
+                    responseText: xhr.responseText,
+                    error: error
+                });
+                
+                let errorMessage = 'Failed to add product to cart. ';
+                
+                if (xhr.status === 500) {
+                    // Server error - show more details
+                    errorMessage += 'Server error occurred. ';
+                    
+                    // Try to parse the response for more details
+                    try {
+                        const response = JSON.parse(xhr.responseText);
+                        if (response.message) {
+                            errorMessage += 'Details: ' + response.message;
+                        }
+                    } catch (e) {
+                        errorMessage += 'Please check the console for details.';
+                    }
+                    
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Server Error (500)',
+                        text: errorMessage,
+                        footer: '<a href="#" onclick="location.reload()">Click to refresh page</a>'
+                    });
+                } else if (xhr.status === 419) {
+                    errorMessage = 'Session expired. Refreshing page...';
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Session Expired',
+                        text: errorMessage,
+                        showConfirmButton: false,
+                        timer: 2000,
+                        willClose: () => location.reload()
+                    });
+                } else {
+                    errorMessage += 'Please try again.';
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error ' + xhr.status,
+                        text: errorMessage
+                    });
+                }
+            },
+            complete: function() {
+                button.html(originalHtml);
+                button.prop('disabled', false);
+            }
+        });
+    });
+});
+</script>
+
 @endsection

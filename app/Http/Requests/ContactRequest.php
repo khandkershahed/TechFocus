@@ -23,27 +23,22 @@ class ContactRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    public function rules()
-    {
-        $contact = $this->route('contact');  // Assuming 'contact' is the route parameter name for the Contact model instance
+                    public function rules()
+            {
+                return [
+                        'country_id' => 'nullable|exists:countries,id',
+                        'name' => 'required|string|max:255',
+                        'email' => 'required|email|max:255',
+                        'phone' => 'required|string|max:255',
+                        'subject' => 'nullable|string|max:255',
+                        'message' => 'required|string',
+                        'ip_address' => 'nullable|ip|max:100',
+                        'status' => 'nullable|in:pending,replied,on_going,closed',
+                        'code' => 'nullable|string|unique:contacts,code',
 
-        return [
-            'country_id' => 'nullable|exists:countries,id',
-            'code' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('contacts', 'code')->ignore($contact->id),
-            ],
-            'name' => 'nullable|string|max:255',
-            'email' => 'nullable|email|max:255',
-            'phone' => 'nullable|string|max:255',
-            'subject' => 'nullable|string|max:255',
-            'message' => 'nullable|string',
-            'ip_address' => 'nullable|ip|max:100',
-            'status' => 'required|in:pending,replied,on_going,closed',
-        ];
-    }
+                                        ];
+            }
+
 
     /**
      * Get custom messages for validator errors.
@@ -113,4 +108,6 @@ class ContactRequest extends FormRequest
             session()->flash('error', $errorMessage);
         }
     }
+    
+    
 }

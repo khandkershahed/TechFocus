@@ -1,10 +1,11 @@
 <?php
 
-use App\Http\Controllers\Admin\ContactController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Frontend\SiteController;
-use App\Http\Controllers\Frontend\PageController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\Rfq\RfqController;
+use App\Http\Controllers\Admin\ContactController;
+use App\Http\Controllers\Frontend\PageController;
+use App\Http\Controllers\Frontend\SiteController;
 Route::get('/', [SiteController::class, 'homePage'])->name('homepage');
 Route::get('solution/{slug}', [SiteController::class, 'solutionDetails'])->name('solution.details');
 Route::get('category/{slug}', [SiteController::class, 'category'])->name('category');
@@ -42,7 +43,7 @@ Route::middleware('web')->group(function () {
 });
 
 
-Route::get('/product/{slug}', [SiteController::class, 'show'])->name('product.show');
+//Route::get('/product/{slug}', [SiteController::class, 'show'])->name('product.show');
 
 
 // Product search page
@@ -52,3 +53,9 @@ Route::get('/news/{slug}', [SiteController::class, 'newsDetails'])->name('news.d
 Route::get('/product-details/{slug}', [SiteController::class, 'productDetails'])->name('product.product_details');
 
 Route::post('/rfq/submit', [RfqController::class, 'store'])->name('rfq.submit');
+
+// Cart routes
+Route::get('/cart/count', [CartController::class, 'getCartCount'])->name('cart.count');
+Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
+Route::get('/cart/debug', [CartController::class, 'debugCart'])->name('cart.debug');
+Route::get('/cart/view', [CartController::class, 'viewCart'])->name('cart.view');
