@@ -13,7 +13,8 @@
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.8",
         "rats/zkteco": "^002.0",
-        "wildside/userstamps": "^2.3"
+        "wildside/userstamps": "^2.3",
+        "yajra/laravel-datatables-oracle": "^11.0"
     },
     "require-dev": {
         "dipeshsukhia/laravel-country-state-city-data": "^2.0",

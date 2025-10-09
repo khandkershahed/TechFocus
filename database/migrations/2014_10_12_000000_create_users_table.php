@@ -33,7 +33,8 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->enum('client_type', ['online', 'corporate'])->nullable();
-            $table->enum('type', ['client', 'partner'])->nullable();
+ 
+            
             $table->string('company_phone_number')->nullable();
             $table->string('company_logo')->nullable();
             $table->string('company_url')->nullable();

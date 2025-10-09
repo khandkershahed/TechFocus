@@ -116,9 +116,9 @@
                                                 data-product-thumbnail="{{ asset($product->thumbnail) }}">
                                             <i class="fas fa-shopping-cart me-2"></i> $ Request Price Options
                                                                                 </button>
-                                                                {{-- <button class="w-auto btn signin rounded-0">
-                                        $ Request Price Options
-                                    </button> --}}
+                                    <button class="w-auto btn signin rounded-0" onclick="window.location.href='{{ route('rfq.create') }}'">
+                                                Get Quote
+                                            </button>
                                 </div>
                                 <!-- Product Short Desc -->
                                 <div class="mt-3">

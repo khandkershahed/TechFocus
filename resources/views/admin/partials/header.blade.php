@@ -1,768 +1,261 @@
+<div id="kt_header" style="" class="header align-items-stretch">
 
-<!-- Top Bar Start -->
-<section class="fixed-top main_header">
-    <div class="container-fluid d-sm-none d-md-block" style="background-color: var(--secondary-deep-color)">
-        <div class="row text-white top-bar" style="background-color: var(--secondary-color)">
-            <div class="empty-area"
-                style="background-color: var(--secondary-deep-color);
-          clip-path: polygon(0 0, 96% 0%, 100% 120%, 0% 100%);">
-            </div>
-            <div class="fill-area ps-0" style="background-color: var(--secondary-color)">
-                <div class="container ps-0">
-                    <div class="row ps-0">
-                        <div class="col-lg-12 ps-0">
-                            <div class="d-flex justify-content-end align-items-center px-1">
-                                <div class="dropdown">
-                                    <button class="dropdown-toggle me-4" type="button" id="dropdownMenuButton1"
-                                        data-bs-toggle="dropdown" aria-expanded="false" data-aos="fade-left">
-                                        English
-                                    </button>
-                                    <ul class="dropdown-menu extra-dropdown" aria-labelledby="dropdownMenuButton1">
-                                        <li>
-                                            <a class="dropdown-item top-dropdown" href="#">English</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item top-dropdown" href="#">France</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item top-dropdown" href="#">Spanish</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item top-dropdown" href="#">German</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item top-dropdown" href="#">Russian</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="popover__wrapper me-5">
-                                    <a href="#">
-                                        <h2 class="popover__title mb-1 fw-bold" data-aos="fade-left">
-                                            <span>
-                                                <i class="fa-solid fa-star-of-life"></i>
-                                                <span class="p-0 m-0" style="color: var(--primary-color)">My</span>
-                                                Techfocus
-                                            </span>
-                                        </h2>
-                                    </a>
-                                    <div class="popover__content text-start">
-                                        @auth
-                                            <form method="POST" action="{{ route('logout') }}">
-                                                @csrf
-                                                <button type="submit" class="btn signin mb-2 rounded-0">Log Out</button>
-                                            </form>
-                                        @else
-                                            <a href="{{ route('login') }}" class="btn signin mb-2 rounded-0">Log In</a>
-                                            <div class="text-muted">
-                                                First time here?
-                                                <a href="{{ route('register') }}" class="main-color">Sign Up</a>
-                                            </div>
-                                        @endauth
-                                        <hr class="text-muted" />
-                                        <ul class="account p-0 text-muted text-start">
-                                            <li>
-                                                <i class="fa fa-user m-2"></i>
-                                                <a href="{{ route('client.profile') }}" class="">My Profile</a>
-                                            </li>
-                                            <li>
-                                                <i class="fa fa-envelope m-2"></i>
-                                                <a href="{{ route('client.subscription') }}" class="">My
-                                                    Subscriptions</a>
-                                            </li>
-                                            <li>
-                                                <i class="fa fa-star m-2"></i>
-                                                <a href="{{ route('client.favourites') }}" class="">My
-                                                    Favorites</a>
-                                            </li>
-                                            <li>
-                                                <i class="fa fa-list m-2"></i>
-                                                <a href="{{ route('client.requests') }}" class="">My Requests</a>
-                                            </li>
-                                        </ul>
-                                        <hr class="text-muted" />
-                                        <ul class="account p-0 text-muted text-start" style="font-size: 7px">
-                                            <li>
-                                                Sign in to your manufacturer account
-                                                <a target="_blank" class="main-color">Manufacturer account</a>
-                                            </li>
-                                            <li>
-                                                Sign in to your distributor account
-                                                <a target="_blank" class="main-color">Distributor account</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="dropdown">
-                                    <button class="dropdown-toggle me-3" type="button" id="dropdownMenuButton1"
-                                        data-bs-toggle="dropdown" aria-expanded="false" data-aos="fade-left">
-                                        EUR - €
-                                    </button>
-                                    <ul class="dropdown-menu extra-dropdown" aria-labelledby="dropdownMenuButton1">
-                                        <li>
-                                            <a class="dropdown-item top-dropdown" href="#">English</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <!-- <div class="m-1" data-aos="fade-left">
-                                      <a href="exhibit.html" class="rounded-pill p-1 exhibition-btn">Exhibition With Us</a>
-                                    </div> -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <div class="container-fluid d-flex align-items-stretch justify-content-between">
+
+        <div class="d-flex align-items-center d-lg-none ms-n2 me-2" title="Show aside menu">
+            <div class="btn btn-icon btn-active-light-primary w-30px h-30px w-md-40px h-md-40px"
+                id="kt_aside_mobile_toggle">
+
+                <span class="svg-icon svg-icon-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none">
+                        <path d="M21 7H3C2.4 7 2 6.6 2 6V4C2 3.4 2.4 3 3 3H21C21.6 3 22 3.4 22 4V6C22 6.6 21.6 7 21 7Z"
+                            fill="currentColor" />
+                        <path opacity="0.3"
+                            d="M21 14H3C2.4 14 2 13.6 2 13V11C2 10.4 2.4 10 3 10H21C21.6 10 22 10.4 22 11V13C22 13.6 21.6 14 21 14ZM22 20V18C22 17.4 21.6 17 21 17H3C2.4 17 2 17.4 2 18V20C2 20.6 2.4 21 3 21H21C21.6 21 22 20.6 22 20Z"
+                            fill="currentColor" />
+                    </svg>
+                </span>
+
             </div>
         </div>
-    </div>
-    <!-- Top Bar End -->
-    <nav class="navbar navbar-expand-lg navbar-dark main-menu px-3">
-        <div class="container-fluid">
-            <!-- Logo Start -->
-            <a class="navbar-brand mb-0" href="{{ route('homepage') }}" data-aos="fade-right">
-                <img src="{{ !empty($site->system_logo_white) && file_exists(public_path('storage/webSetting/systemLogoWhite/' . $site->system_logo_white)) ? asset('storage/webSetting/systemLogoWhite/' . $site->system_logo_white) : asset('backend/images/no-image-available.png') }}"
-                    height="60px" alt="TechFocus" />
+
+        <div class="d-flex align-items-center flex-grow-1 flex-lg-grow-0">
+            <a href="{{ route('admin.dashboard') }}" class="d-lg-none">
+                <img alt="Logo" src="{{ asset('backend') }}/assets/media/logos/logo-2.svg" class="h-30px" />
             </a>
-            <!-- Logo End -->
-
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav ms-auto">
-                    {{-- <li class="nav-item dropdown">
-                        <a class="nav-link custom-nav dropdown-toggle" href="#" id="navbarDropdown"
-                            role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                            data-aos="fade-right">
-                            Product
-                        </a>
-                        <div class="dropdown-menu menu-dropdown" aria-labelledby="navbarDropdown">
-                            <div class="container">
-                                <div class="row my-5 gx-3">
-                                    <div class="col-lg-3">
-                                        <div>
-                                            <img class="img-fluid header-side-banner"
-                                                src="https://www.kuka.com/-/media/kuka-corporate/images/ir/mitteilungen.jpg?rev=1b1c6d88287d493c9d06716764767b38&w=767&hash=D675CCDCE6BAF6450C5DB2F986F22751"
-                                                alt="">
-                                            <h5 class="pt-3">Products</h5>
-                                            <p>Get an overview on the entire KUKA portfolio from industrial robots to
-                                                complete production lines.</p>
-                                            <div>
-                                                <a href="" class="main-color">
-                                                    Learn More <i class="fa-solid fa-chevron-right ps-1 font-one"></i>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-9">
-                                        <div class="row gx-2">
-                                            <div class="col-lg-4 first-column column-transition">
-                                                <div class="column-header">
-                                                    <div class="pt-0">
-                                                        <a href="#" class="">Industries</a>
-                                                    </div>
-                                                    <div class="pt-4">
-                                                        <a href="#" class="expand-column-first"
-                                                            onclick="toggleColumn('second-column')">Case Studies
-                                                            <i class="fa-solid fa-chevron-right font-one ps-2"></i></a>
-                                                    </div>
-                                                    <div class="pt-4">
-                                                        <a href="#" class="">Automative Industry</a>
-                                                    </div>
-                                                    <div class="pt-4">
-                                                        <a href="#" class="expand-column-first"
-                                                            onclick="toggleColumn('second-column')">Automated
-                                                            House
-                                                            Building<i
-                                                                class="fa-solid fa-chevron-right font-one ps-2"></i></a>
-                                                    </div>
-                                                    <div class="pt-4">
-                                                        <a href="#" class="expand-column-first"
-                                                            onclick="toggleColumn('second-column')">Electronic
-                                                            Industries<i
-                                                                class="fa-solid fa-chevron-right font-one ps-2"></i></a>
-                                                    </div>
-                                                    <div class="pt-4">
-                                                        <a href="#" class="expand-column-first"
-                                                            onclick="toggleColumn('second-column')">Ecommerce &
-                                                            Logistic
-                                                            Service<i
-                                                                class="fa-solid fa-chevron-right font-one ps-2"></i></a>
-                                                    </div>
-                                                    <div class="pt-4">
-                                                        <a href="#" class="expand-column-first"
-                                                            onclick="toggleColumn('second-column')">Helth Care<i
-                                                                class="fa-solid fa-chevron-right font-one ps-2"></i></a>
-                                                    </div>
-                                                    <div class="pt-4">
-                                                        <a href="#" class="expand-column-first"
-                                                            onclick="toggleColumn('second-column')">Consumer
-                                                            Goods
-                                                            Industries<i
-                                                                class="fa-solid fa-chevron-right font-one ps-2"></i></a>
-                                                    </div>
-                                                    <div class="pt-4">
-                                                        <a href="#" class="">Metal Industires<i
-                                                                class="fa-solid fa-chevron-right font-one ps-2"></i></a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-4 second-column column-transition"
-                                                style="display: none;">
-                                                <div class="column-header"
-                                                    style="border-left: 1px solid var(--border-color)">
-                                                    <div class="ps-3">
-                                                        <div class="pt-0">
-                                                            <a href="#" class="">Helthcare</a>
-                                                        </div>
-                                                        <div class="pt-4">
-                                                            <a href="#" class="expand-column-second"
-                                                                onclick="toggleColumn('third-column')">Robots In
-                                                                The
-                                                                Medical Industry<i
-                                                                    class="fa-solid fa-chevron-right font-one ps-2"></i></a>
-                                                        </div>
-                                                        <div class="pt-4">
-                                                            <a href="#" class="">3D Virdtual Showroom</a>
-                                                        </div>
-                                                        <div class="pt-4">
-                                                            <a href="#" class="">Team And Service</a>
-                                                        </div>
-                                                        <div class="pt-4">
-                                                            <a href="#" class="">3D Virdtual Showroom</a>
-                                                        </div>
-                                                        <div class="pt-4">
-                                                            <a href="#" class="expand-column-second"
-                                                                onclick="toggleColumn('third-column')">Current
-                                                                Topics<i
-                                                                    class="fa-solid fa-chevron-right font-one ps-2"></i></a>
-                                                        </div>
-                                                        <div class="pt-4">
-                                                            <a href="#" class="">Swisslog Helthcare</a>
-                                                        </div>
-                                                        <div class="pt-4">
-                                                            <a href="#" class="expand-column-second"
-                                                                onclick="toggleColumn('third-column')">Downloads<i
-                                                                    class="fa-solid fa-chevron-right font-one ps-2"></i></a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-4 third-column column-transition"
-                                                style="display: none;">
-                                                <div class="column-header"
-                                                    style="border-left: 1px solid var(--border-color)">
-                                                    <div class="ps-3">
-                                                        <div class="pt-4">
-                                                            <a href="#" class="">3D Virdtual Showroom</a>
-                                                        </div>
-                                                        <div class="pt-4">
-                                                            <a href="#" class="">Team And Service</a>
-                                                        </div>
-                                                        <div class="pt-4">
-                                                            <a href="#" class="">4D Virdtual Showroom</a>
-                                                        </div>
-                                                        <div class="pt-4">
-                                                            <a href="#" class="">5D Virdtual Showroom</a>
-                                                        </div>
-                                                        <div class="pt-4">
-                                                            <a href="#" class="">6D Virdtual Showroom</a>
-                                                        </div>
-                                                        <div class="pt-4">
-                                                            <a href="#" class="">7D Virdtual Showroom</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </li> --}}
-                    <li class="nav-item">
-                        <a class="nav-link custom-nav" data-aos="fade-right"
-                            href="{{ route('homepage') }}">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link custom-nav" data-aos="fade-right"
-                            href="{{ route('catalog.all') }}">Catalog</a>
-                    </li>
-                    {{-- <li class="nav-item dropdown">
-                        <a class="nav-link custom-nav dropdown-toggle" href="news-trends.html" id="navbarDropdown"
-                            role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                            data-aos="fade-right">
-                            News & Trends
-                        </a>
-                        <div class="dropdown-menu menu-dropdown" aria-labelledby="navbarDropdown">
-                            <div class="container">
-                                <div class="row my-5 gx-3">
-                                    <div class="col-lg-3">
-                                        <div>
-                                            <img class="img-fluid header-side-banner"
-                                                src="https://www.kuka.com/-/media/kuka-corporate/images/ir/mitteilungen.jpg?rev=1b1c6d88287d493c9d06716764767b38&w=767&hash=D675CCDCE6BAF6450C5DB2F986F22751"
-                                                alt="">
-                                            <h5 class="pt-3">Products</h5>
-                                            <p>Get an overview on the entire KUKA portfolio from industrial robots to
-                                                complete production lines.</p>
-                                            <div>
-                                                <a href="" class="main-color">
-                                                    Learn More <i class="fa-solid fa-chevron-right ps-1 font-one"></i>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-9">
-                                        <div class="row gx-2">
-                                            <div class="col-lg-4 first-column column-transition">
-                                                <div class="column-header">
-                                                    <div class="pt-0">
-                                                        <a href="#" class="">Industries</a>
-                                                    </div>
-                                                    <div class="pt-4">
-                                                        <a href="#" class="expand-column-first"
-                                                            onclick="toggleColumn('second-column')">Case Studies
-                                                            <i class="fa-solid fa-chevron-right font-one ps-2"></i></a>
-                                                    </div>
-                                                    <div class="pt-4">
-                                                        <a href="#" class="">Automative Industry</a>
-                                                    </div>
-                                                    <div class="pt-4">
-                                                        <a href="#" class="expand-column-first"
-                                                            onclick="toggleColumn('second-column')">Automated
-                                                            House
-                                                            Building<i
-                                                                class="fa-solid fa-chevron-right font-one ps-2"></i></a>
-                                                    </div>
-                                                    <div class="pt-4">
-                                                        <a href="#" class="expand-column-first"
-                                                            onclick="toggleColumn('second-column')">Electronic
-                                                            Industries<i
-                                                                class="fa-solid fa-chevron-right font-one ps-2"></i></a>
-                                                    </div>
-                                                    <div class="pt-4">
-                                                        <a href="#" class="expand-column-first"
-                                                            onclick="toggleColumn('second-column')">Ecommerce &
-                                                            Logistic
-                                                            Service<i
-                                                                class="fa-solid fa-chevron-right font-one ps-2"></i></a>
-                                                    </div>
-                                                    <div class="pt-4">
-                                                        <a href="#" class="expand-column-first"
-                                                            onclick="toggleColumn('second-column')">Helth Care<i
-                                                                class="fa-solid fa-chevron-right font-one ps-2"></i></a>
-                                                    </div>
-                                                    <div class="pt-4">
-                                                        <a href="#" class="expand-column-first"
-                                                            onclick="toggleColumn('second-column')">Consumer
-                                                            Goods
-                                                            Industries<i
-                                                                class="fa-solid fa-chevron-right font-one ps-2"></i></a>
-                                                    </div>
-                                                    <div class="pt-4">
-                                                        <a href="#" class="">Metal Industires<i
-                                                                class="fa-solid fa-chevron-right font-one ps-2"></i></a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-4 second-column column-transition"
-                                                style="display: none;">
-                                                <div class="column-header"
-                                                    style="border-left: 1px solid var(--border-color)">
-                                                    <div class="ps-3">
-                                                        <div class="pt-0">
-                                                            <a href="#" class="">Helthcare</a>
-                                                        </div>
-                                                        <div class="pt-4">
-                                                            <a href="#" class="expand-column-second"
-                                                                onclick="toggleColumn('third-column')">Robots In
-                                                                The
-                                                                Medical Industry<i
-                                                                    class="fa-solid fa-chevron-right font-one ps-2"></i></a>
-                                                        </div>
-                                                        <div class="pt-4">
-                                                            <a href="#" class="">3D Virdtual Showroom</a>
-                                                        </div>
-                                                        <div class="pt-4">
-                                                            <a href="#" class="">Team And Service</a>
-                                                        </div>
-                                                        <div class="pt-4">
-                                                            <a href="#" class="">3D Virdtual Showroom</a>
-                                                        </div>
-                                                        <div class="pt-4">
-                                                            <a href="#" class="expand-column-second"
-                                                                onclick="toggleColumn('third-column')">Current
-                                                                Topics<i
-                                                                    class="fa-solid fa-chevron-right font-one ps-2"></i></a>
-                                                        </div>
-                                                        <div class="pt-4">
-                                                            <a href="#" class="">Swisslog Helthcare</a>
-                                                        </div>
-                                                        <div class="pt-4">
-                                                            <a href="#" class="expand-column-second"
-                                                                onclick="toggleColumn('third-column')">Downloads<i
-                                                                    class="fa-solid fa-chevron-right font-one ps-2"></i></a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-4 third-column column-transition"
-                                                style="display: none;">
-                                                <div class="column-header"
-                                                    style="border-left: 1px solid var(--border-color)">
-                                                    <div class="ps-3">
-                                                        <div class="pt-4">
-                                                            <a href="#" class="">3D Virdtual Showroom</a>
-                                                        </div>
-                                                        <div class="pt-4">
-                                                            <a href="#" class="">Team And Service</a>
-                                                        </div>
-                                                        <div class="pt-4">
-                                                            <a href="#" class="">4D Virdtual Showroom</a>
-                                                        </div>
-                                                        <div class="pt-4">
-                                                            <a href="#" class="">5D Virdtual Showroom</a>
-                                                        </div>
-                                                        <div class="pt-4">
-                                                            <a href="#" class="">6D Virdtual Showroom</a>
-                                                        </div>
-                                                        <div class="pt-4">
-                                                            <a href="#" class="">7D Virdtual Showroom</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </li> --}}
-                    <li class="nav-item">
-                        <a class="nav-link custom-nav" data-aos="fade-right" href="{{ route('rfq') }}">RFQ</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link custom-nav" href="{{ route('contact') }}">Contact Us</a>
-                    </li>
-                </ul>
-              
-                <!-- Search Box Start -->
-                 <div class="ms-auto">
-                    <form action="{{ route('search.products') }}" method="GET" class="d-flex">
-                        <input type="text" name="q" class="form-control me-2" placeholder="Search products..." required>
-                        <button type="submit" class="btn btn-outline-secondary">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </form>
-                </div>
-
-
-                                 
-                <!-- Search Box End -->
-            </div>
         </div>
-    </nav>
-</section>
 
-<section class="fixed-top mobile_header">
-    <div class="container px-0">
-        <div class="mobile_top_bar">
-            <div class="d-flex justify-content-end align-items-center px-1" data-aos="fade-right">
-                <div class="dropdown">
-                    <button class="dropdown-toggle me-4" type="button" id="dropdownMenuButton1"
-                        data-bs-toggle="dropdown" aria-expanded="false" data-aos="fade-left">
-                        English
-                    </button>
-                    <ul class="dropdown-menu extra-dropdown" aria-labelledby="dropdownMenuButton1">
-                        <li>
-                            <a class="dropdown-item top-dropdown" href="#">English</a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item top-dropdown" href="#">France</a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item top-dropdown" href="#">Spanish</a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item top-dropdown" href="#">German</a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item top-dropdown" href="#">Russian</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="dropdown">
-                    <button class="dropdown-toggle me-3" type="button" id="dropdownMenuButton1"
-                        data-bs-toggle="dropdown" aria-expanded="false" data-aos="fade-left">
-                        EUR - €
-                    </button>
-                    <ul class="dropdown-menu extra-dropdown" aria-labelledby="dropdownMenuButton1">
-                        <li>
-                            <a class="dropdown-item top-dropdown" href="#">English</a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item top-dropdown" href="#">France</a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item top-dropdown" href="#">Spanish</a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item top-dropdown" href="#">German</a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item top-dropdown" href="#">Russian</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="popover__wrapper me-5" data-aos="fade-left">
-                <a href="#">
-                    <h2 class="popover__title mb-1 fw-bold" data-aos="fade-left">
-                        <span>
-                            <i class="fa-solid fa-star-of-life"></i>
-                            <span class="p-0 m-0" style="color: var(--primary-color)">My</span>
-                            Techfocus
-                        </span>
-                    </h2>
-                </a>
-                <div class="popover__content text-start">
-                    @auth
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button type="submit" class="btn signin mb-2 rounded-0">Log Out</button>
-                        </form>
-                    @else
-                        <a href="{{ route('login') }}" class="btn signin mb-2 rounded-0">Log In</a>
-                        <div class="text-muted">
-                            First time here?
-                            <a href="{{ route('register') }}" class="main-color">Sign Up</a>
-                        </div>
-                    @endauth
-                    <hr class="text-muted" />
-                    <ul class="account p-0 text-muted text-start">
-                        <li>
-                            <i class="fa fa-user m-2"></i>
-                            <a href="{{ route('client.profile') }}" class="">My Profile</a>
-                        </li>
-                        <li>
-                            <i class="fa fa-envelope m-2"></i>
-                            <a href="{{ route('client.subscription') }}" class="">My
-                                Subscriptions</a>
-                        </li>
-                        <li>
-                            <i class="fa fa-star m-2"></i>
-                            <a href="{{ route('client.favourites') }}" class="">My Favorites</a>
-                        </li>
-                        <li>
-                            <i class="fa fa-list m-2"></i>
-                            <a href="{{ route('client.requests') }}" class="">My Requests</a>
-                        </li>
-                    </ul>
-                    <hr class="text-muted" />
-                    <ul class="account p-0 text-muted text-start" style="font-size: 7px">
-                        <li>
-                            Sign in to your manufacturer account
-                            <a target="_blank" class="main-color">Manufacturer account</a>
-                        </li>
-                        <li>
-                            Sign in to your distributor account
-                            <a target="_blank" class="main-color">Distributor account</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="mobile_nav_bar">
-            <div class="text-start">
-                <a class="navbar-brand mb-0" href="{{ route('homepage') }}" data-aos="fade-right">
-                    <img src="{{ !empty($site->system_logo_white) && file_exists(public_path('storage/webSetting/systemLogoWhite/' . $site->system_logo_white)) ? asset('storage/webSetting/systemLogoWhite/' . $site->system_logo_white) : asset('backend/images/no-image-available.png') }}"
-                        height="60px" alt="TechFocus" style="margin: 7px 6px;"/ />
-                </a>
-            </div>
-            <div data-aos="fade-left">
-                <!-- Mobile Menu -->
-                <div class="d-flex align-items-center">
-                    <div>
-                        <input type="checkbox" id="menyAvPaa" />
-                        <label id="burger" for="menyAvPaa">
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                        </label>
-                        <nav id="meny">
-                            <div class="" style="z-index: 9999; padding-top: 1rem; padding-left: 28rem;">
-                                <!--Mobile Head -->
-                                <p class="text-danger">
-                                    <a class="navbar-brand" href="{{ route('homepage') }}">
-                                        <img src="{{ !empty($site->system_logo_white) && file_exists(public_path('storage/webSetting/systemLogoWhite/' . $site->system_logo_white)) ? asset('storage/webSetting/systemLogoWhite/' . $site->system_logo_white) : asset('backend/images/no-image-available.png') }}"
-                                            width="200px" height="60px" alt="TechFocus">
+        <div class="d-flex align-items-stretch justify-content-between flex-lg-grow-1">
+
+            <div class="d-flex align-items-stretch" id="kt_header_nav">
+                <div class="header-menu align-items-stretch" data-kt-drawer="true" data-kt-drawer-name="header-menu"
+                    data-kt-drawer-activate="{default: true, lg: false}" data-kt-drawer-overlay="true"
+                    data-kt-drawer-width="{default:'200px', '300px': '250px'}" data-kt-drawer-direction="end"
+                    data-kt-drawer-toggle="#kt_header_menu_mobile_toggle" data-kt-swapper="true"
+                    data-kt-swapper-mode="prepend" data-kt-swapper-parent="{default: '#kt_body', lg: '#kt_header_nav'}">
+
+                    <div class="menu menu-lg-rounded menu-column menu-lg-row menu-state-bg menu-title-gray-700 menu-state-title-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-400 fw-bold my-5 my-lg-0 align-items-stretch"
+                        id="#kt_header_menu" data-kt-menu="true">
+                        <div data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start"
+                            class="menu-item here show menu-lg-down-accordion me-lg-1">
+                            <span class="menu-link py-3">
+                                <span class="menu-title">Dashboards</span>
+                                <span class="menu-arrow d-lg-none"></span>
+                            </span>
+                            <div
+                                class="menu-sub menu-sub-lg-down-accordion menu-sub-lg-dropdown menu-rounded-0 py-lg-4 w-lg-225px">
+                                <div class="menu-item">
+                                    <a class="menu-link active py-3"
+                                        href="{{ route('admin.leave-application.dashboard') }}">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                        <span class="menu-title">Leave Dashboard</span>
                                     </a>
-                                </p>
-                                <!-- Mobile Menu -->
-                                <ul class="navbar-nav ms-auto">
-                                    <li class="nav-item dropdown" data-aos="fade-right" data-aos-duration="500">
-                                        <a class="nav-link custom-nav dropdown-toggle" href="#"
-                                            id="navbarDropdown" role="button" data-toggle="dropdown"
-                                            aria-haspopup="true" aria-expanded="false">
-                                            Product
+                                </div>
+
+                                <div class="menu-inner flex-column collapse" id="kt_aside_menu_collapse_2">
+                                    <div class="menu-item">
+                                        <a class="menu-link py-3" href="">
+                                            <span class="menu-bullet">
+                                                <span class="bullet bullet-dot"></span>
+                                            </span>
+                                            <span class="menu-title">HR</span>
                                         </a>
-                                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                            <div class="container">
-                                                <div class="row">
-                                                    <div class="col-md-4">
-                                                        <span class="text-uppercase text-white">Category 1</span>
-                                                        <ul class="nav flex-column">
-                                                            <li class="nav-item">
-                                                                <a class="nav-link custom-nav active"
-                                                                    href="#">Active</a>
-                                                            </li>
-                                                            <li class="nav-item">
-                                                                <a class="nav-link custom-nav" href="#">Link
-                                                                    item</a>
-                                                            </li>
-                                                            <li class="nav-item">
-                                                                <a class="nav-link custom-nav" href="#">Link
-                                                                    item</a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                    <!-- /.col-md-4  -->
-                                                    <div class="col-md-4">
-                                                        <ul class="nav flex-column">
-                                                            <li class="nav-item">
-                                                                <a class="nav-link custom-nav active"
-                                                                    href="#">Active</a>
-                                                            </li>
-                                                            <li class="nav-item">
-                                                                <a class="nav-link custom-nav" href="#">Link
-                                                                    item</a>
-                                                            </li>
-                                                            <li class="nav-item">
-                                                                <a class="nav-link custom-nav" href="#">Link
-                                                                    item</a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                    <!-- /.col-md-4  -->
-                                                    <div class="col-md-4">
-                                                        <a target="_blank"
-                                                            href="#resources/a-beginners-guide-to-hubspot-cms/">
-                                                            <img src="https://i0.wp.com/bootstrapcreative.com/wp-bc/wp-content/uploads/2022/07/beginners-guide-to-hubspot-cms-cover.png?w=200&ssl=1"
-                                                                alt="Web Design Guides" class="img-fluid" />
-                                                        </a>
-                                                        <p class="text-white">Get Free Guides</p>
-                                                    </div>
-                                                    <!-- /.col-md-4  -->
-                                                </div>
-                                            </div>
-                                            <!--  /.container  -->
-                                        </div>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link custom-nav" href="{{ route('catalog.all') }}">Catalog</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link custom-nav" href="{{ route('rfq') }}">RFQ</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link custom-nav" href="{{ route('contact') }}">Contact Us</a>
-                                    </li>
-                                    <li class="nav-item dropdown">
-                                        <a class="nav-link custom-nav dropdown-toggle" href="news-trends.html"
-                                            id="navbarDropdown" role="button" data-toggle="dropdown"
-                                            aria-haspopup="true" aria-expanded="false">
-                                            News & Trends
+                                    </div>
+
+                                </div>
+                                <div class="menu-item">
+                                    <div class="menu-content">
+                                        <a class="btn btn-flex btn-color-success fs-base p-0 ms-2 mb-2 collapsible collapsed rotate"
+                                            data-bs-toggle="collapse" href="#kt_aside_menu_collapse_2"
+                                            data-kt-toggle-text="Show Less">
+                                            <span data-kt-toggle-text-target="true">Show More</span>
+
+                                            <span class="svg-icon ms-2 svg-icon-3 rotate-180">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none">
+
+                                                </svg>
+                                            </span>
+
                                         </a>
-                                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                            <div class="container">
-                                                <div class="row">
-                                                    <div class="col-md-4">
-                                                        <span class="text-uppercase text-white">Category 2</span>
-                                                        <ul class="nav flex-column">
-                                                            <li class="nav-item">
-                                                                <a class="nav-link custom-nav active"
-                                                                    href="#">Active</a>
-                                                            </li>
-                                                            <li class="nav-item">
-                                                                <a class="nav-link custom-nav" href="#">Link
-                                                                    item</a>
-                                                            </li>
-                                                            <li class="nav-item">
-                                                                <a class="nav-link custom-nav" href="#">Link
-                                                                    item</a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                    <!-- /.col-md-4  -->
-                                                    <div class="col-md-4">
-                                                        <ul class="nav flex-column">
-                                                            <li class="nav-item">
-                                                                <a class="nav-link custom-nav active"
-                                                                    href="#">Active</a>
-                                                            </li>
-                                                            <li class="nav-item">
-                                                                <a class="nav-link custom-nav" href="#">Link
-                                                                    item</a>
-                                                            </li>
-                                                            <li class="nav-item">
-                                                                <a class="nav-link custom-nav" href="#">Link
-                                                                    item</a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                    <!-- /.col-md-4  -->
-                                                    <div class="col-md-4">
-                                                        <a target="_blank" href="#shop/jake-portfolio-hubspot-theme/">
-                                                            <img src="https://i0.wp.com/bootstrapcreative.com/wp-bc/wp-content/uploads/2022/01/jake-portfolio-cover.jpg?w=200&ssl=1"
-                                                                alt="Portfolio Website Templates" class="img-fluid" />
-                                                        </a>
-                                                        <p class="text-white">
-                                                            Create a Portfolio Website Fast
-                                                        </p>
-                                                    </div>
-                                                    <!-- /.col-md-4  -->
-                                                </div>
-                                            </div>
-                                            <!--  /.container  -->
-                                        </div>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link custom-nav" href="#">E-Magazine</a>
-                                    </li>
-                                </ul>
+                                    </div>
+                                </div>
                             </div>
-                        </nav>
+                        </div>
+
+
                     </div>
 
                 </div>
-                <!-- Mobile Menu End-->
+            </div>
+            <div class="d-flex align-items-center">
+                <div id="clock">
+                    <span class="wrap-time">
+                        <span class="time-unit">
+                            <span class="large day">0</span>
+                            <span class="small">DAY</span>
+                        </span>
+
+                        <span class="time-unit">
+                            <span class="large hours">00</span>
+                            <span class="small">HOURS</span>
+                        </span>
+                        <span class="separator">:</span>
+
+                        <span class="time-unit">
+                            <span class="large minutes">00</span>
+                            <span class="small">MINUTES</span>
+                        </span>
+                        <span class="separator">:</span>
+
+                        <span class="time-unit">
+                            <span class="large seconds">00</span>
+                            <span class="small">SECONDS</span>
+                        </span>
+
+                        <span class="time-unit">
+                            <span class="large period">AM</span>
+                            <span class="small">PERIOD</span>
+                        </span>
+                    </span>
+                </div>
+            </div>
+
+
+            <div class="d-flex align-items-stretch flex-shrink-0">
+
+                <div class="d-flex align-items-center ms-1 ms-lg-3">
+                    <div class="btn btn-icon btn-icon-muted btn-active-light btn-active-color-primary w-30px h-30px w-md-40px h-md-40px"
+                        id="kt_activities_toggle">
+                        <span class="svg-icon svg-icon-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none">
+                                <rect x="8" y="9" width="3" height="10" rx="1.5"
+                                    fill="currentColor" />
+                                <rect opacity="0.5" x="13" y="5" width="3" height="14" rx="1.5"
+                                    fill="currentColor" />
+                                <rect x="18" y="11" width="3" height="8" rx="1.5"
+                                    fill="currentColor" />
+                                <rect x="3" y="13" width="3" height="6" rx="1.5"
+                                    fill="currentColor" />
+                            </svg>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center ms-1 ms-lg-3">
+
+                    <div class="btn btn-icon btn-icon-muted btn-active-light btn-active-color-primary w-30px h-30px w-md-40px h-md-40px"
+                        data-kt-menu-trigger="click" data-kt-menu-attach="parent"
+                        data-kt-menu-placement="bottom-end">
+
+                        <span class="svg-icon svg-icon-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                viewBox="0 0 24 24" fill="none">
+                                <rect x="2" y="2" width="9" height="9" rx="2"
+                                    fill="currentColor" />
+                                <rect opacity="0.3" x="13" y="2" width="9" height="9" rx="2"
+                                    fill="currentColor" />
+                                <rect opacity="0.3" x="13" y="13" width="9" height="9" rx="2"
+                                    fill="currentColor" />
+                                <rect opacity="0.3" x="2" y="13" width="9" height="9" rx="2"
+                                    fill="currentColor" />
+                            </svg>
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div class="d-flex align-items-center ms-1 ms-lg-3" id="kt_header_user_menu_toggle">
+
+                    <div class="cursor-pointer symbol symbol-30px symbol-md-40px" data-kt-menu-trigger="click"
+                        data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
+                        <img src="{{ asset('backend') }}/assets/media/avatars/300-1.jpg" alt="user" />
+                    </div>
+
+                    <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-primary fw-bold py-4 fs-6 w-275px"
+                        data-kt-menu="true">
+
+                        <div class="menu-item px-3">
+                            <div class="menu-content d-flex align-items-center px-3">
+
+                                <div class="symbol symbol-50px me-5">
+                                    <img alt="Logo" src="{{ asset('backend') }}/assets/media/avatars/300-1.jpg" />
+                                </div>
+
+
+                                <div class="d-flex flex-column">
+                                    <div class="fw-bolder d-flex align-items-center fs-5">
+                                        {{ Auth::guard('admin')->user()->name }}
+                                        <span
+                                            class="badge badge-light-success fw-bolder fs-8 px-2 py-1 ms-2">Pro</span>
+                                    </div>
+                                    <a href="#"
+                                        class="fw-bold text-muted text-hover-primary fs-7">{{ Auth::guard('admin')->user()->email }}</a>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        <div class="separator my-2"></div>
+
+
+                        <div class="menu-item px-5">
+                            <a href="{{ route('admin.profile.index') }}" class="menu-link px-5">My Profile</a>
+                        </div>
+
+
+                        <div class="separator my-2"></div>
+
+
+                        <div class="menu-item px-5 my-1">
+                            <a href="" class="menu-link px-5">Account
+                                Settings</a>
+                        </div>
+
+
+                        <div class="menu-item px-5">
+                            <form action="{{ route('admin.logout') }}" method="post">
+                                @csrf
+                                <a href="javascript:void(0);" class="menu-link px-5"
+                                    onclick="submitForm(event, this)">Sign Out</a>
+                            </form>
+                        </div>
+
+
+                        <div class="separator my-2"></div>
+
+
+                    </div>
+
+
+                </div>
+
+                <div class="d-flex align-items-center d-lg-none ms-2 me-n3" title="Show header menu">
+                    <div class="btn btn-icon btn-active-light-primary w-30px h-30px w-md-40px h-md-40px"
+                        id="kt_header_menu_mobile_toggle">
+
+                        <span class="svg-icon svg-icon-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                viewBox="0 0 24 24" fill="none">
+                                <path
+                                    d="M13 11H3C2.4 11 2 10.6 2 10V9C2 8.4 2.4 8 3 8H13C13.6 8 14 8.4 14 9V10C14 10.6 13.6 11 13 11ZM22 5V4C22 3.4 21.6 3 21 3H3C2.4 3 2 3.4 2 4V5C2 5.6 2.4 6 3 6H21C21.6 6 22 5.6 22 5Z"
+                                    fill="currentColor" />
+                                <path opacity="0.3"
+                                    d="M21 16H3C2.4 16 2 15.6 2 15V14C2 13.4 2.4 13 3 13H21C21.6 13 22 13.4 22 14V15C22 15.6 21.6 16 21 16ZM14 20V19C14 18.4 13.6 18 13 18H3C2.4 18 2 18.4 2 19V20C2 20.6 2.4 21 3 21H13C13.6 21 14 20.6 14 20Z"
+                                    fill="currentColor" />
+                            </svg>
+                        </span>
+
+                    </div>
+                </div>
+
             </div>
         </div>
-    </div>
-</section>
-
-
-
-<script>
-    function toggleColumn(columnClassName, linkElement) {
-        var column = document.querySelector('.' + columnClassName);
-        var columnHeader = column.querySelector('.column-header');
-
-        // Toggle the 'column-transition' class to enable transitions
-        column.classList.toggle('column-transition');
-
-        if (column.style.display === 'none' || column.style.display === '') {
-            column.style.display = 'block';
-            columnHeader.classList.add('active');
-        } else {
-            column.style.display = 'none';
-            columnHeader.classList.remove('active');
-        }
-
-        // Remove 'active' class from all other links
-        document.querySelectorAll('.column-header a').forEach(function(el) {
-            if (el !== linkElement) {
-                el.parentElement.classList.remove('active');
-            }
-        });
-    }
-         function validateSearch() {
-                                        const searchInput = document.querySelector('.searchTerm');
-                                        return searchInput.value.trim() !== '';
-                                    }
-</script>
+    </div>
+</div>

@@ -326,3 +326,5 @@ Route::prefix('administrator')->name('admin.')->group(static function () {
     // Route::get('/device-restart', [BioMetricController::class, 'device_restart'])->name('machine.devicerestart');
     // Route::get('/device-shutdown', [BioMetricController::class, 'device_shutdown'])->name('machine.deviceshutdown');
 });
+
+

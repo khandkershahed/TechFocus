@@ -14,12 +14,10 @@
 		<!--begin::Main-->
 		    <!-- Also include CSRF token as hidden input for backup -->
     <input type="hidden" name="_token" value="{{ csrf_token() }}">
-    
-    @yield('content')
+
     
     <!-- Scripts -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 		<!--begin::Root-->
 		<div class="d-flex flex-column flex-root">
 			<!--begin::Page-->
@@ -50,6 +48,8 @@
 		</div>
 		<!--end::Root-->
 		<!--begin::Drawers-->
+		    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 		@include('admin.partials.drawers')
 
 		<!--end::Engage toolbar-->

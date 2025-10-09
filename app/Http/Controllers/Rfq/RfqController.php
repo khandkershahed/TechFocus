@@ -2,203 +2,84 @@
 
 namespace App\Http\Controllers\Rfq;
 
-use App\Models\Rfq\Rfq;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use App\Http\Requests\RfqRequest;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Container\Attributes\Log;
+use App\Models\Rfq; // Updated namespace
 
 class RfqController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        return view('admin.pages.rfq.index', [
-            'rfqs' => Rfq::where('rfq_type', 'rfq')->latest('id')->get(),
-        ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Show the RFQ form
      */
     public function create()
     {
-        //
+        return view('frontend.pages.rfq.rfq'); 
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * Store the RFQ request
      */
-    public function store(RfqRequest $request)
-    {
-        $mainFile = $request->file('image');
+        public function store(Request $request)
+{
+    // Validate the incoming request
+    $validated = $request->validate([
+        'conceptTermId' => 'required|string',
+        'info' => 'required|string|min:300',
+        'quantity' => 'required|numeric|min:1',
+        'budget' => 'required|string',
+        'delivery_city' => 'required|string',
+        'decision_period' => 'required|numeric|min:1',
+        'email' => 'required|email',
+        'first_name' => 'required|string',
+        'last_name' => 'required|string',
+        'company_name' => 'required|string',
+        'phone' => 'required|string',
+        'city' => 'required|string',
+    ]);
 
-        $filePath_image = storage_path('app/public/rfq/');
+    // Generate unique codes
+    $rfq_code = 'RFQ-' . strtoupper(uniqid());
+    $deal_code = 'DEAL-' . strtoupper(uniqid());
 
-        if (!empty($mainFile)) {
-            $globalFunImage = customUpload($mainFile, $filePath_image);
-        } else {
-            $globalFunImage = ['status' => 0];
-        }
+    \Log::info('RFQ Form Data Received:', $request->all());
 
-        Rfq::create([
-            'rfq_code'        => $request->rfq_code,
-            'sales_man_id_L1' => $request->sales_man_id_L1,
-            'sales_man_id_T1' => $request->sales_man_id_T1,
-            'sales_man_id_T2' => $request->sales_man_id_T2,
-            'client_id'       => $request->client_id,
-            'client_type'     => $request->client_type,
-            'name'            => $request->name,
-            'email'           => $request->email,
-            'phone'           => $request->phone,
-            'company_name'    => $request->company_name,
-            'designation'     => $request->designation,
-            'address'         => $request->address,
-            'create_date'     => $request->create_date,
-            'close_date'      => $request->close_date,
-            'sale_date'       => $request->sale_date,
-            'pq_code'         => $request->pq_code,
-            'pqr_code_one'    => $request->pqr_code_one,
-            'pqr_code_two'    => $request->pqr_code_two,
-            'qty'             => $request->qty,
-            'image'           => $globalFunImage['status'] == 1 ? $globalFunImage['file_name'] : null,
-            'message'         => $request->message,
-            'rfq_type'        => $request->rfq_type,
-            'call'            => $request->call,
-            'regular'         => $request->regular,
-            'special'         => $request->special,
-            'tax_status'      => $request->tax_status,
-            'deal_type'       => $request->deal_type,
-            'status'          => $request->status,
-            'tax'             => $request->tax,
-            'vat'             => $request->vat,
-            'total_price'     => $request->total_price,
-            'quoted_price'    => $request->quoted_price,
-            'price_text'      => $request->price_text,
-            'rfq_department'  => $request->rfq_department,
-        ]);
-        return redirect()->back()->with('success', 'Data has been saved successfully!');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(RfqRequest $request, $id)
-    {
-        $rfq = Rfq::find($id);
-
-        $mainFile = $request->file('image');
-        $filePath_image = storage_path('app/public/rfq/');
-
-        if (!empty($mainFile)) {
-            $globalFunImage = customUpload($mainFile, $filePath_image);
-            $paths = [
-                storage_path("app/public/rfq/{$rfq->image}"),
-            ];
-            foreach ($paths as $path) {
-                if (File::exists($path)) {
-                    File::delete($path);
-                }
-            }
-        } else {
-            $globalFunImage = ['status' => 0];
-        }
-
-        $rfq->update([
-            'rfq_code'        => $request->rfq_code,
-            'sales_man_id_L1' => $request->sales_man_id_L1,
-            'sales_man_id_T1' => $request->sales_man_id_T1,
-            'sales_man_id_T2' => $request->sales_man_id_T2,
-            'client_id'       => $request->client_id,
-            'client_type'     => $request->client_type,
-            'name'            => $request->name,
-            'email'           => $request->email,
-            'phone'           => $request->phone,
-            'company_name'    => $request->company_name,
-            'designation'     => $request->designation,
-            'address'         => $request->address,
-            'create_date'     => $request->create_date,
-            'close_date'      => $request->close_date,
-            'sale_date'       => $request->sale_date,
-            'pq_code'         => $request->pq_code,
-            'pqr_code_one'    => $request->pqr_code_one,
-            'pqr_code_two'    => $request->pqr_code_two,
-            'qty'             => $request->qty,
-            'image'        => $globalFunImage['status'] == 1 ? $globalFunImage['file_name'] : $rfq->image,
-            'message'         => $request->message,
-            'rfq_type'        => $request->rfq_type,
-            'call'            => $request->call,
-            'regular'         => $request->regular,
-            'special'         => $request->special,
-            'tax_status'      => $request->tax_status,
-            'deal_type'       => $request->deal_type,
-            'status'          => $request->status,
-            'tax'             => $request->tax,
-            'vat'             => $request->vat,
-            'total_price'     => $request->total_price,
-            'quoted_price'    => $request->quoted_price,
-            'price_text'      => $request->price_text,
-            'rfq_department'  => $request->rfq_department,
-
-        ]);
-        return redirect()->route('admin.rfq.index')->with('success', 'Data updated Successfully');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        $rfq = Rfq::find($id);
-
-        $paths = [
-            storage_path("app/public/rfq/{$rfq->image}"),
+    try {
+        // Store the RFQ using your actual table structure
+        $rfqData = [
+            'rfq_code' => $rfq_code,
+            'deal_code' => $deal_code,
+            'user_id' => Auth::id(),
+            'name' => $request->first_name . ' ' . $request->last_name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'company_name' => $request->company_name,
+            'city' => $request->city,
+            'delivery_location' => $request->delivery_city,
+            'budget' => $request->budget,
+            'qty' => $request->quantity,
+            'message' => $request->info,
+            'rfq_type' => 'rfq', // Fixed typo: was 'rfa_type'
+            'client_type' => Auth::id() ? 'client' : 'anonymous',
+            'create_date' => now(),
+            'project_status' => 'pending',
         ];
 
-        foreach ($paths as $path) {
-            if (File::exists($path)) {
-                File::delete($path);
-            }
-        }
-        $rfq->delete();
+        \Log::info('Attempting to create RFQ with data:', $rfqData);
+
+        $rfq = Rfq::create($rfqData);
+
+        \Log::info('RFQ created successfully with ID: ' . $rfq->id);
+
+        return redirect()->back()->with('success', 'RFQ submitted successfully! Your RFQ code: ' . $rfq_code);
+
+    } catch (\Exception $e) { // Fixed: removed extra parenthesis
+        \Log::error('RFQ Store Error: ' . $e->getMessage()); // Fixed: proper concatenation
+        \Log::error('Error Trace: ' . $e->getTraceAsString()); // Fixed: proper concatenation
+        \Log::error('Request Data: ', $request->all());
+
+        return redirect()->back()->with('error', 'Error submitting RFQ. Please try again. Error: ' . $e->getMessage()); // Fixed: proper concatenation
     }
+}
 }

@@ -41,6 +41,7 @@ class ComposerStaticInit477449c53aa665b91ea8dae4c20eebd4
         'a1cfe24d14977df6878b9bf804af2d1c' => __DIR__ . '/..' . '/nunomaduro/collision/src/Adapters/Phpunit/Autoload.php',
         'ec07570ca5a812141189b1fa81503674' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Assert/Functions.php',
         '320163ac6b93aebe3dc25b60a0533d56' => __DIR__ . '/..' . '/spatie/laravel-ignition/src/helpers.php',
+        '0b47d6d4a00ca9112ba3953b49e7c9a4' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/helper.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -51,6 +52,10 @@ class ComposerStaticInit477449c53aa665b91ea8dae4c20eebd4
         'b' => 
         array (
             'browner12\\helpers\\' => 18,
+        ),
+        'Y' => 
+        array (
+            'Yajra\\DataTables\\' => 17,
         ),
         'W' => 
         array (
@@ -202,6 +207,10 @@ class ComposerStaticInit477449c53aa665b91ea8dae4c20eebd4
         array (
             0 => __DIR__ . '/..' . '/browner12/helpers/src',
         ),
+        'Yajra\\DataTables\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src',
+        ),
         'Wildside\\Userstamps\\' => 
         array (
             0 => __DIR__ . '/..' . '/wildside/userstamps/src',
@@ -340,13 +349,13 @@ class ComposerStaticInit477449c53aa665b91ea8dae4c20eebd4
         ),
         'Spatie\\LaravelIgnition\\' => 
         array (
-            0 => __DIR__ . '/..' . '/spatie/laravel-ignition/src',
-            1 => __DIR__ . '/..' . '/spatie/error-solutions/legacy/laravel-ignition',
+            0 => __DIR__ . '/..' . '/spatie/error-solutions/legacy/laravel-ignition',
+            1 => __DIR__ . '/..' . '/spatie/laravel-ignition/src',
         ),
         'Spatie\\Ignition\\' => 
         array (
-            0 => __DIR__ . '/..' . '/spatie/ignition/src',
-            1 => __DIR__ . '/..' . '/spatie/error-solutions/legacy/ignition',
+            0 => __DIR__ . '/..' . '/spatie/error-solutions/legacy/ignition',
+            1 => __DIR__ . '/..' . '/spatie/ignition/src',
         ),
         'Spatie\\FlareClient\\' => 
         array (
@@ -643,7 +652,9 @@ class ComposerStaticInit477449c53aa665b91ea8dae4c20eebd4
         'App\\Http\\Controllers\\Auth\\PasswordResetLinkController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/PasswordResetLinkController.php',
         'App\\Http\\Controllers\\Auth\\RegisteredUserController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/RegisteredUserController.php',
         'App\\Http\\Controllers\\Auth\\VerifyEmailController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/VerifyEmailController.php',
+        'App\\Http\\Controllers\\CartController' => __DIR__ . '/../..' . '/app/Http/Controllers/CartController.php',
         'App\\Http\\Controllers\\Client\\ClientController' => __DIR__ . '/../..' . '/app/Http/Controllers/Client/ClientController.php',
+        'App\\Http\\Controllers\\ContactController' => __DIR__ . '/../..' . '/app/Http/Controllers/ContactController.php',
         'App\\Http\\Controllers\\Content\\BlogController' => __DIR__ . '/../..' . '/app/Http/Controllers/Content/BlogController.php',
         'App\\Http\\Controllers\\Content\\ClientStoryController' => __DIR__ . '/../..' . '/app/Http/Controllers/Content/ClientStoryController.php',
         'App\\Http\\Controllers\\Content\\TechContentController' => __DIR__ . '/../..' . '/app/Http/Controllers/Content/TechContentController.php',
@@ -741,6 +752,7 @@ class ComposerStaticInit477449c53aa665b91ea8dae4c20eebd4
         'App\\Models\\Admin\\BrandPage' => __DIR__ . '/../..' . '/app/Models/Admin/BrandPage.php',
         'App\\Models\\Admin\\Catalog' => __DIR__ . '/../..' . '/app/Models/Admin/Catalog.php',
         'App\\Models\\Admin\\CatalogAttachment' => __DIR__ . '/../..' . '/app/Models/Admin/CatalogAttachment.php',
+        'App\\Models\\Admin\\CatalogCategory' => __DIR__ . '/../..' . '/app/Models/Admin/CatalogCategory.php',
         'App\\Models\\Admin\\Category' => __DIR__ . '/../..' . '/app/Models/Admin/Category.php',
         'App\\Models\\Admin\\Company' => __DIR__ . '/../..' . '/app/Models/Admin/Company.php',
         'App\\Models\\Admin\\Contact' => __DIR__ . '/../..' . '/app/Models/Admin/Contact.php',
@@ -780,6 +792,7 @@ class ComposerStaticInit477449c53aa665b91ea8dae4c20eebd4
         'App\\Models\\Admin\\UserRole' => __DIR__ . '/../..' . '/app/Models/Admin/UserRole.php',
         'App\\Models\\Admin\\VatAndTax' => __DIR__ . '/../..' . '/app/Models/Admin/VatAndTax.php',
         'App\\Models\\City' => __DIR__ . '/../..' . '/app/Models/City.php',
+        'App\\Models\\Contact' => __DIR__ . '/../..' . '/app/Models/Contact.php',
         'App\\Models\\Country' => __DIR__ . '/../..' . '/app/Models/Country.php',
         'App\\Models\\HR\\Attendance' => __DIR__ . '/../..' . '/app/Models/HR/Attendance.php',
         'App\\Models\\HR\\EmployeeTask' => __DIR__ . '/../..' . '/app/Models/HR/EmployeeTask.php',
@@ -7368,6 +7381,22 @@ class ComposerStaticInit477449c53aa665b91ea8dae4c20eebd4
         'Wildside\\Userstamps\\Listeners\\Updating' => __DIR__ . '/..' . '/wildside/userstamps/src/Listeners/Updating.php',
         'Wildside\\Userstamps\\Userstamps' => __DIR__ . '/..' . '/wildside/userstamps/src/Userstamps.php',
         'Wildside\\Userstamps\\UserstampsScope' => __DIR__ . '/..' . '/wildside/userstamps/src/UserstampsScope.php',
+        'Yajra\\DataTables\\ApiResourceDataTable' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/ApiResourceDataTable.php',
+        'Yajra\\DataTables\\CollectionDataTable' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/CollectionDataTable.php',
+        'Yajra\\DataTables\\Contracts\\DataTable' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/Contracts/DataTable.php',
+        'Yajra\\DataTables\\Contracts\\Formatter' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/Contracts/Formatter.php',
+        'Yajra\\DataTables\\DataTableAbstract' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/DataTableAbstract.php',
+        'Yajra\\DataTables\\DataTables' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/DataTables.php',
+        'Yajra\\DataTables\\DataTablesServiceProvider' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/DataTablesServiceProvider.php',
+        'Yajra\\DataTables\\EloquentDataTable' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/EloquentDataTable.php',
+        'Yajra\\DataTables\\Exceptions\\Exception' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/Exceptions/Exception.php',
+        'Yajra\\DataTables\\Facades\\DataTables' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/Facades/DataTables.php',
+        'Yajra\\DataTables\\Processors\\DataProcessor' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/Processors/DataProcessor.php',
+        'Yajra\\DataTables\\Processors\\RowProcessor' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/Processors/RowProcessor.php',
+        'Yajra\\DataTables\\QueryDataTable' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/QueryDataTable.php',
+        'Yajra\\DataTables\\Utilities\\Config' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/Utilities/Config.php',
+        'Yajra\\DataTables\\Utilities\\Helper' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/Utilities/Helper.php',
+        'Yajra\\DataTables\\Utilities\\Request' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/Utilities/Request.php',
         'browner12\\helpers\\Commands\\HelperMakeCommand' => __DIR__ . '/..' . '/browner12/helpers/src/Commands/HelperMakeCommand.php',
         'browner12\\helpers\\HelperServiceProvider' => __DIR__ . '/..' . '/browner12/helpers/src/HelperServiceProvider.php',
         'voku\\helper\\ASCII' => __DIR__ . '/..' . '/voku/portable-ascii/src/voku/helper/ASCII.php',

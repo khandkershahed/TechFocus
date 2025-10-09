@@ -59,3 +59,12 @@ Route::get('/cart/count', [CartController::class, 'getCartCount'])->name('cart.c
 Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
 Route::get('/cart/debug', [CartController::class, 'debugCart'])->name('cart.debug');
 Route::get('/cart/view', [CartController::class, 'viewCart'])->name('cart.view');
+
+// rfq
+
+
+// Show the RFQ form
+Route::get('/rfq/create', [RfqController::class, 'create'])->name('rfq.create');
+
+// Handle RFQ submission
+Route::post('/rfq/store', [RfqController::class, 'store'])->name('rfq.store');

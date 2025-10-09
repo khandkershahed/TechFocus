@@ -176,24 +176,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4">
-                    <div class="p-3 border-0 contact-card card"
-                        style=" background-color: var(--secondary-deep-color); box-shadow: var(--custom-shadow)">
-                        <img class="mx-auto" width="150px"
-                            src="https://www.cosmed.com/images/08_icons/get_in_touch/register_product.svg"
-                            class="card-img-top" alt="...">
-                        <div class="text-center card-body">
-                            <h3 class="text-white card-title">Get Support Now</h3>
-                            <p class="py-2 mx-auto text-white card-text w-75">Fill the online form to get software upgrades
-                                and more
-                                advantages</p>
-                            <a href="{{ route('buying.guide') }}" class="mx-auto mt-2 bg-white border btn common-btn-2 rounded-0 w-50">
-                                <span class="text-gradient">Contact Us</span></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+
     </section>
 
     <section class="bg-white">
