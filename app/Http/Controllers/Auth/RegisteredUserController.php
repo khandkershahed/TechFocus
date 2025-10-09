@@ -20,9 +20,7 @@ class RegisteredUserController extends Controller
      */
     public function create()
     {
-        // return view('auth.register');
         return view('frontend.pages.client.auth.register');
-
     }
 
     /**
@@ -35,22 +33,35 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request)
     {
+        // Validate the request
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
-        
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'name'      => ['required', 'string', 'max:255'],
+            'email'     => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password'  => ['required', 'confirmed', Rules\Password::defaults()],
+            'user_type' => ['required', 'in:client,partner'], // validate user_type
         ]);
 
+        // Create the user with selected user_type
+        $user = User::create([
+            'name'      => $request->name,
+            'email'     => $request->email,
+            'password'  => Hash::make($request->password),
+            'user_type' => $request->user_type,
+        ]);
+
+        // Trigger email verification
         event(new Registered($user));
 
+        // Log the user in
         Auth::login($user);
 
-        return redirect(RouteServiceProvider::HOME);
+        // // Redirect based on user_type
+        // return $user->user_type === 'partner'
+        //     ? redirect()->route('partner.dashboard')
+        //     : redirect(RouteServiceProvider::HOME);
+                // Redirect to email verification notice page instead of dashboard
+        return redirect()->route('verification.notice')
+            ->with('status', 'verification-link-sent');
+
     }
 }

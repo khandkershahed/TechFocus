@@ -31,18 +31,27 @@
                                         </h2>
                                     </a>
                                     <div class="popover__content text-start">
-                                        @auth
-                                            <form method="POST" action="{{ route('logout') }}">
-                                                @csrf
-                                                <button type="submit" class="btn signin mb-2 rounded-0">Log Out</button>
-                                            </form>
-                                        @else
-                                            <a href="{{ route('login') }}" class="btn signin mb-2 rounded-0">Log In</a>
-                                            <div class="text-muted">
-                                                First time here?
-                                                <a href="{{ route('register') }}" class="main-color">Sign Up</a>
-                                            </div>
-                                        @endauth
+                                      @auth
+                                                <form method="POST" action="{{ route('logout') }}">
+                                                    @csrf
+                                                    <button type="submit" class="btn signin mb-2 rounded-0">Log Out</button>
+                                                </form>
+                                            @else
+                                                <!-- Client Login/Register -->
+                                                <a href="{{ route('login') }}" class="btn signin mb-2 rounded-0">Client Log In</a>
+                                                <div class="text-muted">
+                                                    First time here? 
+                                                    <a href="{{ route('register') }}" class="main-color">
+                                                        
+                                                        
+                                                        Sign Up</a>
+                                                </div>
+
+                                                <!-- Partner Login/Register -->
+                                                <a href="{{ route('partner.login') }}" class="btn signin mb-2 rounded-0 mt-2">Partner Log In</a>
+                                             
+                                            @endauth
+
                                         <hr class="text-muted" />
                                         <ul class="account p-0 text-muted text-start">
                                             <li>

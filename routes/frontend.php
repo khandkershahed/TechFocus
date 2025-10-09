@@ -68,3 +68,37 @@ Route::get('/rfq/create', [RfqController::class, 'create'])->name('rfq.create');
 
 // Handle RFQ submission
 Route::post('/rfq/store', [RfqController::class, 'store'])->name('rfq.store');
+//partner log in 
+use App\Http\Controllers\Auth\PartnerLoginController;
+use App\Http\Controllers\Partner\DashboardController;
+
+// Partner Login Routes
+Route::get('/partner/login', [PartnerLoginController::class, 'showLoginForm'])->name('partner.login');
+Route::post('/partner/login', [PartnerLoginController::class, 'login'])->name('partner.login.submit');
+
+// Partner Dashboard & Logout Routes (protected)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/partner/dashboard', [DashboardController::class, 'index'])->name('partner.dashboard');
+    Route::post('/partner/logout', [DashboardController::class, 'logout'])->name('partner.logout');
+});
+
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
+
+// Login Routes
+Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
+Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('login.submit');
+
+// Logout Route
+Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
+
+//email verification
+use App\Http\Controllers\Auth\VerifyEmailController;
+
+Route::get('/email/verify/{id}/{hash}', VerifyEmailController::class)
+    ->middleware(['auth', 'signed'])
+    ->name('verification.verify');
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/client/dashboard', [DashboardController::class, 'index'])
+        ->name('client.dashboard');
+  Route::get('/partner/dashboard', [DashboardController::class, 'index'])->name('partner.dashboard');
+});
