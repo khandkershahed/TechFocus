@@ -79,6 +79,7 @@ Route::post('/partner/login', [PartnerLoginController::class, 'login'])->name('p
 // Partner Dashboard & Logout Routes (protected)
 Route::middleware(['auth'])->group(function () {
     Route::get('/partner/dashboard', [DashboardController::class, 'index'])->name('partner.dashboard');
+       Route::post('/partner/dashboard/update', [DashboardController::class, 'updateProfile'])->name('partner.profile.update');
     Route::post('/partner/logout', [DashboardController::class, 'logout'])->name('partner.logout');
 });
 
@@ -101,4 +102,34 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/client/dashboard', [DashboardController::class, 'index'])
         ->name('client.dashboard');
   Route::get('/partner/dashboard', [DashboardController::class, 'index'])->name('partner.dashboard');
+});
+
+
+
+// Route::prefix('partner')->middleware(['auth'])->group(function () {
+//     Route::get('/dashboard', [DashboardController::class, 'index'])->name('partner.dashboard');
+//     Route::post('/dashboard/update', [DashboardController::class, 'updateProfile'])->name('partner.profile.update');
+//     Route::post('/logout', [DashboardController::class, 'logout'])->name('partner.logout');
+// });
+
+
+use App\Http\Controllers\Client\ClientController;
+
+// Client Dashboard
+Route::middleware(['auth', 'verified'])->group(function () {
+
+    // Dashboard
+    Route::get('/client/dashboard', [ClientController::class, 'dashboard'])->name('client.dashboard');
+
+    // Profile
+    Route::get('/client/profile', [ClientController::class, 'profile'])->name('client.profile');
+    Route::post('/client/profile/update', [ClientController::class, 'updateProfile'])->name('client.profile.update');
+
+    // Other pages
+    Route::get('/client/subscription', [ClientController::class, 'subscription'])->name('client.subscription');
+    Route::get('/client/favourites', [ClientController::class, 'favourites'])->name('client.favourites');
+    Route::get('/client/requests', [ClientController::class, 'requests'])->name('client.requests');
+
+    // Logout
+    Route::post('/client/logout', [ClientController::class, 'logout'])->name('client.logout');
 });

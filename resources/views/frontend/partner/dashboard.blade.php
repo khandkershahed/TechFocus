@@ -56,53 +56,144 @@
                         @endauth
                     </div>
 
-                    <div class="text-center mb-3">
-                        <img src="{{ auth()->user()->profile_image ?? 'https://cdn-icons-png.flaticon.com/512/547/547590.png' }}"
-                             class="rounded-circle shadow-lg border border-2 border-success"
-                             width="80px" height="80px" alt="Profile Image">
-                    </div>
+                    <form class="row g-3 profileValidation" novalidate
+                          method="POST" enctype="multipart/form-data"
+                          action="{{ route('partner.profile.update') }}">
+                        @csrf
 
-                    <form class="row g-3 profileValidation" novalidate>
-                        {{-- First Name --}}
-                        <div class="col-md-6">
-                            <label for="first_name" class="form-label">First Name</label>
-                            <input type="text" class="form-control rounded-0" id="first_name"
-                                   value="{{ auth()->user()->first_name ?? '' }}">
+                        {{-- Profile Photo --}}
+                        <div class="col-12 text-center mb-3">
+                            <img src="{{ auth()->user()->photo ? asset('storage/'.auth()->user()->photo) : 'https://cdn-icons-png.flaticon.com/512/547/547590.png' }}"
+                                 class="rounded-circle shadow-lg border border-2 border-success"
+                                 width="100" height="100" alt="Profile Image">
+                        </div>
+                        <div class="col-12 text-center mb-3">
+                            <input type="file" name="profile_image" class="form-control" id="profile_image">
                         </div>
 
-                        {{-- Last Name --}}
+                        {{-- Name --}}
                         <div class="col-md-6">
-                            <label for="last_name" class="form-label">Last Name</label>
-                            <input type="text" class="form-control rounded-0" id="last_name"
-                                   value="{{ auth()->user()->last_name ?? '' }}">
+                            <label for="name" class="form-label">First Name</label>
+                            <input type="text" class="form-control rounded-0" id="name" name="name"
+                                   value="{{ auth()->user()->name ?? '' }}" required>
                         </div>
+
+                        {{-- Username --}}
+                        <div class="col-md-6">
+                            <label for="username" class="form-label">Last Name</label>
+                            <input type="text" class="form-control rounded-0" id="username" name="username"
+                                   value="{{ auth()->user()->username ?? '' }}">
+                        </div>
+
+                       
 
                         {{-- Email --}}
                         <div class="col-md-6">
                             <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control rounded-0" id="email"
-                                   value="{{ auth()->user()->email ?? '' }}">
+                            <input type="email" class="form-control rounded-0" id="email" name="email"
+                                   value="{{ auth()->user()->email ?? '' }}" required>
                         </div>
 
-                        {{-- Phone Number --}}
+                        {{-- Phone --}}
                         <div class="col-md-6">
-                            <label for="phone_number" class="form-label">Phone Number</label>
-                            <input type="text" class="form-control rounded-0" id="phone_number"
-                                   value="{{ auth()->user()->phone_number ?? '' }}">
+                            <label for="phone" class="form-label">Phone</label>
+                            <input type="text" class="form-control rounded-0" id="phone" name="phone"
+                                   value="{{ auth()->user()->phone ?? '' }}">
                         </div>
 
                         {{-- Company --}}
                         <div class="col-md-6">
                             <label for="company" class="form-label">Company</label>
-                            <input type="text" class="form-control rounded-0" id="company"
-                                   value="{{ auth()->user()->company ?? '' }}">
+                            <input type="text" class="form-control rounded-0" id="company" name="company"
+                                   value="{{ auth()->user()->company_name ?? '' }}">
                         </div>
 
                         {{-- City --}}
                         <div class="col-md-6">
                             <label for="city" class="form-label">City</label>
-                            <input type="text" class="form-control rounded-0" id="city"
+                            <input type="text" class="form-control rounded-0" id="city" name="city"
                                    value="{{ auth()->user()->city ?? '' }}">
+                        </div>
+
+                        {{-- Address --}}
+                        <div class="col-md-12">
+                            <label for="address" class="form-label">Address</label>
+                            <input type="text" class="form-control rounded-0" id="address" name="address"
+                                   value="{{ auth()->user()->address ?? '' }}">
+                        </div>
+
+                        {{-- Postal --}}
+                        <div class="col-md-6">
+                            <label for="postal" class="form-label">Postal Code</label>
+                            <input type="text" class="form-control rounded-0" id="postal" name="postal"
+                                   value="{{ auth()->user()->postal ?? '' }}">
+                        </div>
+
+                        {{-- Status --}}
+                        <div class="col-md-6">
+                            <label for="status" class="form-label">Status</label>
+                            <select class="form-control rounded-0" id="status" name="status">
+                                <option value="active" {{ auth()->user()->status=='active' ? 'selected' : '' }}>Active</option>
+                                <option value="inactive" {{ auth()->user()->status=='inactive' ? 'selected' : '' }}>Inactive</option>
+                                <option value="suspended" {{ auth()->user()->status=='suspended' ? 'selected' : '' }}>Suspended</option>
+                                <option value="disabled" {{ auth()->user()->status=='disabled' ? 'selected' : '' }}>Disabled</option>
+                            </select>
+                        </div>
+
+                        {{-- Support Tier --}}
+                        <div class="col-md-6">
+                            <label for="support_tier" class="form-label">Support Tier</label>
+                            <input type="text" class="form-control rounded-0" id="support_tier" name="support_tier"
+                                   value="{{ auth()->user()->support_tier ?? '' }}">
+                        </div>
+
+                        {{-- Support Tier Description --}}
+                        <div class="col-md-6">
+                            <label for="support_tier_description" class="form-label">Support Tier Description</label>
+                            <input type="text" class="form-control rounded-0" id="support_tier_description" name="support_tier_description"
+                                   value="{{ auth()->user()->support_tier_description ?? '' }}">
+                        </div>
+
+                        {{-- Company Phone --}}
+                        <div class="col-md-6">
+                            <label for="company_phone_number" class="form-label">Company Phone</label>
+                            <input type="text" class="form-control rounded-0" id="company_phone_number" name="company_phone_number"
+                                   value="{{ auth()->user()->company_phone_number ?? '' }}">
+                        </div>
+
+                        {{-- Company URL --}}
+                        <div class="col-md-6">
+                            <label for="company_url" class="form-label">Company URL</label>
+                            <input type="text" class="form-control rounded-0" id="company_url" name="company_url"
+                                   value="{{ auth()->user()->company_url ?? '' }}">
+                        </div>
+
+                        {{-- Company Established Date --}}
+                        <div class="col-md-6">
+                            <label for="company_established_date" class="form-label">Company Established Date</label>
+                            <input type="date" class="form-control rounded-0" id="company_established_date" name="company_established_date"
+                                   value="{{ auth()->user()->company_established_date ?? '' }}">
+                        </div>
+
+                        {{-- Company Address --}}
+                        <div class="col-md-6">
+                            <label for="company_address" class="form-label">Company Address</label>
+                            <input type="text" class="form-control rounded-0" id="company_address" name="company_address"
+                                   value="{{ auth()->user()->company_address ?? '' }}">
+                        </div>
+
+                        {{-- VAT Number --}}
+                        <div class="col-md-6">
+                            <label for="vat_number" class="form-label">VAT Number</label>
+                            <input type="text" class="form-control rounded-0" id="vat_number" name="vat_number"
+                                   value="{{ auth()->user()->vat_number ?? '' }}">
+                        </div>
+
+                        {{-- Tax Number --}}
+                        <div class="col-md-6">
+                            <label for="tax_number" class="form-label">Tax Number</label>
+                            <input type="text" class="form-control rounded-0" id="tax_number" name="tax_number"
+                                   value="{{ auth()->user()->tax_number ?? '' }}">
                         </div>
 
                         {{-- Update Button --}}
