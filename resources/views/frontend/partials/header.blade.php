@@ -542,8 +542,8 @@
                                 Subscriptions</a>
                         </li>
                         <li>
-                            <i class="m-2 fa fa-star"></i>
-                            <a href="{{ route('client.favourites') }}" class="">My Favorites</a>
+                            <i class="fa fa-star m-2"></i>
+                            <a href="{{ route('favorites.index') }}" class="">My Favorites</a>
                         </li>
                         <li>
                             <i class="m-2 fa fa-list"></i>

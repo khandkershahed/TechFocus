@@ -6,7 +6,6 @@
 @section('content')
     <!--Banner -->
     @include('frontend.pages.client.partials.page_header')
-
     <div class="container">
         <div class="row my-5">
             <div class="col-lg-8 offset-lg-2">

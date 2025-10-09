@@ -29,8 +29,10 @@
                         <form action="{{ $userType === 'partner' ? route('plogin') : route('login') }}" method="POST" class="login-validation" novalidate>
                             @csrf
 
-                            {{-- Hidden user_type field --}}
+                            {{-- Hidden fields --}}
                             <input type="hidden" name="user_type" value="{{ $userType }}">
+                            <input type="hidden" name="redirect_to" value="{{ request()->query('redirect_to') }}">
+                            <input type="hidden" name="product_id" value="{{ request()->query('product_id') }}">
 
                             {{-- Email --}}
                             <div class="mb-3 mt-3">
