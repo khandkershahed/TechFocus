@@ -1,8 +1,7 @@
-
 <!-- Top Bar Start -->
 <section class="fixed-top main_header">
     <div class="container-fluid d-sm-none d-md-block" style="background-color: var(--secondary-deep-color)">
-        <div class="row text-white top-bar" style="background-color: var(--secondary-color)">
+        <div class="text-white row top-bar" style="background-color: var(--secondary-color)">
             <div class="empty-area"
                 style="background-color: var(--secondary-deep-color);
           clip-path: polygon(0 0, 96% 0%, 100% 120%, 0% 100%);">
@@ -11,18 +10,17 @@
                 <div class="container ps-0">
                     <div class="row ps-0">
                         <div class="col-lg-12 ps-0">
-                            <div class="d-flex justify-content-end align-items-center px-1">
+                            <div class="px-1 d-flex justify-content-end align-items-center">
                                 <!-- RFQ Link -->
                                 <div class="me-4" data-aos="fade-left">
                                     <a class="nav-link custom-nav" data-aos="fade-right" href="{{ route('rfq') }}">
                                         RFQ
                                     </a>
                                 </div>
-
                                 <!-- My Techfocus -->
                                 <div class="popover__wrapper">
                                     <a href="#">
-                                        <h2 class="popover__title mb-1 fw-bold" data-aos="fade-left">
+                                        <h2 class="mb-1 popover__title fw-bold" data-aos="fade-left">
                                             <span>
                                                 <i class="fa-solid fa-star-of-life"></i>
                                                 <span class="p-0 m-0" style="color: var(--primary-color)">My</span>
@@ -31,50 +29,50 @@
                                         </h2>
                                     </a>
                                     <div class="popover__content text-start">
-                                      @auth
-                                                <form method="POST" action="{{ route('logout') }}">
-                                                    @csrf
-                                                    <button type="submit" class="btn signin mb-2 rounded-0">Log Out</button>
-                                                </form>
-                                            @else
-                                                <!-- Client Login/Register -->
-                                                <a href="{{ route('login') }}" class="btn signin mb-2 rounded-0">Client Log In</a>
-                                                <div class="text-muted">
-                                                    First time here? 
-                                                    <a href="{{ route('register') }}" class="main-color">
-                                                        
-                                                        
-                                                        Sign Up</a>
-                                                </div>
+                                        @auth
+                                        <form method="POST" action="{{ route('logout') }}">
+                                            @csrf
+                                            <button type="submit" class="mb-2 btn signin rounded-0">Log Out</button>
+                                        </form>
+                                        @else
+                                        <!-- Client Login/Register -->
+                                        <a href="{{ route('login') }}" class="mb-2 btn signin rounded-0">Client Log In</a>
+                                        <div class="text-muted">
+                                            First time here?
+                                            <a href="{{ route('register') }}" class="main-color">
 
-                                                <!-- Partner Login/Register -->
-                                                <a href="{{ route('partner.login') }}" class="btn signin mb-2 rounded-0 mt-2">Partner Log In</a>
-                                             
-                                            @endauth
+
+                                                Sign Up</a>
+                                        </div>
+
+                                        <!-- Partner Login/Register -->
+                                        <a href="{{ route('partner.login') }}" class="mt-2 mb-2 btn signin rounded-0">Partner Log In</a>
+
+                                        @endauth
 
                                         <hr class="text-muted" />
-                                        <ul class="account p-0 text-muted text-start">
+                                        <ul class="p-0 account text-muted text-start">
                                             <li>
-                                                <i class="fa fa-user m-2"></i>
+                                                <i class="m-2 fa fa-user"></i>
                                                 <a href="{{ route('client.profile') }}" class="">My Profile</a>
                                             </li>
                                             <li>
-                                                <i class="fa fa-envelope m-2"></i>
+                                                <i class="m-2 fa fa-envelope"></i>
                                                 <a href="{{ route('client.subscription') }}" class="">My
                                                     Subscriptions</a>
                                             </li>
                                             <li>
-                                                <i class="fa fa-star m-2"></i>
+                                                <i class="m-2 fa fa-star"></i>
                                                 <a href="{{ route('client.favourites') }}" class="">My
                                                     Favorites</a>
                                             </li>
                                             <li>
-                                                <i class="fa fa-list m-2"></i>
+                                                <i class="m-2 fa fa-list"></i>
                                                 <a href="{{ route('client.requests') }}" class="">My Requests</a>
                                             </li>
                                         </ul>
                                         <hr class="text-muted" />
-                                        <ul class="account p-0 text-muted text-start" style="font-size: 7px">
+                                        <ul class="p-0 account text-muted text-start" style="font-size: 7px">
                                             <li>
                                                 Sign in to your manufacturer account
                                                 <a target="_blank" class="main-color">Manufacturer account</a>
@@ -86,6 +84,21 @@
                                         </ul>
                                     </div>
                                 </div>
+                                <!--  -->
+                                <div class="dropdown">
+                                    <button class="mx-3 dropdown-toggle" type="button" id="dropdownMenuButton1"
+                                        data-bs-toggle="dropdown" aria-expanded="false" data-aos="fade-left">
+                                        EUR - €
+                                    </button>
+                                    <ul class="dropdown-menu extra-dropdown" aria-labelledby="dropdownMenuButton1">
+                                        <li><a class="dropdown-item top-dropdown" href="#">USD - $</a></li>
+                                        <li><a class="dropdown-item top-dropdown" href="#">EUR - €</a></li>
+                                        <li><a class="dropdown-item top-dropdown" href="#">GBP - £</a></li>
+                                        <li><a class="dropdown-item top-dropdown" href="#">JPY - ¥</a></li>
+                                        <li><a class="dropdown-item top-dropdown" href="#">INR - ₹</a></li>
+                                    </ul>
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -95,10 +108,10 @@
     </div>
 
     <!-- Top Bar End -->
-    <nav class="navbar navbar-expand-lg navbar-dark main-menu px-3">
+    <nav class="px-3 navbar navbar-expand-lg navbar-dark main-menu">
         <div class="container-fluid">
             <!-- Logo Start -->
-            <a class="navbar-brand mb-0" href="{{ route('homepage') }}" data-aos="fade-right">
+            <a class="mb-0 navbar-brand" href="{{ route('homepage') }}" data-aos="fade-right">
                 <img src="{{ !empty($site->system_logo_white) && file_exists(public_path('storage/webSetting/systemLogoWhite/' . $site->system_logo_white)) ? asset('storage/webSetting/systemLogoWhite/' . $site->system_logo_white) : asset('backend/images/no-image-available.png') }}"
                     height="60px" alt="TechFocus" />
             </a>
@@ -114,7 +127,7 @@
                         </a>
                         <div class="dropdown-menu menu-dropdown" aria-labelledby="navbarDropdown">
                             <div class="container">
-                                <div class="row my-5 gx-3">
+                                <div class="my-5 row gx-3">
                                     <div class="col-lg-3">
                                         <div>
                                             <img class="img-fluid header-side-banner"
@@ -272,7 +285,7 @@
                         </a>
                         <div class="dropdown-menu menu-dropdown" aria-labelledby="navbarDropdown">
                             <div class="container">
-                                <div class="row my-5 gx-3">
+                                <div class="my-5 row gx-3">
                                     <div class="col-lg-3">
                                         <div>
                                             <img class="img-fluid header-side-banner"
@@ -422,20 +435,20 @@
                     </li>
                 </ul>
                 <!-- Search Box Start -->
-            <!-- Search Box Start -->
-                 <div class="ms-auto">
-    <form action="{{ route('search.products') }}" method="GET" class="d-flex">
-        <!-- Input field -->
-        <input type="text" name="q" class="form-control me-2 border-primary text-primary" placeholder="Search products..." required>
-        
-        <!-- Submit button -->
-        <button type="submit" class="btn btn-primary">
-            <i class="fas fa-search"></i>
-        </button>
-    </form>
-</div>
+                <!-- Search Box Start -->
+                <div class="ms-auto">
+                    <form action="{{ route('search.products') }}" method="GET" class="d-flex">
+                        <!-- Input field -->
+                        <input type="text" name="q" class="form-control me-2 border-primary text-primary" placeholder="Search products..." required>
 
-                                 
+                        <!-- Submit button -->
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </form>
+                </div>
+
+
                 <!-- Search Box End -->
                 <!-- Search Box End -->
             </div>
@@ -443,10 +456,10 @@
     </nav>
 </section>
 
- <section class="fixed-top mobile_header">
+<section class="fixed-top mobile_header">
     <div class="container px-0">
         <div class="mobile_top_bar">
-            <div class="d-flex justify-content-end align-items-center px-1" data-aos="fade-right">
+            <div class="px-1 d-flex justify-content-end align-items-center" data-aos="fade-right">
                 <div class="dropdown">
                     <button class="dropdown-toggle me-4" type="button" id="dropdownMenuButton1"
                         data-bs-toggle="dropdown" aria-expanded="false" data-aos="fade-left">
@@ -496,7 +509,7 @@
             </div>
             <div class="popover__wrapper me-5" data-aos="fade-left">
                 <a href="#">
-                    <h2 class="popover__title mb-1 fw-bold" data-aos="fade-left">
+                    <h2 class="mb-1 popover__title fw-bold" data-aos="fade-left">
                         <span>
                             <i class="fa-solid fa-star-of-life"></i>
                             <span class="p-0 m-0" style="color: var(--primary-color)">My</span>
@@ -506,39 +519,39 @@
                 </a>
                 <div class="popover__content text-start">
                     @auth
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button type="submit" class="btn signin mb-2 rounded-0">Log Out</button>
-                        </form>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="mb-2 btn signin rounded-0">Log Out</button>
+                    </form>
                     @else
-                        <a href="{{ route('login') }}" class="btn signin mb-2 rounded-0">Log In</a>
-                        <div class="text-muted">
-                            First time here?
-                            <a href="{{ route('register') }}" class="main-color">Sign Up</a>
-                        </div>
+                    <a href="{{ route('login') }}" class="mb-2 btn signin rounded-0">Log In</a>
+                    <div class="text-muted">
+                        First time here?
+                        <a href="{{ route('register') }}" class="main-color">Sign Up</a>
+                    </div>
                     @endauth
                     <hr class="text-muted" />
-                    <ul class="account p-0 text-muted text-start">
+                    <ul class="p-0 account text-muted text-start">
                         <li>
-                            <i class="fa fa-user m-2"></i>
+                            <i class="m-2 fa fa-user"></i>
                             <a href="{{ route('client.profile') }}" class="">My Profile</a>
                         </li>
                         <li>
-                            <i class="fa fa-envelope m-2"></i>
+                            <i class="m-2 fa fa-envelope"></i>
                             <a href="{{ route('client.subscription') }}" class="">My
                                 Subscriptions</a>
                         </li>
                         <li>
-                            <i class="fa fa-star m-2"></i>
+                            <i class="m-2 fa fa-star"></i>
                             <a href="{{ route('client.favourites') }}" class="">My Favorites</a>
                         </li>
                         <li>
-                            <i class="fa fa-list m-2"></i>
+                            <i class="m-2 fa fa-list"></i>
                             <a href="{{ route('client.requests') }}" class="">My Requests</a>
                         </li>
                     </ul>
                     <hr class="text-muted" />
-                    <ul class="account p-0 text-muted text-start" style="font-size: 7px">
+                    <ul class="p-0 account text-muted text-start" style="font-size: 7px">
                         <li>
                             Sign in to your manufacturer account
                             <a target="_blank" class="main-color">Manufacturer account</a>
@@ -553,9 +566,9 @@
         </div>
         <div class="mobile_nav_bar">
             <div class="text-start">
-                <a class="navbar-brand mb-0" href="{{ route('homepage') }}" data-aos="fade-right">
+                <a class="mb-0 navbar-brand" href="{{ route('homepage') }}" data-aos="fade-right">
                     <img src="{{ !empty($site->system_logo_white) && file_exists(public_path('storage/webSetting/systemLogoWhite/' . $site->system_logo_white)) ? asset('storage/webSetting/systemLogoWhite/' . $site->system_logo_white) : asset('backend/images/no-image-available.png') }}"
-                        height="60px" alt="TechFocus" style="margin: 7px 6px;"/ />
+                        height="60px" alt="TechFocus" style="margin: 7px 6px;" / />
                 </a>
             </div>
             <div data-aos="fade-left">
@@ -589,7 +602,7 @@
                                             <div class="container">
                                                 <div class="row">
                                                     <div class="col-md-4">
-                                                        <span class="text-uppercase text-white">Category 1</span>
+                                                        <span class="text-white text-uppercase">Category 1</span>
                                                         <ul class="nav flex-column">
                                                             <li class="nav-item">
                                                                 <a class="nav-link custom-nav active"
@@ -656,7 +669,7 @@
                                             <div class="container">
                                                 <div class="row">
                                                     <div class="col-md-4">
-                                                        <span class="text-uppercase text-white">Category 2</span>
+                                                        <span class="text-white text-uppercase">Category 2</span>
                                                         <ul class="nav flex-column">
                                                             <li class="nav-item">
                                                                 <a class="nav-link custom-nav active"
@@ -718,7 +731,7 @@
             </div>
         </div>
     </div>
-</section> 
+</section>
 
 
 
@@ -745,4 +758,17 @@
             }
         });
     }
+</script>
+
+<script>
+    // Get the button and all dropdown items
+    const currencyButton = document.getElementById('dropdownMenuButton1');
+    const currencyItems = document.querySelectorAll('.dropdown-item.top-dropdown');
+
+    currencyItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault(); // Prevent default link behavior
+            currencyButton.textContent = this.textContent; // Update button text
+        });
+    });
 </script>

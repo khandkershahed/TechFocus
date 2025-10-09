@@ -35,7 +35,7 @@
         <div class="modalPopup">
             <div class="row headerBar align-items-center">
                 <div class="col-2"></div>
-                <div class="col-8 text-center">
+                <div class="text-center col-8">
                     <h1 class="modalh1">Attention</h1>
                 </div>
                 <div class="col-2 text-end">
@@ -56,8 +56,8 @@
     {{-- <button class="btn btn-primary custom-sticky-button w-100 rounded-0" id="stickyButton" type="button"
         data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom">
         <div class="d-flex align-items-center justify-content-center">
-            <p class="m-0 p-0 me-2">1/10 products to compare</p>
-            <p class="m-0 p-2" style="background-color: var(--secondary-color)">Compare</p>
+            <p class="p-0 m-0 me-2">1/10 products to compare</p>
+            <p class="p-2 m-0" style="background-color: var(--secondary-color)">Compare</p>
         </div>
     </button>
 
@@ -65,9 +65,9 @@
         style="background-color: var(--secondary-color);">
         <div class="offcanvas-header">
             <div class="text-center">
-                <p class="m-0 p-0 me-2 text-white">1/10 products to compare</p>
+                <p class="p-0 m-0 text-white me-2">1/10 products to compare</p>
             </div>
-            <button type="button" class="btn-close bg-white rounded-0" data-bs-dismiss="offcanvas"
+            <button type="button" class="bg-white btn-close rounded-0" data-bs-dismiss="offcanvas"
                 aria-label="Close"></button>
         </div>
         <div class="offcanvas-body small">
@@ -101,6 +101,7 @@
     <!-- *********************************Script Start***********************************-->
     @include('frontend.partials.script')
     <script src="https://swc.cdn.skype.com/sdk/v1/sdk.min.js"></script>
+    
     <script>
         $(document).ready(function() {
             $('.compare-card').slick({
@@ -127,7 +128,7 @@
             });
         });
     </script>
-    <script>
+    <!-- <script>
         window.onload = function() {
             // Add a click event listener to the modalOverlay
             document.getElementById('modalOverlay').addEventListener('click', function(event) {
@@ -143,7 +144,7 @@
                 document.getElementById('modalOverlay').style.display = 'none';
             }
         };
-    </script>
+    </script> -->
 
     <!-- *********************************Script End***********************************-->
 </body>

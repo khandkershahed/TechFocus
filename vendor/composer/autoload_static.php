@@ -349,13 +349,13 @@ class ComposerStaticInit477449c53aa665b91ea8dae4c20eebd4
         ),
         'Spatie\\LaravelIgnition\\' => 
         array (
-            0 => __DIR__ . '/..' . '/spatie/error-solutions/legacy/laravel-ignition',
-            1 => __DIR__ . '/..' . '/spatie/laravel-ignition/src',
+            0 => __DIR__ . '/..' . '/spatie/laravel-ignition/src',
+            1 => __DIR__ . '/..' . '/spatie/error-solutions/legacy/laravel-ignition',
         ),
         'Spatie\\Ignition\\' => 
         array (
-            0 => __DIR__ . '/..' . '/spatie/error-solutions/legacy/ignition',
-            1 => __DIR__ . '/..' . '/spatie/ignition/src',
+            0 => __DIR__ . '/..' . '/spatie/ignition/src',
+            1 => __DIR__ . '/..' . '/spatie/error-solutions/legacy/ignition',
         ),
         'Spatie\\FlareClient\\' => 
         array (
@@ -649,6 +649,8 @@ class ComposerStaticInit477449c53aa665b91ea8dae4c20eebd4
         'App\\Http\\Controllers\\Auth\\EmailVerificationNotificationController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/EmailVerificationNotificationController.php',
         'App\\Http\\Controllers\\Auth\\EmailVerificationPromptController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/EmailVerificationPromptController.php',
         'App\\Http\\Controllers\\Auth\\NewPasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/NewPasswordController.php',
+        'App\\Http\\Controllers\\Auth\\PartnerLoginController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/PartnerLoginController.php',
+        'App\\Http\\Controllers\\Auth\\PartnerRegisterController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/PartnerRegisterController.php',
         'App\\Http\\Controllers\\Auth\\PasswordResetLinkController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/PasswordResetLinkController.php',
         'App\\Http\\Controllers\\Auth\\RegisteredUserController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/RegisteredUserController.php',
         'App\\Http\\Controllers\\Auth\\VerifyEmailController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/VerifyEmailController.php',
@@ -673,6 +675,7 @@ class ComposerStaticInit477449c53aa665b91ea8dae4c20eebd4
         'App\\Http\\Controllers\\Marketing\\DmarController' => __DIR__ . '/../..' . '/app/Http/Controllers/Marketing/DmarController.php',
         'App\\Http\\Controllers\\Marketing\\EmarController' => __DIR__ . '/../..' . '/app/Http/Controllers/Marketing/EmarController.php',
         'App\\Http\\Controllers\\Marketing\\MarketingTargetController' => __DIR__ . '/../..' . '/app/Http/Controllers/Marketing/MarketingTargetController.php',
+        'App\\Http\\Controllers\\Partner\\DashboardController' => __DIR__ . '/../..' . '/app/Http/Controllers/Partner/DashboardController.php',
         'App\\Http\\Controllers\\Rfq\\DealController' => __DIR__ . '/../..' . '/app/Http/Controllers/Rfq/DealController.php',
         'App\\Http\\Controllers\\Rfq\\RfqController' => __DIR__ . '/../..' . '/app/Http/Controllers/Rfq/RfqController.php',
         'App\\Http\\Controllers\\Rfq\\RfqProductController' => __DIR__ . '/../..' . '/app/Http/Controllers/Rfq/RfqProductController.php',
@@ -752,7 +755,6 @@ class ComposerStaticInit477449c53aa665b91ea8dae4c20eebd4
         'App\\Models\\Admin\\BrandPage' => __DIR__ . '/../..' . '/app/Models/Admin/BrandPage.php',
         'App\\Models\\Admin\\Catalog' => __DIR__ . '/../..' . '/app/Models/Admin/Catalog.php',
         'App\\Models\\Admin\\CatalogAttachment' => __DIR__ . '/../..' . '/app/Models/Admin/CatalogAttachment.php',
-        'App\\Models\\Admin\\CatalogCategory' => __DIR__ . '/../..' . '/app/Models/Admin/CatalogCategory.php',
         'App\\Models\\Admin\\Category' => __DIR__ . '/../..' . '/app/Models/Admin/Category.php',
         'App\\Models\\Admin\\Company' => __DIR__ . '/../..' . '/app/Models/Admin/Company.php',
         'App\\Models\\Admin\\Contact' => __DIR__ . '/../..' . '/app/Models/Admin/Contact.php',
@@ -805,7 +807,7 @@ class ComposerStaticInit477449c53aa665b91ea8dae4c20eebd4
         'App\\Models\\Marketing\\Emar' => __DIR__ . '/../..' . '/app/Models/Marketing/Emar.php',
         'App\\Models\\Marketing\\MarketingManagerRole' => __DIR__ . '/../..' . '/app/Models/Marketing/MarketingManagerRole.php',
         'App\\Models\\Marketing\\MarketingTarget' => __DIR__ . '/../..' . '/app/Models/Marketing/MarketingTarget.php',
-        'App\\Models\\Rfq\\Rfq' => __DIR__ . '/../..' . '/app/Models/Rfq/Rfq.php',
+        'App\\Models\\Rfq' => __DIR__ . '/../..' . '/app/Models/Rfq.php',
         'App\\Models\\Rfq\\RfqProduct' => __DIR__ . '/../..' . '/app/Models/Rfq/RfqProduct.php',
         'App\\Models\\Sales\\SalesTeamTarget' => __DIR__ . '/../..' . '/app/Models/Sales/SalesTeamTarget.php',
         'App\\Models\\Sales\\SalesYearTarget' => __DIR__ . '/../..' . '/app/Models/Sales/SalesYearTarget.php',
