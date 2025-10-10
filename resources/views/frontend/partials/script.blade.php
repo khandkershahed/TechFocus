@@ -7,7 +7,9 @@
     integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous">
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-<script src="{{ asset('frontend/assets/js/plugin/jquery.min.js') }}"></script>
+<!-- <script src="{{ asset('frontend/assets/js/plugin/jquery.min.js') }}"></script> -->
+ <!-- jQuery -->
+<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
 <script src="{{ asset('frontend/assets/js/plugin/swiper-bundle.min.js') }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.js"></script>
 <script src="{{ asset('frontend/assets/js/plugin/aos@2.3.1.js') }}"></script>

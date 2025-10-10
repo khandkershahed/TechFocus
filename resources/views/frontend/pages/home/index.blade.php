@@ -46,12 +46,11 @@
                 @php
                     $chunks = $categories->chunk(4); // Split into 3 chunks of 4 items each
                 @endphp
-
-                <div class="col-lg-12">
+                <div class="px-0 col-lg-12 px-lg-0">
                     <div class="container">
                         <div class="pt-4 row">
                             @foreach ($chunks as $chunkKey => $chunk)
-                                <div class="col-md-4 {{ $chunkKey == 0 ? 'pe-3' : 'pe-3' }}">
+                                <div class="col-md-4  {{ $chunkKey == 0 ? 'pe-0 ps-0' : 'pe-0' }}">
                                     @foreach ($chunk as $key => $category)
                                         <div class="accordion accordion-flush"
                                             id="accordionFlushExample-{{ $chunkKey }}-{{ $key }}">
@@ -104,11 +103,10 @@
                         </div>
                     </div>
                 </div>
-
             </div>
             <div>
                 <div class="mt-1 mb-3 row">
-                    <div class="col-lg-12">
+                    <div class="col-lg-12 ">
                         <div class="devider-wrap">
                             <h4 class="devider-content">
                                 <span class="devider-text">WHAT WE DO</span>
