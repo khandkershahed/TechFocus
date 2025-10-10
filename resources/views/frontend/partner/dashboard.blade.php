@@ -4,6 +4,7 @@
 @endsection
 
 @section('content')
+   @include('frontend.pages.client.partials.page_header')
 <div class="container my-5">
     <div class="row justify-content-center">
         <div class="col-lg-10">

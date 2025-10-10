@@ -98,4 +98,9 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $this->attributes['password'] = \Hash::needsRehash($value) ? \Hash::make($value) : $value;
     }
+
+        public function favourites()
+    {
+        return $this->hasMany(Favorite::class, 'user_id', 'id');
+    }
 }

@@ -89,6 +89,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
 Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('login.submit');
 
+
 // Logout Route
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
@@ -132,4 +133,37 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Logout
     Route::post('/client/logout', [ClientController::class, 'logout'])->name('client.logout');
+});
+
+//add favourite 
+use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\CompareController;
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');
+    Route::post('/favorites/{product}', [FavoriteController::class, 'store'])->name('favorites.store');
+    Route::delete('/favorites/{product}', [FavoriteController::class, 'destroy'])->name('favorites.destroy');
+});
+
+// Route::get('/client/favourites', [ClientController::class, 'favourites'])->name('client.favourites');
+Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
+
+// // Add a product to comparison
+// Route::get('/compare/add/{id}', [App\Http\Controllers\CompareController::class, 'add'])->name('products.compare.add');
+
+// // Remove a product from comparison
+// Route::get('/compare/remove/{id}', [App\Http\Controllers\CompareController::class, 'remove'])->name('products.compare.remove');
+
+// // Show comparison page
+// // Route::get('/compare', [App\Http\Controllers\CompareController::class, 'index'])
+// //     ->name('products.compare.index');
+
+// Route::get('/compare/result', [CompareController::class, 'result'])->name('products.compare.result');
+Route::prefix('compare')->group(function () {
+    Route::get('/', [CompareController::class, 'index'])->name('products.compare.index');
+    Route::get('/add/{id}', [CompareController::class, 'add'])->name('products.compare.add');
+    Route::get('/remove/{id}', [CompareController::class, 'remove'])->name('products.compare.remove');
+    Route::get('/result', [CompareController::class, 'result'])->name('products.compare.result');
+    Route::get('/clear', [CompareController::class, 'clear'])->name('products.compare.clear');
 });

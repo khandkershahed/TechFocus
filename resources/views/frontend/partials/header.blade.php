@@ -530,7 +530,7 @@
                         </li>
                         <li>
                             <i class="fa fa-star m-2"></i>
-                            <a href="{{ route('client.favourites') }}" class="">My Favorites</a>
+                            <a href="{{ route('favorites.index') }}" class="">My Favorites</a>
                         </li>
                         <li>
                             <i class="fa fa-list m-2"></i>

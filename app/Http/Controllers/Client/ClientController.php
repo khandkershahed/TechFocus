@@ -130,4 +130,19 @@ class ClientController extends Controller
             abort(403, 'Unauthorized access.');
         }
     }
+    /**
+ * Show Client Favourites Page
+ */
+public function favourites()
+{
+    $this->authorizeClient(); // Make sure only clients can access it
+    $user = Auth::user();
+
+    // Example: if you have a Favourite model related to User
+    // $favourites = $user->favourites; // if relationship exists in User model
+
+    // For now, just show an empty view or static page
+    return view('frontend.pages.client.favourites', compact('user'));
+}
+
 }

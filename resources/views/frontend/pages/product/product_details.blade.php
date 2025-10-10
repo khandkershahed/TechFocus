@@ -127,15 +127,45 @@
                                     </p>
                                 </div>
                                 <!-- Others Button -->
-                                <div class="mt-4 d-flex main-color">
-                                    <a href="">
-                                        <i class="fa-solid fa-heart me-1"></i> Add to
-                                        favorites</a>
-                                    <span class="ms-2 me-2">|</span>
-                                    <a href=""><i class="fa-solid fa-table-columns me-1"></i> Compare
-                                        this product</a>
-                                </div>
+            <div class="mt-4 d-flex main-color">
+                                            @auth
+                            <form action="{{ route('favorites.store', $product->id) }}" method="POST" class="me-2">
+                                @csrf
+                                <button type="submit" class="btn btn-link p-0 text-decoration-none main-color">
+                                    <i class="fa-solid fa-heart me-1"></i>
+                                    @if(Auth::user()->favourites->contains('product_id', $product->id))
+                                        Added to Favorites
+                                    @else
+                                        Add to Favorites
+                                    @endif
+                                </button>
+                            </form>
+                        @else
+                            <div class="dropdown me-2">
+                                <a class="btn btn-link dropdown-toggle p-0 text-decoration-none main-color" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fa-solid fa-heart me-1"></i> Add to Favorites
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('login', ['type' => 'client', 'redirect_to' => url()->current(), 'product_id' => $product->id]) }}">
+                                            Login as Client
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('partner.login', ['type' => 'partner', 'redirect_to' => url()->current(), 'product_id' => $product->id]) }}">
+                                            Login as Partner
+                                        </a>
+                                    </li>
+                                </ul>
                             </div>
+                        @endauth
+                        <div class="mt-4 d-flex main-color">
+                                <a href="{{ route('products.compare.add', $product->id) }}" class="text-decoration-none main-color me-2">
+                                    <i class="fa-solid fa-table-columns me-1"></i> Compare this product
+                                </a>
+                            </div>
+
+
                         </div>
                     </div>
                 </div>
