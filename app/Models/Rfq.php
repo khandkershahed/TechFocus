@@ -9,11 +9,6 @@ class Rfq extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'rfq_code',
         'salesman_id',
@@ -88,16 +83,7 @@ class Rfq extends Model
         'deal_code',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
     protected $casts = [
-        'category' => 'array',
-        'brand' => 'array',
-        'industry' => 'array',
-        'solution' => 'array',
         'create_date' => 'date',
         'close_date' => 'date',
         'sale_date' => 'date',
@@ -107,6 +93,10 @@ class Rfq extends Model
         'quoted_price' => 'double',
         'budget' => 'double',
         'qty' => 'integer',
+        'category' => 'array',
+        'brand' => 'array',
+        'industry' => 'array',
+        'solution' => 'array',
     ];
 
     /**

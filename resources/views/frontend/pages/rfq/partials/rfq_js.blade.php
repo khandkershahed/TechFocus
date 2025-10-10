@@ -450,4 +450,30 @@
 
     // Run check on page load too
     checkProductName();
+
+
+    ///iamge section 
+
+    document.getElementById('mainForm').addEventListener('submit', function(e){
+    e.preventDefault(); // prevent normal submission
+    const form = this;
+    const formData = new FormData(form);
+
+    // Append selected images from modal
+    selectedImages.forEach((file, index) => {
+        formData.append(`contacts[${index}][image]`, file);
+    });
+
+    fetch(form.action, {
+        method: 'POST',
+        body: formData,
+    })
+    .then(res => res.json())
+    .then(data => {
+        console.log('Submitted:', data);
+        alert('Form submitted successfully!');
+    })
+    .catch(err => console.error(err));
+});
+
 </script>

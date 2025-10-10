@@ -52,7 +52,7 @@ Route::get('/news/{slug}', [SiteController::class, 'newsDetails'])->name('news.d
 
 Route::get('/product-details/{slug}', [SiteController::class, 'productDetails'])->name('product.product_details');
 
-Route::post('/rfq/submit', [RfqController::class, 'store'])->name('rfq.submit');
+//  Route::post('/rfq/submit', [RfqController::class, 'store'])->name('rfq.submit');
 
 // Cart routes
 Route::get('/cart/count', [CartController::class, 'getCartCount'])->name('cart.count');
@@ -60,14 +60,21 @@ Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add')
 Route::get('/cart/debug', [CartController::class, 'debugCart'])->name('cart.debug');
 Route::get('/cart/view', [CartController::class, 'viewCart'])->name('cart.view');
 
-// rfq
 
 
-// Show the RFQ form
+
+// Show RFQ form
 Route::get('/rfq/create', [RfqController::class, 'create'])->name('rfq.create');
 
-// Handle RFQ submission
-Route::post('/rfq/store', [RfqController::class, 'store'])->name('rfq.store');
+// Handle RFQ submission - KEEP ONLY THIS ONE
+Route::post('/rfq/store', [App\Http\Controllers\Rfq\RfqController::class, 'store'])->name('rfq.store');
+
+
+
+Route::post('/rfq/upload-image', [RfqController::class, 'uploadImage'])->name('rfq.uploadImage');
+
+// REMOVE OR COMMENT OUT THIS DUPLICATE:
+// Route::post('/rfq/submit', [RfqController::class, 'store'])->name('rfq.submit');
 //partner log in 
 use App\Http\Controllers\Auth\PartnerLoginController;
 use App\Http\Controllers\Partner\DashboardController;

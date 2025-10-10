@@ -50,7 +50,7 @@
                     </div>
                     <div class="p-3 card-body p-lg-4">
 
-                        <form id="stepperForm" action="" method="post"
+                        <form id="stepperForm" action="{{ route('rfq.store') }}" method="post"
                             enctype="multipart/form-data">
                             @csrf
                             <!-- ✅ Repeater goes here as you said -->
@@ -162,35 +162,37 @@
                                             <i class="fas fa-plus"></i> Add Items
                                         </button>
                                         <div>
-                                            <!-- Button to trigger modal -->
-                                            <button type="button" class="bg-transparent border-0 modal-text-btn" data-bs-toggle="modal" data-bs-target="#rfqModal">
-                                                Upload RFQ/Tender Images
-                                            </button>
+<!-- Button to trigger modal -->
+<button type="button" class="bg-transparent border-0 modal-text-btn" data-bs-toggle="modal" data-bs-target="#rfqModal">
+    Upload RFQ/Tender Images
+</button>
 
-                                            <!-- Modal -->
-                                            <div class="modal fade" id="rfqModal" tabindex="-1" aria-labelledby="rfqModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog modal-dialog-centered">
-                                                    <div class="border-0 modal-content rounded-0">
-                                                        <div class="py-2 modal-header bg-light">
-                                                            <h1 class="modal-title fs-5" id="rfqModalLabel">Upload RFQ/Tender Images</h1>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                        </div>
-                                                        <!-- Modal Body -->
-                                                        <div class="p-5 modal-body">
-                                                            <div class="row">
-                                                                <div class="col-lg-12">
-                                                                    <div class="mb-3">
-                                                                        <input type="file" class="form-control file-input">
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <p class="text-sm text-danger warning-text" style="display:none;">
-                                                                You must input product name in item Box.
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+<!-- Modal -->
+<div class="modal fade" id="rfqModal" tabindex="-1" aria-labelledby="rfqModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="border-0 modal-content rounded-0">
+            <div class="py-2 modal-header bg-light">
+                <h1 class="modal-title fs-5" id="rfqModalLabel">Upload RFQ/Tender Images</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <!-- Modal Body -->
+            <div class="p-5 modal-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="mb-3">
+                            <input type="file" class="form-control file-input" multiple>
+                        </div>
+                    </div>
+                </div>
+                <div id="imagePreview" class="d-flex flex-wrap gap-2 mb-2"></div>
+                <p class="text-sm text-danger warning-text" style="display:none;">
+                    You must input product name in item Box.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
                                         </div>
 
                                     </div>
