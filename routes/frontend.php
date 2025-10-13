@@ -156,17 +156,6 @@ Route::middleware(['auth'])->group(function () {
 // Route::get('/client/favourites', [ClientController::class, 'favourites'])->name('client.favourites');
 Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
 
-// // Add a product to comparison
-// Route::get('/compare/add/{id}', [App\Http\Controllers\CompareController::class, 'add'])->name('products.compare.add');
-
-// // Remove a product from comparison
-// Route::get('/compare/remove/{id}', [App\Http\Controllers\CompareController::class, 'remove'])->name('products.compare.remove');
-
-// // Show comparison page
-// // Route::get('/compare', [App\Http\Controllers\CompareController::class, 'index'])
-// //     ->name('products.compare.index');
-
-// Route::get('/compare/result', [CompareController::class, 'result'])->name('products.compare.result');
 Route::prefix('compare')->group(function () {
     Route::get('/', [CompareController::class, 'index'])->name('products.compare.index');
     Route::get('/add/{id}', [CompareController::class, 'add'])->name('products.compare.add');
@@ -174,3 +163,4 @@ Route::prefix('compare')->group(function () {
     Route::get('/result', [CompareController::class, 'result'])->name('products.compare.result');
     Route::get('/clear', [CompareController::class, 'clear'])->name('products.compare.clear');
 });
+

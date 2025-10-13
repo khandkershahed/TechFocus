@@ -1,26 +1,22 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
+namespace App\Models\Admin;
 
-return new class extends Migration
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class CatalogCategory extends Model
 {
-    public function up(): void
-    {
-        Schema::create('catalog_categories', function (Blueprint $table) {
-            $table->id('category_id');
-            $table->string('name');
-            $table->string('slug')->nullable();
-            $table->text('description')->nullable();
-            $table->string('image')->nullable();
-            $table->boolean('status')->default(true);
-            $table->timestamps();
-        });
-    }
+    use HasFactory;
 
-    public function down(): void
+    protected $table = 'catalog_categories';
+    protected $primaryKey = 'category_id'; 
+    public $incrementing = true;
+    protected $guarded = [];
+
+    // Relationship back to Category
+    public function category()
     {
-        Schema::dropIfExists('catalog_categories');
+        return $this->belongsTo(Category::class, 'category_id', 'category_id');
     }
-};
+}

@@ -15,6 +15,10 @@
 
                     <a href="../../demo1/dist/.html" class="btn btn-sm btn-primary" data-bs-toggle="modal"
                         data-bs-target="#kt_modal_create_app">Create</a>
+                      <a href="{{ route('page_banners.index') }}" class="btn btn-primary">
+                    View All Page Banners
+                </a>
+
                 </div>
             </div>
         </div>

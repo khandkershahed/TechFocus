@@ -328,3 +328,20 @@ Route::prefix('administrator')->name('admin.')->group(static function () {
 });
 
 
+use App\Http\Controllers\PageBannerController;
+
+Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
+    // List
+    Route::get('page-banners', [PageBannerController::class, 'index'])->name('page_banners.index');
+
+    // Create
+    Route::get('page-banners/create', [PageBannerController::class, 'create'])->name('page_banners.create');
+    Route::post('page-banners', [PageBannerController::class, 'store'])->name('page_banners.store');
+
+    // Edit / Update
+    Route::get('page-banners/{pageBanner}/edit', [PageBannerController::class, 'edit'])->name('page_banners.edit');
+    Route::put('page-banners/{pageBanner}', [PageBannerController::class, 'update'])->name('page_banners.update');
+
+    // Delete
+    Route::delete('page-banners/{pageBanner}', [PageBannerController::class, 'destroy'])->name('page_banners.destroy');
+});

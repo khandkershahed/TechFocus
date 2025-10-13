@@ -60,6 +60,7 @@ use App\Repositories\Interfaces\ProductAttributeRepositoryInterface;
 use App\Repositories\Interfaces\EmployeeDepartmentRepositoryInterface;
 use App\Repositories\Interfaces\PolicyAcknowledgmentRepositoryInterface;
 
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -94,6 +95,7 @@ class AppServiceProvider extends ServiceProvider
             SeoRepositoryInterface::class => SeoRepository::class,
             FaqRepositoryInterface::class => FaqRepository::class,
             BankingRepositoryInterface::class => BankingRepository::class,
+            
         ];
 
         foreach ($bindings as $interface => $implementation) {
@@ -129,7 +131,14 @@ class AppServiceProvider extends ServiceProvider
         } catch (Exception $e) {
             // Log the exception if needed
         }
+          // Pass default banner to all views
+    View::composer('*', function ($view) {
+        $view->with('banner', null); // default null
+    });
 
         Paginator::useBootstrap();
     }
+
+
+
 }

@@ -3,6 +3,8 @@
 namespace App\Models\Admin;
 
 use App\Traits\HasSlug;
+use App\Models\Admin\Product;
+use App\Models\Admin\CatalogCategory;
 use Wildside\Userstamps\Userstamps;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -37,7 +39,6 @@ class Category extends Model
 
     public function catalogs()
     {
-        return $this->hasMany(CatalogCategory::class, 'category_id');
+        return $this->hasMany(CatalogCategory::class, 'category_id', 'category_id');
     }
-
 }

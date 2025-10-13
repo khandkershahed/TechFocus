@@ -3,21 +3,31 @@
 @endsection
 @section('content')
     <!--Banner -->
-    <div class="swiper bannerSwiper">
-        <div class="swiper-wrapper">
-            <div class="swiper-slide">
-                <img src="https://i.ibb.co/TvqFnbV/54658v1.jpg" class="img-fluid" alt="" />
-            </div>
-            <div class="swiper-slide">
-                <img src="https://i.ibb.co/ZhLgfWB/54490v1-1.jpg" class="img-fluid" alt="" />
-            </div>
-            <div class="swiper-slide">
-                <img src="https://i.ibb.co/ZhLgfWB/54490v1-1.jpg" class="img-fluid" alt="" />
-            </div>
-        </div>
-        <div class="swiper-pagination"></div>
-    </div>
-
+    <section class="ban_sec section_one">
+        <div class="p-0 container-fluid">
+            <div class="ban_img">
+                @if($banners->count() > 0)
+                    <div class="swiper bannerSwiper">
+                        <div class="swiper-wrapper">
+                            @foreach($banners as $banner)
+                                @if($banner->image)
+                                    <div class="swiper-slide">
+                                        <a href="{{ $banner->banner_link ?? '#' }}">
+                                            <img src="{{ asset('uploads/page_banners/' . $banner->image) }}"
+                                                 class="img-fluid"
+                                                 alt="{{ $banner->title ?? 'Banner' }}"
+                                                 onerror="this.onerror=null;this.src='{{ asset('frontend/images/no-banner(1920-330).png') }}';" />
+                                        </a>
+                                    </div>
+                                @endif
+                            @endforeach
+                        </div>
+                    </div>
+                @else
+                    <img src="{{ asset('frontend/images/no-banner(1920-330).png') }}"
+                         class="img-fluid"
+                         alt="No Banner">
+                @endif
     <!-- content start -->
     <div class="container my-4">
         <div class="row align-items-center">

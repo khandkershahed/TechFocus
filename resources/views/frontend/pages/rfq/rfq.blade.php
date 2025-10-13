@@ -4,6 +4,34 @@
 @endsection
 <!-- Main Content Section Start Here -->
 @section('content')
+
+    {{-- Banner Section --}}
+    <section class="ban_sec section_one">
+        <div class="p-0 container-fluid">
+            <div class="ban_img">
+                @if($banners->count() > 0)
+                    <div class="swiper bannerSwiper">
+                        <div class="swiper-wrapper">
+                            @foreach($banners as $banner)
+                                @if($banner->image)
+                                    <div class="swiper-slide">
+                                        <a href="{{ $banner->banner_link ?? '#' }}">
+                                            <img src="{{ asset('uploads/page_banners/' . $banner->image) }}"
+                                                 class="img-fluid"
+                                                 alt="{{ $banner->title ?? 'Banner' }}"
+                                                 onerror="this.onerror=null;this.src='{{ asset('frontend/images/no-banner(1920-330).png') }}';" />
+                                        </a>
+                                    </div>
+                                @endif
+                            @endforeach
+                        </div>
+                    </div>
+                @else
+                    <img src="{{ asset('frontend/images/no-banner(1920-330).png') }}"
+                         class="img-fluid"
+                         alt="No Banner">
+                @endif
+
 @include('frontend.pages.rfq.partials.rfq_css')
 <div class="container mm">
     <!-- Header Section -->

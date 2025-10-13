@@ -2,6 +2,8 @@
 <html lang="en">
 
 <head>
+
+    
     @include('frontend.partials.head')
     <style>
        .offcanvas.compare-canvas{
@@ -18,7 +20,19 @@
     </header>
 
     <!-- HEADER-END -->
+    <!-- Page Banner Start -->
+  @if($banner)
+    <section class="banner" style="background-image: url('{{ asset('uploads/page_banners/'.$banner->image) }}')">
+        <div class="overlay">
+            <h1>{{ $banner->title }}</h1>
+            @if($banner->button_name)
+                <a href="{{ $banner->button_link }}" class="btn btn-primary">{{ $banner->button_name }}</a>
+            @endif
+        </div>
+    </section>
+@endif
 
+    <!-- Page Banner End -->
     <!-- Main Content Start -->
     <main>
         @yield('content')

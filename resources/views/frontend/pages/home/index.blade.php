@@ -26,16 +26,11 @@
     <!-- Banner -->
     <div class="swiper bannerSwiper">
         <div class="swiper-wrapper">
-            <div class="swiper-slide">
-                <a href=""><img src="https://i.ibb.co/72jrMpF/54667.jpg" class="img-fluid" alt="" /></a>
-            </div>
-            <div class="swiper-slide">
-                <a href=""><img src="https://i.ibb.co/pfYZQK4/54574v2.jpg" class="img-fluid"
-                        alt="" /></a>
-            </div>
-            <div class="swiper-slide">
-                <a href=""><img src="https://i.ibb.co/W3X5G2H/54361.jpg" class="img-fluid" alt="" /></a>
-            </div>
+           @foreach ($banners as $banner) 
+             <div class="swiper-slide">
+                 <a href=""><img src="{{ $banner ? asset('uploads/page_banners/' . $banner->image) : asset('frontend/images/no-banner(1920-330).png') }}" class="img-fluid" alt="Banner" /></a>
+             </div>
+           @endforeach
         </div>
         <div class="swiper-pagination"></div>
     </div>
