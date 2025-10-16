@@ -4,6 +4,7 @@ namespace App\Models\Admin;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Admin\Brand; // ✅ Ensure Brand model is imported
 
 class NewsTrend extends Model
 {
@@ -11,42 +12,98 @@ class NewsTrend extends Model
 
     protected $table = 'news_trends';
 
+    protected $fillable = [
+        'title',
+        'author',
+        'badge',
+        'featured',
+        'type',
+        'brand_id',
+        'category_id',
+        'industry_id',
+        'solution_id',
+        'product_id',
+        'thumbnail_image',
+        'banner_image',
+        'source_image',
+        'short_des',
+        'long_des',
+        'tags',
+        'address',
+        'header',
+        'footer',
+        'additional_button_name',
+        'additional_url',
+        'source_link',
+        'added_by',
+    ];
+
+    /**
+     * 🔹 Cast JSON fields to arrays
+     */
     protected $casts = [
-        'brand_id' => 'array', // ensures brand_id is treated as JSON array
+        'brand_id'    => 'array',
         'category_id' => 'array',
         'industry_id' => 'array',
         'solution_id' => 'array',
-        'product_id' => 'array',
+        'product_id'  => 'array',
     ];
 
-    // Scope to filter trends by a given brand ID (JSON column)
+    /**
+     * 🔹 Scope: filter by type (news, trends, blogs, client_stories, tech_contents)
+     */
+    public function scopeByType($query, string $type)
+    {
+        return $query->where('type', $type);
+    }
+
+    /**
+     * 🔹 Scope: filter by brand (JSON field)
+     */
     public function scopeForBrand($query, $brandId)
     {
         return $query->whereJsonContains('brand_id', $brandId);
     }
 
-    // Scope for featured trends
+    /**
+     * 🔹 Scope: featured only
+     */
     public function scopeFeatured($query)
     {
-        return $query->where('featured', '1'); // must be string '1'
+        return $query->where('featured', '1');
     }
 
-    // Optional: trending scope (example: last 30 days)
+    /**
+     * 🔹 Scope: trending (last 30 days)
+     */
     public function scopeTrending($query)
     {
         return $query->where('created_at', '>=', now()->subDays(30));
     }
 
-    // Relationships (if needed)
-    public function brands()
+    /**
+     * 🔹 Relationship: admin/user who added the item
+     */
+    public function addedBy()
     {
-        // If you have Brand model and a method to get multiple brands
-        return Brand::whereIn('id', $this->brand_id ?? [])->get();
+        return $this->belongsTo(\App\Models\User::class, 'added_by');
     }
 
+    /**
+     * 🔹 Helper: get Brand models safely from JSON IDs
+     */
+    public function brands()
+    {
+        $ids = is_array($this->brand_id) ? $this->brand_id : json_decode($this->brand_id, true) ?? [];
+        return Brand::whereIn('id', $ids)->get();
+    }
+
+    /**
+     * 🔹 Helper: get the first associated Brand safely
+     */
     public function firstBrand()
     {
-        $ids = $this->brand_id ?? [];
+        $ids = is_array($this->brand_id) ? $this->brand_id : json_decode($this->brand_id, true) ?? [];
         return Brand::find($ids[0] ?? null);
     }
 }

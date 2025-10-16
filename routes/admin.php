@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\RowController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\HR\HolidayController;
+use App\Http\Controllers\PageBannerController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\BannerController;
@@ -56,12 +57,11 @@ use App\Http\Controllers\Admin\DynamicCategoryController;
 use App\Http\Controllers\Admin\SolutionDetailsController;
 use App\Http\Controllers\Sales\SalesTeamTargetController;
 use App\Http\Controllers\Sales\SalesYearTargetController;
+use App\Http\Controllers\Admin\Auth\NewPasswordController;
 use App\Http\Controllers\Admin\CountryStateCityController;
 use App\Http\Controllers\Admin\EmployeeCategoryController;
 use App\Http\Controllers\Admin\ProductAttributeController;
 use App\Http\Controllers\Admin\EmployeeDepartmentController;
-use App\Http\Controllers\Accounts\AccountsDocumentController;
-use App\Http\Controllers\Admin\PolicyAcknowledgmentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -328,7 +328,11 @@ Route::prefix('administrator')->name('admin.')->group(static function () {
 });
 
 
-use App\Http\Controllers\PageBannerController;
+use App\Http\Controllers\Accounts\AccountsDocumentController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Admin\PolicyAcknowledgmentController;
+use App\Http\Controllers\Admin\Auth\PasswordResetLinkController;
+use App\Http\Controllers\Auth\EmailVerificationPromptController;
 
 Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
     // List
@@ -344,4 +348,17 @@ Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
 
     // Delete
     Route::delete('page-banners/{pageBanner}', [PageBannerController::class, 'destroy'])->name('page_banners.destroy');
+});
+
+
+
+// Admin Employee Task Routes
+Route::prefix('admin')->name('admin.')->group(function () {
+    // Resource routes for EmployeeTask (except 'show')
+    Route::resource('employee-task', EmployeeTaskController::class)->except(['show']);
+
+    // Get all tasks for a selected employee (AJAX)
+    Route::get('employee-tasks/{employeeId}', [EmployeeTaskController::class, 'employeeTasks'])->name('employee.tasks');
+
+
 });

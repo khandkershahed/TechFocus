@@ -35,16 +35,17 @@
                     </li>
                 </ul>
                 <div class="social-icons-btn">
-                    <a class="icons twitter" href="#">
+                    <a class="icons twitter" href="https://www.x.com/ngenit
+">
                         <i class="fa-brands fa-twitter"></i>
                     </a>
-                    <a class="icons facebook" href="#">
+                    <a class="icons facebook" href="https://www.facebook.com/share/1FZ8jpvcis/">
                         <i class="fa-brands fa-facebook-f"></i>
                     </a>
-                    <a class="icons instagram" href="#">
+                    <a class="icons instagram" href="https://www.instagram.com/ngenitltd">
                         <i class="fa-brands fa-instagram"></i>
                     </a>
-                    <a class="icons linkedin" href="#">
+                    <a class="icons linkedin" href="https://www.linkedin.com/company/ngenitltd/">
                         <i class="fa-brands fa-linkedin-in"></i>
                     </a>
                 </div>

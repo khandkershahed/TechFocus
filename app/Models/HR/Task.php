@@ -2,26 +2,33 @@
 
 namespace App\Models\HR;
 
-use App\Traits\HasSlug;
-use Wildside\Userstamps\Userstamps;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Task extends Model
 {
-    use HasFactory, HasSlug, Userstamps;
+    use HasFactory;
 
-    /**
-     * The attributes that aren't mass assignable.
-     *
-     * @var array
-     */
     protected $guarded = [];
 
-    /**
-     * , HasSlug
-     * protected $slugSourceColumn = 'name';
-     */
-    protected $slugSourceColumn = 'task_name';
+    // Cast date/time fields properly
+    protected $casts = [
+        'start_date'  => 'date',
+        'end_date'    => 'date',
+        'start_time'  => 'datetime:H:i',
+        'end_time'    => 'datetime:H:i',
+        'buffer_time' => 'datetime:H:i',
+    ];
 
+    // Relationship: Each Task belongs to one EmployeeTask
+    public function employeeTask()
+    {
+        return $this->belongsTo(EmployeeTask::class, 'employee_task_id');
+    }
+
+    // Relationship: Each Task belongs to one Employee
+    public function employee()
+    {
+        return $this->belongsTo(\App\Models\Admin::class, 'employee_id');
+    }
 }
