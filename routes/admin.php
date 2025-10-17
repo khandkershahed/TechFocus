@@ -362,3 +362,36 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
 
 });
+
+
+//leave
+// Leave Application Routes
+Route::prefix('leave-applications')->name('leave-applications.')->group(function () {
+    
+    // Index/List Route
+    Route::get('/', [LeaveApplicationController::class, 'index'])->name('index');
+        Route::get('/create', [LeaveApplicationController::class, 'create'])->name('create'); 
+    
+    // History Route
+    Route::get('/history', [LeaveApplicationController::class, 'history'])->name('history');
+    
+    // Dashboard Route
+    Route::get('/dashboard', [LeaveApplicationController::class, 'dashboard'])->name('dashboard');
+    
+    // Store Route
+    Route::post('/store', [LeaveApplicationController::class, 'store'])->name('store');
+    
+    // Edit Route
+    Route::get('/edit/{id}', [LeaveApplicationController::class, 'edit'])->name('edit');
+    
+    // Update Route
+    Route::put('/update/{id}', [LeaveApplicationController::class, 'update'])->name('update');
+    
+    // Delete Route
+    Route::delete('/destroy/{id}', [LeaveApplicationController::class, 'destroy'])->name('destroy');
+});
+
+// Alternative shorter routes if preferred:
+Route::resource('leave-applications', LeaveApplicationController::class)->except(['show', 'create']);
+Route::get('leave-applications/history', [LeaveApplicationController::class, 'history'])->name('leave-applications.history');
+Route::get('leave-applications/dashboard', [LeaveApplicationController::class, 'dashboard'])->name('leave-applications.dashboard');

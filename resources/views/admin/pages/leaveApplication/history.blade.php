@@ -28,568 +28,398 @@
                                             placeholder="Search" style="border: 1px solid #eee;" />
                                     </div>
                                     <!--end::Search-->
-                                    <!--begin::Export buttons-->
-                                    <div id="kt_datatable_example_1_export" class="d-none"></div>
-                                    <!--end::Export buttons-->
                                 </div>
                                 <div class="col-lg-4 col-sm-12 text-lg-center text-sm-center">
                                     <div class="card-title table_title">
-                                        <h2>Leave Applications</h2>
+                                        <h2>Leave Applications History</h2>
+                                        <small class="text-muted">Total: {{ $leaveApplications->count() }} applications</small>
                                     </div>
                                 </div>
                                 <div class="col-lg-4 col-sm-12 text-lg-end text-sm-center">
-                                    <!--begin::Export dropdown-->
-                                    <a href="#"
+                                    <a href="{{ route('leave-applications.index') }}"
                                         class="btn btn-sm btn-light-primary rounded-0 me-3">
-                                        Leave Application
+                                        <i class="fa-solid fa-arrow-left me-1"></i>Back to Current
                                     </a>
-                                    <button type="button" class="btn btn-sm btn-light-success rounded-0"
-                                        data-kt-menu-placement="bottom-end" data-bs-toggle="modal"
-                                        data-bs-target="#brandAddModal">
-                                        Add New
-                                    </button>
-
-                                    <!--end::Export dropdown-->
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="card-body">
-                        <table
-                            class="table table-striped table-hover align-middle rounded-0 table-row-bordered border fs-6 g-5 border"
-                            id="kt_datatable_example">
-                            <thead class="table_header_bg">
-                                <tr class="text-center text-gray-900 fw-bolder fs-7 text-uppercase">
-                                    <th width="5%" class="text-center">Sl:</th>
-                                    <th width="30%">Applicant name</th>
-                                    <th width="15%">Type Of Leave</th>
-                                    <th width="15%">Designation</th>
-                                    <th width="20%">Status</th>
-                                    <th width="15%" class="text-center">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody class="fw-bold text-gray-600 text-center">
-                                @if ($leaveApplications)
+                        @if ($leaveApplications->count() > 0)
+                            <table
+                                class="table table-striped table-hover align-middle rounded-0 table-row-bordered border fs-6 g-5 border"
+                                id="kt_datatable_example">
+                                <thead class="table_header_bg">
+                                    <tr class="text-center text-gray-900 fw-bolder fs-7 text-uppercase">
+                                        <th width="5%" class="text-center">Sl:</th>
+                                        <th width="20%">Applicant name</th>
+                                        <th width="15%">Type Of Leave</th>
+                                        <th width="15%">Designation</th>
+                                        <th width="15%">Applied Date</th>
+                                        <th width="15%">Status</th>
+                                        <th width="15%" class="text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="fw-bold text-gray-600 text-center">
                                     @foreach ($leaveApplications as $leaveApplication)
                                         <tr>
                                             <td class="text-center">{{ $loop->iteration }}</td>
                                             <td>{{ $leaveApplication->name }}</td>
                                             <td>{{ $leaveApplication->type_of_leave }}</td>
                                             <td>{{ $leaveApplication->designation }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($leaveApplication->created_at)->format('M d, Y') }}</td>
                                             <td>
                                                 <span
-                                                    class="badge bg-{{ optional($leaveApplication)->application_status == 'approved' ? 'success' : (optional($leaveApplication)->application_status == 'rejected' ? 'danger' : 'warning') }}">
-                                                    {{ optional($leaveApplication)->application_status == 'approved' ? 'Approved' : (optional($leaveApplication)->application_status == 'rejected' ? 'Rejected' : 'Pending') }}
+                                                    class="badge bg-{{ $leaveApplication->application_status == 'approved' ? 'success' : ($leaveApplication->application_status == 'rejected' ? 'danger' : 'warning') }}">
+                                                    {{ $leaveApplication->application_status == 'approved' ? 'Approved' : ($leaveApplication->application_status == 'rejected' ? 'Rejected' : 'Pending') }}
                                                 </span>
                                             </td>
                                             <td class="text-center">
-                                                <a href="javascript:void(0);" class="text-primary" data-bs-toggle="modal"
-                                                    data-bs-target="#makeleaveEdit-{{ $leaveApplication }}">
-                                                    <i class="fa-solid fa-pen-to-square me-2 p-1 rounded-circle text-white"
+                                                <!-- Details Button -->
+                                                <a href="javascript:void(0);" class="text-info me-2" data-bs-toggle="modal"
+                                                    data-bs-target="#leaveDetailsModal-{{ $leaveApplication->id }}"
+                                                    title="View Details">
+                                                    <i class="fa-solid fa-eye p-1 rounded-circle text-white"
                                                         style="color: #247297 !important;"></i>
                                                 </a>
-                                                <a href="javascript:void(0);" href="" class="text-danger delete">
+                                                <!-- Edit Button -->
+                                                <a href="javascript:void(0);" class="text-primary me-2" data-bs-toggle="modal"
+                                                    data-bs-target="#leaveEditModal-{{ $leaveApplication->id }}"
+                                                    title="Edit">
+                                                    <i class="fa-solid fa-pen-to-square p-1 rounded-circle text-white"
+                                                        style="color: #247297 !important;"></i>
+                                                </a>
+                                                <!-- Delete Button -->
+                                                <a href="javascript:void(0);" class="text-danger delete-leave" 
+                                                    data-id="{{ $leaveApplication->id }}"
+                                                    data-url="{{ route('leave-applications.destroy', $leaveApplication->id ) }}"
+                                                    title="Delete">
                                                     <i class="fa-solid fa-trash p-1 rounded-circle text-white"
                                                         style="color: #247297 !important;"></i>
                                                 </a>
                                             </td>
                                         </tr>
                                     @endforeach
-                                @endif
-                            </tbody>
+                                </tbody>
+                            </table>
 
-                        </table>
-
-                        {{-- <p>{!! nl2br() !!}</p> --}}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    {{-- Add Modal --}}
-    <div class="modal fade" id="brandAddModal" data-backdrop="static">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content rounded-0 border-0 shadow-sm">
-                <div class="modal-header p-2 rounded-0">
-                    <h5 class="modal-title">Add Brand</h5>
-                    <!-- Close button in the header -->
-                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
-                        aria-label="Close">
-                        <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
-                        <span class="svg-icon svg-icon-2x">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none">
-                                <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1"
-                                    transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
-                                <rect x="7.41422" y="6" width="16" height="2" rx="1"
-                                    transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
-                            </svg>
-                        </span>
-                        <!--end::Svg Icon-->
-                    </div>
-                    <!-- End Close button in the header -->
-                </div>
-                <form method="POST" action="{{ route('admin.brand.store') }}" class="needs-validation" novalidate
-                    enctype="multipart/form-data">
-                    @csrf
-                    <div class="modal-body">
-                        <div class="container px-0">
-                            <div class="row">
-                                <div class="col-lg-12 col-sm-12">
-                                    <div class="row">
-                                        {{-- <div class="col-md-6">
-                                            <label for="validationCustom04" class="form-label required">Country
-                                                Name</label>
-                                            <select class="form-select form-select-solid" name="country_id"
-                                                data-dropdown-parent="#brandAddModal" data-control="select2"
-                                                data-placeholder="Select an option" data-allow-clear="true" required>
-                                                <option></option>
-                                                @foreach (getAllCountry() as $country)
-                                                    <option value="{{ $country->id }}">{{ $country->name }}</option>
-                                                @endforeach
-                                            </select>
-                                            <div class="valid-feedback"> Looks good! </div>
-                                            <div class="invalid-feedback"> Please provide a valid zip. </div>
-                                        </div> --}}
-                                        <div class="col-md-6 mb-1">
-                                            <label for="validationCustom01" class="form-label required ">Brand Name
-                                            </label>
-                                            <input type="text" class="form-control form-control-solid form-control-sm"
-                                                name="title" id="validationCustom01" placeholder="Enter Name" required>
-                                            <div class="valid-feedback"> Looks good! </div>
-                                            <div class="invalid-feedback"> Please Enter Name </div>
-                                        </div>
-                                        <div class="col-md-6 mb-1">
-                                            <label for="validationCustom01" class="form-label">Image
-                                            </label>
-                                            <input type="file" class="form-control form-control-solid form-control-sm"
-                                                name="image" id="validationCustom01" required>
-                                            <div class="valid-feedback"> Looks good! </div>
-                                            <div class="invalid-feedback"> Please Enter Image(jpg,jpeg,png) </div>
-                                        </div>
-                                        <div class="col-md-6 mb-1">
-                                            <label for="validationCustom01" class="form-label">Logo
-                                            </label>
-                                            <input type="file" class="form-control form-control-solid form-control-sm"
-                                                name="logo" id="validationCustom01" required>
-                                            <div class="valid-feedback"> Looks good! </div>
-                                            <div class="invalid-feedback"> Please Enter logo(jpg,jpeg,png) </div>
-                                        </div>
-                                        <div class="col-md-6 mb-1">
-                                            <label for="validationCustom01" class="form-label">Website URL
-                                            </label>
-                                            <input type="url" class="form-control form-control-solid form-control-sm"
-                                                name="website_url" id="validationCustom01"
-                                                placeholder="Enter Web Site Url">
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label for="validationCustom010" class="form-label">Description</label>
-                                            <textarea rows="1" name="description" class="form-control form-control-sm form-control-solid"></textarea>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label for="validationCustom04" class="form-label required">Category</label>
-                                            <select class="form-select form-select-solid" name="category"
-                                                data-dropdown-parent="#brandAddModal" data-control="select2"
-                                                data-placeholder="Select an option" data-allow-clear="true" required>
-                                                <option></option>
-                                                <option value="Top">Top</option>
-                                                <option value="Featured">Featured</option>
-                                                <option value="Others">Others</option>
-                                            </select>
-                                            <div class="valid-feedback"> Looks good! </div>
-                                            <div class="invalid-feedback"> Please provide a valid zip. </div>
-                                        </div>
-                                    </div>
+                            <!-- Simple Pagination Info -->
+                            <div class="d-flex justify-content-between align-items-center mt-4">
+                                <div class="text-muted">
+                                    Showing {{ $leaveApplications->count() }} of {{ $totalApplications ?? $leaveApplications->count() }} applications
                                 </div>
+                                @if($leaveApplications->count() >= 10)
+                                    <div class="alert alert-info alert-dismissible fade show py-2" role="alert">
+                                        <small>
+                                            <i class="fa-solid fa-info-circle me-1"></i>
+                                            Showing recent applications. Use search to find specific records.
+                                        </small>
+                                        <button type="button" class="btn-close py-2" data-bs-dismiss="alert"></button>
+                                    </div>
+                                @endif
                             </div>
-                        </div>
+                        @else
+                            <div class="text-center py-5">
+                                <i class="fa-solid fa-inbox fa-3x text-muted mb-3"></i>
+                                <h4 class="text-muted">No Leave Applications Found</h4>
+                                <p class="text-muted">There are no leave applications in history yet.</p>
+                                <a href="{{ route('leave-applications.create') }}" class="btn btn-primary btn-sm">
+                                    <i class="fa-solid fa-plus me-1"></i>Create First Application
+                                </a>
+                            </div>
+                        @endif
                     </div>
-                    <div class="modal-footer p-2">
-                        <!-- Button to close the modal in the footer -->
-                        <button type="submit" class="btn btn-sm btn-light-primary rounded-0">Submit</button>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
-    {{-- Edit Modal --}}
+
+    {{-- Details Modals --}}
     @foreach ($leaveApplications as $leaveApplication)
-        <div class="modal fade" id="makeleaveEdit-{{ $leaveApplication }}" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1"
-            aria-labelledby="checkapprovedLabel" aria-hidden="true">
+        <!-- Details Modal -->
+        <div class="modal fade" id="leaveDetailsModal-{{ $leaveApplication->id }}" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1"
+            aria-labelledby="leaveDetailsLabel-{{ $leaveApplication->id }}" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content rounded-0">
-                    <div class="modal-header rounded-0 text-white bg-secondary">
-                        <h5 class="modal-title text-uppercase" id="checkapprovedLabel">Leave Application (Today's)</h5>
-                        <h2 class="accordion-header d-flex align-items-center" id="flush-headingOne">
-                            <button class="ms-2 button-37 collapsed" type="button" data-bs-target="#flush-collapseOne"
-                                aria-expanded="false" aria-controls="flush-collapseOne">
-                                <a href="javascript:void(0);" class="text-primary">
-                                    <i class="fa-solid fa-eyes p-1 rounded-circle" style=" color: #174a62;"></i>
-                                </a>
-                            </button>
-                        </h2>
+                    <div class="modal-header rounded-0 text-white bg-info">
+                        <h5 class="modal-title text-uppercase" id="leaveDetailsLabel-{{ $leaveApplication->id }}">
+                            <i class="fa-solid fa-eye me-2"></i>Leave Application Details
+                        </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body rounded-0">
                         <div class="container">
-                            <div class="accordion accordion-flush" id="accordionFlushExample_{{ $leaveApplication->id }}">
-                                <div class="accordion-item">
-                                    <div id="flush-collapseOne" class="accordion-collapse collapse"
-                                        aria-labelledby="flush-headingOne"
-                                        data-bs-parent="#accordionFlushExample_{{ $leaveApplication->id }}">
-                                        <div class="accordion-body p-0 m-0">
-                                            <div class="row my-2">
-                                                <div class="col-lg-12">
-                                                    <form class="" action="#">
-                                                        <div class="card-body">
-                                                            <div class="row">
-                                                                <div class="col-lg-3">
-                                                                    <div class="mb-1">
-                                                                        <label class="form-label mb-0">Applicant Name: <span
-                                                                                class="text-danger">*</span></label>
-                                                                        <input type="text" name="name"
-                                                                            value="{{ $leaveApplication->name }}"
-                                                                            class="form-control form-control-sm"
-                                                                            placeholder="Enter Applicant Name"
-                                                                            @disabled(true)>
-                                                                    </div>
-                                                                </div>
-
-                                                                <div class="col-lg-3">
-                                                                    <div class="mb-1">
-                                                                        <label class="form-label mb-0">Type Of Leave: <span
-                                                                                class="text-danger">*</span></label>
-                                                                        <input type="text" name="type_of_leave"
-                                                                            value="{{ $leaveApplication->type_of_leave }}"
-                                                                            class="form-control form-control-sm"
-                                                                            placeholder="Enter Type Of Leave"
-                                                                            @disabled(true)>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-3">
-                                                                    <div class="mb-1">
-                                                                        <label class="form-label mb-0">Designation: <span
-                                                                                class="text-danger">*</span></label>
-                                                                        <input type="text" name="designation"
-                                                                            value="{{ $leaveApplication->designation }}"
-                                                                            class="form-control form-control-sm"
-                                                                            placeholder="Enter Your Designation"
-                                                                            @disabled(true)>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-3">
-                                                                    <div class="mb-1">
-                                                                        <label class="form-label mb-0">Company:</label>
-                                                                        <input type="text" name="company"
-                                                                            value="{{ $leaveApplication->company }}"
-                                                                            @disabled(true)
-                                                                            class="form-control form-control-sm"
-                                                                            placeholder="NGEN IT">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-3">
-                                                                    <div class="mb-1">
-                                                                        <label class="form-label mb-0">Leave Start Date:
-                                                                            <span class="text-danger">*</span></label>
-                                                                        <input type="date" name="leave_start_date"
-                                                                            value="{{ $leaveApplication->leave_start_date }}"
-                                                                            class="form-control form-control-sm"
-                                                                            placeholder="Leave Start Date"
-                                                                            @disabled(true)>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-3">
-                                                                    <div class="mb-1">
-                                                                        <label class="form-label mb-0">Leave End Date:
-                                                                            <span class="text-danger">*</span></label>
-                                                                        <input type="date" name="leave_end_date"
-                                                                            value="{{ $leaveApplication->leave_end_date }}"
-                                                                            class="form-control form-control-sm"
-                                                                            placeholder="Leave End Date"
-                                                                            @disabled(true)>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-3">
-                                                                    <div class="mb-1">
-                                                                        <label class="form-label mb-0">Total Days: <span
-                                                                                class="text-danger">*</span></label>
-                                                                        <input type="text" name="total_days"
-                                                                            value="{{ $leaveApplication->total_days }}"
-                                                                            class="form-control form-control-sm"
-                                                                            placeholder="Enter Total Dayes"
-                                                                            @disabled(true)>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-3">
-                                                                    <div class="mb-1">
-                                                                        <label class="form-label mb-0">Job Status <span
-                                                                                class="text-danger">*</span></label>
-                                                                        <input type="text" name="job_status"
-                                                                            value="{{ $leaveApplication->job_status }}"
-                                                                            class="form-control form-control-sm"
-                                                                            placeholder="Enter Job Status"
-                                                                            @disabled(true)>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-3">
-                                                                    <div class="mb-1">
-                                                                        <label class="form-label mb-0">Reporting On <span
-                                                                                class="text-danger">*</span></label>
-                                                                        <input type="date" name="reporting_on"
-                                                                            value="{{ $leaveApplication->reporting_on }}"
-                                                                            class="form-control form-control-sm"
-                                                                            placeholder="Leave End Date"
-                                                                            @disabled(true)>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-6">
-                                                                    <div class="mb-1">
-                                                                        <label class="form-label mb-0">Leave Explanation
-                                                                            <span class="text-danger">*</span></label>
-                                                                        <textarea name="leave_explanation" class="form-control form-control-sm" id="" cols="30"
-                                                                            rows="1"placeholder="Enter Leave Explanation" @disabled(true)>{{ $leaveApplication->leave_explanation }}</textarea>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-3">
-                                                                    <div class="mb-1">
-                                                                        <label class="form-label mb-0">Substitute During
-                                                                            Leave
-                                                                            <span class="text-danger">*</span></label>
-                                                                        <input type="text"
-                                                                            name="substitute_during_leave"
-                                                                            value="{{ $leaveApplication->substitute_during_leave }}"
-                                                                            class="form-control form-control-sm"
-                                                                            placeholder="Enter Substitute During Leave"
-                                                                            @disabled(true)>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-3">
-                                                                    <div class="mb-1">
-                                                                        <label class="form-label mb-0">Leave
-                                                                            Address</label>
-                                                                        <input type="text" name="leave_address"
-                                                                            value="{{ $leaveApplication->leave_address }}"
-                                                                            class="form-control form-control-sm"
-                                                                            @disabled(true)
-                                                                            placeholder="Leave End Date">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-3">
-                                                                    <div class="mb-1">
-                                                                        <label class="form-label mb-0">Is Betwwen
-                                                                            Holiday</label>
-                                                                        <div class="d-flex align-items-center">
-                                                                            <div class="form-check">
-                                                                                <input class="form-check-input"
-                                                                                    type="radio"
-                                                                                    name="is_between_holidays"
-                                                                                    value="yes" id="yes"
-                                                                                    @checked($leaveApplication->is_between_holidays == 'yes') disabled>
-                                                                                <label class="form-check-label"
-                                                                                    for="yes">
-                                                                                    Yes
-                                                                                </label>
-                                                                            </div>
-                                                                            <div class="form-check ms-3">
-                                                                                <input class="form-check-input"
-                                                                                    type="radio"
-                                                                                    name="is_between_holidays"
-                                                                                    value="no" id="no"
-                                                                                    @checked($leaveApplication->is_between_holidays == 'no') disabled>
-                                                                                <label class="form-check-label"
-                                                                                    for="no">
-                                                                                    No
-                                                                                </label>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-3">
-                                                                    <div class="mb-1">
-                                                                        <label class="form-label mb-0">Leave Contact
-                                                                            Number</label>
-                                                                        <input type="text" name="leave_contact_no"
-                                                                            value="{{ $leaveApplication->leave_contact_no }}"
-                                                                            @disabled(true)
-                                                                            class="form-control form-control-sm"
-                                                                            placeholder="Enter Enter Leave Contact Number">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-3">
-                                                                    <div class="mb-1">
-                                                                        <label class="form-label mb-0">Include Open
-                                                                            Saturday</label>
-                                                                        <input type="text"
-                                                                            name="included_open_saturday"
-                                                                            value="{{ $leaveApplication->included_open_saturday }}"
-                                                                            @disabled(true)
-                                                                            class="form-control form-control-sm"
-                                                                            placeholder="Enter Include Open Saturday">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-4">
-                                                                    <div class="mb-1">
-                                                                        <label class="form-label mb-0">Substitute Signature
-                                                                            <span class="text-danger">*</span></label>
-                                                                        <input type="file" name="substitute_signature"
-                                                                            value="{{ $leaveApplication->substitute_signature }}"
-                                                                            class="form-control form-control-sm"
-                                                                            @disabled(true)>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-4">
-                                                                    <div class="mb-1">
-                                                                        <label class="form-label mb-0">Applicant Signature
-                                                                            <span class="text-danger">*</span></label>
-                                                                        <input type="file" name="applicant_signature"
-                                                                            value="{{ $leaveApplication->applicant_signature }}"
-                                                                            class="form-control form-control-sm"
-                                                                            @disabled(true)>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="card-footer d-flex justify-content-end mt-3">
-                                                            {{-- <button type="reset" value="Reset" class="submit_close_btn "
-                                                                data-bs-dismiss="modal">Reset Form</button>
-                                                            <button type="submit" class="submit_btn from-prevent-multiple-submits"
-                                                                style="padding: 4px 9px;">Submit</button> --}}
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
+                            <!-- Personal Information -->
+                            <div class="row mb-3">
+                                <div class="col-lg-12">
+                                    <div class="section-header bg-light-info p-2 rounded">
+                                        <h6 class="mb-0 text-info">
+                                            <i class="fa-solid fa-user me-2"></i>Personal Information
+                                        </h6>
                                     </div>
                                 </div>
                             </div>
-                            <div class="p-0">
-                                <div class="row gx-0 mb-3">
-                                    <div class="col-lg-12">
-                                        <table class="table table-bordered">
-                                            <thead
-                                                style="background-color: #2472974f !important; color: #174a62 !important;">
-                                                <tr>
-                                                    <th scope="col">Leave Position</th>
-                                                    <th scope="col">Leave Due As On</th>
-                                                    <th scope="col">Leave Availed</th>
-                                                    <th scope="col">Balance Due</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>
-                                                        <input type="text" name="leave_position"
-                                                            class="form-control form-control-sm" value="Earned Leave">
-                                                    </td>
-                                                    <td>
-                                                        <input type="text" name="leave_due_as_on"
-                                                            class="form-control form-control-sm">
-                                                    </td>
-                                                    <td><input type="text" name="leave_availed"
-                                                            class="form-control form-control-sm"></td>
-                                                    <td><input type="text" name="balance_due"
-                                                            class="form-control form-control-sm"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <input type="text" name="leave_position"
-                                                            class="form-control form-control-sm" value="Casual Leave">
-                                                    </td>
-                                                    <td>
-                                                        <input type="text" name="leave_due_as_on"
-                                                            class="form-control form-control-sm">
-                                                    </td>
-                                                    <td><input type="text" name="leave_availed"
-                                                            class="form-control form-control-sm"></td>
-                                                    <td><input type="text" name="balance_due"
-                                                            class="form-control form-control-sm"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <input type="text" name="leave_position"
-                                                            class="form-control form-control-sm" value="Medical Leave">
-                                                    </td>
-                                                    <td>
-                                                        <input type="text" name="leave_availed"
-                                                            class="form-control form-control-sm">
-                                                    </td>
-                                                    <td><input type="text" name="leave_due_as_on"
-                                                            class="form-control form-control-sm"></td>
-                                                    <td><input type="text" name="balance_due"
-                                                            class="form-control form-control-sm"></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                                <div class="row gx-0">
-                                    <div class="col-lg-6">
-                                        <p class="m-0 border p-1"
-                                            style="background-color: #2472974f !important; color:
-                                            #174a62;">
-                                            Checked By: (HR &
-                                            Admin)</p>
-                                        <p class="m-0
-                                            border p-1"
-                                            style="background-color: #2472974f !important; color:
-                                            #174a62;">
-                                            Recommended By: (CEO
-                                            & Head)</p>
-                                        <p class="m-0
-                                            border p-1"
-                                            style="background-color: #2472974f !important; color:
-                                            #174a62;">
-                                            Recived By: (OD)</p>
-                                        <p class="m-0
-                                            border p-1"
-                                            style="background-color: #2472974f !important; color:
-                                            #174a62;">
-                                            Approved By: (MD)</p>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <p class="m-0 p-0">
-                                            <input class="form-control form-control-sm" type="file" name="checked_by"
-                                                value="Approved">
-                                        </p>
-                                        <p class="m-0 p-0">
-                                            <input class="form-control form-control-sm" type="file"
-                                                name="recommended_by" value="Approved">
-                                        </p>
-                                        <p class="m-0 p-0">
-                                            <input class="form-control form-control-sm" type="file" name="reviewed_by"
-                                                value="Approved">
-                                        </p>
-                                        <p class="m-0 p-0">
-                                            <input class="form-control form-control-sm" type="file" name="approved_by"
-                                                value="Approved">
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="row align-items-center">
-                                    <div class="col-lg-6">
-                                        <p class="m-0 p-0">Application Status</p>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="btn-group border mt-3 d-flex justify-content-end" role="group"
-                                            aria-label="Basic radio toggle button group">
-                                            <input type="radio" class="btn-check" name="application_status"
-                                                id="btnradio1" autocomplete="off" checked>
-                                            <label class="btn btn-outline-success" for="btnradio1">Approved</label>
 
-                                            <input type="radio" class="btn-check" name="application_status"
-                                                id="btnradio2" autocomplete="off">
-                                            <label class="btn btn-outline-danger" for="btnradio2">Reject</label>
-                                        </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-2">
+                                    <label class="form-label mb-0 fw-bold">Applicant Name:</label>
+                                    <p class="mb-0">{{ $leaveApplication->name }}</p>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label class="form-label mb-0 fw-bold">Designation:</label>
+                                    <p class="mb-0">{{ $leaveApplication->designation }}</p>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label class="form-label mb-0 fw-bold">Company:</label>
+                                    <p class="mb-0">{{ $leaveApplication->company }}</p>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label class="form-label mb-0 fw-bold">Type Of Leave:</label>
+                                    <p class="mb-0">{{ $leaveApplication->type_of_leave }}</p>
+                                </div>
+                            </div>
+
+                            <!-- Leave Details -->
+                            <div class="row mb-3">
+                                <div class="col-lg-12">
+                                    <div class="section-header bg-light-info p-2 rounded">
+                                        <h6 class="mb-0 text-info">
+                                            <i class="fa-solid fa-calendar-days me-2"></i>Leave Details
+                                        </h6>
                                     </div>
                                 </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4 mb-2">
+                                    <label class="form-label mb-0 fw-bold">Leave Start Date:</label>
+                                    <p class="mb-0">{{ \Carbon\Carbon::parse($leaveApplication->leave_start_date)->format('M d, Y') }}</p>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <label class="form-label mb-0 fw-bold">Leave End Date:</label>
+                                    <p class="mb-0">{{ \Carbon\Carbon::parse($leaveApplication->leave_end_date)->format('M d, Y') }}</p>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <label class="form-label mb-0 fw-bold">Total Days:</label>
+                                    <p class="mb-0">{{ $leaveApplication->total_days }} days</p>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label class="form-label mb-0 fw-bold">Reporting On:</label>
+                                    <p class="mb-0">{{ \Carbon\Carbon::parse($leaveApplication->reporting_on)->format('M d, Y') }}</p>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label class="form-label mb-0 fw-bold">Job Status:</label>
+                                    <p class="mb-0">{{ $leaveApplication->job_status }}</p>
+                                </div>
+                            </div>
+
+                            <!-- Leave Explanation -->
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <label class="form-label mb-0 fw-bold">Leave Explanation:</label>
+                                    <div class="border p-3 rounded bg-light">
+                                        {{ $leaveApplication->leave_explanation }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Contact Information -->
+                            <div class="row mb-3">
+                                <div class="col-lg-12">
+                                    <div class="section-header bg-light-info p-2 rounded">
+                                        <h6 class="mb-0 text-info">
+                                            <i class="fa-solid fa-address-card me-2"></i>Contact & Additional Information
+                                        </h6>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-2">
+                                    <label class="form-label mb-0 fw-bold">Substitute During Leave:</label>
+                                    <p class="mb-0">{{ $leaveApplication->substitute_during_leave }}</p>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label class="form-label mb-0 fw-bold">Leave Address:</label>
+                                    <p class="mb-0">{{ $leaveApplication->leave_address ?? 'N/A' }}</p>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label class="form-label mb-0 fw-bold">Leave Contact Number:</label>
+                                    <p class="mb-0">{{ $leaveApplication->leave_contact_no ?? 'N/A' }}</p>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label class="form-label mb-0 fw-bold">Include Open Saturday:</label>
+                                    <p class="mb-0">{{ $leaveApplication->included_open_saturday ?? 'N/A' }}</p>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label class="form-label mb-0 fw-bold">Is Between Holidays:</label>
+                                    <p class="mb-0">{{ $leaveApplication->is_between_holidays == 'yes' ? 'Yes' : 'No' }}</p>
+                                </div>
+                            </div>
+
+                            <!-- Application Status -->
+                            <div class="row mb-3">
+                                <div class="col-lg-12">
+                                    <div class="section-header bg-light-info p-2 rounded">
+                                        <h6 class="mb-0 text-info">
+                                            <i class="fa-solid fa-tasks me-2"></i>Application Status
+                                        </h6>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-2">
+                                    <label class="form-label mb-0 fw-bold">Application Status:</label>
+                                    <p class="mb-0">
+                                        <span class="badge bg-{{ $leaveApplication->application_status == 'approved' ? 'success' : ($leaveApplication->application_status == 'rejected' ? 'danger' : 'warning') }}">
+                                            {{ ucfirst($leaveApplication->application_status) }}
+                                        </span>
+                                    </p>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label class="form-label mb-0 fw-bold">Applied Date:</label>
+                                    <p class="mb-0">{{ \Carbon\Carbon::parse($leaveApplication->created_at)->format('M d, Y h:i A') }}</p>
+                                </div>
+                                @if($leaveApplication->note)
+                                <div class="col-12 mb-2">
+                                    <label class="form-label mb-0 fw-bold">Additional Notes:</label>
+                                    <p class="mb-0">{{ $leaveApplication->note }}</p>
+                                </div>
+                                @endif
                             </div>
                         </div>
                     </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Modal -->
+        <div class="modal fade" id="leaveEditModal-{{ $leaveApplication->id }}" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1"
+            aria-labelledby="leaveEditLabel-{{ $leaveApplication->id }}" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content rounded-0">
+                    <div class="modal-header rounded-0 text-white bg-warning">
+                        <h5 class="modal-title text-uppercase" id="leaveEditLabel-{{ $leaveApplication->id }}">
+                            <i class="fa-solid fa-edit me-2"></i>Edit Leave Application
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form method="POST" action="{{ route('leave-applications.update', $leaveApplication->id) }}" enctype="multipart/form-data">
+                        @csrf
+                        @method('PUT')
+                        <div class="modal-body rounded-0">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label mb-0 required">Application Status</label>
+                                        <select class="form-select form-select-sm" name="application_status" required>
+                                            <option value="pending" {{ $leaveApplication->application_status == 'pending' ? 'selected' : '' }}>Pending</option>
+                                            <option value="approved" {{ $leaveApplication->application_status == 'approved' ? 'selected' : '' }}>Approved</option>
+                                            <option value="rejected" {{ $leaveApplication->application_status == 'rejected' ? 'selected' : '' }}>Rejected</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label mb-0">Additional Notes</label>
+                                        <textarea class="form-control form-control-sm" name="note" 
+                                                  rows="2" placeholder="Any additional notes...">{{ $leaveApplication->note }}</textarea>
+                                    </div>
+                                </div>
+                                
+                                <!-- Hidden fields to preserve other data -->
+                                <input type="hidden" name="name" value="{{ $leaveApplication->name }}">
+                                <input type="hidden" name="designation" value="{{ $leaveApplication->designation }}">
+                                <input type="hidden" name="type_of_leave" value="{{ $leaveApplication->type_of_leave }}">
+                                <input type="hidden" name="leave_start_date" value="{{ $leaveApplication->leave_start_date }}">
+                                <input type="hidden" name="leave_end_date" value="{{ $leaveApplication->leave_end_date }}">
+                                <input type="hidden" name="total_days" value="{{ $leaveApplication->total_days }}">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-warning btn-sm">Update Status</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     @endforeach
 @endsection
 
+@push('styles')
+<style>
+    .table_header_bg {
+        background-color: #2472974f !important;
+    }
+    .section-header {
+        border-left: 4px solid;
+        background-color: #f8f9fa !important;
+    }
+    .bg-light-info {
+        background-color: #d1ecf1 !important;
+    }
+    .required::after {
+        content: " *";
+        color: #dc3545;
+    }
+</style>
+@endpush
+
 @push('scripts')
+<script>
+    // Delete functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        // Delete leave application
+        document.querySelectorAll('.delete-leave').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const leaveId = this.getAttribute('data-id');
+                const deleteUrl = this.getAttribute('data-url');
+                
+                if (confirm('Are you sure you want to delete this leave application?')) {
+                    // Create form for DELETE request
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = deleteUrl;
+                    
+                    const csrfToken = document.createElement('input');
+                    csrfToken.type = 'hidden';
+                    csrfToken.name = '_token';
+                    csrfToken.value = '{{ csrf_token() }}';
+                    
+                    const methodField = document.createElement('input');
+                    methodField.type = 'hidden';
+                    methodField.name = '_method';
+                    methodField.value = 'DELETE';
+                    
+                    form.appendChild(csrfToken);
+                    form.appendChild(methodField);
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            });
+        });
+
+        // Search functionality
+        const searchInput = document.querySelector('input[data-kt-filter="search"]');
+        if (searchInput) {
+            searchInput.addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase();
+                const rows = document.querySelectorAll('tbody tr');
+                
+                rows.forEach(row => {
+                    const text = row.textContent.toLowerCase();
+                    if (text.includes(searchTerm)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+        }
+    });
+</script>
 @endpush
