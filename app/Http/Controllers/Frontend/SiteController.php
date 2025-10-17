@@ -372,19 +372,4 @@ public function catalogDetails($slug)
     
 
 
-public function showBySlugOrId($slugOrId)
-{
-    $catalog = Catalog::where('slug', $slugOrId)->first();
-
-    if (!$catalog && is_numeric($slugOrId)) {
-        $catalog = Catalog::find($slugOrId);
-    }
-
-    if (!$catalog) {
-        abort(404, 'Catalog not found');
-    }
-
-    return view('frontend.pages.catalog.details', compact('catalog'));
-}
-
 }

@@ -50,8 +50,7 @@
             <div class="d-flex flex-column align-items-center">
                 <img class="mb-2 rfq-img rounded-circle"
                     src="{{ 'https://img.directindustry.com/media/ps/images/common/rfq/ao-step-0' . ($i+1) . '.svg' }}"
-                    alt="No Image"
-                    onerror="this.onerror=null; this.src='https://img.directindustry.com/media/ps/images/common/rfq/ao-step-01.svg';">
+                    alt="No Image" style="width: 120px;">
                 <p class="text-center font-three">{{ $step }}</p>
             </div>
         </div>
@@ -662,4 +661,56 @@
     </div>
 </section>
 @include('frontend.pages.rfq.partials.rfq_js')
+<script>
+$(document).ready(function() {
+    // Auto-fill products from server-side data
+    @if(isset($prefilledProducts) && count($prefilledProducts) > 0)
+        console.log('Prefilled products from server:', @json($prefilledProducts));
+        
+        @foreach($prefilledProducts as $index => $product)
+            @if($index == 0)
+                // Fill the first product row
+                $('input[name="contacts[0][product_name]"]').val('{{ $product["product_name"] }}');
+                $('input[name="contacts[0][qty]"]').val('{{ $product["qty"] ?? 1 }}');
+                
+                @if(isset($product['sku_no']) && $product['sku_no'])
+                    $('input[name="sku_no"]').first().val('{{ $product["sku_no"] }}');
+                @endif
+                
+                @if(isset($product['brand_name']) && $product['brand_name'])
+                    $('input[name="brand_name"]').first().val('{{ $product["brand_name"] }}');
+                @endif
+                
+                @if(isset($product['model_no']) && $product['model_no'])
+                    $('input[name="model_no"]').first().val('{{ $product["model_no"] }}');
+                @endif
+                
+                @if(isset($product['product_des']) && $product['product_des'])
+                    $('textarea[name="product_des"]').first().val('{{ $product["product_des"] }}');
+                @endif
+            @endif
+        @endforeach
+    @endif
+
+    // Also check for URL parameters as fallback
+    const urlParams = new URLSearchParams(window.location.search);
+    const productId = urlParams.get('product_id');
+    const productName = urlParams.get('product_name');
+    const productSku = urlParams.get('product_sku');
+    const productBrand = urlParams.get('product_brand');
+    
+    if (productName && !$('input[name="contacts[0][product_name]"]').val()) {
+        console.log('Filling from URL parameters:', { productName, productSku, productBrand });
+        $('input[name="contacts[0][product_name]"]').val(productName);
+        
+        if (productSku) {
+            $('input[name="sku_no"]').first().val(productSku);
+        }
+        
+        if (productBrand) {
+            $('input[name="brand_name"]').first().val(productBrand);
+        }
+    }
+});
+</script>
 @endsection

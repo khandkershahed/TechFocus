@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Models\Admin\Brand;
 use Illuminate\Http\Request;
 use App\Models\Admin\Product;
+use App\Models\Admin\BrandPage;
 use App\Models\Admin\NewsTrend;
 use Yoeunes\Toastr\Facades\Toastr;
 use App\Http\Controllers\Controller;
@@ -108,44 +109,57 @@ class PageController extends Controller
         //     return redirect()->back();
         // }
     }
-
-    public function productDetails($id, $slug)
-    {
-        $data = [
-            'product' => Product::with('multiImages')->where('slug', $slug)->firstOrFail(),
-            'brand' => Brand::with('brandPage')->where('slug', $id)->select('id', 'slug', 'title', 'logo')->firstOrFail(),
-        ];
-        return view('frontend.pages.product.product_details',$data);
-        // $data['sproduct'] = Product::where('slug', $id)->where('product_status', 'product')->first();
-        // if (!empty($data['sproduct']->cat_id)) {
-        //     $data['products'] = Product::where('cat_id', $data['sproduct']->cat_id)
-        //         ->where('product_status', 'product')
-        //         ->select('id', 'rfq', 'slug', 'name', 'thumbnail', 'price', 'discount', 'sku_code', 'mf_code', 'product_code', 'cat_id', 'brand_id')
-        //         ->limit(12)
-        //         ->distinct()
-        //         ->get();
-        // } else {
-        //     $data['products'] = Product::inRandomOrder()->where('product_status', 'product')->limit(12)->get();
-        // }
-
-        // $data['brand'] = Brand::where('id', $data['sproduct']->brand_id)->select('id', 'slug', 'title', 'image')->first();
-        // $data['brandpage'] = BrandPage::where('brand_id', $data['brand']->id)->first(['id', 'banner_image', 'brand_logo', 'header']);
-        // $data['related_search'] = [
-        //     'categories' =>  Category::where('id', '!=', $data['sproduct']->cat_id)->inRandomOrder()->limit(2)->get(),
-        //     'brands' =>  Brand::where('id', '!=', $data['sproduct']->brand_id)->inRandomOrder()->limit(20)->get(),
-        //     'solutions' =>  SolutionDetail::inRandomOrder()->limit(4)->get('id', 'slug', 'name'),
-        //     'industries' =>  Industry::inRandomOrder()->limit(4)->get('id', 'slug', 'title'),
-        // ];
-        // $data['brand_products'] = Product::where('brand_id', $data['sproduct']->brand_id)->where('id', '!=', $data['sproduct']->id)->inRandomOrder()->where('product_status', 'product')->limit(20)->get();
-
-        // $data['documents'] = DocumentPdf::where('product_id', $data['sproduct']->id)->get();
-
-        // if (!empty($data['brandpage'])) {
-        //     return view('frontend.pages.kukapages.product_details', $data);
-        // } else {
-        //     return view('frontend.pages.product.product_details', $data);
-        // }
+public function productDetails($id, $slug)
+{
+    $data = [
+        'product' => Product::with('multiImages')->where('slug', $slug)->firstOrFail(),
+        'brand' => Brand::with('brandPage')->where('slug', $id)->select('id', 'slug', 'title', 'logo')->firstOrFail(),
+    ];
+    
+    // Check if this is a redirect from RFQ process
+    if (request()->has('rfq_redirect') && request('rfq_redirect') == 'success') {
+        Toastr::success('Product added to RFQ successfully!');
     }
+    
+    return view('frontend.pages.product.product_details', $data);
+}
+    // public function productDetails($id, $slug)
+    // {
+    //     $data = [
+    //         'product' => Product::with('multiImages')->where('slug', $slug)->firstOrFail(),
+    //         'brand' => Brand::with('brandPage')->where('slug', $id)->select('id', 'slug', 'title', 'logo')->firstOrFail(),
+    //     ];
+    //     return view('frontend.pages.product.product_details',$data);
+    //     // $data['sproduct'] = Product::where('slug', $id)->where('product_status', 'product')->first();
+    //     // if (!empty($data['sproduct']->cat_id)) {
+    //     //     $data['products'] = Product::where('cat_id', $data['sproduct']->cat_id)
+    //     //         ->where('product_status', 'product')
+    //     //         ->select('id', 'rfq', 'slug', 'name', 'thumbnail', 'price', 'discount', 'sku_code', 'mf_code', 'product_code', 'cat_id', 'brand_id')
+    //     //         ->limit(12)
+    //     //         ->distinct()
+    //     //         ->get();
+    //     // } else {
+    //     //     $data['products'] = Product::inRandomOrder()->where('product_status', 'product')->limit(12)->get();
+    //     // }
+
+    //     // $data['brand'] = Brand::where('id', $data['sproduct']->brand_id)->select('id', 'slug', 'title', 'image')->first();
+    //     // $data['brandpage'] = BrandPage::where('brand_id', $data['brand']->id)->first(['id', 'banner_image', 'brand_logo', 'header']);
+    //     // $data['related_search'] = [
+    //     //     'categories' =>  Category::where('id', '!=', $data['sproduct']->cat_id)->inRandomOrder()->limit(2)->get(),
+    //     //     'brands' =>  Brand::where('id', '!=', $data['sproduct']->brand_id)->inRandomOrder()->limit(20)->get(),
+    //     //     'solutions' =>  SolutionDetail::inRandomOrder()->limit(4)->get('id', 'slug', 'name'),
+    //     //     'industries' =>  Industry::inRandomOrder()->limit(4)->get('id', 'slug', 'title'),
+    //     // ];
+    //     // $data['brand_products'] = Product::where('brand_id', $data['sproduct']->brand_id)->where('id', '!=', $data['sproduct']->id)->inRandomOrder()->where('product_status', 'product')->limit(20)->get();
+
+    //     // $data['documents'] = DocumentPdf::where('product_id', $data['sproduct']->id)->get();
+
+    //     // if (!empty($data['brandpage'])) {
+    //     //     return view('frontend.pages.kukapages.product_details', $data);
+    //     // } else {
+    //     //     return view('frontend.pages.product.product_details', $data);
+    //     // }
+    // }
 
     public function brandPdf($slug)
     {

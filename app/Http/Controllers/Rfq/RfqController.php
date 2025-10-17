@@ -259,7 +259,7 @@ class RfqController extends Controller
             Log::error('SQL Error: ' . $e->getSql());
             Log::error('Bindings: ' . json_encode($e->getBindings()));
 
-            $errorMessage = 'Database error occurred while submitting RFQ. Please try again.';
+            $errorMessage = 'Database error occurred while submitting RFQ. Please try again:.'.$e->getMessage();
             if (app()->environment('local')) {
                 $errorMessage .= ' Error: ' . $e->getMessage();
             }
