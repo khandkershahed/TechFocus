@@ -661,56 +661,264 @@
     </div>
 </section>
 @include('frontend.pages.rfq.partials.rfq_js')
-<script>
+{{-- <script>
 $(document).ready(function() {
-    // Auto-fill products from server-side data
-    @if(isset($prefilledProducts) && count($prefilledProducts) > 0)
-        console.log('Prefilled products from server:', @json($prefilledProducts));
-        
-        @foreach($prefilledProducts as $index => $product)
-            @if($index == 0)
-                // Fill the first product row
-                $('input[name="contacts[0][product_name]"]').val('{{ $product["product_name"] }}');
-                $('input[name="contacts[0][qty]"]').val('{{ $product["qty"] ?? 1 }}');
-                
-                @if(isset($product['sku_no']) && $product['sku_no'])
-                    $('input[name="sku_no"]').first().val('{{ $product["sku_no"] }}');
-                @endif
-                
-                @if(isset($product['brand_name']) && $product['brand_name'])
-                    $('input[name="brand_name"]').first().val('{{ $product["brand_name"] }}');
-                @endif
-                
-                @if(isset($product['model_no']) && $product['model_no'])
-                    $('input[name="model_no"]').first().val('{{ $product["model_no"] }}');
-                @endif
-                
-                @if(isset($product['product_des']) && $product['product_des'])
-                    $('textarea[name="product_des"]').first().val('{{ $product["product_des"] }}');
-                @endif
-            @endif
-        @endforeach
-    @endif
-
-    // Also check for URL parameters as fallback
-    const urlParams = new URLSearchParams(window.location.search);
-    const productId = urlParams.get('product_id');
-    const productName = urlParams.get('product_name');
-    const productSku = urlParams.get('product_sku');
-    const productBrand = urlParams.get('product_brand');
+    console.log('RFQ Auto-fill initialized - Aggressive mode');
     
-    if (productName && !$('input[name="contacts[0][product_name]"]').val()) {
-        console.log('Filling from URL parameters:', { productName, productSku, productBrand });
-        $('input[name="contacts[0][product_name]"]').val(productName);
+    function autoFillProductDetails() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const productName = urlParams.get('product_name');
+        const productSku = urlParams.get('product_sku');
+        const productBrand = urlParams.get('product_brand');
         
-        if (productSku) {
-            $('input[name="sku_no"]').first().val(productSku);
-        }
-        
-        if (productBrand) {
-            $('input[name="brand_name"]').first().val(productBrand);
+        if (productName && productName !== 'asdasd') {
+            console.log('Auto-filling:', productName, productSku, productBrand);
+            
+            // Direct targeting for main row
+            $('input[placeholder="Product Name"]').first().val(productName);
+            $('input[placeholder="Product Name"]').first().attr('value', productName);
+            
+            // Direct targeting for modal - wait for modal to be in DOM
+            setTimeout(() => {
+                // Target by placeholder or name attribute
+                $('input[placeholder="Enter SKU / Part No."]').val(productSku);
+                $('input[placeholder="Enter Brand Name"]').val(productBrand);
+                $('input[placeholder="Enter Item Name"]').val(productName);
+                $('input[placeholder="Enter Quantity"]').val('1');
+                
+                // Also target by name attribute with modal context
+                $('#Product input[name="sku_no"]').val(productSku);
+                $('#Product input[name="brand_name"]').val(productBrand);
+                $('#Product input[name="additional_product_name"]').val(productName);
+                $('#Product input[name="additional_qty"]').val('1');
+                
+                console.log('Aggressive auto-fill completed');
+            }, 1000);
         }
     }
+    
+    // Run on load and also when modal opens
+    autoFillProductDetails();
+    
+    $('#Product').on('show.bs.modal', function() {
+        setTimeout(autoFillProductDetails, 100);
+    });
+    
+    $('.deal-modal-btn').click(function() {
+        setTimeout(autoFillProductDetails, 200);
+    });
 });
+</script> --}}
+
+<script>
+$(document).ready(function() {
+    console.log('RFQ Auto-fill initialized');
+    
+    // Initialize auto-fill when page loads
+    setTimeout(function() {
+        autoFillProductDetails();
+    }, 500);
+
+    function autoFillProductDetails() {
+        console.log('Starting auto-fill product details...');
+        
+        // Get product data from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = urlParams.get('product_id');
+        const productName = urlParams.get('product_name');
+        const productSku = urlParams.get('product_sku');
+        const productBrand = urlParams.get('product_brand');
+        
+        console.log('URL Parameters found:', {
+            productId: productId,
+            productName: productName,
+            productSku: productSku,
+            productBrand: productBrand
+        });
+
+        // Check if we have product data to auto-fill
+        if (productName && productName !== 'asdasd') {
+            console.log('Auto-filling product details for:', productName);
+            
+            // Fill main product row
+            fillMainProductRow(productName, productBrand);
+            
+            // Fill modal fields (EXCLUDING SKU)
+            fillModalFields(productName, productBrand);
+            
+            console.log('Product details auto-filled successfully (SKU excluded)');
+        } else {
+            console.log('No valid product data found for auto-fill');
+        }
+    }
+
+    function fillMainProductRow(productName, productBrand) {
+        console.log('Filling main product row...');
+        
+        // Fill the main product name input
+        const mainProductInput = $('input[name*="[product_name]"]').first();
+        if (mainProductInput.length) {
+            console.log('Found main product input, current value:', mainProductInput.val());
+            if (mainProductInput.val() === 'asdasd' || !mainProductInput.val().trim()) {
+                mainProductInput.val(productName);
+                console.log('Main product name filled:', productName);
+            }
+        }
+        
+        // Set quantity to 1 if empty
+        const qtyInput = $('input[name*="[qty]"]').first();
+        if (qtyInput.length) {
+            if (!qtyInput.val() || qtyInput.val() === '1') {
+                qtyInput.val('1');
+                console.log('Quantity set to 1');
+            }
+        }
+        
+        // Update SL number
+        const slInput = $('input[name*="[sl]"]').first();
+        if (slInput.length) {
+            slInput.val('1');
+            console.log('SL number set to 1');
+        }
+    }
+
+    function fillModalFields(productName, productBrand) {
+        console.log('Filling modal fields (SKU excluded)...');
+        
+        // SKU FIELD INTENTIONALLY EXCLUDED - No auto-fill for SKU
+        
+        // Fill Brand Name in modal
+        if (productBrand) {
+            const brandInput = $('#Product input[name="brand_name"]');
+            if (brandInput.length) {
+                brandInput.val(productBrand);
+                console.log('Brand filled in modal:', productBrand);
+            }
+        }
+        
+        // Fill Item Name (additional product name) in modal
+        const additionalNameInput = $('#Product input[name="additional_product_name"]');
+        if (additionalNameInput.length) {
+            additionalNameInput.val(productName);
+            console.log('Additional product name filled in modal:', productName);
+        }
+        
+        // Set additional quantity to 1 in modal
+        const additionalQtyInput = $('#Product input[name="additional_qty"]');
+        if (additionalQtyInput.length) {
+            additionalQtyInput.val('1');
+            console.log('Additional quantity set to 1 in modal');
+        }
+        
+        // Model No. also excluded since you didn't mention it
+    }
+
+    // Sync data when modal opens (excluding SKU)
+    $('#Product').on('show.bs.modal', function() {
+        console.log('Product modal opened - syncing data (SKU excluded)...');
+        
+        setTimeout(function() {
+            // Get data from main product row to populate modal
+            const mainProductName = $('input[name*="[product_name]"]').first().val();
+            const mainProductQty = $('input[name*="[qty]"]').first().val();
+            
+            console.log('Syncing from main row - Name:', mainProductName, 'Qty:', mainProductQty);
+            
+            if (mainProductName && mainProductName !== 'asdasd') {
+                // Update modal fields with main row data (SKU excluded)
+                const modalNameInput = $('#Product input[name="additional_product_name"]');
+                const modalQtyInput = $('#Product input[name="additional_qty"]');
+                
+                if (modalNameInput.length) {
+                    modalNameInput.val(mainProductName);
+                    console.log('Modal product name synced:', mainProductName);
+                }
+                
+                if (modalQtyInput.length) {
+                    modalQtyInput.val(mainProductQty || '1');
+                    console.log('Modal quantity synced:', mainProductQty || '1');
+                }
+                
+                // Note: SKU is intentionally NOT synced
+            }
+        }, 100);
+    });
+
+    // Update main product row when modal fields change (SKU changes don't affect main row)
+    $(document).on('change', '#Product input[name="additional_product_name"]', function() {
+        const additionalName = $(this).val();
+        if (additionalName) {
+            $('input[name*="[product_name]"]').first().val(additionalName);
+            console.log('Main product name updated from modal:', additionalName);
+        }
+    });
+
+    $(document).on('change', '#Product input[name="additional_qty"]', function() {
+        const additionalQty = $(this).val();
+        if (additionalQty) {
+            $('input[name*="[qty]"]').first().val(additionalQty);
+            console.log('Main quantity updated from modal:', additionalQty);
+        }
+    });
+
+    // Modal button click handler (SKU excluded)
+    $(document).on('click', '.deal-modal-btn', function() {
+        console.log('Modal button clicked - ensuring data sync (SKU excluded)...');
+        
+        const mainProductName = $('input[name*="[product_name]"]').first().val();
+        const mainProductQty = $('input[name*="[qty]"]').first().val();
+        
+        console.log('Current main row data - Name:', mainProductName, 'Qty:', mainProductQty);
+        
+        if (mainProductName && mainProductName !== 'asdasd') {
+            setTimeout(function() {
+                const modalNameInput = $('#Product input[name="additional_product_name"]');
+                const modalQtyInput = $('#Product input[name="additional_qty"]');
+                
+                if (modalNameInput.length) {
+                    modalNameInput.val(mainProductName);
+                    console.log('Modal product name set from main row:', mainProductName);
+                }
+                
+                if (modalQtyInput.length) {
+                    modalQtyInput.val(mainProductQty || '1');
+                    console.log('Modal quantity set from main row:', mainProductQty || '1');
+                }
+                
+                // SKU is intentionally left empty
+            }, 300);
+        }
+    });
+
+    // Debug function
+    function debugInputs() {
+        console.log('=== DEBUG INPUTS ===');
+        console.log('Main product name:', $('input[name*="[product_name]"]').first().val());
+        console.log('Modal brand name:', $('#Product input[name="brand_name"]').val());
+        console.log('Modal additional name:', $('#Product input[name="additional_product_name"]').val());
+        console.log('Modal SKU (should be empty):', $('#Product input[name="sku_no"]').val());
+        console.log('====================');
+    }
+
+    // Run debug on load
+    setTimeout(debugInputs, 1000);
+
+    window.debugRFQ = debugInputs;
+});
+
+// Quantity functions
+function increment(button) {
+    const input = $(button).closest('.d-flex').find('.qty-input');
+    let value = parseInt(input.val()) || 1;
+    input.val(value + 1);
+}
+
+function decrement(button) {
+    const input = $(button).closest('.d-flex').find('.qty-input');
+    let value = parseInt(input.val()) || 1;
+    if (value > 1) {
+        input.val(value - 1);
+    }
+}
 </script>
 @endsection
