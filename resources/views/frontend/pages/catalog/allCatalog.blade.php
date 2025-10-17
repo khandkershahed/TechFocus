@@ -2,7 +2,7 @@
 @section('metadata')
 @endsection
 @section('content')
-    <!--Banner -->
+    <!-- Banner Section -->
     <section class="ban_sec section_one">
         <div class="p-0 container-fluid">
             <div class="ban_img">
@@ -24,194 +24,144 @@
                         </div>
                     </div>
                 @else
-                    <img src="{{ asset('frontend/images/no-banner(1920-330).png') }}"
-                         class="img-fluid"
-                         alt="No Banner">
+                    <img src="{{ asset('frontend/images/no-banner(1920-330).png') }}" class="img-fluid" alt="No Banner">
                 @endif
-    <!-- content start -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Catalogs Section -->
     <div class="container my-4">
-        <div class="row align-items-center">
-            <div class="container px-4">
-                <div class="row gx-5">
-                    <div class="col-lg-3">
-                        <div class="pt-4 pb-2 text-center">CATALOGS BY CATEGORIES</div>
-                        <div>
-                            <ul class="nav nav-tabs flex-column" id="myTab" role="tablist">
-                                <li class="nav-item p-0 mt-1 shadow-lg univers-group-item" role="presentation">
-                                    <span class="nav-link ps-3 active" id="home-tab" data-bs-toggle="tab"
-                                        data-bs-target="#home" type="button" role="tab" aria-controls="home"
-                                        aria-selected="true">
-                                        All
-                                    </span>
-                                </li>
-                                @if (count($categories) > 0)
-                                    @foreach ($categories as $key => $category)
-                                        <li class="nav-item p-0 mt-1 shadow-lg univers-group-item" role="presentation">
-                                            <span class="nav-link ps-3" id="category-item-{{ $key }}-tab" data-bs-toggle="tab"
-                                                data-bs-target="#category-item-{{ $key }}" type="button" role="tab"
-                                                aria-controls="category-item-{{ $key }}" aria-selected="false">
-                                                {{ $category->name }}
-                                            </span>
-                                        </li>
-                                    @endforeach
-                                @endif
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-lg-9">
-                        
-                        <div>
-                            <div class="tab-content" id="myTabContent">
-                                <div class="tab-pane fade show active" id="home" role="tabpanel"
-                                    aria-labelledby="home-tab">
-                                    <!-- Content -->
-                                    <div class="devider-wrap">
-                                        <h4 class="devider-content mb-4">
-                                            <span class="devider-text">All Catalogs</span>
-                                        </h4>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-3">
-                                            <a href="{{ route('pdf.details','machine-safeguard') }}">
-                                                <div class="card projects-card rounded-0">
-                                                    <img src="https://img.directindustry.com/pdf/repository_di/12525/2022-power-generation-products-1050613_1b.jpg"
-                                                        class="card-img-top img-fluid rounded-0" alt="..." />
-                                                    <div class="card-body">
-                                                        <p class="card-text project-para text-center">
-                                                            Machine safeguard
-                                                        </p>
-                                                        <div class="catalog-logo-area">
-                                                            <img title="Key Technology (China) Limited"
-                                                                class="catalog-logo lazyLoaded"
-                                                                src="https://img.directindustry.com/images_di/logo-pp/L68381.gif" />
-                                                        </div>
-                                                        <div class="catalog-logo-area mt-3">
-                                                            <p class="p-0 m-0" style="font-size: 10px">
-                                                                2 Pages
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </a>
+        <div class="row">
+            <div class="col-lg-3">
+                <h6 class="mb-3">Catalogs by Categories</h6>
+                <ul class="nav nav-tabs flex-column" id="myTab" role="tablist">
+                    <li class="nav-item p-0 mt-1 shadow-lg" role="presentation">
+                        <span class="nav-link ps-3 active" id="home-tab" data-bs-toggle="tab"
+                              data-bs-target="#home" type="button" role="tab">All</span>
+                    </li>
+                    @foreach($catalogCategories as $key => $category)
+                        <li class="nav-item p-0 mt-1 shadow-lg" role="presentation">
+                            <span class="nav-link ps-3" id="category-item-{{ $key }}-tab" data-bs-toggle="tab"
+                                  data-bs-target="#category-item-{{ $key }}" type="button" role="tab">
+                                {{ ucfirst($category) }}
+                            </span>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+
+            <div class="col-lg-9">
+                <div class="tab-content" id="myTabContent">
+                    <!-- All Catalogs Tab -->
+                    <div class="tab-pane fade show active" id="home" role="tabpanel">
+                        <div class="row">
+                            @forelse($allCatalogs as $catalog)
+                                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                                    <div class="card projects-card rounded-0 h-100 catalog-card"
+                                         style="cursor: pointer;"
+                                         data-pdf-url="{{ $catalog->document ? asset('storage/catalog/document/' . $catalog->document) : '' }}">
+                                        <img src="{{ $catalog->thumbnail ? asset('storage/catalog/thumbnail/' . $catalog->thumbnail) : asset('frontend/images/no-image.jpg') }}"
+                                             class="card-img-top img-fluid rounded-0"
+                                             alt="{{ $catalog->name }}"
+                                             style="height: 200px; object-fit: cover;" />
+                                        <div class="card-body d-flex flex-column">
+                                            <p class="text-center flex-grow-1">{{ $catalog->name }}</p>
+
+                                            {{-- Catalog Logo --}}
+                                            @php
+                                                $logoUrl = asset('frontend/images/no-logo.png');
+                                                $logoTitle = 'No Logo';
+
+                                                if($catalog->category == 'brand' && $catalog->brands->first()?->logo) {
+                                                    $logoUrl = asset('storage/brand/logo/' . $catalog->brands->first()->logo);
+                                                    $logoTitle = $catalog->brands->first()->title;
+                                                } elseif($catalog->category == 'company' && $catalog->companies->first()?->logo) {
+                                                    $logoUrl = asset('storage/company/logo/' . $catalog->companies->first()->logo);
+                                                    $logoTitle = $catalog->companies->first()->name;
+                                                }
+                                            @endphp
+                                            <div class="text-center mb-2">
+                                                <img src="{{ $logoUrl }}" title="{{ $logoTitle }}" style="max-height: 40px; max-width: 100px;"
+                                                     onerror="this.onerror=null;this.src='{{ asset('frontend/images/no-logo.png') }}';">
+                                                <p class="small mt-2 mb-0">{{ $catalog->page_number ?? 0 }} Pages</p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                @if (count($categories) > 0) 
-                                    @foreach ($categories as $key => $category)
-                                        <div class="tab-pane fade" id="category-item-{{ $key }}" role="tabpanel"
-                                            aria-labelledby="category-item-{{ $key }}-tab">
-                                               <!-- Content -->
-                                               <div class="devider-wrap">
-                                                <h4 class="devider-content mb-4">
-                                                    <span class="devider-text">{{ $category->name }} Catalogs</span>
-                                                </h4>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-lg-3">
-                                                    <a href="">
-                                                        <div class="card projects-card rounded-0">
-                                                            <img src="https://img.directindustry.com/pdf/repository_di/12525/2022-power-generation-products-1050613_1b.jpg"
-                                                                class="card-img-top img-fluid rounded-0" alt="..." />
-                                                            <div class="card-body">
-                                                                <p class="card-text project-para text-center">
-                                                                    Machine safeguard
-                                                                </p>
-                                                                <div class="catalog-logo-area">
-                                                                    <img title="Key Technology (China) Limited"
-                                                                        class="catalog-logo lazyLoaded"
-                                                                        src="https://img.directindustry.com/images_di/logo-pp/L68381.gif" />
-                                                                </div>
-                                                                <div class="catalog-logo-area mt-3">
-                                                                    <p class="p-0 m-0" style="font-size: 10px">
-                                                                        2 Pages
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </a>
+                            @empty
+                                <div class="col-12">
+                                    <div class="alert alert-info text-center">No catalogs found.</div>
+                                </div>
+                            @endforelse
+                        </div>
+                    </div>
+
+                    {{-- Category-wise Catalogs --}}
+                    @foreach($catalogCategories as $key => $category)
+                        <div class="tab-pane fade" id="category-item-{{ $key }}">
+                            <div class="row">
+                                @if(isset($catalogsByCategory[$category]) && $catalogsByCategory[$category]->count() > 0)
+                                    @foreach($catalogsByCategory[$category] as $catalog)
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                                            <div class="card projects-card rounded-0 h-100 catalog-card"
+                                                 style="cursor: pointer;"
+                                                 data-pdf-url="{{ $catalog->document ? asset('storage/catalog/document/' . $catalog->document) : '' }}">
+                                                <img src="{{ $catalog->thumbnail ? asset('storage/catalog/thumbnail/' . $catalog->thumbnail) : asset('frontend/images/no-image.jpg') }}"
+                                                     class="card-img-top img-fluid rounded-0"
+                                                     alt="{{ $catalog->name }}"
+                                                     style="height: 200px; object-fit: cover;" />
+                                                <div class="card-body d-flex flex-column">
+                                                    <p class="text-center flex-grow-1">{{ $catalog->name }}</p>
+
+                                                    {{-- Catalog Logo --}}
+                                                    @php
+                                                        $logoUrl = asset('frontend/images/no-logo.png');
+                                                        $logoTitle = 'No Logo';
+                                                        if($catalog->category == 'brand' && $catalog->brands->first()?->logo) {
+                                                            $logoUrl = asset('storage/brand/logo/' . $catalog->brands->first()->logo);
+                                                            $logoTitle = $catalog->brands->first()->title;
+                                                        } elseif($catalog->category == 'company' && $catalog->companies->first()?->logo) {
+                                                            $logoUrl = asset('storage/company/logo/' . $catalog->companies->first()->logo);
+                                                            $logoTitle = $catalog->companies->first()->name;
+                                                        }
+                                                    @endphp
+                                                    <div class="text-center mb-2">
+                                                        <img src="{{ $logoUrl }}" title="{{ $logoTitle }}" style="max-height: 40px; max-width: 100px;"
+                                                             onerror="this.onerror=null;this.src='{{ asset('frontend/images/no-logo.png') }}';">
+                                                        <p class="small mt-2 mb-0">{{ $catalog->page_number ?? 0 }} Pages</p>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     @endforeach
+                                @else
+                                    <div class="col-12">
+                                        <div class="alert alert-info text-center">No catalogs found in {{ ucfirst($category) }} category.</div>
+                                    </div>
                                 @endif
                             </div>
                         </div>
-                    </div>
+                    @endforeach
                 </div>
-            </div>
-        </div>
-    </div>
-    <div class="container my-5 pt-5">
-        <div class="row">
-            <div class="col-lg-12">
-                <p class="text-center">CHOOSE BY COMPANY NAME</p>
-                <div class="d-flex justify-content-center">
-                    <div class="pagination">
-                        <a href="javascript:void(0).html">0-9</a>
-                        <span>-</span>
-                        <a href="javascript:void(0)">A</a>
-                        <span>-</span>
-                        <a href="javascript:void(0)">B</a>
-                        <span>-</span>
-                        <a href="javascript:void(0)">C</a>
-                        <span>-</span>
-                        <a href="javascript:void(0)">D</a>
-                        <span>-</span>
-                        <a href="javascript:void(0)">E</a>
-                        <span>-</span>
-                        <a href="javascript:void(0)">F</a>
-                        <span>-</span>
-                        <a href="javascript:void(0)">G</a>
-                        <span>-</span>
-                        <a href="javascript:void(0)">H</a>
-                        <span>-</span>
-                        <a href="javascript:void(0)">I</a>
-                        <span>-</span>
-                        <a href="javascript:void(0)">J</a>
-                        <span>-</span>
-                        <a href="javascript:void(0)">K</a>
-                        <span>-</span>
-                        <a href="javascript:void(0)">L</a>
-                        <span>-</span>
-                        <a href="javascript:void(0)">M</a>
-                        <span>-</span>
-                        <a href="javascript:void(0)">N</a>
-                        <span>-</span>
-                        <a href="javascript:void(0)">O</a>
-                        <span>-</span>
-                        <a href="javascript:void(0)">P</a>
-                        <span>-</span>
-                        <a href="javascript:void(0)">Q</a>
-                        <span>-</span>
-                        <a href="javascript:void(0)">R</a>
-                        <span>-</span>
-                        <a href="javascript:void(0)">S</a>
-                        <span>-</span>
-                        <a href="javascript:void(0)">T</a>
-                        <span>-</span>
-                        <a href="javascript:void(0)">U</a>
-                        <span>-</span>
-                        <a href="javascript:void(0)">V</a>
-                        <span>-</span>
-                        <a href="javascript:void(0)">W</a>
-                        <span>-</span>
-                        <a href="javascript:void(0)">X</a>
-                        <span>-</span>
-                        <a href="javascript:void(0)">Y</a>
-                        <span>-</span>
-                        <a href="javascript:void(0)">Z</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-12 col-sm-12">
-                <p class="sub-color text-center w-75 mx-auto"> *Prices are pre-tax. They exclude delivery charges and customs duties
-                    and
-                    do not include additional charges for installation or activation options. Prices are indicative only and
-                    may
-                    vary by country, with changes to the cost of raw materials and exchange rates. </p>
             </div>
         </div>
     </div>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.catalog-card').forEach(card => {
+        card.addEventListener('click', function() {
+            const pdfUrl = this.dataset.pdfUrl;
+            if(pdfUrl) {
+                window.open(pdfUrl, '_blank'); // open PDF in new tab
+            } else {
+                alert('PDF not available for this catalog.');
+            }
+        });
+    });
+});
+</script>
+@endpush

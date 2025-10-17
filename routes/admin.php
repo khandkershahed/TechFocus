@@ -360,6 +360,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // Get all tasks for a selected employee (AJAX)
     Route::get('employee-tasks/{employeeId}', [EmployeeTaskController::class, 'employeeTasks'])->name('employee.tasks');
 
+    Route::get('/catalog', [CatalogController::class, 'index'])->name('catalog.index');
+Route::get('/catalog/create', [CatalogController::class, 'create'])->name('catalog.create');
+Route::post('/catalog', [CatalogController::class, 'store'])->name('catalog.store');
+Route::get('/catalog/{id}/edit', [CatalogController::class, 'edit'])->name('catalog.edit');
+Route::put('/catalog/{id}', [CatalogController::class, 'update'])->name('catalog.update');
+Route::delete('/catalog/{id}', [CatalogController::class, 'destroy'])->name('catalog.destroy');
 
 });
 
@@ -395,3 +401,7 @@ Route::prefix('leave-applications')->name('leave-applications.')->group(function
 Route::resource('leave-applications', LeaveApplicationController::class)->except(['show', 'create']);
 Route::get('leave-applications/history', [LeaveApplicationController::class, 'history'])->name('leave-applications.history');
 Route::get('leave-applications/dashboard', [LeaveApplicationController::class, 'dashboard'])->name('leave-applications.dashboard');
+
+//catalog 
+
+// OR

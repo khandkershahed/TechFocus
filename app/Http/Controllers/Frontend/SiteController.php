@@ -47,21 +47,117 @@ class SiteController extends Controller
     /**
      * All Catalog Page
      */
-    public function allCatalog()
-    {
+    // public function allCatalog()
+    // {
+    //     $banners = PageBanner::where('page_name', 'catalog')->get();
+
+    //     $categories = Category::with([
+    //         'children.children.children.children',
+    //         'catalogs.attachments'
+    //     ])
+    //     ->where('is_parent', 1)
+    //     ->get(['id', 'parent_id', 'name', 'slug']);
+
+    //     $allCatalogs = Catalog::with('attachments')->get();
+
+    //     return view('frontend.pages.catalog.allCatalog', compact('categories', 'allCatalogs', 'banners'));
+    // }
+
+    /**
+ * All Catalog Page - SAFE VERSION
+ */
+public function allCatalog()
+{
+    $banners = PageBanner::where('page_name', 'catalog')->get();
+
+    // Get all unique catalog categories (brand, product, industry, solution, company)
+    $catalogCategories = Catalog::distinct()->pluck('category');
+    
+    // Get all catalogs for the "All" tab with relationships
+    $allCatalogs = Catalog::with(['attachments'])
+        ->latest()
+        ->get();
+
+    // Get catalogs grouped by category
+    $catalogsByCategory = [];
+    foreach ($catalogCategories as $category) {
+        $catalogsByCategory[$category] = Catalog::with(['attachments'])
+            ->where('category', $category)
+            ->latest()
+            ->get();
+    }
+
+    return view('frontend.pages.catalog.allCatalog', compact(
+        'catalogCategories',
+        'allCatalogs',
+        'catalogsByCategory',
+        'banners'
+    ));
+}
+
+    /**
+     * Catalog Details Page
+     */
+public function catalogDetails($slug)
+{
+    try {
+        $catalog = Catalog::with(['attachments', 'brands', 'products', 'industries', 'companies'])
+            ->where('slug', $slug)
+            ->first();
+
+        if (!$catalog) {
+            abort(404, 'Catalog not found');
+        }
+
         $banners = PageBanner::where('page_name', 'catalog')->get();
 
-        $categories = Category::with([
-            'children.children.children.children',
-            'catalogs.attachments'
-        ])
-        ->where('is_parent', 1)
-        ->get(['id', 'parent_id', 'name', 'slug']);
-
-        $allCatalogs = Catalog::with('attachments')->get();
-
-        return view('frontend.pages.catalog.allCatalog', compact('categories', 'allCatalogs', 'banners'));
+        return view('frontend.pages.catalog.details', compact('catalog', 'banners'));
+        
+    } catch (\Exception $e) {
+        abort(404, 'Catalog not found');
     }
+}
+
+    /**
+     * Get Company Catalogs by Letter (AJAX)
+     */
+    public function getCompanyCatalogs($letter)
+    {
+        if ($letter === '0-9') {
+            // Get companies starting with numbers
+            $companies = Company::where('name', 'REGEXP', '^[0-9]')
+                ->where('status', true)
+                ->pluck('id');
+        } else {
+            // Get companies starting with specific letter
+            $companies = Company::where('name', 'LIKE', $letter . '%')
+                ->where('status', true)
+                ->pluck('id');
+        }
+
+        $catalogs = Catalog::with(['companies'])
+            ->whereHas('companies', function($query) use ($companies) {
+                $query->whereIn('companies.id', $companies);
+            })
+            ->where('status', true)
+            ->get()
+            ->map(function($catalog) {
+                return [
+                    'id' => $catalog->id,
+                    'name' => $catalog->name,
+                    'slug' => $catalog->slug,
+                    'thumbnail' => $catalog->thumbnail,
+                    'page_number' => $catalog->page_number,
+                    'category' => $catalog->category,
+                ];
+            });
+
+        return response()->json([
+            'catalogs' => $catalogs
+        ]);
+    }
+
+
 
     /**
      * RFQ Page
@@ -273,4 +369,22 @@ class SiteController extends Controller
 
         return view('frontend.pages.news.details', compact('news', 'categories', 'solutions', 'news_trends'));
     }
+    
+
+
+public function showBySlugOrId($slugOrId)
+{
+    $catalog = Catalog::where('slug', $slugOrId)->first();
+
+    if (!$catalog && is_numeric($slugOrId)) {
+        $catalog = Catalog::find($slugOrId);
+    }
+
+    if (!$catalog) {
+        abort(404, 'Catalog not found');
+    }
+
+    return view('frontend.pages.catalog.details', compact('catalog'));
+}
+
 }

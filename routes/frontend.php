@@ -146,6 +146,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\CompareController;
+use App\Http\Controllers\Admin\CatalogController;
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');
@@ -163,4 +164,9 @@ Route::prefix('compare')->group(function () {
     Route::get('/result', [CompareController::class, 'result'])->name('products.compare.result');
     Route::get('/clear', [CompareController::class, 'clear'])->name('products.compare.clear');
 });
+
+// Catalog Routes
+Route::get('/catalogs', [SiteController::class, 'allCatalog'])->name('catalogs.all');
+Route::get('/catalogs/company/{letter}', [SiteController::class, 'getCompanyCatalogs'])->name('catalogs.by.company');
+
 

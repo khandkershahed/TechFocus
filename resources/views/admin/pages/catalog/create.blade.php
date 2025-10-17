@@ -33,8 +33,8 @@
                                         <select class="form-select form-select-solid form-select-sm" name="category"
                                             id="category" data-control="select2" data-hide-search="false"
                                             data-placeholder="Select an Product Type" data-allow-clear="true"
-                                            onchange="showSelectBox()">
-                                            <option selected>Select The Category</option>
+                                            onchange="showSelectBox()" required>
+                                            <option value="">Select The Category</option>
                                             <option value="brand">Brand</option>
                                             <option value="product">Product</option>
                                             <option value="industry">Industry</option>
@@ -48,70 +48,71 @@
                                     <div class="fv-row mb-3">
                                         <label class="form-label required">Brand Name</label>
                                         <select class="form-select form-select-solid form-select-sm" name="brand_id[]"
-                                            id="field2" multiple multiselect-search="true" multiselect-select-all="true"
-                                            multiselect-max-items="3" onchange="console.log(this.selectedOptions)">
+                                            id="brand_id" multiple multiselect-search="true" multiselect-select-all="true"
+                                            multiselect-max-items="3">
                                             @foreach ($brands as $brand)
-                                                <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                                                <option value="{{ $brand->id }}">{{ $brand->title }}</option>
                                             @endforeach
                                         </select>
-                                        <div class="invalid-feedback"> Please Enter Product Name.</div>
+                                        <div class="invalid-feedback"> Please Select Brand.</div>
                                     </div>
                                 </div>
                                 <div class="col-lg-6 product-select-box hidden">
                                     <div class="fv-row mb-3">
                                         <label class="form-label required">Product Name</label>
-                                        <select class="form-select form-select-solid" name="product_id[]" id="field2"
+                                        <select class="form-select form-select-solid" name="product_id[]" id="product_id"
                                             multiple multiselect-search="true" multiselect-select-all="true"
-                                            multiselect-max-items="3" onchange="console.log(this.selectedOptions)">
+                                            multiselect-max-items="3">
                                             @foreach ($products as $product)
                                                 <option value="{{ $product->id }}">{{ $product->name }}</option>
                                             @endforeach
                                         </select>
-                                        <div class="invalid-feedback"> Please Enter Product Name.</div>
+                                        <div class="invalid-feedback"> Please Select Product.</div>
                                     </div>
                                 </div>
                                 <div class="col-lg-6 industry-select-box hidden">
                                     <div class="fv-row mb-3">
                                         <label class="form-label required">Industry Name</label>
-                                        <select class="form-select form-select-solid" name="industry_id[]" id="field2"
+                                        <select class="form-select form-select-solid" name="industry_id[]" id="industry_id"
                                             multiple multiselect-search="true" multiselect-select-all="true"
-                                            multiselect-max-items="3" onchange="console.log(this.selectedOptions)">
+                                            multiselect-max-items="3">
                                             @foreach ($industries as $industry)
                                                 <option value="{{ $industry->id }}">{{ $industry->name }}</option>
                                             @endforeach
                                         </select>
-                                        <div class="invalid-feedback"> Please Enter Product Name.</div>
+                                        <div class="invalid-feedback"> Please Select Industry.</div>
                                     </div>
                                 </div>
                                 <div class="col-lg-6 solution-select-box hidden">
                                     <div class="fv-row mb-3">
                                         <label class="form-label required">Solution Name</label>
-                                        <select class="form-select form-select-solid" name="solution_id[]" id="field2"
+                                        <select class="form-select form-select-solid" name="solution_id[]" id="solution_id"
                                             multiple multiselect-search="true" multiselect-select-all="true"
-                                            multiselect-max-items="3" onchange="console.log(this.selectedOptions)">
-                                            {{-- @foreach ($solutions as $solution)
-                                                <option value="{{ $solution->id }}">{{ $solution->name }}</option>
-                                            @endforeach --}}
+                                            multiselect-max-items="3">
+                                            <!-- Add solutions here if available -->
+                                            <option value="">Solution 1</option>
+                                            <option value="">Solution 2</option>
+                                            <option value="">Solution 3</option>
                                         </select>
-                                        <div class="invalid-feedback"> Please Enter Product Name.</div>
+                                        <div class="invalid-feedback"> Please Select Solution.</div>
                                     </div>
                                 </div>
                                 <div class="col-lg-2 company-select-box hidden">
                                     <div class="fv-row mb-3">
                                         <label class="form-label required">Company Name</label>
-                                        <select class="form-select form-select-solid" name="company_id[]" id="field2"
+                                        <select class="form-select form-select-solid" name="company_id[]" id="company_id"
                                             multiple multiselect-search="true" multiselect-select-all="true"
-                                            multiselect-max-items="3" onchange="console.log(this.selectedOptions)">
+                                            multiselect-max-items="3">
                                             @foreach ($companies as $company)
                                                 <option value="{{ $company->id }}">{{ $company->name }}</option>
                                             @endforeach
                                         </select>
-                                        <div class="invalid-feedback"> Please Enter Product Name.</div>
+                                        <div class="invalid-feedback"> Please Select Company.</div>
                                     </div>
                                 </div>
                                 <div class="col-lg-2 button-select-box hidden">
                                     <div class="fv-row mb-3">
-                                        <label class="form-label required">Button Name</label>
+                                        <label class="form-label">Button Name</label>
                                         <input name="company_button_name"
                                             class="form-control form-control-sm form-control-solid"
                                             placeholder="Enter Button Name" type="text" />
@@ -120,7 +121,7 @@
                                 </div>
                                 <div class="col-lg-2 link-select-box hidden">
                                     <div class="fv-row mb-3">
-                                        <label class="form-label required">Button Link</label>
+                                        <label class="form-label">Button Link</label>
                                         <input name="company_button_link"
                                             class="form-control form-control-sm form-control-solid"
                                             placeholder="Enter Button Link" type="url" />
@@ -175,7 +176,6 @@
                                     <h5 class="mb-3 w-150px text-white p-2" style="background: #0069bf;">
                                         Catalogue Details
                                     </h5>
-                                    {{-- <hr style="margin-top: -9px;"> --}}
                                 </div>
                                 <div class="col-lg-12">
                                     <div id="kt_docs_repeater_advanced">
@@ -214,7 +214,7 @@
                                                                         placeholder="Enter Button Link" />
                                                                 </div>
                                                                 <div class="col-md-12">
-                                                                    <label class="form-label required">Description</label>
+                                                                    <label class="form-label">Description</label>
                                                                     <textarea rows="1" name="description" class="form-control form-control-sm form-control-solid"
                                                                         data-kt-repeater="repeat" placeholder="Enter Description"></textarea>
                                                                 </div>
