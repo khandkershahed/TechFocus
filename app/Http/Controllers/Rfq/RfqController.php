@@ -446,7 +446,7 @@ class RfqController extends Controller
             'country' => $request->country,
             'city' => $request->city,
             'zip_code' => $request->zip_code,
-            'is_reseller' => $request->boolean('is_reseller'),
+            'is_reseller' => $request->is_reseller,
             
             // Shipping Details
             'shipping_company_name' => $request->shipping_company_name,
