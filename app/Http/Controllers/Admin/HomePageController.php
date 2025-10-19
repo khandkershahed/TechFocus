@@ -4,11 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use App\Models\Admin\HomePage;
-use App\Http\Controllers\Controller;
-use App\Models\Admin\NewsTrend;
 use App\Models\Admin\Product;
+use App\Models\Admin\HomePage;
+use App\Models\Admin\NewsTrend;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
+use Spatie\ErrorSolutions\Contracts\Solution;
 
 class HomePageController extends Controller
 {
@@ -31,9 +32,12 @@ class HomePageController extends Controller
      */
     public function create()
     {
+       
         return view('admin.pages.homePage.create', [
+            
             'products' => Product::get(['id', 'name']),
             'newsTrends' => NewsTrend::get(['id', 'title']),
+            
         ]);
     }
 
@@ -253,9 +257,11 @@ class HomePageController extends Controller
      */
     public function update(Request $request, $id)
     {
+       
         $homePage = HomePage::find($id);
 
         $mainFileSectionOneImage              = $request->file('section_one_image');
+        
         $mainFileSectionThreeFirstColumnLogo  = $request->file('section_three_first_column_logo');
         $mainFileSectionThreeSecondColumnLogo = $request->file('section_three_second_column_logo');
         $mainFileSectionThreeThirdColumnLogo  = $request->file('section_three_third_column_logo');
@@ -441,6 +447,7 @@ class HomePageController extends Controller
         $homePage->update([
             'country_id'                            => $request->country_id,
             'section_one_name'                      => $request->section_one_name,
+              
             'section_one_badge'                     => $request->section_one_badge,
             'section_one_title'                     => $request->section_one_title,
             'section_one_description'               => $request->section_one_description,

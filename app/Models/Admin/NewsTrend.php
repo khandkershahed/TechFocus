@@ -23,6 +23,7 @@ class NewsTrend extends Model
         'industry_id',
         'solution_id',
         'product_id',
+        'slug',
         'thumbnail_image',
         'banner_image',
         'source_image',

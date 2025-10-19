@@ -2,47 +2,90 @@
 
 namespace App\Http\Controllers\Frontend;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
 use App\Models\PageBanner;
-use App\Models\Admin\Product;
 use App\Models\Admin\Brand;
+use Illuminate\Http\Request;
+use App\Models\Admin\Catalog;
+use App\Models\Admin\Product;
 use App\Models\Admin\Category;
+use App\Models\Admin\HomePage;
 use App\Models\Admin\Industry;
 use App\Models\Admin\AboutPage;
 use App\Models\Admin\NewsTrend;
-use App\Models\Admin\Catalog;
+use App\Models\Admin\TechGlossy;
+use App\Models\Admin\ClientStory;
+use App\Http\Controllers\Controller;
 use App\Models\Admin\SolutionDetail;
 use App\Models\Admin\SubSubCategory;
-use App\Models\Admin\ClientStory;
-use App\Models\Admin\TechGlossy;
+use Illuminate\Support\Facades\Session;
+
 
 class SiteController extends Controller
 {
     /**
      * Home Page
      */
-    public function homePage()
-    {
-        $banners = PageBanner::where('page_name', 'home')->get();
-// dd($banner);
-        $data = [
-            'banners'        => $banners,
-            'categories'    => Category::with('children.children.children.children.children.children.children.children.children.children')
-                                ->where('is_parent', '1')
-                                ->get(['id', 'parent_id', 'name', 'slug']),
-            'products'      => Product::with('brand')
-                                ->where('status', 'active')
-                                ->inRandomOrder()
-                                ->limit(5)
-                                ->get(),
-            'news_trends'   => NewsTrend::where('type', 'trends')->limit(4)->get(),
-            'solutions'     => SolutionDetail::latest()->limit(4)->get(),
-        ];
+//     public function homePage()
+//     {
+//         $banners = PageBanner::where('page_name', 'home')->get();
+// // dd($banner);
+//         $data = [
+//             'banners'        => $banners,
+//             'categories'    => Category::with('children.children.children.children.children.children.children.children.children.children')
+//                                 ->where('is_parent', '1')
+//                                 ->get(['id', 'parent_id', 'name', 'slug']),
+//             'products'      => Product::with('brand')
+//                                 ->where('status', 'active')
+//                                 ->inRandomOrder()
+//                                 ->limit(5)
+//                                 ->get(),
+//             'news_trends'   => NewsTrend::where('type', 'trends')->limit(4)->get(),
+//             'solutions'     => SolutionDetail::latest()->limit(4)->get(),
+//         ];
 
-        return view('frontend.pages.home.index', $data);
+//         return view('frontend.pages.home.index', $data);
+//     }
+
+
+public function homePage()
+{
+    $banners = PageBanner::where('page_name', 'home')->get();
+    
+    // Get dynamic homepage data
+    $homePage = HomePage::with(['country'])->first();
+    
+    // Get featured products for section two if homepage data exists
+    $featuredProducts = collect();
+    if ($homePage && $homePage->section_two_products) {
+        $featuredProducts = Product::whereIn('id', $homePage->section_two_products)->get();
     }
+
+    // Get news trends for section four if homepage data exists
+    $sectionFourNews = collect();
+    if ($homePage && $homePage->section_four_contents) {
+        $sectionFourNews = NewsTrend::whereIn('id', $homePage->section_four_contents)->get();
+    }
+
+    $data = [
+        'banners'        => $banners,
+        'categories'    => Category::with('children.children.children.children.children.children.children.children.children.children')
+                            ->where('is_parent', '1')
+                            ->get(['id', 'parent_id', 'name', 'slug']),
+        'products'      => Product::with('brand')
+                            ->where('status', 'active')
+                            ->inRandomOrder()
+                            ->limit(5)
+                            ->get(),
+        'news_trends'   => NewsTrend::where('type', 'trends')->limit(4)->get(),
+        'solutions'     => SolutionDetail::latest()->limit(4)->get(),
+        // Add dynamic homepage data
+        'homePage' => $homePage,
+        'featuredProducts' => $featuredProducts,
+        'sectionFourNews' => $sectionFourNews,
+    ];
+
+    return view('frontend.pages.home.index', $data);
+}
 
     /**
      * All Catalog Page

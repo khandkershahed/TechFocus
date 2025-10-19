@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Admin\Category;
 use App\Models\Admin\NewsTrend;
@@ -103,6 +104,7 @@ class NewsTrendController extends Controller
             'title'                  => $request->title,
             'header'                 => $request->header,
             'short_des'              => $request->short_des,
+             'slug' => Str::slug($request->title) . '-' . uniqid(), // ✅ Add this line
             'long_des'               => $request->long_des,
             'author'                 => $request->author,
             'address'                => $request->address,

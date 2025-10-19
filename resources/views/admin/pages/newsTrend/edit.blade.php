@@ -81,12 +81,13 @@
                                                         ? json_decode($content->industry_id, true)
                                                         : [];
                                             @endphp
-                                            @foreach ($industries as $id => $name)
-                                                <option value="{{ $id }}"
-                                                    {{ is_array($industryIds) && in_array($id, $industryIds) ? 'selected' : '' }}>
-                                                    {{ is_string($name) ? htmlspecialchars($name, ENT_QUOTES, 'UTF-8') : '' }}
-                                                </option>
-                                            @endforeach
+                                           @foreach ($industries as $industry)
+                                                                <option value="{{ $industry->id }}"
+                                                                    {{ is_array($industryIds) && in_array($industry->id, $industryIds) ? 'selected' : '' }}>
+                                                                    {{ htmlspecialchars($industry->name, ENT_QUOTES, 'UTF-8') }}
+                                                                </option>
+                                                            @endforeach
+
                                         </select>
                                         <div class="invalid-feedback"> Please Select Industry Name. </div>
                                     </div>
@@ -101,12 +102,13 @@
                                                         ? json_decode($content->solution_id, true)
                                                         : [];
                                             @endphp
-                                            @foreach ($solutions as $id => $name)
-                                                <option value="{{ $id }}"
-                                                    {{ is_array($solutionIds) && in_array($id, $solutionIds) ? 'selected' : '' }}>
-                                                    {{ is_string($name) ? htmlspecialchars($name, ENT_QUOTES, 'UTF-8') : '' }}
-                                                </option>
-                                            @endforeach
+                                     @foreach ($solutions as $solution)
+                                                            <option value="{{ $solution->id }}"
+                                                                {{ is_array($solutionIds) && in_array($solution->id, $solutionIds) ? 'selected' : '' }}>
+                                                                {{ htmlspecialchars($solution->name, ENT_QUOTES, 'UTF-8') }}
+                                                            </option>
+                                                        @endforeach
+
                                         </select>
                                         <div class="invalid-feedback"> Please Select Solution Name. </div>
                                     </div>
