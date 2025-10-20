@@ -1581,113 +1581,125 @@
     </div>
 @endsection
 @push('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-multiselect@0.9.16/dist/js/bootstrap-multiselect.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('.nav-tabs a').click(function() {
-                $(this).tab('show');
-            });
-        });
-    </script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-multiselect@0.9.16/dist/js/bootstrap-multiselect.min.js"></script>
+<script>
+$(document).ready(function() {
 
-    <script>
-        $(document).ready(function() {
-            // Function to validate and switch tabs
-            function validateAndSwitchTab(targetTabId) {
-                let isValid = true;
+    // -------------------------------
+    // FORM DATA PERSISTENCE HANDLING
+    // -------------------------------
+    let formStorageKey = "tabFormDataStorage";
+    let tabFormData = JSON.parse(localStorage.getItem(formStorageKey)) || {};
 
-
-                // Get the index of the tab to be shown
-                const activeTabHref = $('.tab-trigger.active').attr('href');
-                $(activeTabHref).find('input, textarea, select').each(function() {
-                    var $field = $(this);
-
-
-                    // Check if it's a Select2 element
-                    var isSelect2 = $field.hasClass('select2-hidden-accessible');
-
-
-                    if ($field.prop('required') && $field.val() === '') {
-                        isValid = false;
-
-
-                        if (isSelect2) {
-                            // Apply CSS based on the element type
-                            $field.next('.select2-container').addClass('is-invalid');
-                        } else {
-                            $field.addClass('is-invalid');
-                        }
-                    }
-                });
-
-
-                if (!isValid) {
-                    // Fields are not valid, prevent the tab switch
-                    return false;
+    // Save current tab data
+    function saveCurrentTabData(tabId) {
+        const data = {};
+        $(tabId).find('input, textarea, select').each(function() {
+            const name = $(this).attr('name');
+            if (name) {
+                if ($(this).attr('type') === 'checkbox' || $(this).attr('type') === 'radio') {
+                    data[name] = $(this).prop('checked');
                 } else {
-                    // Fields are valid, switch to the next tab
-                    switchTab(targetTabId);
-                    return true;
+                    data[name] = $(this).val();
                 }
             }
+        });
+        tabFormData[tabId] = data;
+        localStorage.setItem(formStorageKey, JSON.stringify(tabFormData)); // Save to localStorage
+    }
 
-
-            // Function to switch tabs
-            function switchTab(targetTabId) {
-                $('.nav-link[href="' + targetTabId + '"]').tab('show');
+    // Restore tab data
+    function restoreTabData(tabId) {
+        if (tabFormData[tabId]) {
+            const data = tabFormData[tabId];
+            for (const name in data) {
+                const $field = $(tabId).find(`[name="${name}"]`);
+                if ($field.attr('type') === 'checkbox' || $field.attr('type') === 'radio') {
+                    $field.prop('checked', data[name]);
+                } else {
+                    $field.val(data[name]).trigger('change');
+                }
             }
+        }
+    }
 
+    // Restore all tabs on page load
+    $('.tab-pane').each(function() {
+        const tabId = '#' + $(this).attr('id');
+        restoreTabData(tabId);
+    });
 
-            // Event handler for tab switch
-            $('.tab-trigger').on('show.bs.tab', function(event) {
-                return validateAndSwitchTab($(this).data('bs-target'));
-            });
+    // -------------------------------
+    // VALIDATION AND TAB SWITCH LOGIC
+    // -------------------------------
+    function validateAndSwitchTab(targetTabId) {
+        let isValid = true;
+        const activeTabHref = $('.tab-trigger.active').attr('href');
+        saveCurrentTabData(activeTabHref); // Save before switching
 
+        $(activeTabHref).find('input, textarea, select').each(function() {
+            const $field = $(this);
+            const isSelect2 = $field.hasClass('select2-hidden-accessible');
 
-            // Event handler for input change
-            $('.tab-content').on('input change', 'input, textarea, select', function() {
-                var $field = $(this);
-                var isSelect2 = $field.hasClass('select2-hidden-accessible');
-
-
-                // Remove red border when user interacts with the field
+            if ($field.prop('required') && !$field.val()) {
+                isValid = false;
                 if (isSelect2) {
-                    $field.next('.select2-container').removeClass('is-invalid');
+                    $field.next('.select2-container').addClass('is-invalid');
                 } else {
-                    $field.removeClass('is-invalid');
+                    $field.addClass('is-invalid');
                 }
-            });
-
-
-            // Event handler for multi-select change
-            $('.multiple-select').on('change', function() {
-                // Remove validation error only from the changed multi-select field
-                var $multiSelect = $(this);
-                $multiSelect.removeClass('is-invalid');
-            });
-
-
-            // Event handler for the "Continue" button
-            $('.tab-trigger-next').on('click', function(event) {
-                // Assuming the data-bs-target attribute contains the tab ID to switch to
-                const targetTabId = $(this).data('bs-target');
-
-
-                // Validate and switch to the next tab
-                validateAndSwitchTab(targetTabId);
-            });
-
-
-            // Event handler for the "Previous" button
-            $('.tab-trigger-previous').on('click', function(event) {
-                // Assuming the data-bs-target attribute contains the tab ID to switch to
-                const targetTabId = $(this).data('bs-target');
-
-
-                // Validate and switch to the previous tab
-                validateAndSwitchTab(targetTabId);
-            });
+            }
         });
-    </script>
+
+        if (!isValid) {
+            return false;
+        } else {
+            switchTab(targetTabId);
+            restoreTabData(targetTabId);
+            return true;
+        }
+    }
+
+    // Switch tab function
+    function switchTab(targetTabId) {
+        $('.nav-link[href="' + targetTabId + '"]').tab('show');
+    }
+
+    // -------------------------------
+    // EVENT HANDLERS
+    // -------------------------------
+    $('.tab-trigger').on('show.bs.tab', function(event) {
+        return validateAndSwitchTab($(this).data('bs-target'));
+    });
+
+    $('.tab-content').on('input change', 'input, textarea, select', function() {
+        const $field = $(this);
+        const isSelect2 = $field.hasClass('select2-hidden-accessible');
+        if (isSelect2) {
+            $field.next('.select2-container').removeClass('is-invalid');
+        } else {
+            $field.removeClass('is-invalid');
+        }
+
+        // Save in real-time
+        const activeTabHref = $('.tab-trigger.active').attr('href');
+        saveCurrentTabData(activeTabHref);
+    });
+
+    $('.multiple-select').on('change', function() {
+        $(this).removeClass('is-invalid');
+    });
+
+    $('.tab-trigger-next').on('click', function() {
+        const targetTabId = $(this).data('bs-target');
+        validateAndSwitchTab(targetTabId);
+    });
+
+    $('.tab-trigger-previous').on('click', function() {
+        const targetTabId = $(this).data('bs-target');
+        validateAndSwitchTab(targetTabId);
+    });
+});
+</script>
 @endpush
