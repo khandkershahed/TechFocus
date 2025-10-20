@@ -3,17 +3,93 @@
 namespace App\Http\Controllers\Rfq;
 
 use App\Models\Rfq;
-use App\Models\Admin\Product;
 use App\Models\Admin\Brand;
 use Illuminate\Http\Request;
+use App\Models\Admin\Product;
+use App\Mail\RfqNotificationMail;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class RfqController extends Controller
 {
+
+         /**
+     * Email recipients for RFQ notifications
+     */
+ private function getRfqRecipients()
+{
+    // Primary email recipients for RFQ notifications
+    return [
+        'dev2.ngenit@gmail.com',  // Your main Gmail account
+        // 'rfq@yourcompany.com',    // Your RFQ department email
+        // 'sales@yourcompany.com',  // Your sales team email
+        // Add more specific emails as needed:
+        // 'manager@yourcompany.com',
+        // 'quotes@yourcompany.com',
+        // 'support@yourcompany.com',
+    ];
+    
+    // Alternative: You can still use environment variables if preferred
+    /*
+    return [
+        env('RFQ_PRIMARY_EMAIL', 'dev2.ngenit@gmail.com'),
+        env('RFQ_SECONDARY_EMAIL', 'rfq@yourcompany.com'),
+        env('RFQ_TERTIARY_EMAIL', 'sales@yourcompany.com'),
+    ];
+    */
+}
     /**
+     * Send RFQ notification emails
+     */
+    private function sendRfqEmails(Rfq $rfq)
+{
+    try {
+        $recipients = $this->getRfqRecipients();
+        $subject = 'New RFQ Submitted - ' . $rfq->rfq_code;
+        
+        Log::info('Attempting to send RFQ notification emails to:', $recipients);
+        Log::info('RFQ Details:', [
+            'rfq_code' => $rfq->rfq_code,
+            'company' => $rfq->company_name,
+            'contact' => $rfq->name,
+            'email' => $rfq->email
+        ]);
+
+        $sentCount = 0;
+        $failedCount = 0;
+        
+        foreach ($recipients as $recipient) {
+            if (filter_var($recipient, FILTER_VALIDATE_EMAIL)) {
+                try {
+                    Mail::to($recipient)->send(new RfqNotificationMail($rfq, $subject));
+                    Log::info(" RFQ email sent successfully to: {$recipient}");
+                    $sentCount++;
+                } catch (\Exception $e) {
+                    Log::error("Failed to send email to {$recipient}: " . $e->getMessage());
+                    $failedCount++;
+                }
+            } else {
+                Log::warning("⚠️ Invalid email address configured: {$recipient}");
+                $failedCount++;
+            }
+        }
+        
+        Log::info("Email sending summary: {$sentCount} sent, {$failedCount} failed");
+        
+        return $sentCount > 0; // Return true if at least one email was sent
+        
+    } catch (\Exception $e) {
+        Log::error(' Critical error in sendRfqEmails: ' . $e->getMessage());
+        Log::error('Stack trace: ' . $e->getTraceAsString());
+        return false;
+    }
+}
+
+    /**
+ 
      * Show the RFQ form with pre-filled product data if available
      */
     public function create(Request $request)
@@ -187,6 +263,59 @@ class RfqController extends Controller
      */
     public function store(Request $request)
     {
+
+
+//email section strat 
+
+ Log::info('RFQ Store Method Called');
+    Log::info('All Request Data:', $request->all());
+
+    // Your existing validation and processing code...
+    
+    try {
+        // Generate unique codes
+        $rfq_code = 'RFQ-' . date('Ymd') . '-' . strtoupper(substr(uniqid(), -6));
+        $deal_code = 'DEAL-' . date('Ymd') . '-' . strtoupper(substr(uniqid(), -6));
+
+        // Process products and files
+        $processedData = $this->processProductsAndFiles($request);
+        $products = $processedData['products'];
+        $uploadedFiles = $processedData['files'];
+
+        // Prepare RFQ data
+        $rfqData = $this->prepareRfqData($request, $rfq_code, $deal_code, $products, $uploadedFiles);
+
+        // Create the RFQ
+        $rfq = Rfq::create($rfqData);
+
+        Log::info('RFQ created successfully with ID: ' . $rfq->id);
+
+        // ✅ FIX: Send email notification after successful RFQ creation
+        $emailSent = $this->sendRfqEmails($rfq);
+        
+        if ($emailSent) {
+            Log::info('RFQ notification emails sent successfully');
+        } else {
+            Log::warning('RFQ created but email sending failed');
+        }
+
+        // Clear cart if needed
+        $this->clearCartIfNeeded($request);
+
+        return redirect()->back()
+            ->with('success', 'RFQ submitted successfully! Your RFQ code: ' . $rfq_code . ' and Deal code: ' . $deal_code)
+            ->with('rfq_code', $rfq_code)
+            ->with('deal_code', $deal_code);
+
+    } catch (\Exception $e) {
+        Log::error('RFQ Store Error: ' . $e->getMessage());
+        return redirect()->back()
+            ->with('error', 'Error submitting RFQ. Please try again.')
+            ->withInput();
+    }
+
+///email section end 
+
         Log::info('RFQ Store Method Called');
         Log::info('All Request Data:', $request->all());
         Log::info('Contacts Data:', $request->contacts ?? []);
@@ -198,16 +327,16 @@ class RfqController extends Controller
         $validator = Validator::make($request->all(), $validationRules, $customMessages);
 
         // Check if validation fails
-        if ($validator->fails()) {
-            Log::error('RFQ Validation Failed:');
-            Log::error('Validation Errors:', $validator->errors()->toArray());
-            Log::error('Submitted Data:', $request->all());
+        // if ($validator->fails()) {
+        //     Log::error('RFQ Validation Failed:');
+        //     Log::error('Validation Errors:', $validator->errors()->toArray());
+        //     Log::error('Submitted Data:', $request->all());
             
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput()
-                ->with('error', 'Please fix the validation errors below.');
-        }
+        //     return redirect()->back()
+        //         ->withErrors($validator)
+        //         ->withInput()
+        //         ->with('error', 'Please fix the validation errors below.');
+        // }
 
         Log::info('RFQ Form Data Validated Successfully');
 
@@ -278,6 +407,15 @@ class RfqController extends Controller
                 ->with('error', $errorMessage)
                 ->withInput();
         }
+
+        if ($validator->fails()) {
+        return response()->json([
+        'success' => false,
+        'errors' => $validator->errors(),
+        'data' => $request->all()
+    ]);
+}
+
     }
 
     /**

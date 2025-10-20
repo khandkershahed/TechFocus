@@ -69,7 +69,8 @@ Route::get('/rfq/create', [RfqController::class, 'create'])->name('rfq.create');
 // Handle RFQ submission - KEEP ONLY THIS ONE
 Route::post('/rfq/store', [App\Http\Controllers\Rfq\RfqController::class, 'store'])->name('rfq.store');
 
-
+ Route::get('/test-email', [RfqController::class, 'testEmail'])->name('rfq.test-email');
+ Route::get('/test-validation', [RfqController::class, 'testValidation'])->name('rfq.test-validation');
 
 Route::post('/rfq/upload-image', [RfqController::class, 'uploadImage'])->name('rfq.uploadImage');
 
