@@ -432,33 +432,7 @@
             </div>
             @endif
 
-            <!-- Section 7: News & Trends (Dynamic) -->
-            @if($homePage && $homePage->section_four_name && $sectionFourNews->count() > 0)
-            <div class="mt-3 row">
-                <div class="col-lg-12">
-                    <div class="devider-wrap">
-                        <h4 class="devider-content">
-                            <span class="devider-text">{{ $homePage->section_four_name }}</span>
-                        </h4>
-                    </div>
-                </div>
-            </div>
-            <div class="row gx-5">
-                @foreach ($sectionFourNews as $news_trend)
-                    <div class="col-lg-3 col-md-12">
-                        <a href="{{ route('content.details', $news_trend->slug) }}">
-                            <div class="card projects-card rounded-0">
-                                <img src="{{ asset('storage/content/' . $news_trend->thumbnail_image) }}"
-                                    class="card-img-top img-fluid rounded-0" alt="{{ $news_trend->title }}" />
-                                <div class="card-body">
-                                    <p class="card-text project-para">{{ $news_trend->title }}</p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                @endforeach
-            </div>
-            @endif
+   
 
         
 
@@ -519,7 +493,7 @@
                 @endforeach
             </div>
 
-            <!-- Section 10: News Trends -->
+            {{-- <!-- Section 10: News Trends -->
             <div>
                 <div class="mt-3 row">
                     <div class="col-lg-12">
@@ -545,7 +519,36 @@
                         </div>
                     @endforeach
                 </div>
+            </div> --}}
+
+
+                     <!-- Section 7: News & Trends (Dynamic) -->
+            @if($homePage && $homePage->section_four_name && $sectionFourNews->count() > 0)
+            <div class="mt-3 row">
+                <div class="col-lg-12">
+                    <div class="devider-wrap">
+                        <h4 class="devider-content">
+                            <span class="devider-text">{{ $homePage->section_four_name }}</span>
+                        </h4>
+                    </div>
+                </div>
             </div>
+            <div class="row gx-5">
+                @foreach ($sectionFourNews as $news_trend)
+                    <div class="col-lg-3 col-md-12">
+                        <a href="{{ route('content.details', $news_trend->slug) }}">
+                            <div class="card projects-card rounded-0">
+                                <img src="{{ asset('storage/content/' . $news_trend->thumbnail_image) }}"
+                                    class="card-img-top img-fluid rounded-0" alt="{{ $news_trend->title }}" />
+                                <div class="card-body">
+                                    <p class="card-text project-para">{{ $news_trend->title }}</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                @endforeach
+            </div>
+            @endif
 
 
           <!-- Section 8: Quick Links (Dynamic) - Exhibitions Style -->
@@ -686,7 +689,7 @@
 </div>
 @endif
 
-            <!-- Section 11: Why Need Us Section -->
+         
            <!-- Section 11: Why Need Us Section (Dynamic) -->
 @if($homePage && $homePage->section_seven_title)
 <div>
