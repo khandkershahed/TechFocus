@@ -6,7 +6,7 @@
     <!-- content start -->
     <div class="container">
 
-        <div class="row mb-3 mt-5">
+        <div class="mt-5 mb-3 row">
             <div class="col-lg-12">
                 <p class="">ALL {{ $brand->title }} PRODUCTS</p>
             </div>
@@ -20,21 +20,21 @@
                 </div>
             </div>
         </div> --}}
-        <div class="row mb-5">
+        <div class="mb-5 row">
             @foreach ($brand->products as $product)
-                <div class="col-lg-3 mb-4">
+                <div class="mb-4 col-lg-3">
                     <div class="card projects-card rounded-0">
                         <div>
                             <p class="video-tag">New</p>
                         </div>
                         <a href="{{ route('product.details', ['id' => $product->brand->slug, 'slug' => $product->slug]) }}">
-                            <img src="{{ $product->thumbnail }}" class="card-img-top img-fluid rounded-0"
+                            <img src="{{ $product->thumbnail }}" class="p-card-img-top img-fluid rounded-0"
                                 alt="{{ $product->name }}" />
                         </a>
-                        <div class="card-body mb-4">
+                        <div class="mb-4 card-body">
                             <a
                                 href="{{ route('product.details', ['id' => $product->brand->slug, 'slug' => $product->slug]) }}">
-                                <p class="card-text project-para text-center" style="font-size: 14px">
+                                <p class="text-center card-text project-para" style="font-size: 14px">
                                     {{ Str::words($product->name, 10) }}
                                 </p>
                             </a>
@@ -64,9 +64,9 @@
         </div>
         <!-- Related Search -->
         <div class="container">
-            <div class="row mt-5 mb-5">
-                <div class="col p-0">
-                    <div class="card rounded-0 border-0 shadow-sm">
+            <div class="mt-5 mb-5 row">
+                <div class="p-0 col">
+                    <div class="border-0 shadow-sm card rounded-0">
                         <div class="card-header rounded-0">
                             <h4 class="pt-2 text-center">Related Searches</h4>
                         </div>
@@ -109,9 +109,9 @@
                 </div>
             </div>
         </div>
-        <div class="row p-3">
+        <div class="p-3 row">
             <div class="col-lg-12 col-sm-12">
-                <p class="sub-color text-center w-75 mx-auto"> *Prices are pre-tax. They exclude delivery charges and
+                <p class="mx-auto text-center sub-color w-75"> *Prices are pre-tax. They exclude delivery charges and
                     customs duties
                     and
                     do not include additional charges for installation or activation options. Prices are indicative only and

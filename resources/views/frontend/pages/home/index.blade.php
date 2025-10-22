@@ -29,7 +29,10 @@
         <div class="swiper-wrapper">
            @foreach ($banners as $banner) 
              <div class="swiper-slide">
-                 <a href=""><img src="{{ $banner ? asset('uploads/page_banners/' . $banner->image) : asset('frontend/images/no-banner(1920-330).png') }}" class="img-fluid" alt="Banner" /></a>
+                 <a href="">
+                    <img src="{{ $banner ? asset('uploads/page_banners/' . $banner->image) : asset('frontend/images/no-banner(1920-330).png') }}" class="img-fluid" alt="Banner"  
+                    onerror="this.onerror=null;this.src='{{ asset('frontend/images/no-banner(1920-330).png') }}';"/>
+                </a>
              </div>
            @endforeach
         </div>
@@ -181,7 +184,7 @@
                                                     @endif
                                                 </div>
                                                 <div class="text-box">
-                                                    <p class="p-0 m-0 ps-2 w-75">
+                                                    <p class="p-0 m-0 ps-2 w-100">
                                                         {{ Str::words($solution->name, 5) }}
                                                     </p>
                                                 </div>
@@ -198,7 +201,7 @@
                     </div>
                     
                     @if($homePage->section_solutions_button && $homePage->section_solutions_link)
-                    <div class="text-center mt-4">
+                    <div class="mt-4 text-center">
                         <a href="{{ $homePage->section_solutions_link }}" class="btn btn-primary">
                             {{ $homePage->section_solutions_button }}
                         </a>
@@ -312,7 +315,7 @@
                                                 @endif
                                             </div>
                                             <div class="text-box">
-                                                <p class="p-0 m-0 ps-2 w-75">
+                                                <p class="p-0 m-0 ps-2 w-100">
                                                     {{ $homePage->section_three_first_column_title }}
                                                 </p>
                                             </div>
@@ -343,7 +346,7 @@
                                                 @endif
                                             </div>
                                             <div class="text-box">
-                                                <p class="p-0 m-0 ps-2 w-75">
+                                                <p class="p-0 m-0 ps-2 w-100">
                                                     {{ $homePage->section_three_second_column_title }}
                                                 </p>
                                             </div>
@@ -374,7 +377,7 @@
                                                 @endif
                                             </div>
                                             <div class="text-box">
-                                                <p class="p-0 m-0 ps-2 w-75">
+                                                <p class="p-0 m-0 ps-2 w-100">
                                                     {{ $homePage->section_three_third_column_title }}
                                                 </p>
                                             </div>
@@ -405,7 +408,7 @@
                                                 @endif
                                             </div>
                                             <div class="text-box">
-                                                <p class="p-0 m-0 ps-2 w-75">
+                                                <p class="p-0 m-0 ps-2 w-100">
                                                     {{ $homePage->section_three_fourth_column_title }}
                                                 </p>
                                             </div>
@@ -422,7 +425,7 @@
                     </div>
                     
                     @if($homePage->section_three_button && $homePage->section_three_link)
-                    <div class="text-center mt-4">
+                    <div class="mt-4 text-center">
                         <a href="{{ $homePage->section_three_link }}" class="btn btn-primary">
                             {{ $homePage->section_three_button }}
                         </a>
@@ -449,7 +452,9 @@
                         <a href="{{ route('content.details', $news_trend->slug) }}">
                             <div class="card projects-card rounded-0">
                                 <img src="{{ asset('storage/content/' . $news_trend->thumbnail_image) }}"
-                                    class="card-img-top img-fluid rounded-0" alt="{{ $news_trend->title }}" />
+                                    class="card-img-top img-fluid rounded-0"
+                                    alt="{{ $news_trend->title }}"
+                                    onerror="this.onerror=null;this.src='{{ asset('frontend/images/error-image.avif') }}';">
                                 <div class="card-body">
                                     <p class="card-text project-para">{{ $news_trend->title }}</p>
                                 </div>
@@ -656,8 +661,6 @@
                                                      alt="{{ $homePage->section_seven_first_grid_title }}" 
                                                      style="width: 50px; height: 50px;" />
                                             @else
-                                                
-                                                <?xml version="1.0" encoding="UTF-8"?>
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80">
                                                     <defs>
                                                         <style>
