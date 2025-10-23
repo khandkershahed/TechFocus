@@ -30,8 +30,8 @@
            @foreach ($banners as $banner) 
              <div class="swiper-slide">
                  <a href="">
-                    <img src="{{ $banner ? asset('uploads/page_banners/' . $banner->image) : asset('frontend/images/no-banner(1920-330).png') }}" class="img-fluid" alt="Banner"  
-                    onerror="this.onerror=null;this.src='{{ asset('frontend/images/no-banner(1920-330).png') }}';"/>
+                     <img src="{{ asset('uploads/page_banners/' . $banner->image) }}" class="img-fluid" alt="{{ $banner->title ?? 'Banner' }}"
+                                                onerror="this.onerror=null;this.src='{{ asset('frontend/images/no-banner(1920-330).png') }}';" />
                 </a>
              </div>
            @endforeach
@@ -851,5 +851,4 @@
             });
         </script>
     @endpush
-
 </x-frontend-layout>

@@ -74,13 +74,14 @@
                                 
                                 <!-- Button Area -->
                                 <div class="mt-5">
-                                    <button class="btn btn-outline-danger rounded-0 add-to-cart-btn" 
+                                    {{-- <button class="btn btn-outline-danger rounded-0 add-to-cart-btn" 
                                             data-product-id="{{ $product->id }}"
                                             data-product-name="{{ $product->name }}"
-                                            data-product-price="{{ $product->sas_price ?? 0 }}"
+                                            data-product-sku="{{ $product->sku_code ?? '' }}"
+                                            data-product-brand="{{ $product->brand->name ?? '' }}"
                                             data-product-thumbnail="{{ asset($product->thumbnail) }}">
                                         <i class="fas fa-shopping-cart me-2"></i> $ Request Price Options
-                                    </button>
+                                    </button> --}}
                                     
                                     <button class="w-auto btn signin rounded-0 add-to-cart-and-rfq" 
                                             data-product-id="{{ $product->id }}"
@@ -88,6 +89,7 @@
                                             data-product-sku="{{ $product->sku_code ?? '' }}"
                                             data-product-brand="{{ $product->brand->name ?? '' }}"
                                             data-product-thumbnail="{{ asset($product->thumbnail) }}">
+                                              <i class="fas fa-shopping-cart me-2"></i>
                                         Get Quote
                                     </button>
                                 </div>
