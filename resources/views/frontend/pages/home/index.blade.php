@@ -108,6 +108,8 @@
             <!-- Section 3: Dynamic Hero Section One -->
             @if($homePage && $homePage->section_one_title)
             <div class="mx-1 mb-5 bg-white row what-we-do"
+
+
                 style="background-image: url({{ $homePage->section_one_image ? asset('storage/home-page/image/' . $homePage->section_one_image) : 'https://www.riverbed.com/riverbed-wp-content/uploads/2022/12/lady-with-laptop.png' }});">
                 <div class="p-5 mb-3 col-lg-12">
                     <div class="row align-items-center">

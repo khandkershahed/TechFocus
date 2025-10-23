@@ -47,18 +47,20 @@
                     <div class="mb-4">
                         <h1 class="mb-0">Contact Info</h1>
                         <h5 class="pt-4 fw-bold">
-                            <span class="main-color">Hotline :</span> +84 1900 8198
+                            <span class="main-color">Hotline :</span> {{ $site->phone_one ?? 'N/A' }}
                         </h5>
                         <ul class="ms-0 ps-0">
                             <li class="pt-3">
-                                <a href="mailto:info.industris@gmail.com">
-                                    <i class="fa-solid fa-envelope pe-2 main-color"></i>Info.industris@gmail.com
+                                <a href="mailto:{{ $site->contact_email ?? 'info@example.com' }}">
+                                    <i class="fa-solid fa-envelope pe-2 main-color"></i>{{ $site->contact_email ?? 'info@example.com' }}
                                 </a>
                             </li>
                             <li class="pt-3">
                                 <i class="fa-solid fa-location-dot pe-2 main-color"></i>
-                                Crows Nest Apt 69, Sydney, Australia
-                                <a href="https://www.google.com/maps?q=Crows+Nest+Apt+69,+Sydney,+Australia" target="_blank" class="main-color">(View map)</a>
+                                {{ $site->address ?? 'Address not set' }}
+                                @if($site->google_map_link)
+                                    <a href="{{ $site->google_map_link }}" target="_blank" class="main-color">(View map)</a>
+                                @endif
                             </li>
                         </ul>
                     </div>
@@ -99,17 +101,17 @@
     </section>
 
     {{-- Google Maps --}}
+    @if($site->google_map_link)
     <section>
         <div class="p-0 container-fluid">
             <div class="row">
                 <div class="col-lg-12">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d11200.675829730526!2d-75.6876061!3d45.42609535!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4cce04ff4fe494ef%3A0x26bb54f60c29f6e!2sParliament+Hill!5e0!3m2!1sen!2sca!4v1528808935681" width="100%" height="600" frameborder="0" style="border:0" allowfullscreen></iframe>
+                    <iframe src="{{ $site->google_map_link }}" width="100%" height="600" frameborder="0" style="border:0" allowfullscreen></iframe>
                 </div>
             </div>
         </div>
     </section>
-
-    {{-- Remaining contact info sections ... keep unchanged --}}
+    @endif
 @endsection
 
 @push('scripts')
