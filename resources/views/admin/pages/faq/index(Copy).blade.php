@@ -236,16 +236,19 @@
                                             <div class="col-md-5 mb-2">
                                                 <label for="validationCustom04" class="form-label required mb-0">Category
                                                     Name</label>
-                                              <select name="dynamic_category_id" required class="form-select">
-                                                    <option value="">Select Category</option>
-                                                    @foreach ($dynamicCategories as $category)
-                                                        <option value="{{ $category->id }}" 
-                                                            {{ old('dynamic_category_id', $faq->dynamic_category_id ?? '') == $category->id ? 'selected' : '' }}>
-                                                            {{ $category->name }}
+                                                <select class="form-select-sm form-select form-select-solid"
+                                                    name="dynamic_category_id"
+                                                    data-dropdown-parent="#faqEditModal_{{ $faq->id }}"
+                                                    data-control="select2" data-placeholder="Select an option"
+                                                    data-allow-clear="true" required>
+                                                    <option></option>
+                                                    @foreach ($dynamicCategories as $dynamicCategory)
+                                                        <option @selected($dynamicCategory->id == $faq->dynamic_category_id)
+                                                            value="{{ $dynamicCategory->id }}">
+                                                            {{ $dynamicCategory->name }}
                                                         </option>
                                                     @endforeach
                                                 </select>
-
                                                 <div class="invalid-feedback"> Please Select Category Name. </div>
                                             </div>
                                             <div class="col-md-4 mb-2">

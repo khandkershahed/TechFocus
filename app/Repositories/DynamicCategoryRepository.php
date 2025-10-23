@@ -7,33 +7,55 @@ use App\Repositories\Interfaces\DynamicCategoryRepositoryInterface;
 
 class DynamicCategoryRepository implements DynamicCategoryRepositoryInterface
 {
+    /**
+     * Get all dynamic categories (newest first)
+     */
     public function allDynamicCategory()
     {
-        return DynamicCategory::latest('id')->get();
+        return DynamicCategory::orderByDesc('id')->get();
     }
 
-    public function allDynamicActiveCategory($categoryType)
+    /**
+     * Get all active dynamic categories (optionally filtered by type)
+     */
+    public function allDynamicActiveCategory($categoryType = null)
     {
-        return DynamicCategory::where('type', $categoryType)
-            ->whereStatus('active')
+        return DynamicCategory::query()
+            ->when($categoryType, fn($q) => $q->where('type', $categoryType))
+            ->where('status', 1) // ✅ use integer status for active rows
+            ->orderBy('name', 'asc')
             ->get();
     }
 
+    /**
+     * Store a new dynamic category
+     */
     public function storeDynamicCategory(array $data)
     {
         return DynamicCategory::create($data);
     }
 
+    /**
+     * Find a dynamic category by ID
+     */
     public function findDynamicCategory(int $id)
     {
         return DynamicCategory::findOrFail($id);
     }
 
+    /**
+     * Update an existing dynamic category
+     */
     public function updateDynamicCategory(array $data, int $id)
     {
-        return DynamicCategory::findOrFail($id)->update($data);
+        $category = DynamicCategory::findOrFail($id);
+        $category->update($data);
+        return $category;
     }
 
+    /**
+     * Delete a dynamic category by ID
+     */
     public function destroyDynamicCategory(int $id)
     {
         return DynamicCategory::destroy($id);

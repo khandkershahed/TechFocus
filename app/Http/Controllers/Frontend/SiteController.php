@@ -18,6 +18,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Admin\SolutionDetail;
 use App\Models\Admin\SubSubCategory;
 use Illuminate\Support\Facades\Session;
+use App\Repositories\Interfaces\FaqRepositoryInterface;
+use App\Repositories\Interfaces\DynamicCategoryRepositoryInterface;
 
 
 class SiteController extends Controller
@@ -266,9 +268,33 @@ public function catalogDetails($slug)
         return view('frontend.pages.shop.filterProducts', $data);
     }
 
+    // public function faq()
+    // {
+    //     return view('frontend.pages.others.faq');
+    // }
+
+    // public function terms()
+    // {
+    //     return view('frontend.pages.others.terms');
+    // }
+
+
+
+    private $faqRepository;
+    private $dynamicCategoryRepository;
+
+    public function __construct(FaqRepositoryInterface $faqRepository, DynamicCategoryRepositoryInterface $dynamicCategoryRepository)
+    {
+        $this->faqRepository = $faqRepository;
+        $this->dynamicCategoryRepository = $dynamicCategoryRepository;
+    }
+
     public function faq()
     {
-        return view('frontend.pages.others.faq');
+        return view('frontend.pages.others.faq', [
+            'faqs' => $this->faqRepository->allFaq(), // All FAQs
+            'categories' => $this->dynamicCategoryRepository->allDynamicActiveCategory('faqs'),
+        ]);
     }
 
     public function terms()
@@ -413,6 +439,19 @@ public function catalogDetails($slug)
         return view('frontend.pages.news.details', compact('news', 'categories', 'solutions', 'news_trends'));
     }
     
-    //brandlist search 
+    //faqsearch
+    public function faqSearch(Request $request)
+{
+    $query = $request->get('q');
+
+    $faqs = $this->faqRepository->searchFaq($query); // we'll define this in the repo
+    $categories = $this->dynamicCategoryRepository->allDynamicActiveCategory('faqs');
+
+    return view('frontend.pages.others.faq', [
+        'faqs' => $faqs,
+        'categories' => $categories,
+        'searchQuery' => $query,
+    ]);
+} 
 
 }

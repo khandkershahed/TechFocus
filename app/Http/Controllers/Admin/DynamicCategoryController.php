@@ -5,61 +5,56 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DynamicCategoryRequest;
 use App\Repositories\Interfaces\DynamicCategoryRepositoryInterface;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class DynamicCategoryController extends Controller
 {
     public function __construct(
         private DynamicCategoryRepositoryInterface $dynamicCategoryRepository
-    ) {
-    }
+    ) {}
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Display a listing of dynamic categories.
      */
-    public function index()
+    public function index(): View
     {
-        return view('admin.pages.dynamicCategory.index', [
-            'dynamicCategories' => $this->dynamicCategoryRepository->allDynamicCategory(),
-        ]);
+        $dynamicCategories = $this->dynamicCategoryRepository->allDynamicCategory();
+        return view('admin.pages.dynamicCategory.index', compact('dynamicCategories'));
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * Store a newly created dynamic category.
      */
-    public function store(DynamicCategoryRequest $request)
+    public function store(DynamicCategoryRequest $request): RedirectResponse
     {
-        $this->dynamicCategoryRepository->storeDynamicCategory($request->only('parent_id', 'name', 'type', 'status'));
+        $this->dynamicCategoryRepository->storeDynamicCategory(
+            $request->only('parent_id', 'name', 'type', 'status')
+        );
 
-        return redirect()->back()->with('success', 'Data has been saved successfully!');
+        return redirect()->back()->with('success', 'Dynamic category has been saved successfully!');
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * Update an existing dynamic category.
      */
-    public function update(DynamicCategoryRequest $request, $id)
+    public function update(DynamicCategoryRequest $request, int $id): RedirectResponse
     {
-        $this->dynamicCategoryRepository->updateDynamicCategory($request->only('parent_id', 'name', 'type', 'status'), $id);
+        $this->dynamicCategoryRepository->updateDynamicCategory(
+            $request->only('parent_id', 'name', 'type', 'status'),
+            $id
+        );
 
-        return redirect()->back()->with('success', 'Data has been updated successfully!');
+        return redirect()->back()->with('success', 'Dynamic category has been updated successfully!');
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * Remove the specified dynamic category.
      */
-    public function destroy($id)
+    public function destroy(int $id): RedirectResponse
     {
         $this->dynamicCategoryRepository->destroyDynamicCategory($id);
+
+        return redirect()->back()->with('success', 'Dynamic category has been deleted successfully!');
     }
 }

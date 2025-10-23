@@ -414,3 +414,28 @@ Route::prefix('admin')->group(function () {
     Route::resource('rfqProducts', RfqProductController::class);
 });
 Route::resource('company', CompanyController::class)->except(['show']);
+
+//faQ routes
+Route::prefix('administrator')->name('admin.')->group(function () {
+    // List all FAQs
+    Route::get('/faq', [FaqController::class, 'index'])->name('faq.index');
+
+    // Store a new FAQ (from modal form)
+    Route::post('/faq', [FaqController::class, 'store'])->name('faq.store');
+
+    // Update an existing FAQ (from modal form)
+    Route::put('/faq/{id}', [FaqController::class, 'update'])->name('faq.update');
+
+    // Delete an FAQ
+    Route::delete('/faq/{id}', [FaqController::class, 'destroy'])->name('faq.destroy');
+
+    // Optional: Search FAQs
+    Route::get('/faq/search', [FaqController::class, 'search'])->name('faq.search');
+});
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('/profile/edit', [App\Http\Controllers\Admin\ProfileController::class, 'edit'])
+        ->name('profile.edit');
+
+    Route::post('/profile/update', [App\Http\Controllers\Admin\ProfileController::class, 'update'])
+        ->name('profile.update');
+});

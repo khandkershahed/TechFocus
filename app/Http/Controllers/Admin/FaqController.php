@@ -5,118 +5,82 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\FaqRequest;
 use App\Http\Controllers\Controller;
 use App\Repositories\Interfaces\FaqRepositoryInterface;
-use App\Repositories\Interfaces\CompanyRepositoryInterface;
 use App\Repositories\Interfaces\DynamicCategoryRepositoryInterface;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class FaqController extends Controller
 {
-    private $faqRepository;
-    private $companyRepository;
-    private $dynamicCategoryRepository;
+    private FaqRepositoryInterface $faqRepository;
+    private DynamicCategoryRepositoryInterface $dynamicCategoryRepository;
 
-    public function __construct(FaqRepositoryInterface $faqRepository, DynamicCategoryRepositoryInterface $dynamicCategoryRepository)
-    {
-        $this->faqRepository             = $faqRepository;
+    public function __construct(
+        FaqRepositoryInterface $faqRepository,
+        DynamicCategoryRepositoryInterface $dynamicCategoryRepository
+    ) {
+        $this->faqRepository = $faqRepository;
         $this->dynamicCategoryRepository = $dynamicCategoryRepository;
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Display a listing of FAQs.
      */
-    public function index()
+    public function index(): View
     {
-        return view('admin.pages.faq.index', [
-            'faqs'              => $this->faqRepository->allFaq(),
-            'dynamicCategories' =>  $this->dynamicCategoryRepository->allDynamicActiveCategory('faqs'),
+        $faqs = $this->faqRepository->allFaq();
+        $dynamicCategories = $this->dynamicCategoryRepository->allDynamicActiveCategory('faqs');
+
+        if ($dynamicCategories->isEmpty()) {
+            Log::warning('No active dynamic categories found for FAQs.');
+        }
+
+        return view('admin.pages.faq.index', compact('faqs', 'dynamicCategories'));
+    }
+
+    /**
+     * Store a newly created FAQ.
+     */
+    public function store(FaqRequest $request): RedirectResponse
+    {
+        $data = $request->only([
+            'dynamic_category_id',
+            'question',
+            'answer',
+            'order',
+            'is_published',
         ]);
-    }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(FaqRequest $request)
-    {
-        $data = [
-            'dynamic_category_id' => $request->dynamic_category_id,
-            'question'            => $request->question,
-            'answer'              => $request->answer,
-            'order'               => $request->order,
-            'is_published'        => $request->is_published,
-        ];
         $this->faqRepository->storeFaq($data);
 
-        session()->flash('success', 'Data has been saved successfully!');
-        return redirect()->back();
+        return redirect()->back()->with('success', 'FAQ created successfully!');
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * Update the specified FAQ.
      */
-    public function show($id)
+    public function update(FaqRequest $request, int $id): RedirectResponse
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(FaqRequest $request, $id)
-    {
-        $data = [
-            'dynamic_category_id' => $request->dynamic_category_id,
-            'question'            => $request->question,
-            'answer'              => $request->answer,
-            'order'               => $request->order,
-            'is_published'        => $request->is_published,
-        ];
+        $data = $request->only([
+            'dynamic_category_id',
+            'question',
+            'answer',
+            'order',
+            'is_published',
+        ]);
 
         $this->faqRepository->updateFaq($data, $id);
 
-        session()->flash('success', 'Data has been saved successfully!');
-        return redirect()->back();
+        return redirect()->back()->with('success', 'FAQ updated successfully!');
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * Remove the specified FAQ.
      */
-    public function destroy($id)
+    public function destroy(int $id): RedirectResponse
     {
         $this->faqRepository->destroyFaq($id);
+
+        return redirect()->back()->with('success', 'FAQ deleted successfully!');
     }
 }
