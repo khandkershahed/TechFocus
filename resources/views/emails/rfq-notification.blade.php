@@ -9,7 +9,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>RFQ Notification</title>
     <style>
-        body { margin:0; padding:0; background:#f4f4f4; font-family: Arial, sans-serif; color:#333; }
+        body { margin:0; padding:0; background:#f4f4f4; font-family: Arial, sans-serif; color:#83bff7; }
         table { border-collapse: collapse; }
         a { color:#ae0a46; text-decoration:none; }
         @media only screen and (max-width: 620px) {
@@ -30,7 +30,7 @@
 
                     <!-- Header -->
                     <tr>
-                        <td style="background-color:#ae0a46; padding:15px;">
+                        <td style="background-color:#001430; padding:15px;">
                             <table width="100%">
                                 <tr>
                                     <td align="left">
@@ -141,7 +141,7 @@
                                 <tr>
                                     <td class="mail-footers" style="font-size:14px; width:50%; vertical-align:top;">
                                         <p style="margin:0 0 10px;"><strong>Thank You</strong></p>
-                                        <p style="margin:0;color:#ae0a46;">Techfocus SALES TEAM</p>
+                                        <p style="margin:0;color:#14abe7;">Techfocus SALES TEAM</p>
                                     </td>
                                     <td class="mail-footers" style="text-align:right; font-size:14px; width:50%; vertical-align:top;">
                                         <p style="margin:0;"><a href="tel:+19177203055">(☏) +1 917-720-3055</a></p>
@@ -154,7 +154,7 @@
                     </tr>
 
                     <tr>
-                        <td style="background-color:#ae0a46; text-align:center; padding:15px;">
+                        <td style="background-color:#14abe7; text-align:center; padding:15px;">
                             <a href="http://www.techfocusltd.com" style="color:#fff; font-size:18px;">www.techfocusltd.com</a>
                         </td>
                     </tr>
