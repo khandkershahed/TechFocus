@@ -207,4 +207,8 @@ Route::post('/rfq/remove-from-session/{productId}', [RfqController::class, 'remo
 Route::post('/rfq/remove-from-session', [RfqController::class, 'removeFromRfqSession'])->name('rfq.remove-from-session');
 
 
+//testmail 
+
+
+Route::get('/test-email', [RfqController::class, 'testEmail'])->name('test.email');
 

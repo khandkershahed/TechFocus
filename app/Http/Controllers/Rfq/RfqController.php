@@ -96,7 +96,7 @@ class RfqController extends Controller
 
     private function getRfqRecipients(): array
     {
-        $admin = Admin::whereIn('role', ['Admin', 'Manager', 'HR'])
+        $admin = Admin::whereIn('role', ['Admin', 'Manager'])
                      ->where('status', 'active')
                      ->pluck('email')
                      ->filter(fn($email) => filter_var($email, FILTER_VALIDATE_EMAIL))
@@ -635,19 +635,27 @@ class RfqController extends Controller
     /**
      * Test email functionality
      */
-    public function testEmail()
-    {
-        try {
-            $rfq = Rfq::latest()->first();
-            if ($rfq) {
-                $this->sendRfqEmails($rfq);
-                return response()->json(['success' => true, 'message' => 'Test email sent']);
-            }
-            return response()->json(['success' => false, 'message' => 'No RFQ found for testing']);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => $e->getMessage()]);
+public function testEmail()
+{
+    $message = null;
+    $success = false;
+
+    try {
+        $rfq = Rfq::latest()->first();
+        if ($rfq) {
+            $this->sendRfqEmails($rfq);
+            $message = 'Test email sent successfully.';
+            $success = true;
+        } else {
+            $message = 'No RFQ found for testing.';
         }
+    } catch (\Exception $e) {
+        $message = $e->getMessage();
     }
+
+    // Return Blade view with message
+    return view('test-email', compact('message', 'success'));
+}
 
     /**
      * Test validation functionality
