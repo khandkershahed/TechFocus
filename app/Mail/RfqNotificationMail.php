@@ -3,6 +3,7 @@
 namespace App\Mail;
 
 use App\Models\Rfq;
+use App\Models\Rfq\RfqProduct;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -21,7 +22,15 @@ class RfqNotificationMail extends Mailable
     public function __construct(Rfq $rfq, string $subject = null)
     {
         $this->rfq = $rfq;
-        $this->products = json_decode($rfq->products_data, true) ?? [];
+
+        // Get RFQ products from database
+        $this->products = RfqProduct::where('rfq_id', $rfq->id)->get();
+
+        // Fallback to products_data if no products found
+        if ($this->products->isEmpty() && $rfq->products_data) {
+            $this->products = collect(json_decode($rfq->products_data, true));
+        }
+
         $this->subject = $subject ?? 'New RFQ Submitted - ' . $rfq->rfq_code;
     }
 

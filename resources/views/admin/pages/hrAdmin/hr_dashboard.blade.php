@@ -18,7 +18,11 @@
                       <a href="{{ route('page_banners.index') }}" class="btn btn-primary">
                     View All Page Banners
                 </a>
-
+                    <li class="nav-item">
+    <a class="nav-link" href="{{ route('rfqProducts.index') }}">
+        <i class="fa fa-box"></i> RFQ Products
+    </a>
+</li>
                 </div>
             </div>
         </div>

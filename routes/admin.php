@@ -29,6 +29,7 @@ use App\Http\Controllers\Admin\HomePageController;
 use App\Http\Controllers\Admin\HrPolicyController;
 use App\Http\Controllers\Admin\IndustryController;
 use App\Http\Controllers\Admin\UserRoleController;
+use App\Http\Controllers\Rfq\RfqProductController;
 use App\Http\Controllers\Admin\AboutPageController;
 use App\Http\Controllers\Admin\AttributeController;
 use App\Http\Controllers\Admin\BioMetricController;
@@ -61,7 +62,6 @@ use App\Http\Controllers\Admin\Auth\NewPasswordController;
 use App\Http\Controllers\Admin\CountryStateCityController;
 use App\Http\Controllers\Admin\EmployeeCategoryController;
 use App\Http\Controllers\Admin\ProductAttributeController;
-use App\Http\Controllers\Admin\EmployeeDepartmentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -328,6 +328,7 @@ Route::prefix('administrator')->name('admin.')->group(static function () {
 });
 
 
+use App\Http\Controllers\Admin\EmployeeDepartmentController;
 use App\Http\Controllers\Accounts\AccountsDocumentController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Admin\PolicyAcknowledgmentController;
@@ -348,6 +349,7 @@ Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
 
     // Delete
     Route::delete('page-banners/{pageBanner}', [PageBannerController::class, 'destroy'])->name('page_banners.destroy');
+      Route::resource('rfqProducts', RfqProductController::class);
 });
 
 
@@ -405,3 +407,10 @@ Route::get('leave-applications/dashboard', [LeaveApplicationController::class, '
 //catalog 
 
 // OR
+
+
+// ✅ RFQ Product Routes
+Route::prefix('admin')->group(function () {
+    Route::resource('rfqProducts', RfqProductController::class);
+});
+Route::resource('company', CompanyController::class)->except(['show']);

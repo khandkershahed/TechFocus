@@ -413,6 +413,6 @@ public function catalogDetails($slug)
         return view('frontend.pages.news.details', compact('news', 'categories', 'solutions', 'news_trends'));
     }
     
-
+    //brandlist search 
 
 }

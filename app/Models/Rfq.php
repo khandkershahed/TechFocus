@@ -81,6 +81,7 @@ class Rfq extends Model
         'client_po',
         'client_payment_pdf',
         'deal_code',
+    
     ];
 
     protected $casts = [

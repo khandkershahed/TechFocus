@@ -19,6 +19,10 @@ Route::get('about-us', [SiteController::class, 'about'])->name('about');
 Route::get('services', [SiteController::class, 'service'])->name('service');
 Route::get('subscription', [SiteController::class, 'subscription'])->name('subscription');
 Route::get('brand/list', [SiteController::class, 'brandList'])->name('brand.list');
+Route::get('/brands/search', [App\Http\Controllers\Frontend\SiteController::class, 'brandSearch'])
+    ->name('brand.search');
+
+
 Route::get('sourcing/guide', [SiteController::class, 'sourcingGuide'])->name('sourcing.guide');
 Route::get('buying/guide', [SiteController::class, 'buyingGuide'])->name('buying.guide');
 Route::get('exhibit', [SiteController::class, 'exhibit'])->name('exhibit');
@@ -65,6 +69,7 @@ Route::get('/cart/view', [CartController::class, 'viewCart'])->name('cart.view')
 
 // Show RFQ form
 Route::get('/rfq/create', [RfqController::class, 'create'])->name('rfq.create');
+// routes/web.php
 
 // Handle RFQ submission - KEEP ONLY THIS ONE
 Route::post('/rfq/store', [App\Http\Controllers\Rfq\RfqController::class, 'store'])->name('rfq.store');
@@ -169,5 +174,37 @@ Route::prefix('compare')->group(function () {
 // Catalog Routes
 Route::get('/catalogs', [SiteController::class, 'allCatalog'])->name('catalogs.all');
 Route::get('/catalogs/company/{letter}', [SiteController::class, 'getCompanyCatalogs'])->name('catalogs.by.company');
+
+
+
+
+
+//cart section 
+// Cart Routes
+Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
+Route::get('/cart/count', [CartController::class, 'getCartCount'])->name('cart.count');
+Route::get('/cart/rfq-count', [CartController::class, 'getRfqCount'])->name('cart.rfq-count');
+Route::get('/cart', [CartController::class, 'getCart'])->name('cart.get');
+Route::post('/cart/update', [CartController::class, 'updateCart'])->name('cart.update');
+Route::post('/cart/remove', [CartController::class, 'removeFromCart'])->name('cart.remove');
+Route::post('/cart/rfq/remove', [CartController::class, 'removeFromRfq'])->name('cart.rfq.remove');
+Route::post('/cart/clear', [CartController::class, 'clearCart'])->name('cart.clear');
+Route::post('/cart/rfq/clear', [CartController::class, 'clearRfq'])->name('cart.rfq.clear');
+Route::get('/cart/debug', [CartController::class, 'debug'])->name('cart.debug');
+
+// RFQ Session Management Routes
+Route::post('/rfq/remove-from-session/{productId}', [RfqController::class, 'removeFromRfqSession'])->name('rfq.remove-from-session');
+Route::get('/rfq/session-items', [RfqController::class, 'getRfqSessionItems'])->name('rfq.session-items');
+Route::post('/rfq/clear-session', [RfqController::class, 'clearRfqSession'])->name('rfq.clear-session');
+// In routes/web.php
+Route::post('/cart/remove-rfq', [CartController::class, 'removeFromRfq'])->name('cart.remove-rfq');
+
+//temp
+// Change from this (if you have it):
+Route::post('/rfq/remove-from-session/{productId}', [RfqController::class, 'removeFromRfqSession'])->name('rfq.remove-from-session');
+
+// To this:
+Route::post('/rfq/remove-from-session', [RfqController::class, 'removeFromRfqSession'])->name('rfq.remove-from-session');
+
 
 

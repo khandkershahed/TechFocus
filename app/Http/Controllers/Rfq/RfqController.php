@@ -3,688 +3,754 @@
 namespace App\Http\Controllers\Rfq;
 
 use App\Models\Rfq;
+use App\Models\User;
+use App\Helpers\Helper;
 use App\Models\Admin\Brand;
 use Illuminate\Http\Request;
 use App\Models\Admin\Product;
+use App\Models\Rfq\RfqProduct;
+use App\Notifications\RfqCreate;
+use App\Mail\RFQConfirmationMail;
 use App\Mail\RfqNotificationMail;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\RFQNotificationAdminMail;
+use Illuminate\Support\Facades\Schema;
+use App\Mail\RFQNotificationClientMail;
+use App\Models\Admin;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Notification;
 
 class RfqController extends Controller
 {
+/**
+ * Get RFQ notification recipients
+ */
+// private function getRfqRecipients(): array
+// {
+//     // Primary email recipients for RFQ notifications
+//     return [
+//         'dev2.ngenit@gmail.com',  // Main Gmail account
+//        'dev1.ngenit@gmail.com' ,   // RFQ department
+//         // 'sales@yourcompany.com',  // Sales team
+//         // Add more emails as needed
+//     ];
 
-         /**
-     * Email recipients for RFQ notifications
-     */
- private function getRfqRecipients()
-{
-    // Primary email recipients for RFQ notifications
-    return [
-        'dev2.ngenit@gmail.com',  // Your main Gmail account
-        // 'rfq@yourcompany.com',    // Your RFQ department email
-        // 'sales@yourcompany.com',  // Your sales team email
-        // Add more specific emails as needed:
-        // 'manager@yourcompany.com',
-        // 'quotes@yourcompany.com',
-        // 'support@yourcompany.com',
-    ];
+//     // Alternative: use environment variables
+//     /*
+//     return [
+//         env('RFQ_PRIMARY_EMAIL', 'dev2.ngenit@gmail.com'),
+//         env('RFQ_SECONDARY_EMAIL', 'rfq@yourcompany.com'),
+//         env('RFQ_TERTIARY_EMAIL', 'sales@yourcompany.com'),
+//     ];
+//     */
+// }
+
+// /**
+//  * Send RFQ notification emails
+//  */
+// private function sendRfqEmails(Rfq $rfq): bool
+// {
+//     $recipients = $this->getRfqRecipients();
+//     $subject = 'New RFQ Submitted - ' . $rfq->rfq_code;
+
+//     $sentCount = 0;
+//     $failedCount = 0;
+
+//     Log::info("Attempting to send RFQ emails to: " . implode(', ', $recipients));
+//     Log::info("RFQ Details", [
+//         'rfq_code' => $rfq->rfq_code,
+//         'company' => $rfq->company_name,
+//         'contact' => $rfq->name,
+//         'email' => $rfq->email,
+//     ]);
+
     
-    // Alternative: You can still use environment variables if preferred
-    /*
-    return [
-        env('RFQ_PRIMARY_EMAIL', 'dev2.ngenit@gmail.com'),
-        env('RFQ_SECONDARY_EMAIL', 'rfq@yourcompany.com'),
-        env('RFQ_TERTIARY_EMAIL', 'sales@yourcompany.com'),
-    ];
-    */
-}
+//     foreach ($recipients as $recipient) {
+//         // if (!filter_var($recipient, FILTER_VALIDATE_EMAIL)) {
+//         //     Log::warning("Invalid email address: {$recipient}");
+//         //     $failedCount++;
+//         //     continue;
+//         // }
+//         try {
+//             Mail::to($recipient)->send(new RfqNotificationMail($rfq, $subject));
+//             Log::info("RFQ email sent successfully to: {$recipient}");
+//             $sentCount++;
+//         } catch (\Exception $e) {
+//             Session::flash('error', $e->getMessage());
+//             Log::error(" Failed to send RFQ email to {$recipient}: " . $e->getMessage(), [
+//                 'trace' => $e->getTraceAsString()
+//             ]);
+//             $failedCount++;
+//         }
+//     }
+
+//     Log::info("RFQ Email sending summary: {$sentCount} sent, {$failedCount} failed");
+
+//     return $sentCount > 0; // Return true if at least one email was sent
+// }
+
+
+    private function getRfqRecipients(): array
+    {
+        $admin = Admin::whereIn('role', ['Admin', 'Manager', 'HR'])
+                     ->where('status', 'active')
+                     ->pluck('email')
+                     ->filter(fn($email) => filter_var($email, FILTER_VALIDATE_EMAIL))
+                     ->toArray();
+
+        // Fallback emails
+        return $admin ?: [
+            'dev2.ngenit@gmail.com',
+            'dev1.ngenit@gmail.com',
+        ];
+    }
+
     /**
      * Send RFQ notification emails
      */
-    private function sendRfqEmails(Rfq $rfq)
-{
-    try {
+    private function sendRfqEmails(Rfq $rfq): bool
+    {
         $recipients = $this->getRfqRecipients();
         $subject = 'New RFQ Submitted - ' . $rfq->rfq_code;
-        
-        Log::info('Attempting to send RFQ notification emails to:', $recipients);
-        Log::info('RFQ Details:', [
-            'rfq_code' => $rfq->rfq_code,
-            'company' => $rfq->company_name,
-            'contact' => $rfq->name,
-            'email' => $rfq->email
-        ]);
 
         $sentCount = 0;
-        $failedCount = 0;
-        
+
+        Log::info("Sending RFQ emails to: " . implode(', ', $recipients));
+
         foreach ($recipients as $recipient) {
-            if (filter_var($recipient, FILTER_VALIDATE_EMAIL)) {
-                try {
-                    Mail::to($recipient)->send(new RfqNotificationMail($rfq, $subject));
-                    Log::info(" RFQ email sent successfully to: {$recipient}");
-                    $sentCount++;
-                } catch (\Exception $e) {
-                    Log::error("Failed to send email to {$recipient}: " . $e->getMessage());
-                    $failedCount++;
-                }
-            } else {
-                Log::warning("⚠️ Invalid email address configured: {$recipient}");
-                $failedCount++;
+            try {
+                Mail::to($recipient)->send(new RfqNotificationMail($rfq, $subject));
+                Log::info("RFQ email sent to: {$recipient}");
+                $sentCount++;
+            } catch (\Exception $e) {
+                Log::error("Failed to send RFQ email to {$recipient}: " . $e->getMessage());
             }
         }
-        
-        Log::info("Email sending summary: {$sentCount} sent, {$failedCount} failed");
-        
-        return $sentCount > 0; // Return true if at least one email was sent
-        
-    } catch (\Exception $e) {
-        Log::error(' Critical error in sendRfqEmails: ' . $e->getMessage());
-        Log::error('Stack trace: ' . $e->getTraceAsString());
-        return false;
+
+        Log::info("RFQ email summary: {$sentCount} of " . count($recipients) . " sent");
+        return $sentCount > 0;
     }
-}
+
+
+
 
     /**
- 
-     * Show the RFQ form with pre-filled product data if available
+     * Show the RFQ form with pre-filled product data from session
      */
     public function create(Request $request)
     {
         Log::info('RFQ Create Method Called');
         Log::info('Request Parameters:', $request->all());
         
-        $prefilledProducts = [];
-        $source = $request->get('source', 'direct');
+        // Get RFQ items from session
+        $rfqItems = $this->getRfqItemsFromSession();
         
-        // Check if we have product info from URL parameters (from "Get Quote" button)
-        if ($request->has('product_id') || $request->has('product_name')) {
-            $productId = $request->get('product_id');
-            $productName = $request->get('product_name');
-            $productSku = $request->get('product_sku');
-            $productBrand = $request->get('product_brand');
+        // If no items in session but there are direct parameters, create a temporary item
+        if (empty($rfqItems) && $request->has('product_id')) {
+            $product = Product::with('brand')->find($request->product_id);
             
-            Log::info('Product parameters found:', [
-                'product_id' => $productId,
-                'product_name' => $productName,
-                'product_sku' => $productSku,
-                'product_brand' => $productBrand,
-                'source' => $source
-            ]);
-            
-            $productData = $this->getProductData($productId, $productName, $productSku, $productBrand);
-            
-            if (!empty($productData)) {
-                $prefilledProducts[] = $productData;
-                Log::info('Prefilled product data prepared:', $productData);
-            }
-        }
-        
-        // Check if we should also include cart items
-        $includeCartItems = $request->get('include_cart', false);
-        if ($includeCartItems && Auth::check()) {
-            $cartProducts = $this->getCartProducts();
-            if (!empty($cartProducts)) {
-                $prefilledProducts = array_merge($prefilledProducts, $cartProducts);
-                Log::info('Cart products added to RFQ:', $cartProducts);
-            }
-        }
-        
-        Log::info('Final prefilled products:', $prefilledProducts);
-        
-        return view('frontend.pages.rfq.rfq', compact('prefilledProducts')); 
-    }
-
-    /**
-     * Get product data from database or parameters
-     */
-    private function getProductData($productId = null, $productName = null, $productSku = null, $productBrand = null)
-    {
-        $productData = [];
-        
-        // If we have a product ID, try to fetch from database
-        if ($productId) {
-            try {
-                $product = Product::with('brand')->find($productId);
-                if ($product) {
-                    Log::info('Product found in database:', [
+            if ($product) {
+                $rfqItems = [
+                    $product->id => [
                         'id' => $product->id,
                         'name' => $product->name,
-                        'sku' => $product->sku_code,
+                        'sku_code' => $product->sku_code,
+                        'product_code' => $product->product_code,
+                        'mf_code' => $product->mf_code,
                         'brand' => $product->brand->name ?? 'N/A',
-                        'model' => $product->mf_code,
-                        'description' => $product->short_desc
-                    ]);
-                    
-                    $productData = [
-                        'sl' => 1,
-                        'product_name' => $product->name,
-                        'qty' => 1,
-                        'sku_no' => $product->sku_code ?? $productSku,
-                        'brand_name' => $product->brand->name ?? $productBrand,
-                        'model_no' => $product->mf_code ?? null,
-                        'additional_product_name' => $product->name,
-                        'product_des' => $this->cleanProductDescription($product->short_desc ?? $product->overview ?? ''),
-                        'product_id' => $product->id,
                         'thumbnail' => $product->thumbnail,
-                        'source' => 'database'
-                    ];
-                    
-                    return $productData;
-                }
-            } catch (\Exception $e) {
-                Log::error('Error fetching product from database: ' . $e->getMessage());
-            }
-        }
-        
-        // If no product found in DB but we have product name from URL, use that
-        if ($productName) {
-            Log::info('Using product data from URL parameters');
-            $productData = [
-                'sl' => 1,
-                'product_name' => $productName,
-                'qty' => 1,
-                'sku_no' => $productSku,
-                'brand_name' => $productBrand,
-                'model_no' => null,
-                'additional_product_name' => $productName,
-                'product_des' => '',
-                'product_id' => $productId,
-                'thumbnail' => null,
-                'source' => 'url_parameters'
-            ];
-        }
-        
-        return $productData;
-    }
-
-    /**
-     * Clean product description by removing HTML tags and limiting length
-     */
-    private function cleanProductDescription($description)
-    {
-        if (empty($description)) {
-            return '';
-        }
-        
-        // Remove HTML tags
-        $cleanDescription = strip_tags($description);
-        
-        // Limit length to prevent issues
-        if (strlen($cleanDescription) > 500) {
-            $cleanDescription = substr($cleanDescription, 0, 500) . '...';
-        }
-        
-        // Escape any special characters for JavaScript
-        $cleanDescription = addslashes($cleanDescription);
-        
-        return $cleanDescription;
-    }
-
-    /**
-     * Get cart products for authenticated users
-     */
-    private function getCartProducts()
-    {
-        // This is a placeholder - implement based on your cart system
-        // You might use session, database, or other storage for cart
-        $cartProducts = [];
-        
-        // Example implementation (adjust based on your cart system):
-        /*
-        if (Auth::check()) {
-            $cartItems = Cart::where('user_id', Auth::id())->get();
-            foreach ($cartItems as $index => $item) {
-                $cartProducts[] = [
-                    'sl' => $index + 1,
-                    'product_name' => $item->product->name,
-                    'qty' => $item->quantity,
-                    'sku_no' => $item->product->sku_code,
-                    'brand_name' => $item->product->brand->name,
-                    'model_no' => $item->product->mf_code,
-                    'additional_product_name' => $item->product->name,
-                    'product_des' => $this->cleanProductDescription($item->product->short_desc),
-                    'product_id' => $item->product_id,
-                    'thumbnail' => $item->product->thumbnail,
-                    'source' => 'cart'
+                        'quantity' => 1,
+                        'added_at' => now()->timestamp
+                    ]
                 ];
+                
+                // Store in session for consistency
+                session()->put('rfq_items', $rfqItems);
+                Log::info('Product added to RFQ session from URL parameters:', $rfqItems);
             }
         }
-        */
         
-        return $cartProducts;
+        Log::info('Final RFQ items for display:', $rfqItems);
+        
+        return view('frontend.pages.rfq.rfq', [
+            'rfqItems' => $rfqItems,
+            'source' => $request->get('source', 'direct')
+        ]);
     }
 
     /**
-     * Store the RFQ request
+     * Get RFQ items from session
+     */
+    private function getRfqItemsFromSession()
+    {
+        $rfqItems = Session::get('rfq_items', []);
+        Log::info('RFQ items from session:', $rfqItems);
+        return $rfqItems;
+    }
+
+    /**
+     * Store the RFQ request - Updated to match rfqCreate structure
      */
     public function store(Request $request)
     {
+        Log::info('=== RFQ STORE METHOD START ===');
+        Log::info('Full Request Data:', $request->all());
 
-
-//email section strat 
-
- Log::info('RFQ Store Method Called');
-    Log::info('All Request Data:', $request->all());
-
-    // Your existing validation and processing code...
-    
-    try {
-        // Generate unique codes
-        $rfq_code = 'RFQ-' . date('Ymd') . '-' . strtoupper(substr(uniqid(), -6));
-        $deal_code = 'DEAL-' . date('Ymd') . '-' . strtoupper(substr(uniqid(), -6));
-
-        // Process products and files
-        $processedData = $this->processProductsAndFiles($request);
-        $products = $processedData['products'];
-        $uploadedFiles = $processedData['files'];
-
-        // Prepare RFQ data
-        $rfqData = $this->prepareRfqData($request, $rfq_code, $deal_code, $products, $uploadedFiles);
-
-        // Create the RFQ
-        $rfq = Rfq::create($rfqData);
-
-        Log::info('RFQ created successfully with ID: ' . $rfq->id);
-
-        // ✅ FIX: Send email notification after successful RFQ creation
-        $emailSent = $this->sendRfqEmails($rfq);
-        
-        if ($emailSent) {
-            Log::info('RFQ notification emails sent successfully');
-        } else {
-            Log::warning('RFQ created but email sending failed');
-        }
-
-        // Clear cart if needed
-        $this->clearCartIfNeeded($request);
-
-        return redirect()->back()
-            ->with('success', 'RFQ submitted successfully! Your RFQ code: ' . $rfq_code . ' and Deal code: ' . $deal_code)
-            ->with('rfq_code', $rfq_code)
-            ->with('deal_code', $deal_code);
-
-    } catch (\Exception $e) {
-        Log::error('RFQ Store Error: ' . $e->getMessage());
-        return redirect()->back()
-            ->with('error', 'Error submitting RFQ. Please try again.')
-            ->withInput();
-    }
-
-///email section end 
-
-        Log::info('RFQ Store Method Called');
-        Log::info('All Request Data:', $request->all());
-        Log::info('Contacts Data:', $request->contacts ?? []);
-
-        // Enhanced validation with better error messages
-        $validationRules = $this->getValidationRules();
-        $customMessages = $this->getValidationMessages();
-
-        $validator = Validator::make($request->all(), $validationRules, $customMessages);
-
-        // Check if validation fails
-        // if ($validator->fails()) {
-        //     Log::error('RFQ Validation Failed:');
-        //     Log::error('Validation Errors:', $validator->errors()->toArray());
-        //     Log::error('Submitted Data:', $request->all());
-            
-        //     return redirect()->back()
-        //         ->withErrors($validator)
-        //         ->withInput()
-        //         ->with('error', 'Please fix the validation errors below.');
-        // }
-
-        Log::info('RFQ Form Data Validated Successfully');
+        // Check if it's an AJAX request
+        $isAjax = $request->ajax() || $request->wantsJson();
 
         try {
-            // Generate unique codes
-            $rfq_code = 'RFQ-' . date('Ymd') . '-' . strtoupper(substr(uniqid(), -6));
-            $deal_code = 'DEAL-' . date('Ymd') . '-' . strtoupper(substr(uniqid(), -6));
+            // Validate the request using simplified validation like rfqCreate
+            $validator = Validator::make(
+                $request->all(),
+                [
+                    'name' => 'required|string|max:255',
+                    'email' => 'required|email:rfc,dns',
+                    'phone' => 'required|string|max:20',
+                    'company_name' => 'required|string|max:255',
+                    'country' => 'required|string|max:255',
+                    'address' => 'required|string',
+                    'city' => 'required|string|max:255',
+                    'zip_code' => 'required|string|max:20',
+                    'designation' => 'required|string|max:255',
+                    'products' => 'required|array|min:1',
+                    'products.*.product_name' => 'required|string|max:255',
+                    'products.*.qty' => 'required|integer|min:1',
+                    'products.*.image' => 'nullable|file|mimes:jpeg,png,jpg,pdf,doc,docx|max:5120',
+                ],
+                [
+                    'required' => 'The :attribute field is required.',
+                    'email' => 'The :attribute must be a valid email address.',
+                    'products.*.product_name.required' => 'Each product must have a name.',
+                    'products.*.qty.required' => 'Each product must have a quantity.',
+                    'products.*.qty.integer' => 'Quantity must be a number.',
+                    'products.*.qty.min' => 'Quantity must be at least 1.',
+                    'products.*.image.mimes' => 'The image must be a file of type: jpeg, png, jpg, pdf, doc, docx.',
+                    'products.*.image.max' => 'The image must not be larger than 5MB.',
+                ]
+            );
 
-            Log::info('Generated RFQ Code: ' . $rfq_code);
-            Log::info('Generated Deal Code: ' . $deal_code);
-
-            // Process products and files
-            $processedData = $this->processProductsAndFiles($request);
-            $products = $processedData['products'];
-            $uploadedFiles = $processedData['files'];
-
-            Log::info('Processed products:', $products);
-            Log::info('Uploaded files:', $uploadedFiles);
-
-            // Prepare RFQ data
-            $rfqData = $this->prepareRfqData($request, $rfq_code, $deal_code, $products, $uploadedFiles);
-
-            Log::info('Final RFQ Data to be saved:', $rfqData);
-
-            // Validate fillable fields
-            $rfqData = $this->validateFillableFields($rfqData);
-
-            // Create the RFQ
-            Log::info('Creating RFQ record...');
-            $rfq = Rfq::create($rfqData);
-
-            Log::info('RFQ created successfully with ID: ' . $rfq->id);
-            Log::info('RFQ Code: ' . $rfq_code);
-            Log::info('Deal Code: ' . $deal_code);
-
-            // Clear cart if items were added from cart
-            $this->clearCartIfNeeded($request);
-
-            return redirect()->back()
-                ->with('success', 'RFQ submitted successfully! Your RFQ code: ' . $rfq_code . ' and Deal code: ' . $deal_code)
-                ->with('rfq_code', $rfq_code)
-                ->with('deal_code', $deal_code);
-
-        } catch (\Illuminate\Database\QueryException $e) {
-            Log::error('RFQ Database Query Error: ' . $e->getMessage());
-            Log::error('SQL Error: ' . $e->getSql());
-            Log::error('Bindings: ' . json_encode($e->getBindings()));
-
-            $errorMessage = 'Database error occurred while submitting RFQ. Please try again.';
-            if (app()->environment('local')) {
-                $errorMessage .= ' Error: ' . $e->getMessage();
+            if ($validator->fails()) {
+                Log::error('RFQ Validation Failed:', $validator->errors()->toArray());
+                
+                if ($isAjax) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Please fix the validation errors below.',
+                        'errors' => $validator->errors()->toArray()
+                    ], 422);
+                }
+                
+                return redirect()->back()
+                    ->withErrors($validator)
+                    ->withInput()
+                    ->with('error', 'Please fix the validation errors below.');
             }
 
-            return redirect()->back()
-                ->with('error', $errorMessage)
-                ->withInput();
+            Log::info('✅ Validation passed successfully');
 
-        } catch (\Exception $e) {
-            Log::error('RFQ Store General Error: ' . $e->getMessage());
-            Log::error('Error Trace: ' . $e->getTraceAsString());
+           
+            // Generate RFQ Code like rfqCreate method
+            $today = now()->format('ymd');
+            $lastCode = Rfq::where('rfq_code', 'like', "$today-%")->latest('id')->first();
+            if ($lastCode) {
+                $parts = explode('-', $lastCode->rfq_code);
+                $lastNumber = isset($parts[1]) ? (int)$parts[1] : 0;
+                $newNumber = $lastNumber + 1;
+            } else {
+                $newNumber = 1;
+            }
+            $rfq_code = $today . '-' . $newNumber;
+            $deal_code = 'DEAL-' . $today . '-' . $newNumber;
 
-            $errorMessage = 'Error submitting RFQ. Please try again.';
-            if (app()->environment('local')) {
-                $errorMessage .= ' Error: ' . $e->getMessage();
+            Log::info('Generated codes:', ['rfq_code' => $rfq_code, 'deal_code' => $deal_code]);
+
+            // Check for existing client
+            $client_type = 'anonymous';
+            $client = User::where('email', trim($request->email))->first();
+            
+            if ($client) {
+                if ($client->user_type === 'job_seeker') {
+                    // Don't delete the user, just treat as anonymous
+                    $client_type = 'anonymous';
+                } elseif (in_array(trim(strtolower($client->user_type)), ['client', 'partner'])) {
+                    $client_type = $client->user_type;
+                }
             }
 
-            return redirect()->back()
-                ->with('error', $errorMessage)
-                ->withInput();
-        }
-
-        if ($validator->fails()) {
-        return response()->json([
-        'success' => false,
-        'errors' => $validator->errors(),
-        'data' => $request->all()
-    ]);
-}
-
-    }
-
-    /**
-     * Get validation rules for RFQ form
-     */
-    private function getValidationRules()
-    {
-        return [
-            // Company Information
-            'company_name' => 'required|string|max:255',
-            'name' => 'required|string|max:255',
-            'designation' => 'required|string|max:255',
-            'email' => 'required|email',
-            'phone' => 'required|string|max:20',
-            'address' => 'required|string',
-            'country' => 'required|string',
-            'city' => 'required|string',
-            'zip_code' => 'required|string|max:20',
-            'is_reseller' => 'sometimes|boolean',
-            
-            // Shipping Details
-            'shipping_company_name' => 'nullable|string|max:255',
-            'shipping_name' => 'nullable|string|max:255',
-            'shipping_designation' => 'nullable|string|max:255',
-            'shipping_email' => 'nullable|email',
-            'shipping_phone' => 'nullable|string|max:20',
-            'shipping_address' => 'nullable|string',
-            'shipping_country' => 'nullable|string',
-            'shipping_city' => 'nullable|string',
-            'shipping_zip_code' => 'nullable|string|max:20',
-            'is_contact_address' => 'sometimes|boolean',
-            
-            // End User Information
-            'end_user_company_name' => 'nullable|string|max:255',
-            'end_user_name' => 'nullable|string|max:255',
-            'end_user_designation' => 'nullable|string|max:255',
-            'end_user_email' => 'nullable|email',
-            'end_user_phone' => 'nullable|string|max:20',
-            'end_user_address' => 'nullable|string',
-            'end_user_country' => 'nullable|string',
-            'end_user_city' => 'nullable|string',
-            'end_user_zip_code' => 'nullable|string|max:20',
-            'end_user_is_contact_address' => 'sometimes|boolean',
-            
-            // Additional Details
-            'project_name' => 'nullable|string|max:255',
-            'budget' => 'nullable|numeric|min:0',
-            'project_status' => 'nullable|string',
-            'approximate_delivery_time' => 'nullable|string',
-            'project_brief' => 'nullable|string',
-            
-            // Products from repeater
-            'contacts' => 'required|array|min:1',
-            'contacts.*.product_name' => 'required|string|max:255',
-            'contacts.*.qty' => 'required|numeric|min:1',
-            'contacts.*.sku_no' => 'nullable|string|max:255',
-            'contacts.*.model_no' => 'nullable|string|max:255',
-            'contacts.*.brand_name' => 'nullable|string|max:255',
-            'contacts.*.additional_qty' => 'nullable|numeric|min:0',
-            'contacts.*.additional_product_name' => 'nullable|string|max:255',
-            'contacts.*.product_des' => 'nullable|string',
-            'contacts.*.additional_info' => 'nullable|string',
-            'contacts.*.image' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:10240',
-        ];
-    }
-
-    /**
-     * Get validation messages
-     */
-    private function getValidationMessages()
-    {
-        return [
-            'contacts.required' => 'At least one product is required.',
-            'contacts.*.product_name.required' => 'Product name is required for all items.',
-            'contacts.*.qty.required' => 'Quantity is required for all items.',
-            'contacts.*.qty.numeric' => 'Quantity must be a number.',
-            'contacts.*.qty.min' => 'Quantity must be at least 1.',
-            'company_name.required' => 'Company name is required.',
-            'name.required' => 'Contact name is required.',
-            'email.required' => 'Email address is required.',
-            'email.email' => 'Please enter a valid email address.',
-            'phone.required' => 'Phone number is required.',
-        ];
-    }
-
-    /**
-     * Process products and handle file uploads
-     */
-    private function processProductsAndFiles(Request $request)
-    {
-        $products = [];
-        $uploadedFiles = [];
-
-        foreach ($request->contacts as $index => $contact) {
-            Log::info("Processing product {$index}:", $contact);
-
-            $productData = [
-                'sl' => $contact['sl'] ?? $index + 1,
-                'product_name' => $contact['product_name'] ?? 'Unknown Product',
-                'quantity' => $contact['qty'] ?? 1,
-                'sku_no' => $contact['sku_no'] ?? null,
-                'model_no' => $contact['model_no'] ?? null,
-                'brand_name' => $contact['brand_name'] ?? null,
-                'additional_qty' => $contact['additional_qty'] ?? null,
-                'additional_product_name' => $contact['additional_product_name'] ?? null,
-                'product_description' => $contact['product_des'] ?? null,
-                'additional_info' => $contact['additional_info'] ?? null,
-                'image_path' => null,
+            // Prepare RFQ data like rfqCreate method
+            $rfqData = [
+                'rfq_code' => $rfq_code,
+                'deal_code' => $deal_code,
+                'user_id' => Auth::id(),
+                'client_id' => $request->client_id ?? $client->id ?? null,
+                'client_type' => $client_type,
+                
+                // Company Information
+                'company_name' => $request->company_name,
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'designation' => $request->designation,
+                'address' => $request->address,
+                'country' => $request->country,
+                'city' => $request->city,
+                'zip_code' => $request->zip_code,
+                'is_reseller' => $request->is_reseller,
+                
+                // Shipping Details
+                'shipping_company_name' => ($request->is_contact_address == '1') ? $request->company_name : ($request->shipping_company_name ?? null),
+                'shipping_name' => ($request->is_contact_address == '1') ? $request->name : ($request->shipping_name ?? null),
+                'shipping_designation' => ($request->is_contact_address == '1') ? $request->designation : ($request->shipping_designation ?? null),
+                'shipping_email' => ($request->is_contact_address == '1') ? $request->email : ($request->shipping_email ?? null),
+                'shipping_phone' => ($request->is_contact_address == '1') ? $request->phone : ($request->shipping_phone ?? null),
+                'shipping_address' => ($request->is_contact_address == '1') ? $request->address : ($request->shipping_address ?? null),
+                'shipping_country' => ($request->is_contact_address == '1') ? $request->country : ($request->shipping_country ?? null),
+                'shipping_city' => ($request->is_contact_address == '1') ? $request->city : ($request->shipping_city ?? null),
+                'shipping_zip_code' => ($request->is_contact_address == '1') ? $request->zip_code : ($request->shipping_zip_code ?? null),
+                
+                // End User Information
+                'end_user_company_name' => ($request->end_user_is_contact_address == '1') ? $request->company_name : ($request->end_user_company_name ?? null),
+                'end_user_name' => ($request->end_user_is_contact_address == '1') ? $request->name : ($request->end_user_name ?? null),
+                'end_user_designation' => ($request->end_user_is_contact_address == '1') ? $request->designation : ($request->end_user_designation ?? null),
+                'end_user_email' => ($request->end_user_is_contact_address == '1') ? $request->email : ($request->end_user_email ?? null),
+                'end_user_phone' => ($request->end_user_is_contact_address == '1') ? $request->phone : ($request->end_user_phone ?? null),
+                'end_user_address' => ($request->end_user_is_contact_address == '1') ? $request->address : ($request->end_user_address ?? null),
+                'end_user_country' => ($request->end_user_is_contact_address == '1') ? $request->country : ($request->end_user_country ?? null),
+                'end_user_city' => ($request->end_user_is_contact_address == '1') ? $request->city : ($request->end_user_city ?? null),
+                'end_user_zip_code' => ($request->end_user_is_contact_address == '1') ? $request->zip_code : ($request->end_user_zip_code ?? null),
+                
+                // Additional Details
+                'project_name' => $request->project_name ?? null,
+                'budget' => $request->budget ?? null,
+                'project_status' => $request->project_status ?? 'pending',
+                'approximate_delivery_time' => $request->approximate_delivery_time ?? null,
+                'message' => $request->project_brief ?? null,
+                
+                // System fields
+                'rfq_type' => 'rfq',
+                'create_date' => now(),
+                'status' => 'rfq_created',
+                'deal_type' => 'new',
             ];
 
-            // Handle file upload for this product
-            $filePath = $this->handleFileUpload($request, $index, $contact);
-            if ($filePath) {
-                $productData['image_path'] = $filePath;
-                $uploadedFiles[] = $filePath;
+            // Set main product_id if available from first product
+            if (!empty($request->products) && isset($request->products[0]['product_id'])) {
+                $rfqData['product_id'] = $request->products[0]['product_id'];
+                Log::info('Main product_id set to: ' . $rfqData['product_id']);
             }
 
-            $products[] = $productData;
-            Log::info("Product {$index} processed successfully");
-        }
+            // Add optional checkbox fields
+            $rfqData['is_contact_address'] = $request->boolean('is_contact_address') ?? false;
+            $rfqData['end_user_is_contact_address'] = $request->boolean('end_user_is_contact_address') ?? false;
 
-        return [
-            'products' => $products,
-            'files' => $uploadedFiles
-        ];
-    }
+            Log::info('Final RFQ Data to be saved:', [
+                'rfq_code' => $rfqData['rfq_code'],
+                'products_count' => count($request->products ?? [])
+            ]);
 
-    /**
-     * Handle file upload for a product
-     */
-    private function handleFileUpload(Request $request, $index, $contact)
-    {
-        if (isset($contact['image']) && $request->hasFile("contacts.{$index}.image")) {
+            // Create the RFQ
             try {
-                $file = $request->file("contacts.{$index}.image");
-                if ($file && $file->isValid()) {
-                    $fileName = time() . '_' . $index . '_' . preg_replace('/[^A-Za-z0-9\.]/', '', $file->getClientOriginalName());
-                    $filePath = $file->storeAs('rfq_files', $fileName, 'public');
-                    Log::info("File uploaded successfully: {$filePath}");
-                    return $filePath;
+                $rfq = Rfq::create($rfqData);
+                Log::info('✅ RFQ created successfully with ID: ' . $rfq->id);
+
+                // Process RFQ Products like rfqCreate method
+                $this->processRfqProducts($rfq->id, $request->products);
+
+            } catch (\Illuminate\Database\QueryException $dbException) {
+                Log::error('❌ Database Error Creating RFQ:', [
+                    'message' => $dbException->getMessage(),
+                    'error_code' => $dbException->getCode()
+                ]);
+                
+                throw new \Exception('Database error: ' . $dbException->getMessage());
+            }
+ // -------------------------------
+        // Send RFQ Notification Emails
+        // -------------------------------
+
+
+            // Send Emails
+        $this->sendRfqEmails($rfq);
+
+        // try {
+        //     $mailSent = $this->sendRfqEmails($rfq);
+
+        //     if ($mailSent) {
+        //         Log::info(' RFQ notification emails sent successfully.');
+        //     } else {
+        //         Log::warning(' RFQ notification emails failed to send.');
+        //     }
+        // } catch (\Exception $mailEx) {
+        //     Log::error(' Error sending RFQ emails: ' . $mailEx->getMessage());
+
+        // }
+
+
+            Log::info('✅ RFQ session cleared');
+
+            Log::info('=== RFQ STORE METHOD COMPLETED SUCCESSFULLY ===');
+
+            if ($isAjax) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'RFQ submitted successfully! Your RFQ code: ' . $rfq_code,
+                    'rfq_code' => $rfq_code,
+                    'deal_code' => $deal_code,
+                    'redirect_url' => route('rfq', $rfq_code)
+                ]);
+            }
+
+            return redirect()->route('rfq', $rfq_code)
+                ->with('success', 'RFQ submitted successfully! Your RFQ code: ' . $rfq_code);
+
+        } catch (\Exception $e) {
+            Log::error('RFQ Store Critical Error: ' . $e->getMessage());
+            
+            $errorMessage = 'Error submitting RFQ: ' . $e->getMessage();
+            
+            if ($isAjax) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $errorMessage
+                ], 500);
+            }
+
+            return redirect()->back()
+                ->with('error', $errorMessage)
+                ->withInput();
+        }
+    }
+
+    /**
+     * Process RFQ Products like rfqCreate method - FIXED BUGS
+     */
+    private function processRfqProducts($rfqId, $products)
+    {
+        Log::info('Processing RFQ products for RFQ ID: ' . $rfqId);
+        Log::info('Products data received:', ['products' => $products]);
+        
+        if (empty($products) || !is_array($products)) {
+            Log::warning('Products data is empty or not an array:', ['products' => $products]);
+            return;
+        }
+
+        foreach ($products as $index => $productItem) {
+            $productName = $productItem['product_name'] ?? null;
+            $qty = $productItem['qty'] ?? null;
+
+            if (!$productName || !$qty) {
+                Log::warning('Skipping product - missing product name or quantity:', ['product' => $productItem]);
+                continue;
+            }
+
+            $imagePath = null;
+
+            // Handle file upload if image is present - FIXED: use $productItem instead of $products
+            if (isset($productItem['image']) && $productItem['image'] instanceof \Illuminate\Http\UploadedFile) {
+                try {
+                    $filePath = 'rfq_products/image';
+                    $uploadedFile = Helper::imageUpload($productItem['image'], $filePath);
+                    
+                    if ($uploadedFile['status'] === 1) {
+                        $imagePath = $uploadedFile['file_path'];
+                        Log::info("File uploaded successfully: {$imagePath}");
+                    } else {
+                        Log::error("File upload failed: " . ($uploadedFile['error_message'] ?? 'Unknown error'));
+                        // Continue without image if upload fails
+                    }
+                } catch (\Exception $e) {
+                    Log::error("File upload exception for product {$index}: " . $e->getMessage());
                 }
-            } catch (\Exception $fileException) {
-                Log::error("File upload failed for product {$index}: " . $fileException->getMessage());
+            }
+
+            $productData = [
+                'rfq_id' => $rfqId,
+                'product_id' => $productItem['product_id'] ?? null,
+                'product_name' => $productName,
+                'qty' => (int) $qty,
+                'sku_no' => $productItem['sku_no'] ?? null,
+                'model_no' => $productItem['model_no'] ?? null,
+                'brand_name' => $productItem['brand_name'] ?? null,
+                'additional_qty' => isset($productItem['additional_qty']) ? (int) $productItem['additional_qty'] : null,
+                'additional_product_name' => $productItem['additional_product_name'] ?? null,
+                'product_des' => $productItem['product_des'] ?? null,
+                'additional_info' => $productItem['additional_info'] ?? null,
+                'image' => $imagePath,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+
+            // Create RFQ Product
+            try {
+                RfqProduct::create($productData);
+                Log::info('RFQ Product created:', ['product_name' => $productName, 'qty' => $qty]);
+            } catch (\Exception $e) {
+                Log::error('Failed to create RFQ product: ' . $e->getMessage());
+                // Continue with other products even if one fails
             }
         }
-        return null;
+
+        Log::info('Completed processing RFQ products for RFQ ID: ' . $rfqId);
     }
 
-    /**
-     * Prepare RFQ data for storage
-     */
-    private function prepareRfqData(Request $request, $rfq_code, $deal_code, $products, $uploadedFiles)
+    
+    public function removeFromRfqSession(Request $request)
     {
-        return [
-            'rfq_code' => $rfq_code,
-            'deal_code' => $deal_code,
-            'user_id' => Auth::id(),
+        try {
+            $productId = $request->product_id ?? $request->input('product_id');
             
-            // Company Information
-            'company_name' => $request->company_name,
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'designation' => $request->designation,
-            'address' => $request->address,
-            'country' => $request->country,
-            'city' => $request->city,
-            'zip_code' => $request->zip_code,
-            'is_reseller' => $request->is_reseller,
-            
-            // Shipping Details
-            'shipping_company_name' => $request->shipping_company_name,
-            'shipping_name' => $request->shipping_name,
-            'shipping_designation' => $request->shipping_designation,
-            'shipping_email' => $request->shipping_email,
-            'shipping_phone' => $request->shipping_phone,
-            'shipping_address' => $request->shipping_address,
-            'shipping_country' => $request->shipping_country,
-            'shipping_city' => $request->shipping_city,
-            'shipping_zip_code' => $request->shipping_zip_code,
-            'is_contact_address' => $request->boolean('is_contact_address'),
-            
-            // End User Information
-            'end_user_company_name' => $request->end_user_company_name,
-            'end_user_name' => $request->end_user_name,
-            'end_user_designation' => $request->end_user_designation,
-            'end_user_email' => $request->end_user_email,
-            'end_user_phone' => $request->end_user_phone,
-            'end_user_address' => $request->end_user_address,
-            'end_user_country' => $request->end_user_country,
-            'end_user_city' => $request->end_user_city,
-            'end_user_zip_code' => $request->end_user_zip_code,
-            'end_user_is_contact_address' => $request->boolean('end_user_is_contact_address'),
-            
-            // Additional Details
-            'project_name' => $request->project_name,
-            'budget' => $request->budget,
-            'project_status' => $request->project_status ?? 'pending',
-            'approximate_delivery_time' => $request->approximate_delivery_time,
-            'message' => $request->project_brief,
-            
-            // Products and Files
-            'products_data' => json_encode($products),
-            'uploaded_files' => json_encode($uploadedFiles),
-            
-            // System fields
-            'rfq_type' => 'rfq',
-            'client_type' => Auth::id() ? 'client' : 'anonymous',
-            'create_date' => now(),
-        ];
-    }
-
-    /**
-     * Validate and filter fillable fields
-     */
-    private function validateFillableFields($rfqData)
-    {
-        $fillableFields = (new Rfq())->getFillable();
-        $missingFillable = array_diff(array_keys($rfqData), $fillableFields);
-        
-        if (!empty($missingFillable)) {
-            Log::warning('Removing non-fillable fields from RFQ data:', $missingFillable);
-            foreach ($missingFillable as $field) {
-                unset($rfqData[$field]);
+            if (!$productId) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Product ID is required'
+                ], 400);
             }
-        }
-        
-        return $rfqData;
-    }
 
-    /**
-     * Clear cart after successful RFQ submission if needed
-     */
-    private function clearCartIfNeeded(Request $request)
-    {
-        // Implement cart clearing logic based on your cart system
-        // Example:
-        /*
-        if ($request->has('clear_cart') && $request->boolean('clear_cart')) {
-            Cart::where('user_id', Auth::id())->delete();
-            Log::info('Cart cleared after RFQ submission');
-        }
-        */
-    }
+            $rfqItems = Session::get('rfq_items', []);
+            
+            if (isset($rfqItems[$productId])) {
+                unset($rfqItems[$productId]);
+                Session::put('rfq_items', $rfqItems);
+                
+                Log::info('Product removed from RFQ session:', ['product_id' => $productId]);
 
-    /**
-     * Quick test method to check validation issues
-     */
-    public function testValidation(Request $request)
-    {
-        Log::info('Test Validation - Request Data:', $request->all());
-        
-        $validator = Validator::make($request->all(), [
-            'contacts' => 'required|array|min:1',
-            'contacts.*.product_name' => 'required|string',
-            'contacts.*.qty' => 'required|numeric|min:1',
-        ]);
-
-        if ($validator->fails()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Product removed from RFQ',
+                    'rfq_count' => count($rfqItems)
+                ]);
+            }
+            
             return response()->json([
                 'success' => false,
-                'errors' => $validator->errors(),
-                'request_data' => $request->all()
-            ]);
-        }
+                'message' => 'Product not found in RFQ'
+            ], 404);
 
+        } catch (\Exception $e) {
+            Log::error('Remove from RFQ session error: ' . $e->getMessage());
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to remove product from RFQ'
+            ], 500);
+        }
+    }
+
+    /**
+     * Clear all RFQ session items
+     */
+    public function clearRfqSession()
+    {
+        try {
+            Session::forget('rfq_items');
+            Log::info('RFQ session cleared');
+
+            return response()->json([
+                'success' => true,
+                'message' => 'RFQ items cleared successfully'
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Clear RFQ session error: ' . $e->getMessage());
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to clear RFQ items'
+            ], 500);
+        }
+    }
+
+    /**
+     * Success page for RFQ - FIXED to match your route
+     */
+    public function success($rfq_code)
+    {
+        $rfq = Rfq::where('rfq_code', $rfq_code)->first();
+        
+        if (!$rfq) {
+            return redirect()->route('rfq.create')->with('error', 'RFQ not found.');
+        }
+        
+        // Check if the success view exists, otherwise use a basic success message
+        if (view()->exists('frontend.pages.rfq.success')) {
+            return view('frontend.pages.rfq.rfq', compact('rfq'));
+        } else {
+            // Fallback view
+            return view('frontend.pages.rfq.rfq', compact('rfq'))
+                ->with('success', 'RFQ submitted successfully! Your RFQ code: ' . $rfq_code);
+        }
+    }
+
+    /**
+     * Debug method to check form submission
+     */
+    public function debugFormSubmit(Request $request)
+    {
+        Log::info('=== FORM SUBMISSION DEBUG ===');
+        Log::info('All request data:', $request->all());
+        
         return response()->json([
             'success' => true,
-            'message' => 'Validation passed'
+            'received_data' => $request->all(),
+            'has_products' => $request->has('products'),
+            'products_count' => count($request->products ?? []),
+            'products_data' => $request->products ?? 'NO PRODUCTS'
         ]);
+    }
+
+    /**
+     * Test database connection and check for missing columns
+     */
+    public function checkDatabase()
+    {
+        try {
+            // Check if products_data column exists
+            $rfq = new Rfq();
+            $columns = Schema::getColumnListing($rfq->getTable());
+            
+            $hasProductsData = in_array('products_data', $columns);
+            
+            return response()->json([
+                'success' => true,
+                'has_products_data_column' => $hasProductsData,
+                'all_columns' => $columns,
+                'message' => $hasProductsData ? 
+                    'products_data column exists' : 
+                    'MISSING: products_data column - run migration'
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Database error: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Test email functionality
+     */
+    public function testEmail()
+    {
+        try {
+            $rfq = Rfq::latest()->first();
+            if ($rfq) {
+                $this->sendRfqEmails($rfq);
+                return response()->json(['success' => true, 'message' => 'Test email sent']);
+            }
+            return response()->json(['success' => false, 'message' => 'No RFQ found for testing']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
+        }
+    }
+
+    /**
+     * Test validation functionality
+     */
+    public function testValidation()
+    {
+        try {
+            $testData = [
+                'name' => 'Test User',
+                'email' => 'test@example.com',
+                'phone' => '1234567890',
+                'company_name' => 'Test Company',
+                'country' => 'Test Country',
+                'address' => 'Test Address',
+                'city' => 'Test City',
+                'zip_code' => '12345',
+                'designation' => 'Test Designation',
+                'products' => [
+                    [
+                        'product_name' => 'Test Product',
+                        'qty' => 1
+                    ]
+                ]
+            ];
+
+            $validator = Validator::make($testData, [
+                'name' => 'required|string|max:255',
+                'email' => 'required|email:rfc,dns',
+                'phone' => 'required|string|max:20',
+                'company_name' => 'required|string|max:255',
+                'country' => 'required|string|max:255',
+                'address' => 'required|string',
+                'city' => 'required|string|max:255',
+                'zip_code' => 'required|string|max:20',
+                'designation' => 'required|string|max:255',
+                'products' => 'required|array|min:1',
+                'products.*.product_name' => 'required|string|max:255',
+                'products.*.qty' => 'required|integer|min:1',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validation failed',
+                    'errors' => $validator->errors()->toArray()
+                ]);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Validation passed successfully'
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation test error: ' . $e->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * Handle image upload for RFQ
+     */
+    public function uploadImage(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'image' => 'required|file|mimes:jpeg,png,jpg,pdf,doc,docx|max:5120',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validation failed',
+                    'errors' => $validator->errors()->toArray()
+                ], 422);
+            }
+
+            $file = $request->file('image');
+            $filePath = 'rfq_products/temp';
+            $uploadedFile = Helper::imageUpload($file, $filePath);
+
+            if ($uploadedFile['status'] === 1) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Image uploaded successfully',
+                    'file_path' => $uploadedFile['file_path'],
+                    'file_name' => $uploadedFile['file_name']
+                ]);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'File upload failed: ' . ($uploadedFile['error_message'] ?? 'Unknown error')
+                ], 500);
+            }
+
+        } catch (\Exception $e) {
+            Log::error('Image upload error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Image upload failed: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }
