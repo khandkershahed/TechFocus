@@ -36,12 +36,12 @@
             <div class="col-lg-3">
                 <h6 class="mb-3">Catalogs by Categories</h6>
                 <ul class="nav nav-tabs flex-column" id="myTab" role="tablist">
-                    <li class="nav-item p-0 mt-1 shadow-lg" role="presentation">
+                    <li class="p-0 mt-1 border nav-item" role="presentation">
                         <span class="nav-link ps-3 active" id="home-tab" data-bs-toggle="tab"
                               data-bs-target="#home" type="button" role="tab">All</span>
                     </li>
                     @foreach($catalogCategories as $key => $category)
-                        <li class="nav-item p-0 mt-1 shadow-lg" role="presentation">
+                        <li class="p-0 mt-1 border nav-item" role="presentation">
                             <span class="nav-link ps-3" id="category-item-{{ $key }}-tab" data-bs-toggle="tab"
                                   data-bs-target="#category-item-{{ $key }}" type="button" role="tab">
                                 {{ ucfirst($category) }}
@@ -57,14 +57,15 @@
                     <div class="tab-pane fade show active" id="home" role="tabpanel">
                         <div class="row">
                             @forelse($allCatalogs as $catalog)
-                                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                                <div class="mb-4 col-lg-3 col-md-4 col-sm-6">
                                     <div class="card projects-card rounded-0 h-100 catalog-card"
                                          style="cursor: pointer;"
                                          data-pdf-url="{{ $catalog->document ? asset('storage/catalog/document/' . $catalog->document) : '' }}">
                                         <img src="{{ $catalog->thumbnail ? asset('storage/catalog/thumbnail/' . $catalog->thumbnail) : asset('frontend/images/no-image.jpg') }}"
                                              class="card-img-top img-fluid rounded-0"
                                              alt="{{ $catalog->name }}"
-                                             style="height: 200px; object-fit: cover;" />
+                                             style="height: 200px; object-fit: cover;" 
+                                             onerror="this.onerror=null;this.src='{{ asset('frontend/images/error-image.avif') }}';"/>
                                         <div class="card-body d-flex flex-column">
                                             <p class="text-center flex-grow-1">{{ $catalog->name }}</p>
 
@@ -81,17 +82,17 @@
                                                     $logoTitle = $catalog->companies->first()->name;
                                                 }
                                             @endphp
-                                            <div class="text-center mb-2">
+                                            <div class="mb-2 text-center">
                                                 <img src="{{ $logoUrl }}" title="{{ $logoTitle }}" style="max-height: 40px; max-width: 100px;"
-                                                     onerror="this.onerror=null;this.src='{{ asset('frontend/images/no-logo.png') }}';">
-                                                <p class="small mt-2 mb-0">{{ $catalog->page_number ?? 0 }} Pages</p>
+                                                     onerror="this.onerror=null;this.src='{{ asset('frontend/images/error-image.avif') }}';">
+                                                <p class="mt-2 mb-0 small">{{ $catalog->page_number ?? 0 }} Pages</p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             @empty
                                 <div class="col-12">
-                                    <div class="alert alert-info text-center">No catalogs found.</div>
+                                    <div class="text-center alert alert-info">No catalogs found.</div>
                                 </div>
                             @endforelse
                         </div>
@@ -103,7 +104,7 @@
                             <div class="row">
                                 @if(isset($catalogsByCategory[$category]) && $catalogsByCategory[$category]->count() > 0)
                                     @foreach($catalogsByCategory[$category] as $catalog)
-                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                                        <div class="mb-4 col-lg-3 col-md-4 col-sm-6">
                                             <div class="card projects-card rounded-0 h-100 catalog-card"
                                                  style="cursor: pointer;"
                                                  data-pdf-url="{{ $catalog->document ? asset('storage/catalog/document/' . $catalog->document) : '' }}">
@@ -126,10 +127,10 @@
                                                             $logoTitle = $catalog->companies->first()->name;
                                                         }
                                                     @endphp
-                                                    <div class="text-center mb-2">
+                                                    <div class="mb-2 text-center">
                                                         <img src="{{ $logoUrl }}" title="{{ $logoTitle }}" style="max-height: 40px; max-width: 100px;"
                                                              onerror="this.onerror=null;this.src='{{ asset('frontend/images/no-logo.png') }}';">
-                                                        <p class="small mt-2 mb-0">{{ $catalog->page_number ?? 0 }} Pages</p>
+                                                        <p class="mt-2 mb-0 small">{{ $catalog->page_number ?? 0 }} Pages</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -137,7 +138,7 @@
                                     @endforeach
                                 @else
                                     <div class="col-12">
-                                        <div class="alert alert-info text-center">No catalogs found in {{ ucfirst($category) }} category.</div>
+                                        <div class="text-center alert alert-info">No catalogs found in {{ ucfirst($category) }} category.</div>
                                     </div>
                                 @endif
                             </div>
