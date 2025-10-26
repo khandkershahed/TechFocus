@@ -45,7 +45,7 @@
         <!-- Department -->
         <div class="mb-3">
             <label for="employee_department_id" class="form-label">Department</label>
-            <select name="employee_department_id" class="form-select">
+            <select name="employee_department_id" class="form-select" data-control="select2" data-close-on-select="false" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple">
                 @foreach($employeeDepartments as $dept)
                     <option value="{{ $dept->id }}" {{ $employee->employee_department_id == $dept->id ? 'selected' : '' }}>
                         {{ $dept->name }}
@@ -57,7 +57,7 @@
         <!-- Category -->
         <div class="mb-3">
             <label for="employee_category_id" class="form-label">Category</label>
-            <select name="employee_category_id" class="form-select">
+            <select name="employee_category_id" class="form-select" data-control="select2" data-close-on-select="false" data-placeholder="Select an option" data-allow-clear="true">
                 @foreach($employeeCategories as $cat)
                     <option value="{{ $cat->id }}" {{ $employee->employee_category_id == $cat->id ? 'selected' : '' }}>
                         {{ $cat->name }}
@@ -114,7 +114,7 @@
         <!-- Status -->
         <div class="mb-3">
             <label for="status" class="form-label">Status</label>
-            <select name="status" class="form-select">
+            <select name="status" class="form-select" data-control="select2" data-close-on-select="false" data-placeholder="Select an option" data-allow-clear="true">
                 <option value="active" {{ $employee->status == 'active' ? 'selected' : '' }}>Active</option>
                 <option value="inactive" {{ $employee->status == 'inactive' ? 'selected' : '' }}>Inactive</option>
             </select>

@@ -3,7 +3,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12">
-                <div class="card rounded-0 shadow-lg">
+                <div class="card rounded-0 shadow-sm">
                     <div class="card-header bg-white py-3">
                         <div class="row align-items-center">
                             <div class="col-lg-6">
