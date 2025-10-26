@@ -101,7 +101,7 @@
                                         @if($hasSessionItems)
                                             <!-- Pre-filled products from session -->
                                             @foreach($rfqItems as $index => $product)
-                                            <div data-repeater-item class="row g-2 mb-3 product-item">
+                                            <div data-repeater-item class="mb-3 row g-2 product-item">
                                                 <div class="col-lg-1 col-12">
                                                     <button type="button" title="Provide Additional Product Information" 
                                                         class="px-10 border deal-modal-btn btn btn-light btn-sm w-100 me-1 rounded-0" 
@@ -237,7 +237,7 @@
                                             @endforeach
                                         @else
                                             <!-- Empty template for new items -->
-                                            <div data-repeater-item class="row g-2 mb-3 product-item">
+                                            <div data-repeater-item class="mb-3 row g-2 product-item">
                                                 <div class="col-lg-1 col-12">
                                                     <button type="button" title="Provide Additional Product Information" 
                                                         class="px-10 border deal-modal-btn btn btn-light btn-sm w-100 me-1 rounded-0" 
@@ -382,7 +382,7 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div id="imagePreview" class="d-flex flex-wrap gap-2 mb-2"></div>
+                                                            <div id="imagePreview" class="flex-wrap gap-2 mb-2 d-flex"></div>
                                                             <p class="text-sm text-danger warning-text" style="display:none;">
                                                                 You must input product name in item Box.
                                                             </p>
@@ -1355,37 +1355,37 @@ $(document).ready(function() {
                             <h1 class="modal-title fs-5" id="productModalLabel${index}">Product Information</h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                         </div>
-                        <div class="modal-body p-5">
+                        <div class="p-5 modal-body">
                             <div class="row gx-2">
-                                <div class="col-lg-2 mb-3">
+                                <div class="mb-3 col-lg-2">
                                     <label>SKU / Part No.</label>
                                     <input type="text" class="form-control modal-sku-no">
                                 </div>
-                                <div class="col-lg-3 mb-3">
+                                <div class="mb-3 col-lg-3">
                                     <label>Model No.</label>
                                     <input type="text" class="form-control modal-model-no">
                                 </div>
-                                <div class="col-lg-4 mb-3">
+                                <div class="mb-3 col-lg-4">
                                     <label>Brand Name</label>
                                     <input type="text" class="form-control modal-brand-name">
                                 </div>
-                                <div class="col-lg-3 mb-3">
+                                <div class="mb-3 col-lg-3">
                                     <label>Quantity</label>
                                     <input type="number" class="form-control modal-additional-qty">
                                 </div>
-                                <div class="col-lg-12 mb-3">
+                                <div class="mb-3 col-lg-12">
                                     <label>Item Name</label>
                                     <input type="text" class="form-control modal-additional-product-name">
                                 </div>
-                                <div class="col-lg-6 mb-3">
+                                <div class="mb-3 col-lg-6">
                                     <label>Item Description</label>
                                     <textarea class="form-control modal-product-des" rows="2"></textarea>
                                 </div>
-                                <div class="col-lg-6 mb-3">
+                                <div class="mb-3 col-lg-6">
                                     <label>Additional Info</label>
                                     <textarea class="form-control modal-additional-info" rows="2"></textarea>
                                 </div>
-                                <div class="col-lg-12 mb-3">
+                                <div class="mb-3 col-lg-12">
                                     <label>Upload Product Datasheet / Images</label>
                                     <input type="file" class="form-control modal-image">
                                 </div>

@@ -1379,10 +1379,6 @@ figure img {
   padding: 30px 7.5% 30px calc(7.5% - 50px);
 }
 
-.single-product-description {
-  box-shadow: var(--custom-shadow), rgba(0, 0, 0, 0.1) 0px -1px 5px;
-}
-
 .single-bp-tag {
   font-size: 12px;
 }
@@ -1403,6 +1399,7 @@ figure img {
   text-transform: uppercase;
   border-left: 3px solid var(--primary-color);
   margin-bottom: 0px;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .brand-description-area {
@@ -1410,18 +1407,20 @@ figure img {
 }
 
 .description-areas-brand {
-  height: 251px;
-  overflow: auto;
+  height: 500px;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 .specification-areas-brand {
-  height: 266px;
-  overflow: auto;
+  height: 500px;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 .video-areas-brand {
   height: 250px;
-  overflow: auto;
+  overflow: hidden;
 }
 
 .brand-product-details {
