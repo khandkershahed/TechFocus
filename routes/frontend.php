@@ -88,7 +88,7 @@ Route::get('/rfq/create', [RfqController::class, 'create'])->name('rfq.create');
 // routes/web.php
 
 // Handle RFQ submission - KEEP ONLY THIS ONE
-Route::post('/rfq/store', [App\Http\Controllers\Rfq\RfqController::class, 'store'])->name('rfq.store');
+Route::post('/rfq/store', [RfqController::class, 'store'])->name('rfq.store');
 
  Route::get('/test-email', [RfqController::class, 'testEmail'])->name('rfq.test-email');
  Route::get('/test-validation', [RfqController::class, 'testValidation'])->name('rfq.test-validation');
