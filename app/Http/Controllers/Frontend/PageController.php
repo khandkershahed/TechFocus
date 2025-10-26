@@ -228,11 +228,12 @@ class PageController extends Controller
             ->firstOrFail();
 
         // Fetch trends for this brand
-        $trends = NewsTrend::forBrand($brand->id)
-            ->orderByDesc('featured')    // featured first
-            ->orderByDesc('created_at')  // newest first
-            ->paginate(12);
-        dd($trends);
+        $trends = NewsTrend::whereJsonContains('brand_id', (string)$brand->id)->latest()->paginate(12);;
+        // $trends = NewsTrend::forBrand($brand->id)
+        //     ->orderByDesc('featured')    // featured first
+        //     ->orderByDesc('created_at')  // newest first
+        //     ->paginate(12);
+        // dd($trends);
         // Pass both brand and trends to view
         return view('frontend.pages.brandPage.contents', compact('brand', 'trends'));
         // $data['brand'] = Brand::where('slug', $id)->select('id', 'slug', 'title', 'image')->first();
