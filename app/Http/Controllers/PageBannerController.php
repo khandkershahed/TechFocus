@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\PageBanner;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
 class PageBannerController extends Controller
@@ -75,172 +76,180 @@ class PageBannerController extends Controller
     //     }
     // }
 
-// public function store(Request $request)
-// {
-//     try {
-//         $validator = Validator::make($request->all(), [
-//             'page_name' => 'required|string|max:191',
-//             'image' => 'required|file|mimes:jpg,jpeg,png,webp|max:2048',
-//             'title' => 'nullable|string|max:250',
-//             'badge' => 'nullable|string|max:200',
-//             'button_name' => 'nullable|string|max:200',
-//             'button_link' => 'nullable|url|max:500',
-//             'banner_link' => 'nullable|url|max:500',
-//             'status' => 'nullable|in:active,inactive',
-//         ], [
-//             'image.required' => 'Please select an image file',
-//             'image.file' => 'The uploaded file is not valid',
-//             'image.mimes' => 'Only JPG, JPEG, PNG, and WebP files are allowed',
-//             'image.max' => 'File size should not exceed 2MB',
-//         ]);
+    // public function store(Request $request)
+    // {
+    //     try {
+    //         $validator = Validator::make($request->all(), [
+    //             'page_name' => 'required|string|max:191',
+    //             'image' => 'required|file|mimes:jpg,jpeg,png,webp|max:2048',
+    //             'title' => 'nullable|string|max:250',
+    //             'badge' => 'nullable|string|max:200',
+    //             'button_name' => 'nullable|string|max:200',
+    //             'button_link' => 'nullable|url|max:500',
+    //             'banner_link' => 'nullable|url|max:500',
+    //             'status' => 'nullable|in:active,inactive',
+    //         ], [
+    //             'image.required' => 'Please select an image file',
+    //             'image.file' => 'The uploaded file is not valid',
+    //             'image.mimes' => 'Only JPG, JPEG, PNG, and WebP files are allowed',
+    //             'image.max' => 'File size should not exceed 2MB',
+    //         ]);
 
-//         if ($validator->fails()) {
-//             return redirect()->back()->withErrors($validator)->withInput();
-//         }
+    //         if ($validator->fails()) {
+    //             return redirect()->back()->withErrors($validator)->withInput();
+    //         }
 
-//         // Check if file upload was successful
-//         if (!$request->hasFile('image')) {
-//             return redirect()->back()->with('error', 'No file was uploaded.')->withInput();
-//         }
+    //         // Check if file upload was successful
+    //         if (!$request->hasFile('image')) {
+    //             return redirect()->back()->with('error', 'No file was uploaded.')->withInput();
+    //         }
 
-//         $uploadedFile = $request->file('image');
-        
-//         if (!$uploadedFile->isValid()) {
-//             return redirect()->back()->with('error', 'File upload failed: ' . $uploadedFile->getErrorMessage())->withInput();
-//         }
+    //         $uploadedFile = $request->file('image');
 
-//         // Handle image upload
-//         $imageName = time() . '_' . Str::slug($request->page_name) . '.' . $uploadedFile->getClientOriginalExtension();
-//         $uploadedFile->move(public_path('uploads/page_banners'), $imageName);
+    //         if (!$uploadedFile->isValid()) {
+    //             return redirect()->back()->with('error', 'File upload failed: ' . $uploadedFile->getErrorMessage())->withInput();
+    //         }
 
-//         PageBanner::create([
-//             'page_name' => $request->page_name,
-//             'slug' => Str::slug($request->page_name),
-//             'image' => $imageName,
-//             'badge' => $request->badge,
-//             'title' => $request->title,
-//             'button_name' => $request->button_name,
-//             'button_link' => $request->button_link,
-//             'banner_link' => $request->banner_link,
-//             'status' => $request->status ?? 'active',
-//             'created_by' => Auth::guard('admin')->id(),
-//         ]);
+    //         // Handle image upload
+    //         $imageName = time() . '_' . Str::slug($request->page_name) . '.' . $uploadedFile->getClientOriginalExtension();
+    //         $uploadedFile->move(public_path('uploads/page_banners'), $imageName);
 
-//         return redirect()->route('page_banners.index')->with('success', 'Banner created successfully.');
-//     } catch (\Exception $e) {
-//         return redirect()->back()->withInput()->with('error', 'Error creating banner: ' . $e->getMessage());
-//     }
-// }
+    //         PageBanner::create([
+    //             'page_name' => $request->page_name,
+    //             'slug' => Str::slug($request->page_name),
+    //             'image' => $imageName,
+    //             'badge' => $request->badge,
+    //             'title' => $request->title,
+    //             'button_name' => $request->button_name,
+    //             'button_link' => $request->button_link,
+    //             'banner_link' => $request->banner_link,
+    //             'status' => $request->status ?? 'active',
+    //             'created_by' => Auth::guard('admin')->id(),
+    //         ]);
+
+    //         return redirect()->route('page_banners.index')->with('success', 'Banner created successfully.');
+    //     } catch (\Exception $e) {
+    //         return redirect()->back()->withInput()->with('error', 'Error creating banner: ' . $e->getMessage());
+    //     }
+    // }
 
 
-public function store(Request $request)
-{
-    try {
-        $validator = Validator::make($request->all(), [
-            'page_name' => 'required|string|max:191',
-            'image' => 'required|file|mimes:jpg,jpeg,png,webp|max:2048',
-            'title' => 'nullable|string|max:250',
-            'badge' => 'nullable|string|max:200',
-            'button_name' => 'nullable|string|max:200',
-            'button_link' => 'nullable|url|max:500',
-            'banner_link' => 'nullable|url|max:500',
-            'status' => 'nullable|in:active,inactive',
-        ], [
-            'image.required' => 'Please select an image file',
-            'image.file' => 'The uploaded file is not valid',
-            'image.mimes' => 'Only JPG, JPEG, PNG, and WebP files are allowed',
-            'image.max' => 'File size should not exceed 2MB',
-        ]);
+    public function store(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'page_name' => 'required|string|max:191',
+                'image' => 'required|file|mimes:jpg,jpeg,png,webp|max:2048',
+                'title' => 'nullable|string|max:250',
+                'badge' => 'nullable|string|max:200',
+                'button_name' => 'nullable|string|max:200',
+                'button_link' => 'nullable|url|max:500',
+                'banner_link' => 'nullable|url|max:500',
+                'status' => 'nullable|in:active,inactive',
+            ], [
+                'image.required' => 'Please select an image file',
+                'image.file' => 'The uploaded file is not valid',
+                'image.mimes' => 'Only JPG, JPEG, PNG, and WebP files are allowed',
+                'image.max' => 'File size should not exceed 2MB',
+            ]);
 
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
-
-        // Ensure upload directory exists
-        $uploadPath = public_path('uploads/page_banners');
-        if (!file_exists($uploadPath)) {
-            mkdir($uploadPath, 0755, true); // recursive creation
-        }
-
-        $uploadedFile = $request->file('image');
-        if (!$uploadedFile->isValid()) {
-            return redirect()->back()->with('error', 'File upload failed: ' . $uploadedFile->getErrorMessage())->withInput();
-        }
-
-        $imageName = time() . '_' . Str::slug($request->page_name) . '.' . $uploadedFile->getClientOriginalExtension();
-        $uploadedFile->move($uploadPath, $imageName);
-
-        PageBanner::create([
-            'page_name' => $request->page_name,
-            'slug' => Str::slug($request->page_name),
-            'image' => $imageName,
-            'badge' => $request->badge,
-            'title' => $request->title,
-            'button_name' => $request->button_name,
-            'button_link' => $request->button_link,
-            'banner_link' => $request->banner_link,
-            'status' => $request->status ?? 'active',
-            'created_by' => Auth::guard('admin')->id(),
-        ]);
-
-        return redirect()->route('page_banners.index')->with('success', 'Banner created successfully.');
-    } catch (\Exception $e) {
-        return redirect()->back()->withInput()->with('error', 'Error creating banner: ' . $e->getMessage());
-    }
-}
-
-public function update(Request $request, PageBanner $pageBanner)
-{
-    try {
-        $validator = Validator::make($request->all(), [
-            'page_name' => 'required|string|max:191',
-            'image' => 'nullable|file|mimes:jpg,jpeg,png,webp|max:2048',
-            'title' => 'nullable|string|max:250',
-            'badge' => 'nullable|string|max:200',
-            'button_name' => 'nullable|string|max:200',
-            'button_link' => 'nullable|url|max:500',
-            'banner_link' => 'nullable|url|max:500',
-            'status' => 'nullable|in:active,inactive',
-        ]);
-
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
-
-        $uploadPath = public_path('uploads/page_banners');
-        if (!file_exists($uploadPath)) {
-            mkdir($uploadPath, 0755, true);
-        }
-
-        // Handle new image upload
-        if ($request->hasFile('image') && $request->file('image')->isValid()) {
-            // Delete old image if exists
-            if ($pageBanner->image && file_exists($uploadPath . '/' . $pageBanner->image)) {
-                @unlink($uploadPath . '/' . $pageBanner->image);
+            if ($validator->fails()) {
+                foreach ($validator->errors()->all() as $error) {
+                    Session::flash('error', $error);
+                }
+                return redirect()->back()->withErrors($validator)->withInput();
             }
 
-            $imageName = time() . '_' . Str::slug($request->page_name) . '.' . $request->image->getClientOriginalExtension();
-            $request->image->move($uploadPath, $imageName);
-            $pageBanner->image = $imageName;
+            // Ensure upload directory exists
+            $uploadPath = public_path('uploads/page_banners');
+            if (!file_exists($uploadPath)) {
+                mkdir($uploadPath, 0755, true); // recursive creation
+            }
+
+            $uploadedFile = $request->file('image');
+            if (!$uploadedFile->isValid()) {
+                return redirect()->back()->with('error', 'File upload failed: ' . $uploadedFile->getErrorMessage())->withInput();
+            }
+
+            $imageName = time() . '_' . Str::slug($request->page_name) . '.' . $uploadedFile->getClientOriginalExtension();
+            $uploadedFile->move($uploadPath, $imageName);
+
+            PageBanner::create([
+                'page_name' => $request->page_name,
+                'slug' => Str::slug($request->page_name),
+                'image' => $imageName,
+                'badge' => $request->badge,
+                'title' => $request->title,
+                'button_name' => $request->button_name,
+                'button_link' => $request->button_link,
+                'banner_link' => $request->banner_link,
+                'status' => $request->status ?? 'active',
+                'created_by' => Auth::guard('admin')->id(),
+            ]);
+
+            return redirect()->route('page_banners.index')->with('success', 'Banner created successfully.');
+        } catch (\Exception $e) {
+            Session::flash('error', 'Error creating banner: ' . $e->getMessage());
+            return redirect()->back()->withInput();
         }
-
-        $pageBanner->update([
-            'page_name' => $request->page_name,
-            'slug' => Str::slug($request->page_name),
-            'badge' => $request->badge,
-            'title' => $request->title,
-            'button_name' => $request->button_name,
-            'button_link' => $request->button_link,
-            'banner_link' => $request->banner_link,
-            'status' => $request->status ?? 'active',
-            'updated_by' => Auth::guard('admin')->id(),
-        ]);
-
-        return redirect()->route('page_banners.index')->with('success', 'Banner updated successfully.');
-    } catch (\Exception $e) {
-        return redirect()->back()->withInput()->with('error', 'Error updating banner: ' . $e->getMessage());
     }
-}
+
+    public function update(Request $request, PageBanner $pageBanner)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'page_name' => 'required|string|max:191',
+                'image' => 'nullable|file|mimes:jpg,jpeg,png,webp|max:2048',
+                'title' => 'nullable|string|max:250',
+                'badge' => 'nullable|string|max:200',
+                'button_name' => 'nullable|string|max:200',
+                'button_link' => 'nullable|url|max:500',
+                'banner_link' => 'nullable|url|max:500',
+                'status' => 'nullable|in:active,inactive',
+            ]);
+
+            if ($validator->fails()) {
+                foreach ($validator->errors()->all() as $error) {
+                    Session::flash('error', $error);
+                }
+                return redirect()->back()->withErrors($validator)->withInput();
+            }
+
+            $uploadPath = public_path('uploads/page_banners');
+            if (!file_exists($uploadPath)) {
+                mkdir($uploadPath, 0755, true);
+            }
+
+            // Handle new image upload
+            if ($request->hasFile('image') && $request->file('image')->isValid()) {
+                // Delete old image if exists
+                if ($pageBanner->image && file_exists($uploadPath . '/' . $pageBanner->image)) {
+                    @unlink($uploadPath . '/' . $pageBanner->image);
+                }
+
+                $imageName = time() . '_' . Str::slug($request->page_name) . '.' . $request->image->getClientOriginalExtension();
+                $request->image->move($uploadPath, $imageName);
+                $pageBanner->image = $imageName;
+            }
+
+            $pageBanner->update([
+                'page_name' => $request->page_name,
+                'slug' => Str::slug($request->page_name),
+                'badge' => $request->badge,
+                'title' => $request->title,
+                'button_name' => $request->button_name,
+                'button_link' => $request->button_link,
+                'banner_link' => $request->banner_link,
+                'status' => $request->status ?? 'active',
+                'updated_by' => Auth::guard('admin')->id(),
+            ]);
+
+            return redirect()->route('page_banners.index')->with('success', 'Banner updated successfully.');
+        } catch (\Exception $e) {
+            Session::flash('error', 'Error updating banner: ' . $e->getMessage());
+            return redirect()->back()->withInput();
+        }
+    }
 
     /**
      * Edit existing banner
