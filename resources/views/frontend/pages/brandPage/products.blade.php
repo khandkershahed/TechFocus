@@ -31,7 +31,7 @@
                             <img src="{{ $product->thumbnail }}" class="p-card-img-top img-fluid rounded-0"
                                 alt="{{ $product->name }}" />
                         </a>
-                        <div class="mb-4 card-body">
+                        <div class="pb-4 card-body">
                             <a
                                 href="{{ route('product.details', ['id' => $product->brand->slug, 'slug' => $product->slug]) }}">
                                 <p class="text-center card-text project-para" style="font-size: 14px">

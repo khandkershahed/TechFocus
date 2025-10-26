@@ -102,11 +102,11 @@
                                 </div>
                                 
                                 <!-- Others Button -->
-                                <div class="mt-4 d-flex main-color">
+                                <div class="mt-4 d-flex main-color align-items-center">
                                     @auth
                                         <form action="{{ route('favorites.store', $product->id) }}" method="POST" class="me-2">
                                             @csrf
-                                            <button type="submit" class="btn btn-link p-0 text-decoration-none main-color">
+                                            <button type="submit" class="p-0 btn btn-link text-decoration-none main-color">
                                                 <i class="fa-solid fa-heart me-1"></i>
                                                 @if(Auth::user()->favourites->contains('product_id', $product->id))
                                                     Added to Favorites
@@ -117,7 +117,7 @@
                                         </form>
                                     @else
                                         <div class="dropdown me-2">
-                                            <a class="btn btn-link dropdown-toggle p-0 text-decoration-none main-color" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <a class="p-0 btn btn-link dropdown-toggle text-decoration-none main-color" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                                 <i class="fa-solid fa-heart me-1"></i> Add to Favorites
                                             </a>
                                             <ul class="dropdown-menu">
@@ -135,7 +135,7 @@
                                         </div>
                                     @endauth
                                     
-                                    <div class="mt-4 d-flex main-color">
+                                    <div class="d-flex main-color">
                                         <a href="{{ route('products.compare.add', $product->id) }}" class="text-decoration-none main-color me-2">
                                             <i class="fa-solid fa-table-columns me-1"></i> Compare this product
                                         </a>
@@ -152,10 +152,10 @@
         <div class="mt-5 mb-5 row">
             @if (!empty($product->specification)) 
                 <div class="{{ !empty($product->overview) ? 'col-lg-6' : 'col-lg-12' }}">
-                    <div class="single-product-description" style="font-size: 16px">
+                    <div class="text-justify bg-white shadow-sm" style="font-size: 16px">
                         <h2 class="description-title">Specification</h2>
-                        <div class="container pb-3 specification-areas-brand">
-                            <div class="px-2 row gx-1">
+                        <div class="specification-areas-brand">
+                            <div class="">
                                 <p>{!! $product->specification !!}</p>
                             </div>
                         </div>
@@ -164,10 +164,10 @@
             @endif
             @if (!empty($product->overview)) 
                 <div class="{{ !empty($product->specification) ? 'col-lg-6' : 'col-lg-12' }}">
-                    <div class="text-justify single-product-description" style="font-size: 16px; line-height: 1.5">
+                    <div class="text-justify bg-white shadow-sm" style="font-size: 16px; line-height: 1.5">
                         <h2 class="description-title">Description</h2>
-                        <div class="container pb-3">
-                            <div class="row ps-2">
+                        <div class="specification-areas-brand">
+                            <div class="px-4">
                                 <p>{!! $product->overview !!}</p>
                             </div>
                         </div>
@@ -177,7 +177,7 @@
         </div>
     </div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
@@ -410,7 +410,7 @@ $(document).ready(function() {
 //     updateRfqCount();
 // });
 // </script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+// <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
