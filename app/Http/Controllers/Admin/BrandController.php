@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Admin\Brand;
 use Illuminate\Support\Str;
 use App\Http\Requests\BrandRequest;
 use App\Http\Controllers\Controller;
@@ -184,4 +185,20 @@ class BrandController extends Controller
         }
         $this->brandRepository->destroyBrand($id);
     }
+
+
+    public function overview($slug)
+    {
+        $brand = Brand::where('slug', $slug)
+            ->with('brandPage.rowFour', 'brandPage.rowFive', 'brandPage.rowSeven', 'brandPage.rowEight')
+            ->firstOrFail();
+
+        return view('frontend.pages.brandPage.overview', compact('brand'));
+    }
+     public function products($slug)
+    {
+        $brand = Brand::where('slug', $slug)->with('brandPage')->firstOrFail();
+        return view('frontend.pages.brandPage.products', compact('brand'));
+    }
+
 }
