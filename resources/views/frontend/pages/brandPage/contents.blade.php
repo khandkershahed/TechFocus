@@ -95,7 +95,7 @@
     </div>
 
     <!-- Localization Map Section -->
-    <div class="container">
+    {{-- <div class="container">
         <div class="row gx-5">
             <div class="col-lg-12">
                 <div class="devider-wrap">
@@ -125,5 +125,5 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 @endsection

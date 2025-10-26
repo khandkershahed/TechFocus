@@ -35,101 +35,11 @@
                                 </div>
                             </a>
                         </div>
-                        <div class="col-lg-2">
-                            <a href="">
-                                <div class="card projects-card rounded-0">
-                                    <img src="https://img.directindustry.com/pdf/repository_di/19826/easyb-modular-24v-circuit-breaker-system-693628_1mg.jpg"
-                                        class="card-img-top img-fluid rounded-0" alt="..." />
-                                    <div class="card-body">
-                                        <p class="card-text project-para text-center">
-                                            EasyB - 1-Channel circuit breaker
-                                        </p>
-                                        <div class="catalog-logo-area mt-3">
-                                            <p class="p-0 m-0" style="font-size: 10px">
-                                                2 Pages
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="col-lg-2">
-                            <a href="">
-                                <div class="card projects-card rounded-0">
-                                    <img src="https://img.directindustry.com/pdf/repository_di/19826/tt3-neo-693630_1mg.jpg"
-                                        class="card-img-top img-fluid rounded-0" alt="..." />
-                                    <div class="card-body">
-                                        <p class="card-text project-para text-center">
-                                            Two-phase, primary switched mode power
-                                        </p>
-                                        <div class="catalog-logo-area mt-3">
-                                            <p class="p-0 m-0" style="font-size: 10px">
-                                                2 Pages
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="col-lg-2">
-                            <a href="">
-                                <div class="card projects-card rounded-0">
-                                    <img src="https://img.directindustry.com/pdf/repository_di/19826/two-phase-primary-switched-mode-power-supply-pm-2ac-741601_1mg.jpg"
-                                        class="card-img-top img-fluid rounded-0" alt="..." />
-                                    <div class="card-body">
-                                        <p class="card-text project-para text-center">
-                                            Two-phase, primary switched mode power
-                                        </p>
-                                        <div class="catalog-logo-area mt-3">
-                                            <p class="p-0 m-0" style="font-size: 10px">
-                                                2 Pages
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="col-lg-2">
-                            <a href="">
-                                <div class="card projects-card rounded-0">
-                                    <img src="https://img.directindustry.com/pdf/repository_di/19826/lr3-400-746423_1mg.jpg"
-                                        class="card-img-top img-fluid rounded-0" alt="..." />
-                                    <div class="card-body">
-                                        <p class="card-text project-para text-center">
-                                            LR3 400
-                                        </p>
-                                        <div class="catalog-logo-area mt-3">
-                                            <p class="p-0 m-0" style="font-size: 10px">
-                                                2 Pages
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="col-lg-2">
-                            <a href="">
-                                <div class="card projects-card rounded-0">
-                                    <img src="https://img.directindustry.com/pdf/repository_di/19826/push-in-terminal-transformers-1059466_1mg.jpg"
-                                        class="card-img-top img-fluid rounded-0" alt="..." />
-                                    <div class="card-body">
-                                        <p class="card-text project-para text-center">
-                                            PUSH-IN TERMINAL TRANSFORMERS
-                                        </p>
-                                        <div class="catalog-logo-area mt-3">
-                                            <p class="p-0 m-0" style="font-size: 10px">
-                                                2 Pages
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="container my-5 pt-5">
+        {{-- <div class="container my-5 pt-5">
             <div class="row">
                 <div class="col-lg-12">
                     <p class="text-center">CHOOSE BY COMPANY NAME</p>
@@ -200,5 +110,5 @@
                         rates. </p>
                 </div>
             </div>
-        </div>
+        </div> --}}
 @endsection
