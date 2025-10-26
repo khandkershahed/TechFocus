@@ -85,7 +85,13 @@
                                                     <span class="badge bg-success">{{ ucfirst($admin->department) }}</span>
                                                 @endif
                                             </td>
-                                            <td>{{ $admin->name }}</td>
+                                            <td>@if (is_array(json_decode($admin->role)))
+                                                    @foreach (json_decode($admin->role) as $role)
+                                                        <span class="badge badge-secondary">{{ ucfirst($role) }}</span>
+                                                    @endforeach
+                                                @else
+                                                    <span class="badge badge-secondary">{{ ucfirst($admin->role) }}</span>
+                                                @endif</td>
                                             <td>
                                                 <div class="d-flex justify-content-center align-items-center">
                                                     <a href="{{ route('admin.employee.create') }}"
