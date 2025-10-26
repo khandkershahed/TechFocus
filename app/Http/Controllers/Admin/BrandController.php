@@ -207,12 +207,13 @@ class BrandController extends Controller
     return view('frontend.pages.brandPage.overview', compact('brand'));
 }
 
-public function contentDetails($id)
+public function contentDetails($slug)
 {
-    $newsTrend = NewsTrend::with('brand.brandPage')->findOrFail($id);
+    $newsTrend = NewsTrend::with('brand.brandPage')->where('slug', $slug)->firstOrFail();
     $brand = $newsTrend->brand;
 
     return view('frontend.pages.brandPage.content_details', compact('newsTrend', 'brand'));
 }
+
 
 }
