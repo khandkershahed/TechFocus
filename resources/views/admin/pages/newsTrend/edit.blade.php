@@ -250,32 +250,31 @@
                                         </div>
                                         <div class="col-lg-6 mb-3">
                                             <label for="validationCustom010"
-                                                class="form-label required mb-0">Source Address</label>
+                                                class="form-label mb-0">Source Address</label>
                                             <textarea rows="1" name="address" class="form-control form-control-sm form-control-solid"
-                                                placeholder="Enter Source Address" required>{{ $content->address }}</textarea>
+                                                placeholder="Enter Source Address">{{ $content->address }}</textarea>
                                             <div class="invalid-feedback"> Please Enter Source Address</div>
                                         </div>
 
                                         <div class="col-lg-6 mb-3">
                                             <label for="validationCustom010"
-                                                class="form-label required mb-0">Header</label>
+                                                class="form-label mb-0">Header</label>
                                             <textarea rows="1" name="header" class="form-control form-control-sm form-control-solid"
-                                                placeholder="Enter Header" required>{{ $content->header }}</textarea>
+                                                placeholder="Enter Header">{{ $content->header }}</textarea>
                                             <div class="invalid-feedback"> Please Enter Header</div>
                                         </div>
 
                                         <div class="col-lg-6 mb-3">
                                             <label for="validationCustom010"
-                                                class="form-label required mb-0">Footer</label>
+                                                class="form-label mb-0">Footer</label>
                                             <textarea rows="1" name="footer" class="form-control form-control-sm form-control-solid"
-                                                placeholder="Enter Footer" required>{{ $content->footer }}</textarea>
+                                                placeholder="Enter Footer">{{ $content->footer }}</textarea>
                                             <div class="invalid-feedback"> Please Enter Footer</div>
                                         </div>
                                         <div class="col-md-12 mb-1 mt-3">
-                                            <label for="validationCustom01" class="form-label required mb-0">Short
+                                            <label for="validationCustom01" class="form-label mb-0">Short
                                                 Description</label>
                                             <textarea name="short_des" class="tox-target kt_docs_tinymce_plugins">
-                                                 
                                                 {{ $content->short_des }}</textarea>
                                             <div class="invalid-feedback"> Please Enter Title </div>
                                         </div>
