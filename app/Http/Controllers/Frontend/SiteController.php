@@ -429,16 +429,16 @@ public function catalogDetails($slug)
         return view('frontend.pages.product.show', compact('product', 'categories', 'solutions', 'news_trends'));
     }
 
-    public function newsDetails($slug)
-    {
-        $news = NewsTrend::where('slug', $slug)->firstOrFail();
+    // public function newsDetails($slug)
+    // {
+    //     $news = NewsTrend::where('slug', $slug)->firstOrFail();
 
-        $categories = Category::with('children')->where('is_parent', 1)->get();
-        $solutions = SolutionDetail::latest()->limit(4)->get();
-        $news_trends = NewsTrend::where('type', 'trends')->limit(4)->get();
+    //     $categories = Category::with('children')->where('is_parent', 1)->get();
+    //     $solutions = SolutionDetail::latest()->limit(4)->get();
+    //     $news_trends = NewsTrend::where('type', 'trends')->limit(4)->get();
 
-        return view('frontend.pages.news.details', compact('news', 'categories', 'solutions', 'news_trends'));
-    }
+    //     return view('frontend.pages.news.details', compact('news', 'categories', 'solutions', 'news_trends'));
+    // }
     
     //faqsearch
     public function faqSearch(Request $request)

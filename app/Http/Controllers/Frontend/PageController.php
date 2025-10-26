@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Frontend;
 use App\Models\Admin\Brand;
 use Illuminate\Http\Request;
 use App\Models\Admin\Product;
+use App\Models\Admin\Category;
 use App\Models\Admin\BrandPage;
 use App\Models\Admin\NewsTrend;
 use Yoeunes\Toastr\Facades\Toastr;
 use App\Http\Controllers\Controller;
+use App\Models\Admin\SolutionDetail;
 use Illuminate\Support\Facades\Session;
 
 class PageController extends Controller
@@ -256,8 +258,14 @@ class PageController extends Controller
 
     public function contentDetails($slug)
     {
+            $categories = Category::with('children')->where('is_parent', 1)->get();
+            $solutions = SolutionDetail::latest()->limit(4)->get();
+            $news_trends = NewsTrend::where('type', 'trends')->limit(4)->get();
         $data = [
-            'content' => NewsTrend::where('slug', $slug)->first(),
+            'newsTrend' => NewsTrend::where('slug', $slug)->first(),
+            'categories' => $categories,
+            'solutions' => $solutions,
+            'news_trends' => $news_trends,
             // 'brand' => Brand::with('brandPage')->where('slug', $slug)->select('id', 'slug', 'title', 'logo')->firstOrFail(),
         ];
         return view('frontend.pages.brandPage.content_details', $data);
