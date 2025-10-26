@@ -17,6 +17,7 @@ use App\Models\Admin\ClientStory;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\SolutionDetail;
 use App\Models\Admin\SubSubCategory;
+use App\Models\Admin\DynamicCategory;
 use Illuminate\Support\Facades\Session;
 use App\Repositories\Interfaces\FaqRepositoryInterface;
 use App\Repositories\Interfaces\DynamicCategoryRepositoryInterface;
@@ -453,5 +454,20 @@ public function catalogDetails($slug)
         'searchQuery' => $query,
     ]);
 } 
+
+public function faqByCategory($slug)
+    {
+        // load requested category or 404
+        $category = DynamicCategory::where('slug', $slug)->firstOrFail();
+
+        // published faqs for this category
+        $faqs = $category->faqs()->where('is_published', true)->orderBy('order')->get();
+
+        // load categories for sidebar
+        $categories = DynamicCategory::orderBy('name')->get();
+
+        return view('frontend.pages.others.faq', compact('category', 'faqs', 'categories'));
+    }
+
 
 }

@@ -62,6 +62,12 @@ use App\Http\Controllers\Admin\Auth\NewPasswordController;
 use App\Http\Controllers\Admin\CountryStateCityController;
 use App\Http\Controllers\Admin\EmployeeCategoryController;
 use App\Http\Controllers\Admin\ProductAttributeController;
+use App\Http\Controllers\Admin\EmployeeDepartmentController;
+use App\Http\Controllers\Accounts\AccountsDocumentController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Admin\PolicyAcknowledgmentController;
+use App\Http\Controllers\Admin\Auth\PasswordResetLinkController;
+use App\Http\Controllers\Auth\EmailVerificationPromptController;
 
 /*
 |--------------------------------------------------------------------------
@@ -328,12 +334,6 @@ Route::prefix('administrator')->name('admin.')->group(static function () {
 });
 
 
-use App\Http\Controllers\Admin\EmployeeDepartmentController;
-use App\Http\Controllers\Accounts\AccountsDocumentController;
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\Admin\PolicyAcknowledgmentController;
-use App\Http\Controllers\Admin\Auth\PasswordResetLinkController;
-use App\Http\Controllers\Auth\EmailVerificationPromptController;
 
 Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
     // List
