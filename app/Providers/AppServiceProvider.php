@@ -94,8 +94,7 @@ class AppServiceProvider extends ServiceProvider
             SmtpRepositoryInterface::class => SmtpRepository::class,
             SeoRepositoryInterface::class => SeoRepository::class,
             FaqRepositoryInterface::class => FaqRepository::class,
-            BankingRepositoryInterface::class => BankingRepository::class,
-            
+            BankingRepositoryInterface::class => BankingRepository::class, 
         ];
 
         foreach ($bindings as $interface => $implementation) {
