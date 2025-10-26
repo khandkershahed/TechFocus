@@ -63,8 +63,9 @@ class NewsTrend extends Model
      */
     public function scopeForBrand($query, $brandId)
     {
-        return $query->whereJsonContains('brand_id', (string) $brandId);
+        return $query->whereRaw('JSON_CONTAINS(brand_id, ?)', ['"' . $brandId . '"']);
     }
+
 
 
     /**
