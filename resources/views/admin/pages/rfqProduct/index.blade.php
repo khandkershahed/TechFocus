@@ -76,7 +76,8 @@
                                 <!-- Edit Button -->
                                 <button type="button" class="btn btn-sm btn-warning mb-1" data-bs-toggle="modal" data-bs-target="#editModal{{ $item->id }}">
                                     Edit
-                                </button>
+                                    </button>
+                                       @if (Auth::guard('admin')->user()->role == 'admin') 
 
                                 <!-- Delete Button -->
                                 <form action="{{ route('rfqProducts.destroy', $item->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure?');">
@@ -84,6 +85,8 @@
                                     @method('DELETE')
                                     <button class="btn btn-sm btn-danger">Delete</button>
                                 </form>
+                                @endif
+
                             </td>
                         </tr>
 

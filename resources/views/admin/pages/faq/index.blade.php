@@ -115,11 +115,13 @@
                                                     data-bs-target="#faqEditModal_{{ $faq->id }}">
                                                     <i class="fa-solid fa-pen"></i>
                                                 </a>
+                                                   @if (Auth::guard('admin')->user()->role == 'admin') 
                                                 <a href="{{ route('admin.faq.destroy', $faq->id) }}"
                                                     class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1 delete"
                                                     data-kt-docs-table-filter="delete_row">
                                                     <i class="fa-solid fa-trash-can-arrow-up"></i>
                                                 </a>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach

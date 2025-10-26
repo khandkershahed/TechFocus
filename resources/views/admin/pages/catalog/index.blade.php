@@ -119,6 +119,7 @@
                                                     <i class="fa-solid fa-pen"></i>
                                                 </a>
                                                    <!-- Delete Button - Fixed Form -->
+                                                      @if (Auth::guard('admin')->user()->role == 'admin') 
                                                                             <form action="{{ route('admin.catalog.destroy', $catalog->id) }}" method="POST" class="d-inline">
                                                                                                             @csrf
                                                                                                             @method('DELETE')
@@ -128,6 +129,7 @@
                                                                                                                 <i class="fa-solid fa-trash-can"></i>
                                                                                                             </button>
                                                                                                         </form>
+                                                                                                        @endif
                                              </td>
                                         </tr>
 

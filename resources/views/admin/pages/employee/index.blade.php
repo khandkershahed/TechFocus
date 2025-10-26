@@ -83,14 +83,14 @@
                                                 data-bs-target="#adminEditModal-{{ $admin->id }}">
                                                 <i class="fa-solid fa-pen"></i>
                                             </a>
-
+                                               @if (Auth::guard('admin')->user()->role == 'admin') 
                                             <!-- Delete -->
                                             <a href="#"
                                                 class="btn btn-icon btn-light-danger btn-sm"
                                                 onclick="event.preventDefault(); if(confirm('Are you sure you want to delete this employee?')) document.getElementById('delete-form-{{ $admin->id }}').submit();">
                                                 <i class="fa-solid fa-trash-can"></i>
                                             </a>
-
+                                            
                                             <form id="delete-form-{{ $admin->id }}"
                                                 action="{{ route('admin.employee.destroy', $admin->id) }}"
                                                 method="POST"
@@ -98,6 +98,7 @@
                                                 @csrf
                                                 @method('DELETE')
                                             </form>
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>
