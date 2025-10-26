@@ -49,7 +49,7 @@
 
 <style>
     .fl-wrapper {
-        top: 1.5rem;
-        z-index: 9999;
+        top: 1.5rem !important;
+        z-index: 9999 !important;
     }
 </style>
