@@ -11,17 +11,20 @@ class EmployeeTask extends Model
 {
     use HasFactory, HasSlug, Userstamps;
 
-    /**
-     * The attributes that aren't mass assignable.
-     *
-     * @var array
-     */
     protected $guarded = [];
 
-    /**
-     * , HasSlug
-     * 
-     */
+    // Automatically generate slug from title
     protected $slugSourceColumn = 'title';
 
+    // Cast JSON fields to array
+    protected $casts = [
+        'supervisors' => 'array',
+        'notify_id'   => 'array',
+    ];
+
+    // Relationship: One EmployeeTask has many Tasks
+    public function tasks()
+    {
+        return $this->hasMany(Task::class, 'employee_task_id');
+    }
 }

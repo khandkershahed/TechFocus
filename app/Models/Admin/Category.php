@@ -3,6 +3,8 @@
 namespace App\Models\Admin;
 
 use App\Traits\HasSlug;
+use App\Models\Admin\Product;
+use App\Models\Admin\CatalogCategory;
 use Wildside\Userstamps\Userstamps;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,11 +13,6 @@ class Category extends Model
 {
     use HasFactory, Userstamps, HasSlug;
 
-    /**
-     * The attributes that aren't mass assignable.
-     *
-     * @var array
-     */
     protected $guarded = [];
 
     protected $slugSourceColumn = 'name';
@@ -37,7 +34,11 @@ class Category extends Model
 
     public function products()
     {
-        // return Product::whereJsonContains('category_id', (string) $this->id);
         return Product::whereJsonContains('category_id', json_encode($this->id));
+    }
+
+    public function catalogs()
+    {
+        return $this->hasMany(CatalogCategory::class, 'category_id', 'category_id');
     }
 }

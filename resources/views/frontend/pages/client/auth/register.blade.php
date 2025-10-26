@@ -13,15 +13,17 @@
                         You can view your conversation and request <br />
                         history in your account.
                     </p>
-                        @if ($errors->any())
-                            <div class="alert alert-danger">
-                                <ul>
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif
+
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
                     <div class="row mb-5">
                         <div class="col-lg-8 offset-lg-2">
                             <form action="{{ route('register') }}" method="POST" class="signup_validation needs-validation"
@@ -32,68 +34,21 @@
                                         <div class="mb-3 mt-3">
                                             <label for="name" class="form-label">Name:</label>
                                             <input type="text" class="form-control rounded-0" id="name"
-                                                placeholder="Enter First Name" name="name" required />
+                                                placeholder="Enter Name" name="name" value="{{ old('name') }}" required />
                                             @error('name')
-                                                <div class="invalid-feedback">
-                                                    {{ $message }}
-                                                </div>
+                                                <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
-                                            <div class="valid-feedback">Excellent.</div>
-                                            {{-- <div class="invalid-feedback">
-                                                Please fill out this field.
-                                            </div> --}}
                                         </div>
                                     </div>
-
 
                                     <div class="col-lg-6 col-sm-12">
                                         <div class="mb-3 mt-3">
                                             <label for="email" class="form-label">Email:</label>
                                             <input type="email" class="form-control rounded-0" id="email"
-                                                placeholder="Enter Email" name="email" required />
+                                                placeholder="Enter Email" name="email" value="{{ old('email') }}" required />
                                             @error('email')
-                                                <div class="invalid-feedback">
-                                                    {{ $message }}
-                                                </div>
+                                                <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
-                                            <div class="valid-feedback">Good.</div>
-                                            {{-- <div class="invalid-feedback">
-                                                Please fill out this field.
-                                            </div> --}}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-lg-6 col-sm-12">
-                                        <div class="mb-3">
-                                            <label for="phone" class="form-label">Phone Number</label>
-                                            <input type="number" class="form-control rounded-0" id="phone"
-                                                placeholder="Enter Phone Number" name="phone" required />
-                                            @error('phone')
-                                                <div class="invalid-feedback">
-                                                    {{ $message }}
-                                                </div>
-                                            @enderror
-                                            <div class="valid-feedback">Valid.</div>
-                                            {{-- <div class="invalid-feedback">
-                                                Please fill out this field.
-                                            </div> --}}
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-sm-12">
-                                        <div class="mb-3">
-                                            <label for="company_name" class="form-label">Company Name</label>
-                                            <input type="text" class="form-control rounded-0" id="company_name"
-                                                placeholder="Enter Company Name" name="company_name" />
-                                            @error('company_name')
-                                                <div class="invalid-feedback">
-                                                    {{ $message }}
-                                                </div>
-                                            @enderror
-                                            <div class="valid-feedback">Excellent.</div>
-                                            {{-- <div class="invalid-feedback">
-                                                Please fill out this field.
-                                            </div> --}}
                                         </div>
                                     </div>
                                 </div>
@@ -101,54 +56,86 @@
                                 <div class="row">
                                     <div class="col-lg-6 col-sm-12">
                                         <div class="mb-3">
-                                            <label for="pwd" class="form-label">Password:</label>
-                                            <input type="password" class="form-control rounded-0" id="pwd"
-                                                placeholder="Enter password" name="password" required />
-                                            @error('password')
-                                                <div class="invalid-feedback">
-                                                    {{ $message }}
-                                                </div>
+                                            <label for="phone" class="form-label">Phone Number</label>
+                                            <input type="text" class="form-control rounded-0" id="phone"
+                                                placeholder="Enter Phone Number" name="phone_number" value="{{ old('phone_number') }}" required />
+                                            @error('phone_number')
+                                                <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
-                                            <div class="valid-feedback">Good.</div>
-                                            {{-- <div class="invalid-feedback">
-                                                Please fill out this field.
-                                            </div> --}}
                                         </div>
                                     </div>
+
                                     <div class="col-lg-6 col-sm-12">
                                         <div class="mb-3">
-                                            <label for="confirm_password" class="form-label">Confirm Password:</label>
-                                            <input type="password" class="form-control rounded-0" id="confirm_password"
-                                                placeholder="Enter password" name="password_confirmation" required />
-                                            @error('password_confirmation')
-                                                <div class="invalid-feedback">
-                                                    {{ $message }}
-                                                </div>
+                                            <label for="company_name" class="form-label">Company Name</label>
+                                            <input type="text" class="form-control rounded-0" id="company_name"
+                                                placeholder="Enter Company Name" name="company" value="{{ old('company') }}" />
+                                            @error('company')
+                                                <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
-                                            <div class="valid-feedback">Password Strong.</div>
-                                            <!-- <div class="invalid-feedback">Passwords do not match or are not strong enough.</div> -->
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-12 col-sm-12">
-                                        <div class="d-flex justify-content-center align-items-center mb-3 py-3">
-                                            <input class="form-check-input mt-0 me-2" type="checkbox" id="myCheck" checked
-                                                name="check_terms" required>
-                                            <label class="form-check-label" for="myCheck">I agree on Tech Focus Term &amp;
-                                                Condition.</label>
-                                            <div class="valid-feedback">Valid.</div>
-                                            <div class="invalid-feedback">
-                                                Check this checkbox to continue.
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
+
+                                <!-- User Type Selector -->
+                                <div class="row">
+                                    <div class="col-lg-12 col-sm-12">
+                                        <div class="mb-3">
+                                            <label for="user_type" class="form-label">Register As:</label>
+                                            <select class="form-select rounded-0" id="user_type" name="user_type" required>
+                                                <option value="">-- Select User Type --</option>
+                                                <option value="client" {{ old('user_type') == 'client' ? 'selected' : '' }}>Client</option>
+                                                <option value="partner" {{ old('user_type') == 'partner' ? 'selected' : '' }}>Partner</option>
+                                            </select>
+                                            @error('user_type')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-lg-6 col-sm-12">
+                                        <div class="mb-3">
+                                            <label for="password" class="form-label">Password:</label>
+                                            <input type="password" class="form-control rounded-0" id="password"
+                                                placeholder="Enter password" name="password" required />
+                                            @error('password')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-6 col-sm-12">
+                                        <div class="mb-3">
+                                            <label for="password_confirmation" class="form-label">Confirm Password:</label>
+                                            <input type="password" class="form-control rounded-0" id="password_confirmation"
+                                                placeholder="Enter password again" name="password_confirmation" required />
+                                            @error('password_confirmation')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-12 col-sm-12">
+                                        <div class="d-flex justify-content-center align-items-center mb-3 py-3">
+                                            <input class="form-check-input mt-0 me-2" type="checkbox" id="terms_check" checked
+                                                name="check_terms" required>
+                                            <label class="form-check-label" for="terms_check">
+                                                I agree on Tech Focus Terms &amp; Conditions.
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div class="d-flex justify-content-center align-items-center">
                                     <button type="submit" class="btn signin rounded-0 w-auto">
                                         Sign Up Now
                                     </button>
                                 </div>
+
                                 <div class="d-flex justify-content-center mt-3">
-                                    <span>Already Have An Accounts?
+                                    <span>Already Have An Account?
                                         <a href="{{ route('login') }}" class="my-3 main-color fw-bold">Login Now</a></span>
                                 </div>
                             </form>
@@ -161,31 +148,28 @@
 @endsection
 
 @push('scripts')
-    <script>
-        $(document).ready(function() {
-            // Your existing validation logic
-            $(".needs-validation").on("submit", function(event) {
-                var form = $(this);
-                if (form[0].checkValidity() === false) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
-                form.addClass("was-validated");
-            });
+<script>
+$(document).ready(function() {
+    $(".needs-validation").on("submit", function(event) {
+        var form = $(this);
+        if (form[0].checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        form.addClass("was-validated");
+    });
 
-            // Additional password matching logic
-            $("#pwd, #confirm_password").on("keyup change", function() {
-                var password = $("#pwd").val();
-                var confirmPassword = $("#confirm_password").val();
+    // Password match validation
+    $("#password, #password_confirmation").on("keyup change", function() {
+        var password = $("#password").val();
+        var confirmPassword = $("#password_confirmation").val();
 
-                if (password !== confirmPassword) {
-                    $("#confirm_password")[0].setCustomValidity(
-                        "Passwords do not match"
-                    );
-                } else {
-                    $("#confirm_password")[0].setCustomValidity("");
-                }
-            });
-        });
-    </script>
+        if (password !== confirmPassword) {
+            $("#password_confirmation")[0].setCustomValidity("Passwords do not match");
+        } else {
+            $("#password_confirmation")[0].setCustomValidity("");
+        }
+    });
+});
+</script>
 @endpush

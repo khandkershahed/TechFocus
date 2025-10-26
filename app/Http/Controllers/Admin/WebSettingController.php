@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
-
+use function App\Helpers\customUpload;
 use App\Models\Admin\Site;
 use App\Models\Admin\Company;
 use App\Http\Requests\SeoRequest;

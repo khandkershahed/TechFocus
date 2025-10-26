@@ -1,10 +1,11 @@
 <?php
 
-use App\Http\Controllers\Admin\ContactController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Frontend\SiteController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\Rfq\RfqController;
+use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Frontend\PageController;
-
+use App\Http\Controllers\Frontend\SiteController;
 Route::get('/', [SiteController::class, 'homePage'])->name('homepage');
 Route::get('solution/{slug}', [SiteController::class, 'solutionDetails'])->name('solution.details');
 Route::get('category/{slug}', [SiteController::class, 'category'])->name('category');
@@ -18,14 +19,20 @@ Route::get('about-us', [SiteController::class, 'about'])->name('about');
 Route::get('services', [SiteController::class, 'service'])->name('service');
 Route::get('subscription', [SiteController::class, 'subscription'])->name('subscription');
 Route::get('brand/list', [SiteController::class, 'brandList'])->name('brand.list');
+Route::get('/brands/search', [App\Http\Controllers\Frontend\SiteController::class, 'brandSearch'])
+    ->name('brand.search');
+
+
 Route::get('sourcing/guide', [SiteController::class, 'sourcingGuide'])->name('sourcing.guide');
 Route::get('buying/guide', [SiteController::class, 'buyingGuide'])->name('buying.guide');
 Route::get('exhibit', [SiteController::class, 'exhibit'])->name('exhibit');
 Route::get('manufacturer/account', [SiteController::class, 'manufacturerAccount'])->name('manufacturer.account');
 Route::get('category/{slug}/products', [SiteController::class, 'filterProducts'])->name('filtering.products');
 // Search
-Route::get('/search', [SiteController::class, 'ProductSearch'])->name('product.search');
+Route::get('/search', [SiteController::class, 'ProductSearch'])->name('search.products'); // 
 Route::post('/global-search', [SiteController::class, 'globalSearch'])->name('global.search');
+Route::get('/product/{slug}', [SiteController::class, 'show'])->name('product.show');
+
 
 // Brand Pages
 Route::middleware('web')->group(function () {
@@ -38,3 +45,173 @@ Route::middleware('web')->group(function () {
     Route::get('/contents/details/{slug}', [PageController::class, 'contentDetails'])->name('content.details');
     // Route::get('/{slug}/products', [PageController::class, 'ajaxBrandProductsPagination'])->name('brand.products.pagination');
 });
+
+
+//Route::get('/product/{slug}', [SiteController::class, 'show'])->name('product.show');
+
+
+// Product search page
+Route::get('/search', [SiteController::class, 'ProductSearch'])->name('search.products');
+Route::get('/news/{slug}', [SiteController::class, 'newsDetails'])->name('news.details');
+
+Route::get('/product-details/{slug}', [SiteController::class, 'productDetails'])->name('product.product_details');
+
+//  Route::post('/rfq/submit', [RfqController::class, 'store'])->name('rfq.submit');
+
+// Cart routes
+Route::get('/cart/count', [CartController::class, 'getCartCount'])->name('cart.count');
+Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
+Route::get('/cart/debug', [CartController::class, 'debugCart'])->name('cart.debug');
+Route::get('/cart/view', [CartController::class, 'viewCart'])->name('cart.view');
+
+
+
+
+// Show RFQ form
+Route::get('/rfq/create', [RfqController::class, 'create'])->name('rfq.create');
+// routes/web.php
+
+// Handle RFQ submission - KEEP ONLY THIS ONE
+Route::post('/rfq/store', [App\Http\Controllers\Rfq\RfqController::class, 'store'])->name('rfq.store');
+
+ Route::get('/test-email', [RfqController::class, 'testEmail'])->name('rfq.test-email');
+ Route::get('/test-validation', [RfqController::class, 'testValidation'])->name('rfq.test-validation');
+
+Route::post('/rfq/upload-image', [RfqController::class, 'uploadImage'])->name('rfq.uploadImage');
+
+// REMOVE OR COMMENT OUT THIS DUPLICATE:
+// Route::post('/rfq/submit', [RfqController::class, 'store'])->name('rfq.submit');
+//partner log in 
+use App\Http\Controllers\Auth\PartnerLoginController;
+use App\Http\Controllers\Partner\DashboardController;
+
+// Partner Login Routes
+Route::get('/partner/login', [PartnerLoginController::class, 'showLoginForm'])->name('partner.login');
+Route::post('/partner/login', [PartnerLoginController::class, 'login'])->name('partner.login.submit');
+
+// Partner Dashboard & Logout Routes (protected)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/partner/dashboard', [DashboardController::class, 'index'])->name('partner.dashboard');
+       Route::post('/partner/dashboard/update', [DashboardController::class, 'updateProfile'])->name('partner.profile.update');
+    Route::post('/partner/logout', [DashboardController::class, 'logout'])->name('partner.logout');
+});
+
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
+
+// Login Routes
+Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
+Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('login.submit');
+
+
+// Logout Route
+Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
+
+//email verification
+use App\Http\Controllers\Auth\VerifyEmailController;
+
+Route::get('/email/verify/{id}/{hash}', VerifyEmailController::class)
+    ->middleware(['auth', 'signed'])
+    ->name('verification.verify');
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/client/dashboard', [DashboardController::class, 'index'])
+        ->name('client.dashboard');
+  Route::get('/partner/dashboard', [DashboardController::class, 'index'])->name('partner.dashboard');
+});
+
+
+
+// Route::prefix('partner')->middleware(['auth'])->group(function () {
+//     Route::get('/dashboard', [DashboardController::class, 'index'])->name('partner.dashboard');
+//     Route::post('/dashboard/update', [DashboardController::class, 'updateProfile'])->name('partner.profile.update');
+//     Route::post('/logout', [DashboardController::class, 'logout'])->name('partner.logout');
+// });
+
+
+use App\Http\Controllers\Client\ClientController;
+
+// Client Dashboard
+Route::middleware(['auth', 'verified'])->group(function () {
+
+    // Dashboard
+    Route::get('/client/dashboard', [ClientController::class, 'dashboard'])->name('client.dashboard');
+
+    // Profile
+    Route::get('/client/profile', [ClientController::class, 'profile'])->name('client.profile');
+    Route::post('/client/profile/update', [ClientController::class, 'updateProfile'])->name('client.profile.update');
+
+    // Other pages
+    Route::get('/client/subscription', [ClientController::class, 'subscription'])->name('client.subscription');
+    Route::get('/client/favourites', [ClientController::class, 'favourites'])->name('client.favourites');
+    Route::get('/client/requests', [ClientController::class, 'requests'])->name('client.requests');
+
+    // Logout
+    Route::post('/client/logout', [ClientController::class, 'logout'])->name('client.logout');
+});
+
+//add favourite 
+use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\CompareController;
+use App\Http\Controllers\Admin\CatalogController;
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');
+    Route::post('/favorites/{product}', [FavoriteController::class, 'store'])->name('favorites.store');
+    Route::delete('/favorites/{product}', [FavoriteController::class, 'destroy'])->name('favorites.destroy');
+});
+
+// Route::get('/client/favourites', [ClientController::class, 'favourites'])->name('client.favourites');
+Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
+
+Route::prefix('compare')->group(function () {
+    Route::get('/', [CompareController::class, 'index'])->name('products.compare.index');
+    Route::get('/add/{id}', [CompareController::class, 'add'])->name('products.compare.add');
+    Route::get('/remove/{id}', [CompareController::class, 'remove'])->name('products.compare.remove');
+    Route::get('/result', [CompareController::class, 'result'])->name('products.compare.result');
+    Route::get('/clear', [CompareController::class, 'clear'])->name('products.compare.clear');
+});
+
+// Catalog Routes
+Route::get('/catalogs', [SiteController::class, 'allCatalog'])->name('catalogs.all');
+Route::get('/catalogs/company/{letter}', [SiteController::class, 'getCompanyCatalogs'])->name('catalogs.by.company');
+
+
+
+
+
+//cart section 
+// Cart Routes
+Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
+Route::get('/cart/count', [CartController::class, 'getCartCount'])->name('cart.count');
+Route::get('/cart/rfq-count', [CartController::class, 'getRfqCount'])->name('cart.rfq-count');
+Route::get('/cart', [CartController::class, 'getCart'])->name('cart.get');
+Route::post('/cart/update', [CartController::class, 'updateCart'])->name('cart.update');
+Route::post('/cart/remove', [CartController::class, 'removeFromCart'])->name('cart.remove');
+Route::post('/cart/rfq/remove', [CartController::class, 'removeFromRfq'])->name('cart.rfq.remove');
+Route::post('/cart/clear', [CartController::class, 'clearCart'])->name('cart.clear');
+Route::post('/cart/rfq/clear', [CartController::class, 'clearRfq'])->name('cart.rfq.clear');
+Route::get('/cart/debug', [CartController::class, 'debug'])->name('cart.debug');
+
+// RFQ Session Management Routes
+Route::post('/rfq/remove-from-session/{productId}', [RfqController::class, 'removeFromRfqSession'])->name('rfq.remove-from-session');
+Route::get('/rfq/session-items', [RfqController::class, 'getRfqSessionItems'])->name('rfq.session-items');
+Route::post('/rfq/clear-session', [RfqController::class, 'clearRfqSession'])->name('rfq.clear-session');
+// In routes/web.php
+Route::post('/cart/remove-rfq', [CartController::class, 'removeFromRfq'])->name('cart.remove-rfq');
+
+//temp
+// Change from this (if you have it):
+Route::post('/rfq/remove-from-session/{productId}', [RfqController::class, 'removeFromRfqSession'])->name('rfq.remove-from-session');
+
+// To this:
+Route::post('/rfq/remove-from-session', [RfqController::class, 'removeFromRfqSession'])->name('rfq.remove-from-session');
+
+
+//testmail 
+
+
+Route::get('/test-email', [RfqController::class, 'testEmail'])->name('test.email');
+
+Route::get('/faq', [SiteController::class, 'faq'])->name('faq');
+Route::get('/faq/search', [SiteController::class, 'faqSearch'])->name('faq.search');
+Route::get('/faq/category/{slug}', [SiteController::class, 'faqByCategory'])->name('faq.category');

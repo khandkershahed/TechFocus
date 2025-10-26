@@ -10,7 +10,7 @@
 <meta property="og:title"
     content="TechFocus" />
 <meta property="og:url" content="" />
-<meta property="og:site_name" content="TechFocus" />
+<meta property="og:site_name" content="TechFocus" /> 
 {{-- @dd($site) --}}
 {{-- <link rel="canonical" href="https://preview.keenthemes.com/metronic8" /> --}}
 <link rel="shortcut icon" href="{{ !empty($site->site_icon) && file_exists(public_path('storage/webSetting/siteIcon/'. $site->site_icon)) ? asset('storage/webSetting/siteIcon/'. $site->site_icon) : asset('backend/images/no-image-available.png') }}" />

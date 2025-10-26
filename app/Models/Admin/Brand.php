@@ -55,5 +55,9 @@ class Brand extends Model
     public function brandPage()
     {
         return $this->hasOne(BrandPage::class);
+
+
     }
 }
+
+

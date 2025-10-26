@@ -39,14 +39,21 @@
                 <!-- Tab Menu Content -->
                 <div class="ms-5">
                     <ul class="d-flex pt-3">
-                        <li class="border-left-side p-3 {{ Route::current()->getName() == 'client.profile' ? 'product-tabbing-menu-active' : '' }}">
-                            <a href="{{ route('client.profile') }}">My Profile</a>
-                        </li>
+                        <li class="border-left-side p-3 
+                                        {{ in_array(Route::current()->getName(), ['client.profile', 'partner.profile']) ? 'product-tabbing-menu-active' : '' }}">
+                                        
+                                        @if(Auth::user()->user_type === 'partner')
+                                            <a href="{{ route('partner.dashboard') }}">My Profile</a>
+                                        @else
+                                            <a href="{{ route('client.profile') }}">My Profile</a>
+                                        @endif
+                                    </li>
+
                         <li class="border-left-side p-3 {{ Route::current()->getName() == 'client.subscription' ? 'product-tabbing-menu-active' : '' }}">
                             <a href="{{ route('client.subscription') }}">My Subscriptions</a>
                         </li>
                         <li class="border-left-side p-3 {{ Route::current()->getName() == 'client.favourites' ? 'product-tabbing-menu-active' : '' }}">
-                            <a href="{{ route('client.favourites') }}">My Favourites</a>
+                            <a href="{{ route('favorites.index') }}">My Favourites</a>
                         </li>
                         <li class="border-left-side p-3 {{ Route::current()->getName() == 'client.requests' ? 'product-tabbing-menu-active' : '' }}">
                             <a href="{{ route('client.requests') }}">My Requests</a>

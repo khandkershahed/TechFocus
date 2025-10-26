@@ -1,22 +1,22 @@
 <div class="container-fluid" style="background-color: var(--secondary-color)">
     <div class="container text-white" style="font-size: 14px">
         <div class="row align-items-center">
-            <div class="col-lg-3 p-4 text-lg-start text-center border-left-side">
+            <div class="p-4 text-center col-lg-3 text-lg-start border-left-side">
                 <div>
                     <a href="{{ route('buying.guide') }}">HOW TO BUY PRODUCTS </a>
                 </div>
             </div>
-            <div class="col-lg-2 p-4 text-center border-left-side">
+            <div class="p-4 text-center col-lg-2 border-left-side">
                 <div>
                     <a href="{{ route('exhibit') }}">EXHIBIT WITH US </a>
                 </div>
             </div>
-            <div class="col-lg-2 p-4 text-center border-left-side">
+            <div class="p-4 text-center col-lg-2 border-left-side">
                 <div>
                     <a href="{{route('faq')}}">FAQ </a>
                 </div>
             </div>
-            <div class="col-lg-5 p-4 d-flex justify-content-between align-items-center social-area">
+            <div class="p-4 col-lg-5 d-flex justify-content-between align-items-center social-area">
                 <ul class="">
                     <li class="pt-2">
                         <a href="{{route('brand.list')}}">Brand list</a>
@@ -35,16 +35,17 @@
                     </li>
                 </ul>
                 <div class="social-icons-btn">
-                    <a class="icons twitter" href="#">
+                    <a class="icons twitter" href="https://www.x.com/ngenit
+">
                         <i class="fa-brands fa-twitter"></i>
                     </a>
-                    <a class="icons facebook" href="#">
+                    <a class="icons facebook" href="https://www.facebook.com/share/1FZ8jpvcis/">
                         <i class="fa-brands fa-facebook-f"></i>
                     </a>
-                    <a class="icons instagram" href="#">
+                    <a class="icons instagram" href="https://www.instagram.com/ngenitltd">
                         <i class="fa-brands fa-instagram"></i>
                     </a>
-                    <a class="icons linkedin" href="#">
+                    <a class="icons linkedin" href="https://www.linkedin.com/company/ngenitltd/">
                         <i class="fa-brands fa-linkedin-in"></i>
                     </a>
                 </div>
@@ -54,32 +55,34 @@
 </div>
 <div class="container-fluid" style="background-color: var(--secondary-deep-color)">
     <div class="container footer-logo">
-        <div class="row pt-5">
+        <div class="pt-5 row">
             <div class="col-lg-8 offset-lg-2 d-flex">
+                @php
+                $brandLogos = [
+                'https://www.ngensoftware.com/storage/companyclient/logo/uUJbFPaf5J1759561216.png',
+                'https://www.ngensoftware.com/storage/page-banner/logo/pINXJQPNZ11759560908.png',
+                'https://www.ngensoftware.com/storage/page-banner/logo/8KEBk4kOj51759572777.png',
+                'https://www.ngensoftware.com/storage/companyclient/logo/lPh0SvPTP91759561444.png',
+                'https://www.ngensoftware.com/storage/page-banner/logo/mr48RIhQIJ1759560955.png',
+                ];
+                @endphp
                 <div class="d-flex justify-content-center align-items-center">
                     <a href="{{ route('homepage') }}" class="border-left-side pe-lg-3">
                         <img src="{{ !empty($site->system_logo_white) && file_exists(public_path('storage/webSetting/systemLogoWhite/' . $site->system_logo_white)) ? asset('storage/webSetting/systemLogoWhite/' . $site->system_logo_white) : asset('backend/images/no-image-available.png') }}"
-                            width="180px" class="me-3" alt="" />
+                            width="350px" class="me-3" alt="" />
                     </a>
-                    {{-- <a href="brand-news.html" class="me-4">
-                        <img src="https://i.ibb.co/pL02QzP/images-removebg-preview.png" width="120px" alt="" />
+                    @foreach($brandLogos as $logo)
+                    <a href="#" class="mb-3 me-4">
+                        <img src="{{ $logo }}"
+                            width="300px"
+                            alt="Brand Logo"
+                            onerror="this.onerror=null; this.src='{{ asset('backend/images/no-image-available.png') }}';">
                     </a>
-                    <a href="brand-news.html" class="me-4">
-                        <img src="https://i.ibb.co/CMFMJ5Z/images-removebg-preview-1.png" width="120px" alt="" />
-                    </a>
-                    <a href="brand-news.html" class="me-4">
-                        <img src="https://i.ibb.co/CMFMJ5Z/images-removebg-preview-1.png" width="120px" alt="" />
-                    </a>
-                    <a href="brand-news.html" class="me-4">
-                        <img src="https://i.ibb.co/CMFMJ5Z/images-removebg-preview-1.png" width="120px" alt="" />
-                    </a>
-                    <a href="brand-news.html" class="me-4">
-                        <img src="https://i.ibb.co/CMFMJ5Z/images-removebg-preview-1.png" width="120px" alt="" />
-                    </a> --}}
+                    @endforeach
                 </div>
             </div>
-            <div class="col-lg-12 text-white mt-lg-5 mb-lg-5">
-                <p class="text-center">© 2023 All rights reserved</p>
+            <div class="text-white col-lg-12 mt-lg-5 mb-lg-5">
+                <p class="text-center">© 2025 All rights reserved</p>
                 <ul class="d-flex justify-content-center ps-0">
                     <li>
                         <a href="{{route('terms')}}">Terms - </a>

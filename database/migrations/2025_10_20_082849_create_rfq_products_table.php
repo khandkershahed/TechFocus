@@ -6,21 +6,13 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::create('rfq_products', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('rfq_id')->nullable()->constrained('rfqs')->cascadeOnDelete();
-            $table->foreignId('product_id')->nullable()->constrained('products')->cascadeOnDelete();
-            $table->foreignId('solution_id')->nullable()->constrained('solution_details')->cascadeOnDelete();
-            $table->foreignId('category_id')->nullable()->constrained('categories')->cascadeOnDelete();
-            $table->foreignId('brand_id')->nullable()->constrained('brands')->cascadeOnDelete();
-            $table->string('name')->nullable();
+            $table->unsignedBigInteger('rfq_id');
+            $table->unsignedBigInteger('product_id')->nullable();
+            $table->string('product_name')->nullable();
             $table->bigInteger('qty')->nullable();
             $table->double('unit_price')->nullable();
             $table->double('discount')->nullable();
@@ -32,18 +24,19 @@ return new class extends Migration
             $table->double('vat')->nullable();
             $table->double('vat_price')->nullable();
             $table->double('grand_total')->nullable();
+            $table->string('sku_no')->nullable();
+            $table->string('model_no')->nullable();
+            $table->string('brand_name')->nullable();
+            $table->string('additional_product_name')->nullable();
+            $table->bigInteger('additional_qty')->nullable();
+            $table->string('image')->nullable();
             $table->text('product_des')->nullable();
-            $table->unsignedBigInteger('created_by')->nullable();
-            $table->unsignedBigInteger('updated_by')->nullable();
+            $table->text('additional_info')->nullable();
+            $table->foreign('rfq_id')->references('id')->on('rfqs')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('rfq_products');

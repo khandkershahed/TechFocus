@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\RowController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\HR\HolidayController;
+use App\Http\Controllers\PageBannerController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\BannerController;
@@ -28,6 +29,7 @@ use App\Http\Controllers\Admin\HomePageController;
 use App\Http\Controllers\Admin\HrPolicyController;
 use App\Http\Controllers\Admin\IndustryController;
 use App\Http\Controllers\Admin\UserRoleController;
+use App\Http\Controllers\Rfq\RfqProductController;
 use App\Http\Controllers\Admin\AboutPageController;
 use App\Http\Controllers\Admin\AttributeController;
 use App\Http\Controllers\Admin\BioMetricController;
@@ -56,12 +58,10 @@ use App\Http\Controllers\Admin\DynamicCategoryController;
 use App\Http\Controllers\Admin\SolutionDetailsController;
 use App\Http\Controllers\Sales\SalesTeamTargetController;
 use App\Http\Controllers\Sales\SalesYearTargetController;
+use App\Http\Controllers\Admin\Auth\NewPasswordController;
 use App\Http\Controllers\Admin\CountryStateCityController;
 use App\Http\Controllers\Admin\EmployeeCategoryController;
 use App\Http\Controllers\Admin\ProductAttributeController;
-use App\Http\Controllers\Admin\EmployeeDepartmentController;
-use App\Http\Controllers\Accounts\AccountsDocumentController;
-use App\Http\Controllers\Admin\PolicyAcknowledgmentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -325,4 +325,117 @@ Route::prefix('administrator')->name('admin.')->group(static function () {
     // Route::get('/device-data/clear-attendance', [BioMetricController::class, 'device_data_clear_attendance'])->name('machine.devicedata.clear.attendance');
     // Route::get('/device-restart', [BioMetricController::class, 'device_restart'])->name('machine.devicerestart');
     // Route::get('/device-shutdown', [BioMetricController::class, 'device_shutdown'])->name('machine.deviceshutdown');
+});
+
+
+use App\Http\Controllers\Admin\EmployeeDepartmentController;
+use App\Http\Controllers\Accounts\AccountsDocumentController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Admin\PolicyAcknowledgmentController;
+use App\Http\Controllers\Admin\Auth\PasswordResetLinkController;
+use App\Http\Controllers\Auth\EmailVerificationPromptController;
+
+Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
+    // List
+    Route::get('page-banners', [PageBannerController::class, 'index'])->name('page_banners.index');
+
+    // Create
+    Route::get('page-banners/create', [PageBannerController::class, 'create'])->name('page_banners.create');
+    Route::post('page-banners', [PageBannerController::class, 'store'])->name('page_banners.store');
+
+    // Edit / Update
+    Route::get('page-banners/{pageBanner}/edit', [PageBannerController::class, 'edit'])->name('page_banners.edit');
+    Route::put('page-banners/{pageBanner}', [PageBannerController::class, 'update'])->name('page_banners.update');
+
+    // Delete
+    Route::delete('page-banners/{pageBanner}', [PageBannerController::class, 'destroy'])->name('page_banners.destroy');
+      Route::resource('rfqProducts', RfqProductController::class);
+});
+
+
+
+// Admin Employee Task Routes
+Route::prefix('admin')->name('admin.')->group(function () {
+    // Resource routes for EmployeeTask (except 'show')
+    Route::resource('employee-task', EmployeeTaskController::class)->except(['show']);
+
+    // Get all tasks for a selected employee (AJAX)
+    Route::get('employee-tasks/{employeeId}', [EmployeeTaskController::class, 'employeeTasks'])->name('employee.tasks');
+
+    Route::get('/catalog', [CatalogController::class, 'index'])->name('catalog.index');
+Route::get('/catalog/create', [CatalogController::class, 'create'])->name('catalog.create');
+Route::post('/catalog', [CatalogController::class, 'store'])->name('catalog.store');
+Route::get('/catalog/{id}/edit', [CatalogController::class, 'edit'])->name('catalog.edit');
+Route::put('/catalog/{id}', [CatalogController::class, 'update'])->name('catalog.update');
+Route::delete('/catalog/{id}', [CatalogController::class, 'destroy'])->name('catalog.destroy');
+
+});
+
+
+//leave
+// Leave Application Routes
+Route::prefix('leave-applications')->name('leave-applications.')->group(function () {
+    
+    // Index/List Route
+    Route::get('/', [LeaveApplicationController::class, 'index'])->name('index');
+        Route::get('/create', [LeaveApplicationController::class, 'create'])->name('create'); 
+    
+    // History Route
+    Route::get('/history', [LeaveApplicationController::class, 'history'])->name('history');
+    
+    // Dashboard Route
+    Route::get('/dashboard', [LeaveApplicationController::class, 'dashboard'])->name('dashboard');
+    
+    // Store Route
+    Route::post('/store', [LeaveApplicationController::class, 'store'])->name('store');
+    
+    // Edit Route
+    Route::get('/edit/{id}', [LeaveApplicationController::class, 'edit'])->name('edit');
+    
+    // Update Route
+    Route::put('/update/{id}', [LeaveApplicationController::class, 'update'])->name('update');
+    
+    // Delete Route
+    Route::delete('/destroy/{id}', [LeaveApplicationController::class, 'destroy'])->name('destroy');
+});
+
+// Alternative shorter routes if preferred:
+Route::resource('leave-applications', LeaveApplicationController::class)->except(['show', 'create']);
+Route::get('leave-applications/history', [LeaveApplicationController::class, 'history'])->name('leave-applications.history');
+Route::get('leave-applications/dashboard', [LeaveApplicationController::class, 'dashboard'])->name('leave-applications.dashboard');
+
+//catalog 
+
+// OR
+
+
+// ✅ RFQ Product Routes
+Route::prefix('admin')->group(function () {
+    Route::resource('rfqProducts', RfqProductController::class);
+});
+Route::resource('company', CompanyController::class)->except(['show']);
+
+//faQ routes
+Route::prefix('administrator')->name('admin.')->group(function () {
+    // List all FAQs
+    Route::get('/faq', [FaqController::class, 'index'])->name('faq.index');
+
+    // Store a new FAQ (from modal form)
+    Route::post('/faq', [FaqController::class, 'store'])->name('faq.store');
+
+    // Update an existing FAQ (from modal form)
+    Route::put('/faq/{id}', [FaqController::class, 'update'])->name('faq.update');
+
+    // Delete an FAQ
+    Route::delete('/faq/{id}', [FaqController::class, 'destroy'])->name('faq.destroy');
+
+    // Optional: Search FAQs
+    Route::get('/faq/search', [FaqController::class, 'search'])->name('faq.search');
+});
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('/profile/edit', [App\Http\Controllers\Admin\ProfileController::class, 'edit'])
+        ->name('profile.edit');
+
+    Route::post('/profile/update', [App\Http\Controllers\Admin\ProfileController::class, 'update'])
+        ->name('profile.update');
 });

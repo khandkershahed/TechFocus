@@ -109,13 +109,21 @@
                                                         <i class="fa-solid fa-pen"></i>
                                                         <!--Edit-->
                                                     </a>
-                                                    <a href="{{ route('admin.employee.destroy', $admin->id) }}"
-                                                        class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1 delete"
+                                                  <a href="#" onclick="event.preventDefault();
+                                                    if(confirm('Are you sure?')) {
+                                                        document.getElementById('delete-form-{{ $admin->id }}').submit();
+                                                    }"  class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1 delete"
                                                         data-kt-docs-table-filter="delete_row">
-                                                        <i class="fa-solid fa-trash-can-arrow-up"></i>
-                                                        <!--Delete-->
-                                                    </a>
-                                                </div>
+
+                                                 <i class="fa-solid fa-trash-can-arrow-up"></i>
+
+                                                </a>
+
+                                                <form id="delete-form-{{ $admin->id }}" action="{{ route('admin.employee.destroy', $admin->id) }}" method="POST" style="display: none;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                </form>
+
                                             </td>
                                         </tr>
                                     @endforeach
@@ -287,7 +295,6 @@
                                             Picture</label>
                                         <input id="image1" type="file" class="form-control form-control-sm"
                                             id="basicpill-firstname-input" name="photo" />
-                                        {{-- <img id="showImage" src="{{ url('upload/no_image.jpg') }}" alt="Admin" style="width:40px; height: 40px;"/> --}}
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
@@ -296,31 +303,37 @@
                                         <div class="row"></div>
                                         <input id="image" type="file" class="form-control form-control-sm"
                                             id="basicpill-firstname-input" name="sign" />
-                                        {{-- <img id="showImage" src="{{ url('upload/no_image.jpg') }}" alt="Admin" style="width:40px; height: 40px;"/> --}}
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
-                                    <div class="mb-4">
-                                        <label class="form-label" for="basicpill-firstname-input">Password</label>
-                                        <input type="password" class="form-control form-control-sm" id="password"
-                                            name="password">
+                                    <div class="mb-4 position-relative">
+                                        <label class="form-label" for="password">Password</label>
+                                        <div class="input-group input-group-sm">
+                                            <input type="password" class="form-control form-control-sm" id="add_password"
+                                                name="password" placeholder="Enter password">
+                                            <button type="button" class="btn btn-outline-secondary" id="toggle_add_password">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
-                                    <div class="mb-4">
-                                        <label class="form-label" for="basicpill-firstname-input">Confirm
-                                            Password</label>
-                                        <input type="password" class="form-control form-control-sm" id="confirm_password"
-                                            name="confirm_password">
-                                        <div id="message"></div>
+                                    <div class="mb-4 position-relative">
+                                        <label class="form-label" for="confirm_password">Confirm Password</label>
+                                        <div class="input-group input-group-sm">
+                                            <input type="password" class="form-control form-control-sm" id="add_confirm_password"
+                                                name="confirm_password" placeholder="Confirm password">
+                                            <button type="button" class="btn btn-outline-secondary" id="toggle_add_confirm_password">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                        </div>
+                                        <div id="add_password_message"></div>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer p-2">
-                        <!-- Button to close the modal in the footer -->
                         <button type="submit" class="btn btn-sm btn-primary rounded-0">Submit</button>
                     </div>
                 </form>
@@ -346,11 +359,9 @@
                                         transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
                                 </svg>
                             </span>
-                            <!--end::Svg Icon-->
                         </div>
-                        <!-- End Close button in the header -->
                     </div>
-                    <form method="POST" action="{{ route('admin.employee.update', $admin->id) }}"
+                    <form method="POST" action="{{ route('admin.employee.update', $admin->id ) }}"
                         class="needs-validation" novalidate enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
@@ -499,7 +510,6 @@
                                             <div class="row"></div>
                                             <input id="image" type="file" class="form-control form-control-sm"
                                                 id="basicpill-firstname-input" name="photo" />
-                                            {{-- <img id="showImage" src="{{ url('upload/no_image.jpg') }}" alt="Admin" style="width:40px; height: 40px;"/> --}}
                                         </div>
                                     </div>
                                     <div class="col-lg-4">
@@ -508,136 +518,40 @@
                                             <div class="row"></div>
                                             <input id="image" type="file" class="form-control form-control-sm"
                                                 id="basicpill-firstname-input" name="sign" />
-                                            {{-- <img id="showImage" src="{{ url('upload/no_image.jpg') }}" alt="Admin" style="width:40px; height: 40px;"/> --}}
                                         </div>
                                     </div>
                                     <div class="col-lg-4">
-                                        <div class="mb-1">
-                                            <label class="form-label" for="basicpill-firstname-input">Password</label>
-                                            <input type="password" class="form-control form-control-sm" id="password"
-                                                name="password">
+                                        <div class="mb-1 position-relative">
+                                            <label class="form-label" for="password">Password</label>
+                                            <div class="input-group input-group-sm">
+                                                <input type="password" class="form-control form-control-sm" id="edit_password_{{ $admin->id }}"
+                                                    name="password" placeholder="Enter password">
+                                                <button type="button" class="btn btn-outline-secondary toggle_edit_password" data-target="edit_password_{{ $admin->id }}">
+                                                    <i class="bi bi-eye"></i>
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-lg-4">
-                                        <div class="mb-1">
-                                            <label class="form-label" for="basicpill-firstname-input">Confirm
-                                                Password</label>
-                                            <input type="password" class="form-control form-control-sm"
-                                                id="confirm_password" name="confirm_password">
-                                            <div id="message"></div>
+                                        <div class="mb-1 position-relative">
+                                            <label class="form-label" for="confirm_password">Confirm Password</label>
+                                            <div class="input-group input-group-sm">
+                                                <input type="password" class="form-control form-control-sm" id="edit_confirm_password_{{ $admin->id }}"
+                                                    name="confirm_password" placeholder="Confirm password">
+                                                <button type="button" class="btn btn-outline-secondary toggle_edit_password" data-target="edit_confirm_password_{{ $admin->id }}">
+                                                    <i class="bi bi-eye"></i>
+                                                </button>
+                                            </div>
+                                            <div id="edit_password_message_{{ $admin->id }}"></div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer p-2">
-                            <!-- Button to close the modal in the footer -->
                             <button type="submit" class="btn btn-sm btn-primary rounded-0">Submit</button>
                         </div>
                     </form>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade" id="adminViewModal_{{ $admin->id }}" data-backdrop="static">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content rounded-0 border-0 shadow-sm">
-                    <div class="modal-header p-2 rounded-0">
-                        <h5 class="modal-title mb-0 text-center">Brand View </h5>
-                        <!-- Close button in the header -->
-                        <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
-                            aria-label="Close">
-                            <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
-                            <span class="svg-icon svg-icon-2x">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24" fill="none">
-                                    <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1"
-                                        transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
-                                    <rect x="7.41422" y="6" width="16" height="2" rx="1"
-                                        transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
-                                </svg>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="modal-body">
-                        <div class="container px-0">
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="card border rounded-0">
-                                        {{-- <p class="badge badge-info custom-badge">Brand</span> --}}
-                                        <div class="card-body p-1 px-2">
-                                            <div class="row">
-
-                                                <div class="col-lg-12 mb-3">
-                                                    <div class="row">
-                                                        <div class="col-lg-7 col-sm-5">
-                                                            <p class="fw-bold">Brand Name</p>
-                                                        </div>
-                                                        <div class="col-lg-5 col-sm-6">
-                                                            <p>{{ $admin->name }}</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-6 mb-3">
-                                                    <div class="row">
-                                                        <div class="col-lg-7 col-sm-5">
-                                                            <p class="fw-bold">Image</p>
-                                                        </div>
-                                                        <div class="col-lg-5 col-sm-6">
-                                                            <p>
-                                                                <img class="img-fluid rounded-circle" width="35px"
-                                                                    src="{{ !empty($admin->image) && file_exists(public_path('storage/brand/image/requestImg/' . $admin->image)) ? asset('storage/brand/image/requestImg/' . $admin->image) : asset('backend/images/no-image-available.png') }}"
-                                                                    alt="{{ $admin->image }}">
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-6 mb-3">
-                                                    <div class="row">
-                                                        <div class="col-lg-7 col-sm-5">
-                                                            <p class="fw-bold">Logo</p>
-                                                        </div>
-                                                        <div class="col-lg-5 col-sm-6">
-                                                            <p>
-                                                                <img class="img-fluid rounded-circle" width="35px"
-                                                                    src="{{ !empty($admin->logo) && file_exists(public_path('storage/brand/logo/requestImg/' . $admin->logo)) ? asset('storage/brand/image/requestImg/' . $admin->logo) : asset('backend/images/no-image-available.png') }}"
-                                                                    alt="{{ $admin->logo }}">
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-12 mb-3">
-                                                    <div class="row">
-                                                        <div class="col-lg-3 col-sm-5">
-                                                            <p class="fw-bold">Description</p>
-                                                        </div>
-                                                        <div class="col-lg-9 col-sm-6">
-                                                            <p>
-                                                                {{ $admin->description }}
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-12 mb-3">
-                                                    <div class="row">
-                                                        <div class="col-lg-3 col-sm-5">
-                                                            <p class="fw-bold">Website Url</p>
-                                                        </div>
-                                                        <div class="col-lg-9 col-sm-6">
-                                                            <p>
-                                                                <a href="{{ $admin->website_url }}">{{ $admin->website_url }}
-                                                                </a>
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -645,4 +559,99 @@
 @endsection
 
 @push('scripts')
+<!-- Bootstrap Icons CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    // Add Modal Password Toggle
+    const addPasswordInput = document.getElementById("add_password");
+    const addConfirmPasswordInput = document.getElementById("add_confirm_password");
+    const toggleAddPassword = document.getElementById("toggle_add_password");
+    const toggleAddConfirmPassword = document.getElementById("toggle_add_confirm_password");
+
+    if (toggleAddPassword) {
+        toggleAddPassword.addEventListener("click", function (e) {
+            e.preventDefault();
+            const showing = addPasswordInput.type === "text";
+            addPasswordInput.type = showing ? "password" : "text";
+            const icon = this.querySelector("i");
+            icon.classList.toggle("bi-eye");
+            icon.classList.toggle("bi-eye-slash");
+        });
+    }
+
+    if (toggleAddConfirmPassword) {
+        toggleAddConfirmPassword.addEventListener("click", function (e) {
+            e.preventDefault();
+            const showing = addConfirmPasswordInput.type === "text";
+            addConfirmPasswordInput.type = showing ? "password" : "text";
+            const icon = this.querySelector("i");
+            icon.classList.toggle("bi-eye");
+            icon.classList.toggle("bi-eye-slash");
+        });
+    }
+
+    // Edit Modal Password Toggle (for all edit modals)
+    const editPasswordToggles = document.querySelectorAll(".toggle_edit_password");
+    editPasswordToggles.forEach(toggle => {
+        toggle.addEventListener("click", function (e) {
+            e.preventDefault();
+            const targetId = this.getAttribute("data-target");
+            const targetInput = document.getElementById(targetId);
+            
+            if (targetInput) {
+                const showing = targetInput.type === "text";
+                targetInput.type = showing ? "password" : "text";
+                const icon = this.querySelector("i");
+                icon.classList.toggle("bi-eye");
+                icon.classList.toggle("bi-eye-slash");
+            }
+        });
+    });
+
+    // Password confirmation validation for Add Modal
+    if (addPasswordInput && addConfirmPasswordInput) {
+        function validateAddPasswords() {
+            const message = document.getElementById("add_password_message");
+            if (addPasswordInput.value !== addConfirmPasswordInput.value) {
+                message.innerHTML = "Passwords do not match!";
+                message.style.color = "red";
+                return false;
+            } else {
+                message.innerHTML = "Passwords match!";
+                message.style.color = "green";
+                return true;
+            }
+        }
+
+        addPasswordInput.addEventListener("keyup", validateAddPasswords);
+        addConfirmPasswordInput.addEventListener("keyup", validateAddPasswords);
+    }
+
+    // Password confirmation validation for Edit Modals
+    @foreach ($admins as $admin)
+        const editPassword{{ $admin->id }} = document.getElementById("edit_password_{{ $admin->id }}");
+        const editConfirmPassword{{ $admin->id }} = document.getElementById("edit_confirm_password_{{ $admin->id }}");
+        
+        if (editPassword{{ $admin->id }} && editConfirmPassword{{ $admin->id }}) {
+            function validateEditPasswords{{ $admin->id }}() {
+                const message = document.getElementById("edit_password_message_{{ $admin->id }}");
+                if (editPassword{{ $admin->id }}.value !== editConfirmPassword{{ $admin->id }}.value) {
+                    message.innerHTML = "Passwords do not match!";
+                    message.style.color = "red";
+                    return false;
+                } else {
+                    message.innerHTML = "Passwords match!";
+                    message.style.color = "green";
+                    return true;
+                }
+            }
+
+            editPassword{{ $admin->id }}.addEventListener("keyup", validateEditPasswords{{ $admin->id }});
+            editConfirmPassword{{ $admin->id }}.addEventListener("keyup", validateEditPasswords{{ $admin->id }});
+        }
+    @endforeach
+});
+</script>
 @endpush

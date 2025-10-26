@@ -440,24 +440,31 @@ class EmployeeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        $admins = Admin::find($id);
+ public function destroy($id)
+{
+    $admins = Admin::find($id);
 
-        $paths = [
-            storage_path("app/public/employee/photo/{$admins->photo}"),
-            storage_path("app/public/employee/sign/{$admins->sign}"),
-            storage_path("app/public/employee/ceoSign/{$admins->ceo_sign}"),
-            storage_path("app/public/employee/operationDirectorSign/{$admins->operation_director_sign}"),
-            storage_path("app/public/employee/managingDirectorSign/{$admins->managing_director_sign}"),
-        ];
-
-        foreach ($paths as $path) {
-            if (File::exists($path)) {
-                File::delete($path);
-            }
-        }
-
-        $admins($id);
+    if (!$admins) {
+        return redirect()->back()->with('error', 'Employee not found!');
     }
+
+    $paths = [
+        storage_path("app/public/employee/photo/{$admins->photo}"),
+        storage_path("app/public/employee/sign/{$admins->sign}"),
+        storage_path("app/public/employee/ceoSign/{$admins->ceo_sign}"),
+        storage_path("app/public/employee/operationDirectorSign/{$admins->operation_director_sign}"),
+        storage_path("app/public/employee/managingDirectorSign/{$admins->managing_director_sign}"),
+    ];
+
+    foreach ($paths as $path) {
+        if (File::exists($path)) {
+            File::delete($path);
+        }
+    }
+
+    $admins->delete(); // Correct deletion
+
+    return redirect()->back()->with('success', 'Employee deleted successfully!');
+}
+
 }

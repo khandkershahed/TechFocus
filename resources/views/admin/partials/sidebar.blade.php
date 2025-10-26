@@ -547,7 +547,7 @@
 
                             </div>
                         </div>
-                        <div class="menu-item">
+                        {{-- <div class="menu-item">
                             <a class="menu-link {{ in_array(Route::current()->getName(), ['admin.banner.index','admin.banner.create','admin.banner.edit']) ? 'active' : '' }}""
                                 href="{{ route('admin.banner.index') }}">
                                 <span class="menu-bullet">
@@ -555,7 +555,7 @@
                                 </span>
                                 <span class="menu-title">All Banners</span>
                             </a>
-                        </div>
+                        </div> --}}
                         <div class="menu-item">
                             <a class="menu-link {{ Route::current()->getName() == 'admin.news-trend.index' ? 'active' : '' }}"
                                 href="{{ route('admin.news-trend.index') }}">
@@ -563,6 +563,7 @@
                                     <span class="bullet bullet-dot"></span>
                                 </span>
                                 <span class="menu-title">News & Trends</span>
+                                
                             </a>
                         </div>
                         <div class="menu-item">

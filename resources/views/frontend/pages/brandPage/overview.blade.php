@@ -64,21 +64,21 @@
     <!-- content start -->
     <div class="container">
         <div class="row">
-            <div class="col-lg-12 p-0">
-                <div class="card rounded-0 border-0">
-                    <div class="card-body p-0">
-                        <div class="row px-5 pt-4">
+            <div class="p-0 col-lg-12">
+                <div class="border-0 card rounded-0">
+                    <div class="p-0 card-body">
+                        <div class="px-5 pt-4 row">
                             <div class="col-lg-12">
                                 <div class="devider-wrap">
                                     <h4 class="devider-content">
-                                        <span class="devider-text bg-white">
+                                        <span class="bg-white devider-text">
                                             {{ $brand->brandPage->row_one_title }}
                                         </span>
                                     </h4>
                                 </div>
                             </div>
                         </div>
-                        <div class="row px-5">
+                        <div class="px-5 row">
                             <div class="col-lg-12">
                                 <p>
                                     {{ $brand->brandPage->row_one_header }}
@@ -87,12 +87,12 @@
                         </div>
                         {{-- @dd($brand->brandPage->rowFour) --}}
                         @if (!empty($brand->brandPage->rowFour->badge))
-                            <div class="row px-5">
+                            <div class="px-5 row">
                                 <div class="col-lg-12">
                                     <div class="devider-wrap">
                                         <h4 class="devider-content">
                                             <span
-                                                class="devider-text bg-white">{{ $brand->brandPage->rowFour->badge }}</span>
+                                                class="bg-white devider-text">{{ $brand->brandPage->rowFour->badge }}</span>
                                         </h4>
                                     </div>
                                 </div>
@@ -100,7 +100,7 @@
                         @endif
                         {{-- Fist Row --}}
                         @if (!empty($brand->brandPage->rowFour))
-                            <div class="row align-items-center px-5">
+                            <div class="px-5 row align-items-center">
                                 <div class="{{ !empty($brand->brandPage->rowFour->image) ? 'col-lg-6' : 'col-lg-12' }}">
                                     @if (!empty($brand->brandPage->rowFour->title))
                                         <h3 class="title ">
@@ -114,27 +114,29 @@
                                     @endif
                                     @if (!empty($row_one->link))
                                         <a href="{{ $brand->brandPage->rowFour->link }}"
-                                            class="btn common-btn-3 rounded-0 w-25 mt-2">{{ $brand->brandPage->rowFour->btn_name }}</a>
+                                            class="mt-2 btn common-btn-3 rounded-0 w-25">{{ $brand->brandPage->rowFour->btn_name }}</a>
                                     @endif
                                 </div>
                                 @if (!empty($brand->brandPage->rowFour->image))
                                     <div class="col-lg-6">
                                         <div class="d-flex justify-content-center align-items-center">
-                                            <img class="img-fluid shadow-sm"
+                                            <img class="shadow-sm img-fluid"
                                                 src="{{ asset('storage/row/' . $brand->brandPage->rowFour->image) }}"
-                                                alt="">
+                                                onerror="this.onerror=null;this.src='{{ asset('frontend/images/error-image.avif') }}';"
+                                                alt="" >
                                         </div>
                                     </div>
                                 @endif
                             </div>
                         @endif
                         {{-- Second Row --}}
-                        <div class="row my-5 align-items-center px-5">
+                        <div class="px-5 my-5 row align-items-center">
                             @if (!empty(optional($brand->brandPage->rowFive)->image))
                                 <div class="col-lg-6">
                                     <div class="d-flex justify-content-center align-items-center">
-                                        <img class="img-fluid shadow-sm"
+                                        <img class="shadow-sm img-fluid"
                                             src="{{ asset('storage/row/' . optional($brand->brandPage->rowFive)->image) }}"
+                                            onerror="this.onerror=null;this.src='{{ asset('frontend/images/error-image.avif') }}';"
                                             alt="">
                                     </div>
                                 </div>
@@ -153,7 +155,7 @@
                                 @endif
                                 @if (!empty($row_one->link))
                                     <a href="{{ optional($brand->brandPage->rowFive)->link }}"
-                                        class="btn common-btn-3 rounded-0 w-25 mt-2">{{ optional($brand->brandPage->rowFive)->btn_name }}</a>
+                                        class="mt-2 btn common-btn-3 rounded-0 w-25">{{ optional($brand->brandPage->rowFive)->btn_name }}</a>
                                 @endif
                             </div>
                         </div>
@@ -163,12 +165,13 @@
                                 <div class="col-lg-12">
                                     <img class="img-fluid"
                                         src="{{ asset('storage/brand-page/row/' . optional($brand->brandPage)->row_six_image) }}"
+                                        onerror="this.onerror=null;this.src='{{ asset('frontend/images/no-banner(1920-330).png') }}';"
                                         alt="">
                                 </div>
                             </div>
                         @endif
                         {{-- Third Row --}}
-                        <div class="row my-5 align-items-center px-5">
+                        <div class="px-5 my-5 row align-items-center">
                             <div
                                 class="{{ !empty(optional($brand->brandPage->rowSeven)->image) ? 'col-lg-6' : 'col-lg-12' }}">
                                 @if (!empty(optional($brand->brandPage->rowSeven)->title))
@@ -183,25 +186,27 @@
                                 @endif
                                 @if (!empty($row_one->link))
                                     <a href="{{ optional($brand->brandPage->rowSeven)->link }}"
-                                        class="btn common-btn-3 rounded-0 w-25 mt-2">{{ optional($brand->brandPage->rowSeven)->btn_name }}</a>
+                                        class="mt-2 btn common-btn-3 rounded-0 w-25">{{ optional($brand->brandPage->rowSeven)->btn_name }}</a>
                                 @endif
                             </div>
                             @if (!empty($brand->brandPage->rowSeven->image))
                                 <div class="col-lg-6">
                                     <div class="d-flex justify-content-center align-items-center">
-                                        <img class="img-fluid shadow-sm"
+                                        <img class="shadow-sm img-fluid"
                                             src="{{ asset('storage/row/' . $brand->brandPage->rowSeven->image) }}"
+                                            onerror="this.onerror=null;this.src='{{ asset('frontend/images/error-image.avif') }}';"
                                             alt="">
                                     </div>
                                 </div>
                             @endif
                         </div>
-                        <div class="row my-5 align-items-center px-5">
+                        <div class="px-5 my-5 row align-items-center">
                             @if (!empty($brand->brandPage->rowEight->image))
                                 <div class="col-lg-6">
                                     <div class="d-flex justify-content-center align-items-center">
-                                        <img class="img-fluid shadow-sm"
+                                        <img class="shadow-sm img-fluid"
                                             src="{{ asset('storage/row/' . $brand->brandPage->rowEight->image) }}"
+                                            onerror="this.onerror=null;this.src='{{ asset('frontend/images/error-image.avif') }}';"
                                             alt="">
                                     </div>
                                 </div>
@@ -220,7 +225,7 @@
                                 @endif
                                 @if (!empty($row_one->link))
                                     <a href="{{ optional($brand->brandPage->rowEight)->link }}"
-                                        class="btn common-btn-3 rounded-0 w-25 mt-2">{{ optional($brand->brandPage->rowEight)->btn_name }}</a>
+                                        class="mt-2 btn common-btn-3 rounded-0 w-25">{{ optional($brand->brandPage->rowEight)->btn_name }}</a>
                                 @endif
                             </div>
                         </div>
@@ -228,9 +233,9 @@
                 </div>
             </div>
         </div>
-        <div class="row p-3">
+        <div class="p-3 row">
             <div class="col-lg-12 col-sm-12">
-                <p class="sub-color text-center mx-auto pt-4 pb-2"> *Prices are pre-tax. They exclude delivery charges and
+                <p class="pt-4 pb-2 mx-auto text-center sub-color"> *Prices are pre-tax. They exclude delivery charges and
                     customs duties
                     and do not include additional charges for installation or activation options. Prices are indicative
                     only and may vary by country, with changes to the cost of raw materials and exchange rates. </p>

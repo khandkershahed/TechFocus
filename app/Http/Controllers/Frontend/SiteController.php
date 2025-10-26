@@ -2,61 +2,258 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use App\Models\PageBanner;
 use App\Models\Admin\Brand;
-use Illuminate\Support\Str;
-use App\Models\Admin\Banner;
 use Illuminate\Http\Request;
+use App\Models\Admin\Catalog;
 use App\Models\Admin\Product;
 use App\Models\Admin\Category;
+use App\Models\Admin\HomePage;
 use App\Models\Admin\Industry;
 use App\Models\Admin\AboutPage;
 use App\Models\Admin\NewsTrend;
+use App\Models\Admin\TechGlossy;
+use App\Models\Admin\ClientStory;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\SolutionDetail;
+use App\Models\Admin\SubSubCategory;
 use Illuminate\Support\Facades\Session;
+use App\Repositories\Interfaces\FaqRepositoryInterface;
+use App\Repositories\Interfaces\DynamicCategoryRepositoryInterface;
+
 
 class SiteController extends Controller
 {
+    /**
+     * Home Page
+     */
+//     public function homePage()
+//     {
+//         $banners = PageBanner::where('page_name', 'home')->get();
+// // dd($banner);
+//         $data = [
+//             'banners'        => $banners,
+//             'categories'    => Category::with('children.children.children.children.children.children.children.children.children.children')
+//                                 ->where('is_parent', '1')
+//                                 ->get(['id', 'parent_id', 'name', 'slug']),
+//             'products'      => Product::with('brand')
+//                                 ->where('status', 'active')
+//                                 ->inRandomOrder()
+//                                 ->limit(5)
+//                                 ->get(),
+//             'news_trends'   => NewsTrend::where('type', 'trends')->limit(4)->get(),
+//             'solutions'     => SolutionDetail::latest()->limit(4)->get(),
+//         ];
 
-    public function homePage()
-    {
-        $data = [
-            'categories'    => Category::with('children.children.children.children.children.children.children.children.children.children')->where('is_parent', '1')->get(['id', 'parent_id', 'name', 'slug']),
-            'products'      => Product::with('brand')->where('status', 'active')->inRandomOrder()->limit(5)->get(),
-            // 'products'      => Product::with('brand')->where('product_status','product')->where('status','active')->inRandomOrder()->limit(5)->get(),
-            'news_trends'   => NewsTrend::where('type', 'trends')->limit(4)->get(),
-            'solutions'     => SolutionDetail::latest()->limit(4)->get(),
-        ];
-        return view('frontend.pages.home.index', $data);
+//         return view('frontend.pages.home.index', $data);
+//     }
+
+
+public function homePage()
+{
+    $banners = PageBanner::where('page_name', 'home')->get();
+    
+    // Get dynamic homepage data
+    $homePage = HomePage::with(['country'])->first();
+    
+    // Get featured products for section two if homepage data exists
+    $featuredProducts = collect();
+    if ($homePage && $homePage->section_two_products) {
+        $featuredProducts = Product::whereIn('id', $homePage->section_two_products)->get();
     }
+
+    // Get news trends for section four if homepage data exists
+    $sectionFourNews = collect();
+    if ($homePage && $homePage->section_four_contents) {
+        $sectionFourNews = NewsTrend::whereIn('id', $homePage->section_four_contents)->get();
+    }
+
+    $data = [
+        'banners'        => $banners,
+        'categories'    => Category::with('children.children.children.children.children.children.children.children.children.children')
+                            ->where('is_parent', '1')
+                            ->get(['id', 'parent_id', 'name', 'slug']),
+        'products'      => Product::with('brand')
+                            ->where('status', 'active')
+                            ->inRandomOrder()
+                            ->limit(5)
+                            ->get(),
+        'news_trends'   => NewsTrend::where('type', 'trends')->limit(4)->get(),
+        'solutions'     => SolutionDetail::latest()->limit(4)->get(),
+        // Add dynamic homepage data
+        'homePage' => $homePage,
+        'featuredProducts' => $featuredProducts,
+        'sectionFourNews' => $sectionFourNews,
+    ];
+
+    return view('frontend.pages.home.index', $data);
+}
+
+    /**
+     * All Catalog Page
+     */
+    // public function allCatalog()
+    // {
+    //     $banners = PageBanner::where('page_name', 'catalog')->get();
+
+    //     $categories = Category::with([
+    //         'children.children.children.children',
+    //         'catalogs.attachments'
+    //     ])
+    //     ->where('is_parent', 1)
+    //     ->get(['id', 'parent_id', 'name', 'slug']);
+
+    //     $allCatalogs = Catalog::with('attachments')->get();
+
+    //     return view('frontend.pages.catalog.allCatalog', compact('categories', 'allCatalogs', 'banners'));
+    // }
+
+    /**
+ * All Catalog Page - SAFE VERSION
+ */
+public function allCatalog()
+{
+    $banners = PageBanner::where('page_name', 'catalog')->get();
+
+    // Get all unique catalog categories (brand, product, industry, solution, company)
+    $catalogCategories = Catalog::distinct()->pluck('category');
+    
+    // Get all catalogs for the "All" tab with relationships
+    $allCatalogs = Catalog::with(['attachments'])
+        ->latest()
+        ->get();
+
+    // Get catalogs grouped by category
+    $catalogsByCategory = [];
+    foreach ($catalogCategories as $category) {
+        $catalogsByCategory[$category] = Catalog::with(['attachments'])
+            ->where('category', $category)
+            ->latest()
+            ->get();
+    }
+
+    return view('frontend.pages.catalog.allCatalog', compact(
+        'catalogCategories',
+        'allCatalogs',
+        'catalogsByCategory',
+        'banners'
+    ));
+}
+
+    /**
+     * Catalog Details Page
+     */
+public function catalogDetails($slug)
+{
+    try {
+        $catalog = Catalog::with(['attachments', 'brands', 'products', 'industries', 'companies'])
+            ->where('slug', $slug)
+            ->first();
+
+        if (!$catalog) {
+            abort(404, 'Catalog not found');
+        }
+
+        $banners = PageBanner::where('page_name', 'catalog')->get();
+
+        return view('frontend.pages.catalog.details', compact('catalog', 'banners'));
+        
+    } catch (\Exception $e) {
+        abort(404, 'Catalog not found');
+    }
+}
+
+    /**
+     * Get Company Catalogs by Letter (AJAX)
+     */
+    public function getCompanyCatalogs($letter)
+    {
+        if ($letter === '0-9') {
+            // Get companies starting with numbers
+            $companies = Company::where('name', 'REGEXP', '^[0-9]')
+                ->where('status', true)
+                ->pluck('id');
+        } else {
+            // Get companies starting with specific letter
+            $companies = Company::where('name', 'LIKE', $letter . '%')
+                ->where('status', true)
+                ->pluck('id');
+        }
+
+        $catalogs = Catalog::with(['companies'])
+            ->whereHas('companies', function($query) use ($companies) {
+                $query->whereIn('companies.id', $companies);
+            })
+            ->where('status', true)
+            ->get()
+            ->map(function($catalog) {
+                return [
+                    'id' => $catalog->id,
+                    'name' => $catalog->name,
+                    'slug' => $catalog->slug,
+                    'thumbnail' => $catalog->thumbnail,
+                    'page_number' => $catalog->page_number,
+                    'category' => $catalog->category,
+                ];
+            });
+
+        return response()->json([
+            'catalogs' => $catalogs
+        ]);
+    }
+
+
+
+    /**
+     * RFQ Page
+     */
+      public function rfq()
+    {
+        $banners = PageBanner::where('page_name', 'rfq')->get();
+        return view('frontend.pages.rfq.rfq', compact('banners'));
+    }
+
+    /**
+     * Contact Page
+     */
+      public function contact()
+    {
+        $banners = PageBanner::where('page_name', 'contact')->get();
+        return view('frontend.pages.crm.contact', compact('banners'));
+    }
+
+
+
+    /**
+     * Other Pages (Unchanged)
+     */
     public function solutionDetails($slug)
     {
         $data = [
-            'solution'     => SolutionDetail::where('slug', $slug)->first(),
+            'solution' => SolutionDetail::where('slug', $slug)->first(),
         ];
         return view('frontend.pages.solution.solution_details', $data);
     }
+
     public function category($slug)
     {
         $data = [
-            'category'     => Category::with('children')->where('slug', $slug)->first(),
+            'category' => Category::with('children')->where('slug', $slug)->first(),
         ];
         return view('frontend.pages.category.category', $data);
     }
+
     public function filterProducts($slug)
     {
         $category = Category::where('slug', $slug)->first();
 
-        // Check if category exists
         if (!$category) {
             Session::flash('warning', 'Category not found.');
             return redirect()->back();
         }
 
-        // Get products associated with the category
         $products = $category->products()->get();
 
-        // Check if there are products
         if ($products->isEmpty()) {
             Session::flash('warning', 'No Products Found for this Category');
             return redirect()->back();
@@ -71,38 +268,44 @@ class SiteController extends Controller
         return view('frontend.pages.shop.filterProducts', $data);
     }
 
+    // public function faq()
+    // {
+    //     return view('frontend.pages.others.faq');
+    // }
+
+    // public function terms()
+    // {
+    //     return view('frontend.pages.others.terms');
+    // }
+
+
+
+    private $faqRepository;
+    private $dynamicCategoryRepository;
+
+    public function __construct(FaqRepositoryInterface $faqRepository, DynamicCategoryRepositoryInterface $dynamicCategoryRepository)
+    {
+        $this->faqRepository = $faqRepository;
+        $this->dynamicCategoryRepository = $dynamicCategoryRepository;
+    }
+
     public function faq()
     {
-        return view('frontend.pages.others.faq');
+        return view('frontend.pages.others.faq', [
+            'faqs' => $this->faqRepository->allFaq(), // All FAQs
+            'categories' => $this->dynamicCategoryRepository->allDynamicActiveCategory('faqs'),
+        ]);
     }
+
     public function terms()
     {
         return view('frontend.pages.others.terms');
     }
 
-    public function allCatalog()
-    {
-        $data = [
-            'categories' => Category::with('children.children.children.children.children.children.children.children.children.children')->where('is_parent', '1')->get(['id', 'parent_id', 'name', 'slug']),
-        ];
-        return view('frontend.pages.catalog.allCatalog', $data);
-    }
-
-    public function rfq()
-    {
-        return view('frontend.pages.rfq.rfq');
-    }
-    public function contact()
-    {
-        $data = [
-            'banner' => Banner::where('category','page')->where('page_name', 'contact_page')->first(),
-        ];
-        return view('frontend.pages.crm.contact',$data);
-    }
-
     public function about()
     {
         $aboutPage = AboutPage::whereStatus('active')->first();
+
         if (!empty($aboutPage)) {
             $brandIds = $aboutPage ? json_decode($aboutPage->brand_id, true) : [];
             $brands = $brandIds ? Brand::whereIn('id', $brandIds)->get() : collect();
@@ -131,8 +334,10 @@ class SiteController extends Controller
             'featured_brands' => Brand::byCategory('Featured')->latest('id')->paginate(18, $paginationSettings, 'featured_brands'),
             'others' => Brand::with('brandPage')->select('id', 'slug', 'title')->get(),
         ];
+
         return view('frontend.pages.brand.brand_list', $data);
     }
+
     public function service()
     {
         return view('frontend.pages.service.service');
@@ -152,10 +357,15 @@ class SiteController extends Controller
     {
         return view('frontend.pages.others.exhibit');
     }
+
     public function manufacturerAccount()
     {
         return view('frontend.pages.manufacturer.account');
     }
+
+    /**
+     * Search functions remain unchanged
+     */
     public function globalSearch(Request $request)
     {
         try {
@@ -168,52 +378,80 @@ class SiteController extends Controller
                 ->limit(10)
                 ->get(['products.id', 'products.name', 'products.slug', 'products.thumbnail', 'products.price', 'products.discount', 'products.sku_code', 'products.rfq', 'products.qty', 'products.stock']);
 
-            $data['solutions'] = SolutionDetail::where('name', 'LIKE', '%' . $query . '%')
-                // ->where('status', 'active')
-                ->limit(5)
-                ->get(['id', 'name', 'slug']);
-
-            $data['industries'] = Industry::where('name', 'LIKE', '%' . $query . '%')
-                ->limit(5)
-                ->get(['id', 'name', 'slug']);
-
-            $data['blogs'] = NewsTrend::where('title', 'LIKE', '%' . $query . '%')
-                ->limit(5)
-                ->get(['id', 'title']);
-
-            $data['categorys'] = Category::where('title', 'LIKE', '%' . $query . '%')
-                ->limit(2)
-                ->get(['id', 'title', 'slug']);
-
-            $data['subcategorys'] = Category::where('title', 'LIKE', '%' . $query . '%')
-                ->limit(2)
-                ->get(['id', 'title', 'slug']);
-
-            $data['subsubcategorys'] = SubSubCategory::where('title', 'LIKE', '%' . $query . '%')
-                ->limit(1)
-                ->get(['id', 'title', 'slug']);
-
-            $data['brands'] = Brand::where('title', 'LIKE', '%' . $query . '%')
-                ->where('status', 'active')
-                ->limit(5)
-                ->get(['id', 'title', 'slug']);
-
-            $data['storys'] = ClientStory::where('title', 'LIKE', '%' . $query . '%')
-                ->limit(5)
-                ->get(['id', 'title', 'slug']);
-
-            $data['tech_glossys'] = TechGlossy::where('title', 'LIKE', '%' . $query . '%')
-                ->limit(5)
-                ->get(['id', 'title']);
+            $data['solutions'] = SolutionDetail::where('name', 'LIKE', '%' . $query . '%')->limit(5)->get(['id', 'name', 'slug']);
+            $data['industries'] = Industry::where('name', 'LIKE', '%' . $query . '%')->limit(5)->get(['id', 'name', 'slug']);
+            $data['blogs'] = NewsTrend::where('title', 'LIKE', '%' . $query . '%')->limit(5)->get(['id', 'title']);
+            $data['categorys'] = Category::where('title', 'LIKE', '%' . $query . '%')->limit(2)->get(['id', 'title', 'slug']);
+            $data['subcategorys'] = Category::where('title', 'LIKE', '%' . $query . '%')->limit(2)->get(['id', 'title', 'slug']);
+            $data['subsubcategorys'] = SubSubCategory::where('title', 'LIKE', '%' . $query . '%')->limit(1)->get(['id', 'title', 'slug']);
+            $data['brands'] = Brand::where('title', 'LIKE', '%' . $query . '%')->where('status', 'active')->limit(5)->get(['id', 'title', 'slug']);
+            $data['storys'] = ClientStory::where('title', 'LIKE', '%' . $query . '%')->limit(5)->get(['id', 'title', 'slug']);
+            $data['tech_glossys'] = TechGlossy::where('title', 'LIKE', '%' . $query . '%')->limit(5)->get(['id', 'title']);
 
             return response()->json(view('frontend.partials.search', $data)->render());
         } catch (\Exception $e) {
-            // Log the error for debugging
-            return response()->json([
-                'error' => 'Global search error: ' . $e->getMessage()
-            ], 500);
+            return response()->json(['error' => 'Global search error: ' . $e->getMessage()], 500);
         }
     }
 
+    public function ProductSearch(Request $request)
+    {
+        $searchTerm = $request->input('q');
+
+        $products = Product::with('brand')
+            ->where('name', 'LIKE', '%' . $searchTerm . '%')
+            ->where('status', 'active')
+            ->paginate(12);
+
+        $categories = Category::with('children.children.children.children.children.children.children.children.children.children')
+            ->where('is_parent', '1')
+            ->get(['id', 'parent_id', 'name', 'slug']);
+
+        $solutions = SolutionDetail::latest()->limit(4)->get();
+        $news_trends = NewsTrend::where('type', 'trends')->limit(4)->get();
+
+        return view('frontend.pages.search.index', compact('products', 'searchTerm', 'categories', 'solutions', 'news_trends'));
+    }
+
+    public function show($slug)
+    {
+        $product = Product::with('brand')->where('slug', $slug)->first();
+
+        if (!$product) {
+            abort(404, 'Product not found');
+        }
+
+        $categories = Category::with('children')->where('is_parent', 1)->get();
+        $solutions = SolutionDetail::latest()->limit(4)->get();
+        $news_trends = NewsTrend::where('type', 'trends')->limit(4)->get();
+
+        return view('frontend.pages.product.show', compact('product', 'categories', 'solutions', 'news_trends'));
+    }
+
+    public function newsDetails($slug)
+    {
+        $news = NewsTrend::where('slug', $slug)->firstOrFail();
+
+        $categories = Category::with('children')->where('is_parent', 1)->get();
+        $solutions = SolutionDetail::latest()->limit(4)->get();
+        $news_trends = NewsTrend::where('type', 'trends')->limit(4)->get();
+
+        return view('frontend.pages.news.details', compact('news', 'categories', 'solutions', 'news_trends'));
+    }
     
+    //faqsearch
+    public function faqSearch(Request $request)
+{
+    $query = $request->get('q');
+
+    $faqs = $this->faqRepository->searchFaq($query); // we'll define this in the repo
+    $categories = $this->dynamicCategoryRepository->allDynamicActiveCategory('faqs');
+
+    return view('frontend.pages.others.faq', [
+        'faqs' => $faqs,
+        'categories' => $categories,
+        'searchQuery' => $query,
+    ]);
+} 
+
 }

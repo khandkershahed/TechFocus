@@ -6,6 +6,7 @@ use Illuminate\Support\Str;
 use App\Models\Admin\Category;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
+
 use App\Http\Requests\CategoryRequest;
 use App\Repositories\Interfaces\CategoryRepositoryInterface;
 
@@ -25,11 +26,11 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $data = [
+         $data = [
             'categories' => $this->categoryRepository->allCategory(),
-        ];
+       ];
         return view('admin.pages.category.index', $data);
-    }
+     }
 
     /**
      * Show the form for creating a new resource.
@@ -49,34 +50,50 @@ class CategoryController extends Controller
      */
     public function store(CategoryRequest $request)
     {
-        $mainFile = $request->file('image');
-        $logoFile = $request->file('logo');
-        $imageFilePath = storage_path('app/public/category/image/');
-        $logoFilePath = storage_path('app/public/category/logo/');
-        if (!empty($mainFile)) {
-            $globalFunImage = customUpload($mainFile, $imageFilePath);
-        } else {
-            $globalFunImage = ['status' => 0];
-        }
-        if (!empty($logoFile)) {
-            $globalFunLogo = customUpload($logoFile, $logoFilePath);
-        } else {
-            $globalFunLogo = ['status' => 0];
-        }
+                $mainFile = $request->file('image');
+                $logoFile = $request->file('logo');
 
-        $data = [
-            'country_id'  => $request->country_id,
-            'parent_id'   => $request->parent_id,
-            'name'        => $request->name,
-            'slug'        => Str::slug($request->name),
-            'is_parent'   => $request->is_parent ?? '0',
-            'image'       => $globalFunImage['status'] == 1 ? $globalFunImage['file_name'] : null,
-            'logo'        => $globalFunLogo['status']  == 1 ? $globalFunLogo['file_name'] : null,
-            'description' => $request->description,
-        ];
-        $this->categoryRepository->storeCategory($data);
+                $imageFilePath = storage_path('app/public/category/image/');
+                $logoFilePath  = storage_path('app/public/category/logo/');
 
-        return redirect()->back()->with('success', 'Category Added Successfully');
+                // Handle main image upload
+                if (!empty($mainFile)) {
+                    $globalFunImage = customUpload($mainFile, $imageFilePath);
+                } else {
+                    $globalFunImage = [
+                        'status' => 1,
+                        'file_name' => 'backend/images/no-image-available.png'
+                    ];
+                }
+
+                // Handle logo upload
+                if (!empty($logoFile)) {
+                    $globalFunLogo = customUpload($logoFile, $logoFilePath);
+                } else {
+                    $globalFunLogo = [
+                        'status' => 1,
+                        'file_name' => 'backend/images/no-image-available.png'
+                    ];
+                }
+
+                $data = [
+                    'country_id'  => $request->country_id,
+                    'parent_id'   => $request->parent_id,
+                    'name'        => $request->name,
+                    'slug'        => Str::slug($request->name),
+                    'is_parent'   => $request->is_parent ?? '0',
+                    'image'       => $globalFunImage['file_name'],
+                    'logo'        => $globalFunLogo['file_name'],
+                    'description' => $request->description,
+                ];
+
+                $this->categoryRepository->storeCategory($data);
+
+               
+
+                return redirect()->back()->with('success', 'Category Added Successfully');
+
+
     }
 
     /**
@@ -110,42 +127,43 @@ class CategoryController extends Controller
      */
     public function update(CategoryRequest $request, $id)
     {
-        $category =  $this->categoryRepository->findCategory($id);
+            $mainFile = $request->file('image');
+            $logoFile = $request->file('logo');
 
-        $mainFile = $request->file('image');
-        $logoFile = $request->file('logo');
-        $imageFilePath = storage_path('app/public/category/image/');
-        $logoFilePath = storage_path('app/public/category/logo/');
+            $imageFilePath = storage_path('app/public/category/image/');
+            $logoFilePath  = storage_path('app/public/category/logo/');
 
-        if (!empty($mainFile)) {
-            $globalFunImage = customUpload($mainFile, $imageFilePath);
-            $paths = [
-                storage_path("app/public/category/image/{$category->image}"),
-                storage_path("app/public/category/image/{$category->image}")
-            ];
-            foreach ($paths as $path) {
-                if (File::exists($path)) {
-                    File::delete($path);
-                }
+            // Handle main image
+            if (!empty($mainFile)) {
+                $globalFunImage = customUpload($mainFile, $imageFilePath);
+            } else {
+                // Set default image filename
+                $globalFunImage = [
+                    'status' => 1,
+                     'file_name' => 'backend/images/no-image-available.png' // default image
+                ];
             }
-        } else {
-            $globalFunImage = ['status' => 0];
-        }
 
-        if (!empty($logoFile)) {
-            $globalFunLogo = customUpload($logoFile, $logoFilePath);
-            $paths = [
-                storage_path("app/public/category/logo/{$category->logo}"),
-                storage_path("app/public/category/logo/{$category->logo}")
-            ];
-            foreach ($paths as $path) {
-                if (File::exists($path)) {
-                    File::delete($path);
-                }
+            // Handle logo
+            if (!empty($logoFile)) {
+                $globalFunLogo = customUpload($logoFile, $logoFilePath);
+            } else {
+                // Set default logo filename
+                $globalFunLogo = [
+                    'status' => 1,
+                     'file_name' => 'backend/images/no-image-available.png' //  default logo
+                ];
             }
-        } else {
-            $globalFunLogo = ['status' => 0];
-        }
+
+            // Save to DB (example)
+            $category = Category::create([
+                'name' => $request->name,
+                'parent_id' => $request->parent_id ?? null,
+                'description' => $request->description ?? null,
+                'image' => $globalFunImage['file_name'],
+                'logo' => $globalFunLogo['file_name'],
+                'is_parent' => $request->is_parent ?? 0,
+            ]);
 
         $data = [
             'country_id'  => $request->country_id,
@@ -188,4 +206,6 @@ class CategoryController extends Controller
         }
         $this->categoryRepository->destroyCategory($id);
     }
+
+
 }

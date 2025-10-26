@@ -1,209 +1,264 @@
 @extends('admin.master')
 @section('content')
-    <div class="container-fluid h-100">
-        <div class="row">
-            <div class="col-lg-12 card rounded-0 shadow-lg">
-                <div class="card card-p-0 card-flush">
-                    <div class="card-header align-items-center pt-2 pb-1 gap-2 gap-md-5 border-bottom">
-                        <div class="container-fluid">
-                            <div class="row">
-                                <div class="col-lg-4 col-sm-12 text-lg-start text-sm-center">
-                                    <!--begin::Search-->
-                                    <div class="d-flex align-items-center position-relative my-1">
-                                        <span
-                                            class="svg-icon svg-icon-2 svg-icon-gray-700 position-absolute top-50 translate-middle-y ms-4">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                viewBox="0 0 24 24" fill="none">
-                                                <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2"
-                                                    rx="1" transform="rotate(45 17.0365 15.1223)"
-                                                    fill="currentColor">
-                                                </rect>
-                                                <path
-                                                    d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z"
-                                                    fill="currentColor"></path>
-                                            </svg>
-                                        </span>
-                                        <input type="text" data-kt-filter="search"
-                                            class="form-control form-control-sm form-control-solid w-150px ps-14 rounded-0"
-                                            placeholder="Search" style="border: 1px solid #eee;" />
-                                    </div>
-                                    <!--end::Search-->
-                                    <!--begin::Export buttons-->
-                                    <div id="kt_datatable_example_1_export" class="d-none"></div>
-                                    <!--end::Export buttons-->
-                                </div>
-                                <div class="col-lg-4 col-sm-12 text-lg-center text-sm-center">
-                                    <div class="card-title table_title">
-                                        <h2>Monthly Tasks</h2>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-sm-12 text-lg-end text-sm-center">
-                                    <!--begin::Export dropdown-->
+<div class="container-fluid h-100">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card my-5 rounded-0 shadow-sm">
 
-                                    <button type="button" class="btn btn-sm btn-success rounded-0"
-                                        data-kt-menu-placement="bottom-end" data-bs-toggle="modal"
-                                        data-bs-target="#taskAddModal">
-                                        Add New
-                                    </button>
-                                    <!--end::Export dropdown-->
-                                </div>
-                            </div>
+                {{-- Card Header --}}
+                <div class="main_bg card-header py-2 d-flex justify-content-between align-items-center">
+                    <a class="btn btn-sm btn-primary btn-rounded rounded-circle btn-icon" href="{{ URL::previous() }}">
+                        <i class="fa-solid fa-arrow-left text-white"></i>
+                    </a>
+                    <h4 class="text-white fw-bold m-0">Employee Task Management</h4>
+                </div>
+
+                {{-- Card Body --}}
+                <div class="card-body">
+
+                    {{-- Add New Task Button --}}
+                    <div class="row mb-3">
+                        <div class="col-lg-12 text-end">
+                            @if($selectedEmployeeId)
+                            <a href="{{ route('admin.employee-task.create') }}?employee_id={{ $selectedEmployeeId }}" 
+                               class="btn btn-sm btn-primary">
+                                <i class="fa-solid fa-plus"></i> Add New Task
+                            </a>
+                            @else
+
+                            
+                            <button class="btn btn-sm btn-primary" disabled>
+                                <i class="fa-solid fa-plus"></i> Add New Task
+                            </button>
+                            @endif
                         </div>
                     </div>
-                    <div class="card-body card-p">
-                        <div class="row">
-                            <div class="col-lg-4 offset-lg-4">
-                                <div class="fv-row mb-3">
-                                    <label class="form-label required">Employee Name</label>
-                                    <select class="form-select form-select-solid form-select-sm" name="employee_id"
-                                        data-control="select2" data-placeholder="Select an Employee Name"
-                                        data-allow-clear="true" required>
-                                        <option></option>
-                                        @foreach ($employees as $employee)
-                                            <option value="{{ $employee->id }}">{{ $employee->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    <div class="invalid-feedback"> Please Enter Employee Name.</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row monthly_task_table">
+
+                    {{-- Employee Selection --}}
+                    <div class="row mb-4">
+                        <div class="col-lg-4 offset-lg-4">
+                            <label class="form-label required">Select Employee</label>
+                            <select class="form-select form-select-sm form-select-solid" id="selectEmployee">
+                                <option value="">-- Select Employee --</option>
+                                @foreach($employees as $employee)
+                                    <option value="{{ $employee->id }}" 
+                                        {{ $selectedEmployeeId == $employee->id ? 'selected' : '' }}>
+                                        {{ $employee->name }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
+
+                    {{-- Task Table --}}
+                    <div class="monthly_task_table">
+                        @if(!$selectedEmployeeId)
+                            <div class="text-center text-muted py-4">Select an employee to view tasks.</div>
+                        @elseif($tasks->isEmpty())
+                            <div class="text-center text-muted py-4">No tasks found for this employee.</div>
+                        @else
+                            <table class="table table-bordered table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Task Name</th>
+                                        <th>Start Date</th>
+                                        <th>End Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($tasks as $task)
+                                    <tr>
+                                        <td>{{ $task->task_name }}</td>
+                                        <td>{{ $task->start_date }}</td>
+                                        <td>{{ $task->end_date }}</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-primary editTaskBtn" data-id="{{ $task->id }}">Edit</button>
+                                            <button class="btn btn-sm btn-danger deleteTaskBtn" data-id="{{ $task->id }}">Delete</button>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @endif
+                    </div>
+
                 </div>
             </div>
         </div>
     </div>
-    {{-- Add Modal --}}
-    <div class="modal fade" id="taskAddModal" data-backdrop="static">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content rounded-0 border-0 shadow-sm">
-                <div class="modal-header p-2 rounded-0">
-                    <h5 class="modal-title">Add Brand</h5>
-                    <!-- Close button in the header -->
-                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
-                        aria-label="Close">
-                        <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
-                        <span class="svg-icon svg-icon-2x">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none">
-                                <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1"
-                                    transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
-                                <rect x="7.41422" y="6" width="16" height="2" rx="1"
-                                    transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
-                            </svg>
-                        </span>
-                        <!--end::Svg Icon-->
-                    </div>
-                    <!-- End Close button in the header -->
-                </div>
-                <form method="POST" action="{{ route('admin.brand.store') }}" class="needs-validation" novalidate
-                    enctype="multipart/form-data">
-                    @csrf
-                    <div class="modal-body">
-                        <div class="container-fluid">
-                            <div class="row">
-                                <div class="col-lg-12 col-sm-12">
-                                    <div class="row">
-                                        {{-- <div class="col-md-6">
-                                            <label for="validationCustom04" class="form-label required">Country
-                                                Name</label>
-                                            <select class="form-select form-select-solid" name="country_id"
-                                                data-dropdown-parent="#taskAddModal" data-control="select2"
-                                                data-placeholder="Select an option" data-allow-clear="true" required>
-                                                <option></option>
-                                                @foreach (getAllCountry() as $country)
-                                                    <option value="{{ $country->id }}">{{ $country->name }}</option>
-                                                @endforeach
-                                            </select>
-                                            <div class="valid-feedback"> Looks good! </div>
-                                            <div class="invalid-feedback"> Please provide a valid zip. </div>
-                                        </div> --}}
-                                        <div class="col-md-6 mb-1">
-                                            <label for="validationCustom01" class="form-label required ">Brand Name
-                                            </label>
-                                            <input type="text" class="form-control form-control-solid form-control-sm"
-                                                name="title" id="validationCustom01" placeholder="Enter Name" required>
-                                            <div class="valid-feedback"> Looks good! </div>
-                                            <div class="invalid-feedback"> Please Enter Name </div>
-                                        </div>
-                                        <div class="col-md-6 mb-1">
-                                            <label for="validationCustom01" class="form-label">Image
-                                            </label>
-                                            <input type="file" class="form-control form-control-solid form-control-sm"
-                                                name="image" id="validationCustom01" required>
-                                            <div class="valid-feedback"> Looks good! </div>
-                                            <div class="invalid-feedback"> Please Enter Image(jpg,jpeg,png) </div>
-                                        </div>
-                                        <div class="col-md-6 mb-1">
-                                            <label for="validationCustom01" class="form-label">Logo
-                                            </label>
-                                            <input type="file" class="form-control form-control-solid form-control-sm"
-                                                name="logo" id="validationCustom01" required>
-                                            <div class="valid-feedback"> Looks good! </div>
-                                            <div class="invalid-feedback"> Please Enter logo(jpg,jpeg,png) </div>
-                                        </div>
-                                        <div class="col-md-6 mb-1">
-                                            <label for="validationCustom01" class="form-label">Website URL
-                                            </label>
-                                            <input type="url" class="form-control form-control-solid form-control-sm"
-                                                name="website_url" id="validationCustom01"
-                                                placeholder="Enter Web Site Url">
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label for="validationCustom010" class="form-label">Description</label>
-                                            <textarea rows="1" name="description" class="form-control form-control-sm form-control-solid"></textarea>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label for="validationCustom04" class="form-label required">Category</label>
-                                            <select class="form-select form-select-solid" name="category"
-                                                data-dropdown-parent="#taskAddModal" data-control="select2"
-                                                data-placeholder="Select an option" data-allow-clear="true" required>
-                                                <option></option>
-                                                <option value="Top">Top</option>
-                                                <option value="Featured">Featured</option>
-                                                <option value="Others">Others</option>
-                                            </select>
-                                            <div class="valid-feedback"> Looks good! </div>
-                                            <div class="invalid-feedback"> Please provide a valid zip. </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer p-2">
-                        <!-- Button to close the modal in the footer -->
-                        <button type="submit" class="btn btn-sm btn-light-primary rounded-0">Submit</button>
-                    </div>
-                </form>
+</div>
+
+{{-- Edit Task Modal --}}
+<div class="modal fade" id="taskEditModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-0 border-0 shadow-sm">
+            <div class="modal-header p-2">
+                <h5 class="modal-title">Edit Task</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
+            <form id="editTaskForm">
+                @csrf
+                <input type="hidden" name="task_id" id="editTaskId">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label required">Task Name</label>
+                        <input type="text" name="task_name" id="editTaskName" class="form-control form-control-sm" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label required">Start Date</label>
+                        <input type="date" name="start_date" id="editStartDate" class="form-control form-control-sm" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label required">End Date</label>
+                        <input type="date" name="end_date" id="editEndDate" class="form-control form-control-sm" required>
+                    </div>
+                </div>
+                <div class="modal-footer p-2">
+                    <button type="submit" class="btn btn-sm btn-light-primary">Update</button>
+                </div>
+            </form>
         </div>
     </div>
-    {{-- Edit Modal --}}
-    
+</div>
 @endsection
 
 @push('scripts')
-    <script>
-        $(document).ready(function() {
-            $('select[name="employee_id"]').on('change', function() {
-                var employeeId = $(this).val();
+<script>
+$(function(){
+    // Load tasks for selected employee
+    function loadTasks(employeeId){
+        if(!employeeId){
+            $('.monthly_task_table').html('<div class="text-center text-muted py-4">Select an employee to view tasks.</div>');
+            return;
+        }
 
-                // Make an AJAX request to the controller
-                $.ajax({
-                    type: 'GET',
-                    url: '/employee/monthly-tasks/' + employeeId,
-                    success: function(data) {
-                        // Replace the content of the monthly_task_table div with the received data
-                        $('.monthly_task_table').html(data);
-                    },
-                    error: function() {
-                        console.error('Error fetching data.');
-                    }
-                });
-            });
+        // Show loading
+        $('.monthly_task_table').html('<div class="text-center text-muted py-4">Loading tasks...</div>');
+
+        // Update URL without page reload
+        const url = new URL(window.location);
+        url.searchParams.set('employee_id', employeeId);
+        window.history.pushState({}, '', url);
+
+        $.ajax({
+            url: '/admin/employee-task',
+            type: 'GET',
+            data: {
+                employee_id: employeeId,
+                ajax: true
+            },
+            success: function(res){
+                // Check if response has html property
+                if (res && res.html) {
+                    $('.monthly_task_table').html(res.html);
+                } else {
+                    // If it's the full page, try to extract the task table
+                    console.log('Unexpected response format:', res);
+                    $('.monthly_task_table').html('<div class="text-center text-danger py-4">Error: Unexpected response format</div>');
+                }
+            },
+            error: function(xhr) {
+                console.error('Error loading tasks:', xhr);
+                $('.monthly_task_table').html('<div class="text-center text-danger py-4">Error loading tasks. Please try again.</div>');
+            }
         });
-    </script>
+    }
+
+    // Employee selection change
+    $('#selectEmployee').change(function(){
+        const employeeId = $(this).val();
+        loadTasks(employeeId);
+    });
+
+    // Edit Task
+    $(document).on('click', '.editTaskBtn', function(){
+        const id = $(this).data('id');
+        $.get('/admin/employee-task/'+id+'/edit', function(task){
+            $('#editTaskId').val(task.id);
+            $('#editTaskName').val(task.task_name);
+            $('#editStartDate').val(task.start_date);
+            $('#editEndDate').val(task.end_date);
+            $('#taskEditModal').modal('show');
+        }).fail(function() {
+            toastr.error('Error loading task data');
+        });
+    });
+
+    // Update Task
+    $('#editTaskForm').submit(function(e){
+        e.preventDefault();
+        const id = $('#editTaskId').val();
+        const empId = $('#selectEmployee').val();
+        
+        $.ajax({
+            url: '/admin/employee-task/'+id,
+            type: 'POST',
+            data: $(this).serialize()+'&_method=PUT',
+            success: function(res){
+                if(res.success){
+                    $('#taskEditModal').modal('hide');
+                    loadTasks(empId);
+                    toastr.success(res.message);
+                }
+            },
+            error: function(xhr) {
+                toastr.error('Error updating task');
+                console.error(xhr.responseText);
+            }
+        });
+    });
+
+    // Delete Task
+// Delete Task
+$(document).on('click', '.deleteTaskBtn', function(){
+    if(!confirm('Are you sure you want to delete this task?')) return;
+    const id = $(this).data('id');
+    const empId = $('#selectEmployee').val();
+    
+    $.ajax({
+        url: '/admin/employee-task/' + id, // Remove /delete from the URL
+        type: 'POST',
+        data: {
+            _method: 'DELETE', 
+            _token: '{{ csrf_token() }}'
+        },
+        success: function(res){
+            if(res.success){
+                loadTasks(empId);
+                toastr.success(res.message);
+            } else {
+                toastr.error(res.message || 'Failed to delete task');
+            }
+        },
+        error: function(xhr) {
+            console.error('Delete error:', xhr);
+            if(xhr.status === 404) {
+                toastr.error('Task not found');
+            } else if(xhr.status === 500) {
+                toastr.error('Server error occurred');
+            } else {
+                toastr.error('Error deleting task');
+            }
+        }
+    });
+});
+    // Auto-refresh tasks when coming back from create page
+    @if($selectedEmployeeId && session('success'))
+        toastr.success('{{ session('success') }}');
+        // Reload tasks to show newly created ones
+        setTimeout(function() {
+            loadTasks({{ $selectedEmployeeId }});
+        }, 500);
+    @endif
+
+    // Also reload tasks on page load if employee is selected (to ensure fresh data)
+    @if($selectedEmployeeId)
+        setTimeout(function() {
+            loadTasks({{ $selectedEmployeeId }});
+        }, 1000);
+    @endif
+
+});
+</script>
 @endpush

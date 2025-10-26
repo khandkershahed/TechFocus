@@ -68,11 +68,14 @@
                                     @foreach ($categories as $category)
                                         <tr class="odd">
                                             <td>{{ $loop->iteration }}</td>
-                                            <td>
+                                           <td>
                                                 <img class="img-fluid rounded-circle" width="35px"
-                                                    src="{{ !empty($category->logo) ? asset('storage/category/logo/' . $category->logo) : asset('storage/main/no-image-available.png') }}"
+                                                    src="{{ !empty($category->logo) && file_exists(public_path($category->logo)) 
+                                                            ? asset($category->logo) 
+                                                            : asset('backend/images/no-image-available.png') }}"
                                                     alt="{{ $category->name }} Logo">
                                             </td>
+
                                             <td>{{ $category->parentName() ?? 'No Parent' }}
                                             </td>
                                             <td>{{ $category->name }}
@@ -315,15 +318,15 @@
 
 @push('scripts')
     <script>
-        $(document).ready(function() {
-            $('#flexRadioLg').change(function() {
-                var checkbox = $('.form-check-input');
-                if (checkbox.is(':checked')) {
-                    $('.hide_parent_input').hide();
-                } else {
-                    $('.hide_parent_input').show();
+         $(document).ready(function() {
+          $('#flexRadioLg').change(function() {
+               var checkbox = $('.form-check-input');
+              if (checkbox.is(':checked')) {
+               $('.hide_parent_input').hide();
+           } else {
+                   $('.hide_parent_input').show();
                 }
-            });
+             });
             $('.categoryEditModal').click(function() {
                 var categoryId = $(this).data('id');
                 var parentInputContainer = $('#parentInputContainer-' + categoryId);
@@ -335,6 +338,7 @@
                     parentInputContainer.show();
                 }
             });
-        });
+         });
+
     </script>
 @endpush

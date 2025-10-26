@@ -200,9 +200,9 @@
     }
 </style>
 <section>
-    <div class="container-fluid p-0 m-0">
+    <div class="p-0 m-0 container-fluid">
         <div class="row">
-            <div class="col-lg-12 p-0">
+            <div class="p-0 col-lg-12">
                 <div class="main">
                     <div>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 355">
@@ -480,14 +480,14 @@
                                     </g>
                                     <path class="st9" d="M320.3 257.8h549.9" />
                                     <g id="Text">
-                                        <text transform="translate(377.037 223.025)" class="st8 st10" font-size="12">
+                                        <text transform="translate(477.037 223.025)" class="st8 st10" font-size="30">
                                             404   
                                         </text>
                                         {{-- <text transform="translate(659.5 213.994)" class="st8 st10" font-size="24.025">
                                             Page not found.
                                         </text> --}}
                                         <text transform="translate(659.5 213.994)" class="st8 st10" font-size="21">
-                                            Kindly Refresh The Page.
+                                            Refresh The Page.
                                         </text>
                                     </g>
                                     <g id="ladders">

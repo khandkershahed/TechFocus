@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
 
@@ -39,6 +40,27 @@ class RouteServiceProvider extends ServiceProvider
             Route::middleware('web')
                 ->group(base_path('routes/admin.php'));
         });
+    }
+    /**
+     * Determine where to redirect users after login or email verification.
+     *
+     * @return string
+     */
+    public static function redirectTo(): string
+    {
+        $user = Auth::user();
+
+        if ($user) {
+            if ($user->user_type === 'partner') {
+                return route('partner.dashboard');
+            }
+
+            if ($user->user_type === 'client') {
+                return route('client.dashboard');
+            }
+        }
+
+        return self::HOME; // fallback
     }
 
     /**
