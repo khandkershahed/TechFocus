@@ -206,7 +206,7 @@ class PageBannerController extends Controller
                 'button_link' => 'nullable|url|max:500',
                 'banner_link' => 'nullable|url|max:500',
                 'status' => 'nullable|in:active,inactive',
-            ]);
+            ]);   
 
             if ($validator->fails()) {
                 foreach ($validator->errors()->all() as $error) {
