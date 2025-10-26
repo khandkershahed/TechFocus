@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Admin\Brand;
 use Illuminate\Support\Str;
+use App\Models\Admin\NewsTrend;
 use App\Http\Requests\BrandRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
@@ -200,5 +201,18 @@ class BrandController extends Controller
     //     $brand = Brand::where('slug', $slug)->with('brandPage')->firstOrFail();
     //     return view('frontend.pages.brandPage.products', compact('brand'));
     // }
+    public function brandOverview($slug)
+{
+    $brand = Brand::with('brandPage')->where('slug', $slug)->firstOrFail();
+    return view('frontend.pages.brandPage.overview', compact('brand'));
+}
+
+public function contentDetails($id)
+{
+    $newsTrend = NewsTrend::with('brand.brandPage')->findOrFail($id);
+    $brand = $newsTrend->brand;
+
+    return view('frontend.pages.brandPage.content_details', compact('newsTrend', 'brand'));
+}
 
 }

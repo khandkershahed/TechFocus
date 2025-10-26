@@ -270,4 +270,8 @@ class NewsTrendController extends Controller
         }
         $this->newsTrendRepository->destroyNewsTrend($id);
     }
+
+
+
+
 }

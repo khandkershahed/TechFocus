@@ -40,6 +40,8 @@
         </div>
     </div>
 </div> --}}
+@include('frontend.pages.brandPage.partials.page_header', ['brand' => $brand])
+
 <section class="header d-lg-block d-sm-none" id="myHeader">
     <div class="container brand-page-header-container ">
         <!-- Tabbing Section Start -->

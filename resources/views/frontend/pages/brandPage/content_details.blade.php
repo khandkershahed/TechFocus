@@ -2,7 +2,11 @@
 @section('metadata')
 @endsection
 @section('content')
-    @include('frontend.pages.brandPage.partials.page_header')
+    {{-- @include('frontend.pages.brandPage.partials.page_header') --}}
+@if(isset($brand))
+    @include('frontend.pages.brandPage.partials.page_header', ['brand' => $brand])
+@endif
+
 
     <!-- Banner -->
     <section>
