@@ -1,6 +1,6 @@
-{{-- <!DOCTYPE html> --}}
+<!DOCTYPE html>
 <html lang="en">
-<!--begin::Head-->
+
 
 <head>
     {{-- <base href="../../../">  --}}
@@ -20,78 +20,78 @@
     <link rel="canonical" href="https://preview.keenthemes.com/metronic8" />
     <link rel="shortcut icon"
         href="{{ !empty($site->site_icon) && file_exists(public_path('storage/webSetting/siteIcon/' . $site->site_icon)) ? asset('storage/webSetting/siteIcon/' . $site->site_icon) : asset('backend/images/no-image-available.png') }}" />
-    <!--begin::Fonts-->
+    
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
-    <!--end::Fonts-->
-    <!--begin::Global Stylesheets Bundle(used by all pages)-->
+    
+    
     <link href="{{ asset('backend/assets/plugins/global/plugins.bundle.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('backend/assets/css/style.bundle.css') }}" rel="stylesheet" type="text/css" />
-    <!--end::Global Stylesheets Bundle-->
-    <!--start::Custom Stylesheets Bundle-->
+    
+    
     <link rel="stylesheet" href="{{ asset('backend/assets/css/custom_global.css') }}">
-    <!--end::Custom Stylesheets Bundle-->
+    
 
 
 </head>
-<!--end::Head-->
-<!--begin::Body-->
+
+
 
 <body id="kt_body" class="bg-body">
-    <!--begin::Main-->
-    <!--begin::Root-->
+    
+    
     <div class="d-flex flex-column flex-root">
-        <!--begin::Authentication - Sign-in -->
+        
         <div class="d-flex flex-column flex-lg-row flex-column-fluid">
-            <!--begin::Aside-->
+            
             <div class="d-flex flex-column flex-lg-row-auto w-xl-600px positon-xl-relative common-gradient">
-                <!--begin::Wrapper-->
+                
                 <div class="d-flex flex-column position-xl-fixed top-0 bottom-0 w-xl-600px scroll-y">
-                    <!--begin::Content-->
+                    
                     <div class="d-flex flex-row-fluid flex-column text-center p-10 pt-lg-20">
-                        <!--begin::Logo-->
+                        
                         <a href="{{ route('homepage') }}" class="py-9 mb-5">
                             {{-- <img alt="Logo" src="{{ asset('backend/assets/media/logos/logo-2.svg') }}"
                                 class="h-60px" /> --}}
                             <img src="{{ !empty($site->system_logo_white) && file_exists(public_path('storage/webSetting/systemLogoWhite/' . $site->system_logo_white)) ? asset('storage/webSetting/systemLogoWhite/' . $site->system_logo_white) : asset('backend/images/no-image-available.png') }}"
                                 class="h-60px" alt="TechFocus" />
                         </a>
-                        <!--end::Logo-->
-                        <!--begin::Title-->
+                        
+                        
                         <h1 class="fw-bolder fs-2qx pb-5 pb-md-10 text-white">
                             Welcome to TechFocus Back Office
                         </h1>
-                        <!--end::Title-->
+                        
 
                     </div>
-                    <!--end::Content-->
-                    <!--begin::Illustration-->
+                    
+                    
                     <div class="d-flex flex-row-auto bgi-no-repeat bgi-position-x-center bgi-size-contain bgi-position-y-bottom min-h-100px min-h-lg-350px"
                         style="background-image: url('{{ asset('backend/assets/media/illustrations/sketchy-1/13.png') }}')">
                     </div>
-                    <!--end::Illustration-->
+                    
                 </div>
-                <!--end::Wrapper-->
+                
             </div>
-            <!--end::Aside-->
-            <!--begin::Body-->
+            
+            
             @yield('content')
-            <!--end::Body-->
+            
         </div>
-        <!--end::Authentication - Sign-in-->
+        
     </div>
-    <!--end::Root-->
-    <!--end::Main-->
-    <!--begin::Javascript-->
+    
+    
+    
     <script>
         var hostUrl = "assets/";
     </script>
-    <!--begin::Global Javascript Bundle(used by all pages)-->
+    
     <script src="{{ asset('backend/assets/plugins/global/plugins.bundle.js') }}"></script>
     <script src="{{ asset('backend/assets/js/scripts.bundle.js') }}"></script>
-    <!--end::Global Javascript Bundle-->
-    <!--begin::Page Custom Javascript(used by this page)-->
+    
+    
     <script src="{{ asset('backend/assets/js/custom/authentication/sign-in/general.js') }}"></script>
-    <!--end::Page Custom Javascript-->
+    
 
     <script>
         function togglePasswordVisibility() {
@@ -109,13 +109,13 @@
             }
         }
     </script>
-    <!--end::Javascript-->
-    <!--custom::Javascript-->
+    
+    
     <script src="{{ asset('backend/assets/js/custom.js') }}"></script>
     @stack('scripts')
-    <!--custom::Javascript-->
+    
 
 </body>
-<!--end::Body-->
+
 
 </html>
