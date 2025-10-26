@@ -11,7 +11,7 @@
                     <div class="col-lg-12">
                         <div class="devider-wrap">
                             <h4 class="devider-content mb-4">
-                                <span class="devider-text">PRODUCT TRENDS</span>
+                                <span class="devider-text">{{ $brand->title }} Contents</span>
                             </h4>
                         </div>
                     </div>
