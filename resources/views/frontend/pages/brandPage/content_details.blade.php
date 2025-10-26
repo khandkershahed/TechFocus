@@ -66,17 +66,17 @@
                     <div class="card-header rounded-0 bg-white" style="border-top:5px solid #001430; border-bottom: 0;">
                         <div class="d-flex justify-content-center">
                             <img class="rounded-circle"
-                                src="{{ isset($brand) && $brand->logo && file_exists(public_path('storage/' . $brand->logo))
-                                    ? asset('storage/' . $brand->logo)
+                                src="{{ isset($newsTrend) && $newsTrend->source_image && file_exists(public_path('storage/content/' . $newsTrend->source_image))
+                                    ? asset('storage/content/' . $newsTrend->source_image)
                                     : asset('backend/images/no-image-available.png') }}"
-                                width="200" height="200" alt="{{ $brand->title ?? 'Brand' }}" />
+                                width="200" height="200" alt="{{ $newsTrend->title }}" />
                         </div>
 
                         <div class="text-center mt-4">
-                            @if (isset($brand) && $brand)
-                                <h3 class="fw-bolder">{{ $brand->title }}</h3>
+                            @if (!empty($newsTrend->author))
+                                <h3 class="fw-bolder">Details</h3>
                                 <h6>
-                                    <i class="fa-solid fa-user main-color"></i> {{ $brand->title }}
+                                    <i class="fa-solid fa-user main-color"></i> {{ $newsTrend->author }}
                                 </h6>
                             @endif
 
