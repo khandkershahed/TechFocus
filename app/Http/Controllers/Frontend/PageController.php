@@ -266,7 +266,7 @@ class PageController extends Controller
             'categories' => $categories,
             'solutions' => $solutions,
             'news_trends' => $news_trends,
-            // 'brand' => Brand::with('brandPage')->where('slug', $slug)->select('id', 'slug', 'title', 'logo')->firstOrFail(),
+            'brand' => Brand::with('brandPage')->where('slug', $slug)->select('id', 'slug', 'title', 'logo')->firstOrFail(),
         ];
         return view('frontend.pages.brandPage.content_details', $data);
     }
