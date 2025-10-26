@@ -1,6 +1,7 @@
 @extends('frontend.master')
 
 @section('metadata')
+    {{-- Add metadata here if needed --}}
 @endsection
 
 @section('content')
@@ -23,9 +24,11 @@
         </div>
     </section>
 
-    {{-- Main Content --}}
-    <div class="container mt-5">
-        <div class="row my-3">
+{{-- =========================
+    Main Content
+========================== --}}
+<div class="container mt-5">
+    <div class="row my-3">
 
             {{-- Left Column: Trend Details --}}
             <div class="col-lg-9">
@@ -55,10 +58,12 @@
                                 {!! $newsTrend->long_des !!}
                             </p>
                         @endif
-
-                    </div>
+                    @else
+                        <p>No details available for this content.</p>
+                    @endif
                 </div>
             </div>
+        </div>
 
             {{-- Right Column: Brand Info --}}
             <div class="col-lg-3">
