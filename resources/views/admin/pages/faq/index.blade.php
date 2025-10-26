@@ -92,7 +92,8 @@
                                                 {{ $loop->iteration }}
                                             </td>
                                             <td>
-                                                {{ $faq->dynamicCategoryName() ?? 'No Category' }}
+                                                    {{ $faq->category_name }}
+
                                             </td>
                                             <td>
                                                 {{ $faq->order }}
@@ -325,9 +326,10 @@
                                                         <div class="col-lg-4 col-sm-5">
                                                             <p class="fw-bold" title="Country Name">Company Name :</p>
                                                         </div>
-                                                        <div class="col-lg-8 col-sm-6">
-                                                            <p>  {{ $faq->dynamicCategoryName() ?? 'No Category'  }}</p>
+                                                     <div class="col-lg-8 col-sm-6">
+                                                            <p>{{ $faq->category_name }}</p>
                                                         </div>
+
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-12">
