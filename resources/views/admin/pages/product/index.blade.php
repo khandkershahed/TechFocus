@@ -2,13 +2,13 @@
 @section('content')
     <!-- CSS -->
     {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"> --}}
-    <link rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap-multiselect@0.9.16/dist/css/bootstrap-multiselect.min.css">
+    <!-- <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-multiselect@0.9.16/dist/css/bootstrap-multiselect.min.css"> -->
     <div class="container h-100">
         <div class="">
-            <h1>Multiselect-dropdown</h1>
-            <div class="row bg-white">
-                <div class="fv-row mb-3">
+            <!-- <h1>Multiselect-dropdown</h1> -->
+            <!-- <div class="bg-white row">
+                <div class="mb-3 fv-row">
                     <label class="form-label required">Select Brand</label>
                     <select class="form-select form-select-solid" name="field2" id="field2" multiple
                         multiselect-search="true" multiselect-select-all="true" multiselect-max-items="3"
@@ -81,10 +81,10 @@
                     {{-- <input class="form-control form-control-solid" id="kt_tagify_2"/> --}}
                     <div class="invalid-feedback"> Please Enter Product Name.</div>
                 </div>
-            </div>
+            </div> -->
         @endsection
         @push('scripts')
-            <script>
+            <!-- <script>
                 var style = document.createElement('style');
                 style.setAttribute("id", "multiselect_dropdown_styles");
                 style.innerHTML = `
@@ -403,7 +403,7 @@
                 window.addEventListener('load', () => {
                     MultiselectDropdown(window.MultiselectDropdownOptions);
                 });
-            </script>
+            </script> -->
         @endpush
 
 

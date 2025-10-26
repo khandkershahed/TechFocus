@@ -430,7 +430,7 @@
         </h3>
         <div class="row mb-5">
             <div class="col-lg-4 col-sm-12">
-                <div class="card rounded-0 border-0 shadow-lg">
+                <div class="card rounded-0 border-0 shadow-sm">
                     <div class="card-header border-0 rounded-0 p-0 m-0">
                         <div class="d-flex justify-content-center bg-white p-0 m-0">
                             <img src="https://business.virtual-expo.com/wp-content/uploads/sites/4/2022/03/buyer2-1000x660.png"
@@ -455,7 +455,7 @@
             </div>
 
             <div class="col-lg-4 col-sm-12">
-                <div class="card rounded-0 border-0 shadow-lg">
+                <div class="card rounded-0 border-0 shadow-sm">
                     <div class="card-header border-0 rounded-0 p-0 m-0">
                         <div class="d-flex justify-content-center bg-white p-0 m-0">
                             <img src="https://business.virtual-expo.com/wp-content/uploads/sites/4/2022/03/manufacturers-1-1000x660.png"
@@ -479,7 +479,7 @@
                 </div>
             </div>
             <div class="col-lg-4 col-sm-12">
-                <div class="card rounded-0 border-0 shadow-lg">
+                <div class="card rounded-0 border-0 shadow-sm">
                     <div class="card-header border-0 rounded-0 p-0 m-0">
                         <div class="d-flex justify-content-center bg-white p-0 m-0">
                             <img src="https://business.virtual-expo.com/wp-content/uploads/sites/4/2022/03/distributors-1000x660.png"

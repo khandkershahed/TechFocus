@@ -213,7 +213,7 @@
     <div class="container">
         <div class="row mt-5 mb-5">
             <div class="col bg-light">
-                <div class="card rounded-0 border-0 shadow-lg">
+                <div class="card rounded-0 border-0 shadow-sm">
                     <div class="card-header rounded-0">
                         <h4 class="pt-2 text-center">Related Searches</h4>
                     </div>
