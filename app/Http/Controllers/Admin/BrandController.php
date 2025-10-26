@@ -187,18 +187,18 @@ class BrandController extends Controller
     }
 
 
-    public function overview($slug)
-    {
-        $brand = Brand::where('slug', $slug)
-            ->with('brandPage.rowFour', 'brandPage.rowFive', 'brandPage.rowSeven', 'brandPage.rowEight')
-            ->firstOrFail();
+    // public function overview($slug)
+    // {
+    //     $brand = Brand::where('slug', $slug)
+    //         ->with('brandPage.rowFour', 'brandPage.rowFive', 'brandPage.rowSeven', 'brandPage.rowEight')
+    //         ->firstOrFail();
 
-        return view('frontend.pages.brandPage.overview', compact('brand'));
-    }
-     public function products($slug)
-    {
-        $brand = Brand::where('slug', $slug)->with('brandPage')->firstOrFail();
-        return view('frontend.pages.brandPage.products', compact('brand'));
-    }
+    //     return view('frontend.pages.brandPage.overview', compact('brand'));
+    // }
+    //  public function products($slug)
+    // {
+    //     $brand = Brand::where('slug', $slug)->with('brandPage')->firstOrFail();
+    //     return view('frontend.pages.brandPage.products', compact('brand'));
+    // }
 
 }
