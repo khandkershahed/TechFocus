@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Admin\Brand;
 use Illuminate\Support\Str;
+use App\Models\Admin\NewsTrend;
 use App\Http\Requests\BrandRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
@@ -184,4 +186,37 @@ class BrandController extends Controller
         }
         $this->brandRepository->destroyBrand($id);
     }
+
+
+    // public function overview($slug)
+    // {
+    //     $brand = Brand::where('slug', $slug)
+    //         ->with('brandPage.rowFour', 'brandPage.rowFive', 'brandPage.rowSeven', 'brandPage.rowEight')
+    //         ->firstOrFail();
+
+    //     return view('frontend.pages.brandPage.overview', compact('brand'));
+    // }
+    //  public function products($slug)
+    // {
+    //     $brand = Brand::where('slug', $slug)->with('brandPage')->firstOrFail();
+    //     return view('frontend.pages.brandPage.products', compact('brand'));
+    // }
+    public function brandOverview($slug)
+{
+    $brand = Brand::with('brandPage')->where('slug', $slug)->firstOrFail();
+    return view('frontend.pages.brandPage.overview', compact('brand'));
+}
+
+public function contentDetails($id)
+{
+    // Load the news trend by ID (or slug)
+    $newsTrend = NewsTrend::with('brand.brandPage')->findOrFail($id);
+
+    // Get the related brand for the page header
+    $brand = $newsTrend->brand;
+
+    // Pass both to the view
+    return view('frontend.pages.brandPage.content_details', compact('newsTrend', 'brand'));
+}
+
 }

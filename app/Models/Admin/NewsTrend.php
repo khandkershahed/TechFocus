@@ -107,4 +107,16 @@ class NewsTrend extends Model
         $ids = is_array($this->brand_id) ? $this->brand_id : json_decode($this->brand_id, true) ?? [];
         return Brand::find($ids[0] ?? null);
     }
+
+    public function contentDetails($id)
+{
+    // Load the news trend with its related brand and brandPage
+    $newsTrend = NewsTrend::with('brand.brandPage')->findOrFail($id);
+
+    // Get the related brand
+    $brand = $newsTrend->brand;
+
+    // Pass both variables to the view
+    return view('frontend.pages.brandPage.content_details', compact('newsTrend', 'brand'));
+}
 }

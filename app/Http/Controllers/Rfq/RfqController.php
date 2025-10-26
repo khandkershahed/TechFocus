@@ -26,85 +26,22 @@ use Illuminate\Support\Facades\Notification;
 
 class RfqController extends Controller
 {
-/**
- * Get RFQ notification recipients
- */
-// private function getRfqRecipients(): array
-// {
-//     // Primary email recipients for RFQ notifications
-//     return [
-//         'dev2.ngenit@gmail.com',  // Main Gmail account
-//        'dev1.ngenit@gmail.com' ,   // RFQ department
-//         // 'sales@yourcompany.com',  // Sales team
-//         // Add more emails as needed
-//     ];
-
-//     // Alternative: use environment variables
-//     /*
-//     return [
-//         env('RFQ_PRIMARY_EMAIL', 'dev2.ngenit@gmail.com'),
-//         env('RFQ_SECONDARY_EMAIL', 'rfq@yourcompany.com'),
-//         env('RFQ_TERTIARY_EMAIL', 'sales@yourcompany.com'),
-//     ];
-//     */
-// }
-
-// /**
-//  * Send RFQ notification emails
-//  */
-// private function sendRfqEmails(Rfq $rfq): bool
-// {
-//     $recipients = $this->getRfqRecipients();
-//     $subject = 'New RFQ Submitted - ' . $rfq->rfq_code;
-
-//     $sentCount = 0;
-//     $failedCount = 0;
-
-//     Log::info("Attempting to send RFQ emails to: " . implode(', ', $recipients));
-//     Log::info("RFQ Details", [
-//         'rfq_code' => $rfq->rfq_code,
-//         'company' => $rfq->company_name,
-//         'contact' => $rfq->name,
-//         'email' => $rfq->email,
-//     ]);
-
-    
-//     foreach ($recipients as $recipient) {
-//         // if (!filter_var($recipient, FILTER_VALIDATE_EMAIL)) {
-//         //     Log::warning("Invalid email address: {$recipient}");
-//         //     $failedCount++;
-//         //     continue;
-//         // }
-//         try {
-//             Mail::to($recipient)->send(new RfqNotificationMail($rfq, $subject));
-//             Log::info("RFQ email sent successfully to: {$recipient}");
-//             $sentCount++;
-//         } catch (\Exception $e) {
-//             Session::flash('error', $e->getMessage());
-//             Log::error(" Failed to send RFQ email to {$recipient}: " . $e->getMessage(), [
-//                 'trace' => $e->getTraceAsString()
-//             ]);
-//             $failedCount++;
-//         }
-//     }
-
-//     Log::info("RFQ Email sending summary: {$sentCount} sent, {$failedCount} failed");
-
-//     return $sentCount > 0; // Return true if at least one email was sent
-// }
 
 
     private function getRfqRecipients(): array
     {
-        $admin = Admin::whereIn('role', ['Admin', 'Manager'])
+        
+        $admin = Admin::whereIn('role', ['admin', 'sales','logistics'])
                      ->where('status', 'active')
                      ->pluck('email')
-                     ->filter(fn($email) => filter_var($email, FILTER_VALIDATE_EMAIL))
+                      ->filter(fn($email) => filter_var($email, FILTER_VALIDATE_EMAIL))
                      ->toArray();
 
         // Fallback emails
         return $admin ?: [
-            'dev2.ngenit@gmail.com',
+              ' site2.ngenit@gmail.com',
+            'techfcousltd@gmail.com',
+             'dev2.ngenit@gmail.com',
             'dev1.ngenit@gmail.com',
         ];
     }

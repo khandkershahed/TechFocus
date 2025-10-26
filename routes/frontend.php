@@ -216,3 +216,5 @@ Route::get('/faq', [SiteController::class, 'faq'])->name('faq');
 Route::get('/faq/search', [SiteController::class, 'faqSearch'])->name('faq.search');
 Route::get('/faq/category/{slug}', [SiteController::class, 'faqByCategory'])->name('faq.category');
 Route::get('/faq/{slug}', [SiteController::class, 'faqByCategory'])->name('faq.by.category');
+
+Route::get('/brand/{slug}/details', [BrandController::class, 'contentDetails'])->name('brand.contentDetails');

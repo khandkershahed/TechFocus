@@ -210,6 +210,7 @@ $(function(){
     });
 
     // Delete Task
+    
 // Delete Task
 $(document).on('click', '.deleteTaskBtn', function(){
     if(!confirm('Are you sure you want to delete this task?')) return;

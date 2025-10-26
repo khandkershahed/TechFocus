@@ -475,6 +475,16 @@
                             <div class="menu-sub menu-sub-accordion">
 
                                 <div class="menu-item">
+                                    <a class="menu-link {{ in_array(Route::current()->getName(), ['page_banners.index', 'page_banners.create', 'page_banners.edit']) ? 'active' : '' }}"
+                                        href="{{ route('page_banners.index') }}">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                        <span class="menu-title">Page Banner</span>
+                                    </a>
+                                </div>
+                                <div class="menu-item">
                                     <a class="menu-link {{ in_array(Route::current()->getName(), ['admin.homepage.index', 'admin.homepage.create', 'admin.homepage.edit']) ? 'active' : '' }}"
                                         href="{{ route('admin.homepage.index') }}">
                                         <span class="menu-bullet">

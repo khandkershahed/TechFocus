@@ -48,11 +48,13 @@
                                     <a href="{{ route('page_banners.edit', $banner->id) }}" class="btn btn-sm btn-warning">Edit</a>
 
                                     {{-- Delete Form --}}
+                                       @if (Auth::guard('admin')->user()->role == 'admin') 
                                     <form action="{{ route('page_banners.destroy', $banner->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this banner?');">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-sm btn-danger">Delete</button>
                                     </form>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
