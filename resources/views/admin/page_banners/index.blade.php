@@ -1,7 +1,6 @@
 @extends('admin.master')
-
 @section('content')
-<div class="container py-4">
+<div class="container-fluid h-100">
     <div class="d-flex justify-content-between mb-3">
         <h4>Page Banners</h4>
         <a href="{{ route('page_banners.create') }}" class="btn btn-primary">Add New Banner</a>

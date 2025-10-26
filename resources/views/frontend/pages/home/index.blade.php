@@ -107,40 +107,43 @@
             </div>
 
             <!-- Section 3: Dynamic Hero Section One -->
-            @if ($homePage && $homePage->section_one_title)
-                <div class="mx-1 my-5 bg-white row what-we-do"
-                    style="background-image: url({{ $homePage->section_one_image ? asset('storage/home-page/image/' . $homePage->section_one_image) : 'https://www.riverbed.com/riverbed-wp-content/uploads/2022/12/lady-with-laptop.png' }});">
-                    <div class="p-5 mb-3 col-lg-12">
-                        <div class="row align-items-center">
-                            <div class="col-lg-6 col-sm-12">
-                                <div class="holder-main-text">
-                                    @if ($homePage->section_one_badge)
-                                        <h6 style="width: 28%; line-height: 1.4;">
-                                            {{ $homePage->section_one_badge }}
-                                        </h6>
-                                    @endif
-
-                                    <h2 class="pb-2 mb-0 w-75">
-                                        {{ $homePage->section_one_title }}
-                                    </h2>
-
-                                    @if ($homePage->section_one_description)
-                                        <p class="py-3 mt-0 w-75" style="text-align: justify">
-                                            {!! $homePage->section_one_description !!}
-                                        </p>
-                                    @endif
-
-                                    @if ($homePage->section_one_button && $homePage->section_one_link)
-                                        <a href="{{ $homePage->section_one_link }}"
-                                            class="btn common-btn-3 rounded-0 w-25">
-                                            {{ $homePage->section_one_button }}
-                                        </a>
-                                    @endif
-                                </div>
+            @if($homePage && $homePage->section_one_title)
+            <div class="mx-1 my-5 bg-white row what-we-do"
+                style="
+                background-position: center;
+                background-size: cover;
+                background-repeat: no-repeat;
+                background-image: url('{{ $homePage->section_one_image ? asset('storage/home-page/image/' . $homePage->section_one_image) : 'https://www.riverbed.com/riverbed-wp-content/uploads/2022/12/lady-with-laptop.png' }}')">
+                <div class="p-5 mb-3 col-lg-12">
+                    <div class="row align-items-center">
+                        <div class="col-lg-6 col-sm-12">
+                            <div class="holder-main-text">
+                                @if($homePage->section_one_badge)
+                                <h6 style="width: 28%; line-height: 1.4;">
+                                    {{ $homePage->section_one_badge }}
+                                </h6>
+                                @endif
+                                
+                                <h2 class="pb-2 mb-0 w-75">
+                                    {{ $homePage->section_one_title }}
+                                </h2>
+                                
+                                @if($homePage->section_one_description)
+                                <p class="py-3 mt-0 w-75" style="text-align: justify">
+                                    {!! $homePage->section_one_description !!}
+                                </p>
+                                @endif
+                                
+                                @if($homePage->section_one_button && $homePage->section_one_link)
+                                <a href="{{ $homePage->section_one_link }}" class="btn common-btn-3 rounded-0 w-25">
+                                    {{ $homePage->section_one_button }}
+                                </a>
+                                @endif
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
             @endif
 
             <!-- Section 4: Dynamic Solutions Section -->
