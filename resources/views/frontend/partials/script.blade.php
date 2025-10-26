@@ -32,7 +32,7 @@
 
 @stack('scripts')
 
-<script>
+{{-- <script>
     toastr.options = {
         "closeButton": true,
         "debug": false,
@@ -66,4 +66,4 @@
     @if (Session::has('warning'))
         toastr.warning("{{ Session::get('warning') }}");
     @endif
-</script>
+</script> --}}
