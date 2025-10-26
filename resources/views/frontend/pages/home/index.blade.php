@@ -108,7 +108,7 @@
 
             <!-- Section 3: Dynamic Hero Section One -->
             @if($homePage && $homePage->section_one_title)
-            <div class="mx-1 mb-5 bg-white row what-we-do"
+            <div class="mx-1 my-5 bg-white row what-we-do"
                 style="
                 background-position: center;
                 background-size: cover;
