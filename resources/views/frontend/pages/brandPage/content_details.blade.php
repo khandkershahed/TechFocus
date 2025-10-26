@@ -24,11 +24,11 @@
         </div>
     </section>
 
-{{-- =========================
+    {{-- =========================
     Main Content
 ========================== --}}
-<div class="container mt-5">
-    <div class="row my-3">
+    <div class="container mt-5">
+        <div class="row my-3">
 
             {{-- Left Column: Trend Details --}}
             <div class="col-lg-9">
@@ -57,13 +57,12 @@
                             <p class="text-justify" style="line-height: 1.5;">
                                 {!! $newsTrend->long_des !!}
                             </p>
+                        @else
+                            <p>No details available for this content.</p>
                         @endif
-                    @else
-                        <p>No details available for this content.</p>
-                    @endif
+                    </div>
                 </div>
             </div>
-        </div>
 
             {{-- Right Column: Brand Info --}}
             <div class="col-lg-3">
