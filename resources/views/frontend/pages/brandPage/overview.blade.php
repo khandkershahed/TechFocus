@@ -120,7 +120,7 @@
                                 @if (!empty($brand->brandPage->rowFour->image))
                                     <div class="col-lg-6">
                                         <div class="d-flex justify-content-center align-items-center">
-                                            <img class="shadow-sm img-fluid"
+                                            <img class="shadow-none img-fluid"
                                                 src="{{ asset('storage/row/' . $brand->brandPage->rowFour->image) }}"
                                                 onerror="this.onerror=null;this.src='{{ asset('frontend/images/error-image.avif') }}';"
                                                 alt="" >
@@ -134,7 +134,7 @@
                             @if (!empty(optional($brand->brandPage->rowFive)->image))
                                 <div class="col-lg-6">
                                     <div class="d-flex justify-content-center align-items-center">
-                                        <img class="shadow-sm img-fluid"
+                                        <img class="shadow-none img-fluid"
                                             src="{{ asset('storage/row/' . optional($brand->brandPage->rowFive)->image) }}"
                                             onerror="this.onerror=null;this.src='{{ asset('frontend/images/error-image.avif') }}';"
                                             alt="">
@@ -192,7 +192,7 @@
                             @if (!empty($brand->brandPage->rowSeven->image))
                                 <div class="col-lg-6">
                                     <div class="d-flex justify-content-center align-items-center">
-                                        <img class="shadow-sm img-fluid"
+                                        <img class="shadow-none img-fluid"
                                             src="{{ asset('storage/row/' . $brand->brandPage->rowSeven->image) }}"
                                             onerror="this.onerror=null;this.src='{{ asset('frontend/images/error-image.avif') }}';"
                                             alt="">
@@ -204,7 +204,7 @@
                             @if (!empty($brand->brandPage->rowEight->image))
                                 <div class="col-lg-6">
                                     <div class="d-flex justify-content-center align-items-center">
-                                        <img class="shadow-sm img-fluid"
+                                        <img class="shadow-none img-fluid"
                                             src="{{ asset('storage/row/' . $brand->brandPage->rowEight->image) }}"
                                             onerror="this.onerror=null;this.src='{{ asset('frontend/images/error-image.avif') }}';"
                                             alt="">

@@ -449,7 +449,7 @@
             <div class="row gx-5">
                 <!-- Card 1 -->
                 <div class="col-lg-3 ps-0">
-                    <div class="px-4 py-5 text-center shadow-lg"
+                    <div class="px-4 py-5 text-center shadow-sm"
                         style="border-bottom: 1px solid var(--primary-color); height: 350px;">
                         @if ($aboutPage->section_six_card_one_icon)
                             <i class="{{ $aboutPage->section_six_card_one_icon }} pe-2 main-color"></i>
@@ -460,7 +460,7 @@
                 </div>
                 <!-- Card 2 -->
                 <div class="col-lg-3 ps-0">
-                    <div class="px-4 py-5 text-center shadow-lg"
+                    <div class="px-4 py-5 text-center shadow-sm"
                         style="border-bottom: 1px solid var(--primary-color); height: 350px;">
                         @if ($aboutPage->section_six_card_two_icon)
                             <i class="{{ $aboutPage->section_six_card_two_icon }} pe-2 main-color"></i>
@@ -471,7 +471,7 @@
                 </div>
                 <!-- Card 3 -->
                 <div class="col-lg-3 ps-0">
-                    <div class="px-4 py-5 text-center shadow-lg"
+                    <div class="px-4 py-5 text-center shadow-sm"
                         style="border-bottom: 1px solid var(--primary-color); height: 350px;">
                         @if ($aboutPage->section_six_card_three_icon)
                             <i class="{{ $aboutPage->section_six_card_three_icon }} pe-2 main-color"></i>
@@ -483,7 +483,7 @@
                 </div>
                 <!-- Card 4 -->
                 <div class="col-lg-3 ps-0 pe-0">
-                    <div class="px-4 py-5 text-center shadow-lg"
+                    <div class="px-4 py-5 text-center shadow-sm"
                         style="border-bottom: 1px solid var(--primary-color); height: 350px;">
                         @if ($aboutPage->section_six_card_four_icon)
                             <i class="{{ $aboutPage->section_six_card_four_icon }} pe-2 main-color"></i>
