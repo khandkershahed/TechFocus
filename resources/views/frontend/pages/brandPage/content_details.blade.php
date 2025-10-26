@@ -66,7 +66,7 @@
                     <div class="card-header rounded-0 bg-white" style="border-top:5px solid #001430; border-bottom: 0;">
                         <div class="d-flex justify-content-center">
                             <img class="rounded-circle"
-                                src="{{ isset($newsTrend) && $newsTrend->source_image && file_exists(public_path('storage/content/' . $newsTrend->source_image))
+                                src="{{ !empty($newsTrend->source_image) && file_exists(public_path('storage/content/' . $newsTrend->source_image))
                                     ? asset('storage/content/' . $newsTrend->source_image)
                                     : asset('backend/images/no-image-available.png') }}"
                                 width="200" height="200" alt="{{ $newsTrend->title }}" />
@@ -80,7 +80,7 @@
                                 </h6>
                             @endif
 
-                            @if (isset($newsTrend) && $newsTrend->address)
+                            @if (!empty($newsTrend->address))
                                 <a href="{{ $newsTrend->source_link ?? '#' }}"
                                     class="border p-2 rounded-pill shadow-2 mt-2 d-inline-block">
                                     <i class="fa-solid fa-location-dot main-color"></i>
