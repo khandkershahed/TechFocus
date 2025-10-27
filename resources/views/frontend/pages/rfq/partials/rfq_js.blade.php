@@ -1,4 +1,4 @@
-<!-- jQuery -->
+{{-- <!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <!-- jQuery Validation -->
 <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
@@ -525,4 +525,66 @@ $(document).ready(function() {
         }
     }
 });
+</script> --}}
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- jQuery Validation -->
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+<!-- jQuery Repeater -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.repeater/1.2.1/jquery.repeater.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        // ALL YOUR MAIN RFQ LOGIC GOES HERE (steps, validation, etc.)
+        let currentStep = 1;
+        const totalSteps = 4;
+
+        // Custom validation rules
+        $.validator.addMethod(...);
+        
+        // Form validation setup
+        $("#stepperForm").validate(...);
+        
+        // Step functionality
+        function toggleNextButton() { ... }
+        function toggleCheckboxes() { ... }
+        function updateProgress() { ... }
+        
+        // Event handlers
+        $(".next-step").click(...);
+        $(".prev-step").click(...);
+        
+        // Checkbox functionality
+        function handleCheckboxVisibility() { ... }
+        $("#resellerCheckbox").on("change", ...);
+        
+        // Repeater functionality
+        $('.repeater').repeater({ ... });
+        updateSerials();
+        
+        // Field pairing logic
+        const shippingFieldPairs = [ ... ];
+        $('[name="is_contact_address"], .deliveryAddress').on('change', ...);
+        
+        const endUserFieldPairs = [ ... ];
+        $('[name="end_user_is_contact_address"], .endUser').on('change', ...);
+        
+        // Initial setup
+        handleCheckboxVisibility();
+        updateProgress();
+    });
+
+    // Standalone functions (outside document.ready)
+    function increment(button) { ... }
+    function decrement(button) { ... }
+    function updateSerials() { ... }
+    function deleteRFQFromServer(rowId, onSuccess) { ... }
+    function checkProductName() { ... }
+    
+    // Country placeholder logic
+    const selects = document.getElementsByClassName("countrySelect");
+    // ... country select code
+    
+    function toggleDiv() { ... }
 </script>

@@ -115,6 +115,9 @@
     <!-- *********************************Script Start***********************************-->
     @include('frontend.partials.script')
     <script src="https://swc.cdn.skype.com/sdk/v1/sdk.min.js"></script>
+    <!-- RFQ scripts load after jQuery -->
+        @yield('rfq-scripts')
+     @yield('scripts')
     
     <script>
         $(document).ready(function() {
@@ -159,7 +162,7 @@
             }
         };
     </script> -->
-    @yield('scripts')
+   
     <!-- *********************************Script End***********************************-->
 </body>
 

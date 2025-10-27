@@ -1291,148 +1291,414 @@
         </div>
     </div>
 </section>
-@include('frontend.pages.rfq.partials.rfq_js')
-{{-- <script>
-$(document).ready(function() {
 
-    // Initialize the repeater
+@endsection
+@section('rfq-scripts')
+<!-- RFQ Specific Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.repeater/1.2.1/jquery.repeater.min.js"></script>
+
+<script>
 $(document).ready(function() {
-  $('.repeater').repeater({
-    initEmpty: true,
-    show: function () {
-      $(this).slideDown();
-    },
-    hide: function (deleteElement) {
-      if(confirm('Delete?')) $(this).slideUp(deleteElement);
-    }
-  });
-});,
-        hide: function (deleteElement) {
-            if (confirm('Are you sure you want to remove this item?')) {
-                $(this).slideUp(deleteElement);
-                setTimeout(updateSerialNumbers, 300); // update after slide up
-            }
+    console.log('RFQ JavaScript loaded successfully');
+    
+    let currentStep = 1;
+    const totalSteps = 4;
+
+    // Custom validation rules
+    $.validator.addMethod(
+        "customEmail",
+        function(value, element) {
+            return (
+                this.optional(element) ||
+                /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value)
+            );
         },
-        ready: function () {
-            updateSerialNumbers();
+        "Please enter a valid email (e.g., user@gmail.com)"
+    );
+
+    $.validator.addMethod(
+        "customPhone",
+        function(value, element) {
+            const isValidPattern = /^\d{9,15}$/.test(value);
+            return this.optional(element) || isValidPattern;
+        },
+        "Please enter a valid phone number between 9 and 15 digits."
+    );
+
+    $.validator.addMethod(
+        "customZip",
+        function(value, element) {
+            return this.optional(element) || /^[0-9]{4,6}$/.test(value);
+        },
+        "Please enter a valid ZIP code with 4 to 6 digits"
+    );
+
+    $("#stepperForm").validate({
+        errorClass: "is-invalid",
+        validClass: "is-valid",
+        errorPlacement: function(error, element) {
+            error.addClass("text-danger");
+            error.insertAfter(element);
+        },
+        onkeyup: false,
+        onfocusout: function(element) {
+            $(element).valid();
+            toggleNextButton();
+            toggleCheckboxes();
+        },
+        onclick: false,
+    });
+
+    $('input[name="email"]').rules("add", { customEmail: true });
+    $('input[name="phone"]').rules("add", { customPhone: true });
+    $('input[name="zip_code"]').rules("add", { customZip: true });
+    $('input[name="shipping_email"]').rules("add", { customEmail: true });
+    $('input[name="shipping_phone"]').rules("add", { customPhone: true });
+    $('input[name="shipping_zip_code"]').rules("add", { customZip: true });
+
+    function toggleNextButton() {
+        const $currentStepContent = $(`.step-content[data-step="${currentStep}"]`);
+        const $requiredInputs = $currentStepContent
+            .find("input, select, textarea")
+            .filter("[required]");
+
+        let allValid = true;
+        if ($requiredInputs.length > 0) {
+            $requiredInputs.each(function() {
+                if (!$("#stepperForm").validate().element(this)) {
+                    allValid = false;
+                    return false;
+                }
+            });
+        }
+        $currentStepContent.find(".next-step").prop("disabled", !allValid);
+    }
+
+    function toggleCheckboxes() {
+        const $step1 = $('.step-content[data-step="1"]');
+        const $requiredInputs = $step1.find("input, select").filter("[required]");
+        let allValid = true;
+
+        $requiredInputs.each(function() {
+            const isValid = $("#stepperForm").validate().element(this);
+            if (!isValid) {
+                allValid = false;
+                return false;
+            }
+        });
+
+        $("#deliveryAddress, #endUser").prop("disabled", !allValid);
+    }
+
+    function updateProgress() {
+        $(".step").removeClass("active completed current-step-red");
+
+        $(".step").each(function(index) {
+            const stepNum = index + 1;
+            if (stepNum < currentStep) {
+                $(this).addClass("completed").find("i").show();
+            } else if (stepNum === currentStep) {
+                $(this).addClass("active current-step-red").find("i").hide();
+            } else {
+                $(this).removeClass("completed").find("i").hide();
+            }
+        });
+
+        $(".step-content").removeClass("active");
+        $(`.step-content[data-step="${currentStep}"]`).addClass("active");
+
+        toggleNextButton();
+        toggleCheckboxes();
+    }
+
+    $(document).on(
+        "input change",
+        ".step-content.active input, .step-content.active select, .step-content.active textarea",
+        function() {
+            toggleNextButton();
+            toggleCheckboxes();
+        }
+    );
+
+    $(".next-step").click(function() {
+        const $currentStepContent = $(`.step-content[data-step="${currentStep}"]`);
+        const $requiredInputs = $currentStepContent
+            .find("input, select, textarea")
+            .filter("[required]");
+
+        if ($requiredInputs.length === 0 || $requiredInputs.valid()) {
+            if (currentStep === 1) {
+                const deliveryAddress = $("#deliveryAddress").is(":checked");
+                const endUser = $("#endUser").is(":checked");
+
+                if (deliveryAddress && endUser) {
+                    currentStep = 4;
+                } else if (deliveryAddress) {
+                    currentStep = 3;
+                } else {
+                    currentStep = 2;
+                }
+            } else if (currentStep < totalSteps) {
+                currentStep++;
+            }
+            updateProgress();
+        } else {
+            $requiredInputs.valid();
         }
     });
 
-    // Update field names based on index
-    function updateFieldNames(item, index) {
-        const fields = [
-            'sl', 'product_name', 'product_id', 'qty', 
-            'sku_no', 'model_no', 'brand_name', 'additional_qty',
-            'additional_product_name', 'product_des', 'additional_info', 'image'
-        ];
-        
-        fields.forEach(field => {
-            const input = item.find(`[name="${field}"]`);
-            if (input.length) {
-                input.attr('name', `products[${index}][${field}]`);
+    $(".prev-step").click(function() {
+        if (currentStep > 1) {
+            currentStep--;
+            updateProgress();
+        }
+    });
+
+    let isSubmitting = false;
+    $("#stepperForm").on("submit", function(e) {
+        if (isSubmitting) {
+            e.preventDefault();
+            return;
+        }
+
+        if ($(this).valid()) {
+            isSubmitting = true;
+            $(this).find('button[type="submit"]').prop('disabled', true);
+            $(this).find('button[type="submit"]').html('Submitting...');
+        } else {
+            e.preventDefault();
+        }
+    });
+
+    function handleCheckboxVisibility() {
+        const $checkDefaultWrapper = $("#endUser").closest(".form-check");
+        if ($("#resellerCheckbox").is(":checked")) {
+            $checkDefaultWrapper.hide();
+            $("#endUser").prop("checked", false);
+        } else {
+            $checkDefaultWrapper.show();
+        }
+    }
+
+    $("#resellerCheckbox").on("change", function() {
+        handleCheckboxVisibility();
+        toggleNextButton();
+        toggleCheckboxes();
+    });
+
+    function setupStepTwoJumpCheckbox() {
+        $("#stepTwoGotoStep3").on("change", function() {
+            if ($(this).is(":checked") && currentStep === 2) {
+                currentStep = 3;
+                updateProgress();
             }
         });
     }
 
-    // Update serial numbers
-    function updateSerialNumbers() {
-        $('.repeater [data-repeater-item]').each(function(index) {
-            $(this).find('.sl-input').val(index + 1);
-            updateFieldNames($(this), index);
+    function setupStepTwoJumpCheckboxThree() {
+        $("#stepThreeGotoStep4").on("change", function() {
+            if ($(this).is(":checked") && currentStep === 3) {
+                currentStep = 4;
+                updateProgress();
+            }
         });
     }
 
-    // Initialize modal for a new item
-    function initializeModalForNewItem(item, index) {
-        const modalId = `productModal${index}`;
-        if ($(`#${modalId}`).length) return; // avoid duplicate modals
+    // Repeater functionality
+    $('.repeater').repeater({
+        show: function() {
+            const $row = $(this);
+            $row.slideDown('fast', function() {
+                updateSerials();
+            });
 
-        const modalHtml = `
-            <div class="modal fade" id="${modalId}" tabindex="-1" aria-labelledby="productModalLabel${index}" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-xl">
-                    <div class="modal-content rounded-0">
-                        <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="productModalLabel${index}">Product Information</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                        </div>
-                        <div class="p-5 modal-body">
-                            <div class="row gx-2">
-                                <div class="mb-3 col-lg-2">
-                                    <label>SKU / Part No.</label>
-                                    <input type="text" class="form-control modal-sku-no">
-                                </div>
-                                <div class="mb-3 col-lg-3">
-                                    <label>Model No.</label>
-                                    <input type="text" class="form-control modal-model-no">
-                                </div>
-                                <div class="mb-3 col-lg-4">
-                                    <label>Brand Name</label>
-                                    <input type="text" class="form-control modal-brand-name">
-                                </div>
-                                <div class="mb-3 col-lg-3">
-                                    <label>Quantity</label>
-                                    <input type="number" class="form-control modal-additional-qty">
-                                </div>
-                                <div class="mb-3 col-lg-12">
-                                    <label>Item Name</label>
-                                    <input type="text" class="form-control modal-additional-product-name">
-                                </div>
-                                <div class="mb-3 col-lg-6">
-                                    <label>Item Description</label>
-                                    <textarea class="form-control modal-product-des" rows="2"></textarea>
-                                </div>
-                                <div class="mb-3 col-lg-6">
-                                    <label>Additional Info</label>
-                                    <textarea class="form-control modal-additional-info" rows="2"></textarea>
-                                </div>
-                                <div class="mb-3 col-lg-12">
-                                    <label>Upload Product Datasheet / Images</label>
-                                    <input type="file" class="form-control modal-image">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary save-modal-data" data-modal-index="${index}">Save Changes</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
+            const $modal = $row.find('.modal');
+            if ($modal.length) {
+                const modalId = 'modal-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+                $modal.attr('id', modalId);
+                $modal.find('.modal-title').attr('id', modalId + 'Label');
 
-        $('body').append(modalHtml);
+                const $button = $row.find('[data-bs-toggle="modal"]');
+                $button.attr('data-bs-target', '#' + modalId);
+            }
+        },
+        hide: function(deleteElement) {
+            const $item = $(this);
+            const $list = $item.closest('[data-repeater-list]');
+            const itemCount = $list.find('[data-repeater-item]').length;
 
-        // Link modal button
-        item.find('.deal-modal-btn').attr('data-bs-target', `#${modalId}`);
-    }
-
-    // Handle saving modal data
-    $(document).on('click', '.save-modal-data', function() {
-        const modalIndex = $(this).data('modal-index');
-        const modal = $(`#productModal${modalIndex}`);
-
-        const skuNo = modal.find('.modal-sku-no').val();
-        const modelNo = modal.find('.modal-model-no').val();
-        const brandName = modal.find('.modal-brand-name').val();
-        const additionalQty = modal.find('.modal-additional-qty').val();
-        const additionalProductName = modal.find('.modal-additional-product-name').val();
-        const productDes = modal.find('.modal-product-des').val();
-        const additionalInfo = modal.find('.modal-additional-info').val();
-
-        // Update hidden inputs in main form
-        $(`input.hidden-sku-no[name="products[${modalIndex}][sku_no]"]`).val(skuNo);
-        $(`input.hidden-model-no[name="products[${modalIndex}][model_no]"]`).val(modelNo);
-        $(`input.hidden-brand-name[name="products[${modalIndex}][brand_name]"]`).val(brandName);
-        $(`input.hidden-additional-qty[name="products[${modalIndex}][additional_qty]"]`).val(additionalQty);
-        $(`input.hidden-additional-product-name[name="products[${modalIndex}][additional_product_name]"]`).val(additionalProductName);
-        $(`input.hidden-product-des[name="products[${modalIndex}][product_des]"]`).val(productDes);
-        $(`input.hidden-additional-info[name="products[${modalIndex}][additional_info]"]`).val(additionalInfo);
-
-        modal.modal('hide');
-        alert('Product information saved successfully!');
+            if (itemCount > 1) {
+                $item.slideUp('fast', function() {
+                    deleteElement();
+                    updateSerials();
+                });
+            } else {
+                alert('At least one item must remain.');
+            }
+        },
+        isFirstItemUndeletable: false
     });
 
-});
-</script> --}}
+    // Field pairing for shipping address
+    const shippingFieldPairs = [
+        ['shipping_name', 'name'],
+        ['shipping_email', 'email'],
+        ['shipping_phone', 'phone'],
+        ['shipping_company_name', 'company_name'],
+        ['shipping_designation', 'designation'],
+        ['shipping_address', 'address'],
+        ['shipping_country', 'country'],
+        ['shipping_city', 'city'],
+        ['shipping_zip_code', 'zip_code']
+    ];
 
+    $('[name="is_contact_address"], .deliveryAddress').on('change', function() {
+        const isChecked = $(this).is(':checked');
+        $('[name="is_contact_address"]').prop('checked', isChecked);
+        $('.deliveryAddress').prop('checked', isChecked);
+        shippingFieldPairs.forEach(([shippingName, contactName]) => {
+            const value = isChecked ? $(`[name="${contactName}"]`).val() : '';
+            $(`[name="${shippingName}"]`).val(value);
+        });
+    });
+
+    // Field pairing for end user
+    const endUserFieldPairs = [
+        ['end_user_name', 'name'],
+        ['end_user_email', 'email'],
+        ['end_user_phone', 'phone'],
+        ['end_user_company_name', 'company_name'],
+        ['end_user_designation', 'designation'],
+        ['end_user_address', 'address'],
+        ['end_user_country', 'country'],
+        ['end_user_city', 'city'],
+        ['end_user_zip_code', 'zip_code']
+    ];
+
+    $('[name="end_user_is_contact_address"], .endUser').on('change', function() {
+        const isChecked = $(this).is(':checked');
+        $('[name="end_user_is_contact_address"]').prop('checked', isChecked);
+        $('.endUser').prop('checked', isChecked);
+
+        endUserFieldPairs.forEach(([shippingName, contactName]) => {
+            const value = isChecked ? $(`[name="${contactName}"]`).val() : '';
+            $(`[name="${shippingName}"]`).val(value);
+        });
+    });
+
+    // Initial setup
+    handleCheckboxVisibility();
+    updateProgress();
+    setupStepTwoJumpCheckbox();
+    setupStepTwoJumpCheckboxThree();
+    updateSerials();
+});
+
+// Standalone functions
+function increment(button) {
+    const input = button.closest('.counting-btn').previousElementSibling;
+    let value = parseInt(input.value);
+    input.value = isNaN(value) || value < 1 ? 1 : value + 1;
+}
+
+function decrement(button) {
+    const input = button.closest('.counting-btn').previousElementSibling;
+    let value = parseInt(input.value);
+    if (isNaN(value) || value <= 1) {
+        input.value = 1;
+    } else {
+        input.value = value - 1;
+    }
+}
+
+function updateSerials() {
+    $('[data-repeater-list] [data-repeater-item]').each(function(i) {
+        $(this).find('.sl-input').val(i + 1);
+    });
+}
+
+function deleteRFQFromServer(rowId, onSuccess) {
+    var cartHeader = $('.miniRFQQTY');
+    var offcanvasRFQ = $('.offcanvasRFQ');
+
+    $.ajax({
+        type: 'GET',
+        url: "rfq-remove/" + rowId,
+        dataType: 'json',
+        success: function(data) {
+            cartHeader.empty();
+            if (data.cartHeader > 0) {
+                const label = data.cartHeader > 1 ? 'Item(s)' : 'Item';
+                cartHeader.append(`${data.cartHeader} ${label} Added`);
+            } else {
+                cartHeader.append('Ask Query');
+            }
+
+            offcanvasRFQ.html(data.html);
+
+            Swal.fire({
+                icon: 'info',
+                title: 'Successfully Removed from RFQ!',
+                showConfirmButton: false,
+                timer: 1500
+            });
+
+            if (typeof onSuccess === 'function') {
+                onSuccess();
+            }
+        },
+        error: function(xhr, status, error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Something happened. Try again.',
+                text: error,
+                showConfirmButton: true
+            });
+        }
+    });
+}
+
+// Country placeholder
+const selects = document.getElementsByClassName("countrySelect");
+for (let i = 0; i < selects.length; i++) {
+    const select = selects[i];
+    if (select.value === "") {
+        select.style.color = "#888888b2";
+    }
+    select.addEventListener("change", function() {
+        if (select.value === "") {
+            select.style.color = "#888888b2";
+        } else {
+            select.style.color = "#000";
+        }
+    });
+}
+
+function toggleDiv() {
+    const checkbox = document.getElementById("delivery");
+    const toggleContent = document.getElementById("toggle-content");
+    toggleContent.style.display = checkbox.checked ? "block" : "none";
+}
+
+// Product name validation for file upload
+const productInput = document.querySelector('[name="product_name"]');
+const fileInput = document.querySelector('.file-input');
+const warningText = document.querySelector('.warning-text');
+
+function checkProductName() {
+    if (productInput.value.trim() === "") {
+        fileInput.disabled = true;
+        warningText.style.display = "block";
+    } else {
+        fileInput.disabled = false;
+        warningText.style.display = "none";
+    }
+}
+
+if (productInput) {
+    productInput.addEventListener('input', checkProductName);
+    checkProductName();
+}
+</script>
 @endsection
