@@ -233,7 +233,7 @@ public function catalogDetails($slug)
             return redirect()->back();
         }
 
-        $products = $category->products()->get();
+       $products = $category->products;
 
         if ($products->isEmpty()) {
             Session::flash('warning', 'No Products Found for this Category');

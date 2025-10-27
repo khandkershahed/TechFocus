@@ -3,11 +3,11 @@
 namespace App\Models\Admin;
 
 use App\Traits\HasSlug;
-use App\Models\Admin\Product;
 use App\Models\Admin\CatalogCategory;
 use Wildside\Userstamps\Userstamps;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Admin\Product;
 
 class Category extends Model
 {
@@ -32,9 +32,10 @@ class Category extends Model
         return $this->parent ? $this->parent->name : null;
     }
 
-    public function products()
+    // ✅ JSON-based accessor for products
+    public function getProductsAttribute()
     {
-        return Product::whereJsonContains('category_id', json_encode($this->id));
+        return Product::whereJsonContains('category_id', $this->id)->get();
     }
 
     public function catalogs()
