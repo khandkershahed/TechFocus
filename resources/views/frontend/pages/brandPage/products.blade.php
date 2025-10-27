@@ -5,27 +5,21 @@
     @include('frontend.pages.brandPage.partials.page_header')
     <!-- content start -->
     <div class="container">
-
-        <div class="mt-5 mb-3 row">
-            <div class="col-lg-12">
-                <p class="">ALL {{ $brand->title }} PRODUCTS</p>
-            </div>
-        </div>
-        {{-- <div class="row">
-            <div class="col-lg-12">
+        <div class="row">
+            <div class="px-0 col-lg-12">
                 <div class="devider-wrap">
                     <h4 class="devider-content">
-                        <span class="devider-text">6-AXIS ROBOTIC ARMS</span>
+                        <span class="devider-text">ALL {{ $brand->title }} PRODUCTS</span>
                     </h4>
                 </div>
             </div>
-        </div> --}}
+        </div>
         <div class="mb-5 row">
             @foreach ($brand->products as $product)
-                <div class="mb-4 col-lg-3">
-                    <div class="card projects-card rounded-0">
-                        <div>
-                            <p class="video-tag">New</p>
+                <div class="mb-3 col-lg-3 ps-0">
+                    <div class="overflow-hidden card projects-card rounded-0">
+                        <div class="badge-new">
+                            <span class="">New</span>
                         </div>
                         <a href="{{ route('product.details', ['id' => $product->brand->slug, 'slug' => $product->slug]) }}">
                             <img src="{{ $product->thumbnail }}" class="p-card-img-top img-fluid rounded-0"
@@ -68,7 +62,7 @@
                 <div class="p-0 col">
                     <div class="border-0 shadow-sm card rounded-0">
                         <div class="card-header rounded-0">
-                            <h4 class="pt-2 text-center">Related Searches</h4>
+                            <h4 class="pt-2 text-center">Related Brands</h4>
                         </div>
                         <div class="card-body">
                             <div class="row">
