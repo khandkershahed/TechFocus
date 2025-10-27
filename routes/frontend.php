@@ -88,7 +88,7 @@ Route::get('/rfq/create', [RfqController::class, 'create'])->name('rfq.create');
 // routes/web.php
 
 // Handle RFQ submission - KEEP ONLY THIS ONE
-Route::post('/rfq/store', [App\Http\Controllers\Rfq\RfqController::class, 'store'])->name('rfq.store');
+Route::post('/rfq/store', [RfqController::class, 'store'])->name('rfq.store');
 
  Route::get('/test-email', [RfqController::class, 'testEmail'])->name('rfq.test-email');
  Route::get('/test-validation', [RfqController::class, 'testValidation'])->name('rfq.test-validation');
@@ -234,3 +234,8 @@ Route::get('/faq/category/{slug}', [SiteController::class, 'faqByCategory'])->na
 Route::get('/faq/{slug}', [SiteController::class, 'faqByCategory'])->name('faq.by.category');
 
 Route::get('/brand/{slug}/details', [BrandController::class, 'contentDetails'])->name('brand.contentDetails');
+// web.php
+Route::get('/brand/{slug}', [BrandController::class, 'show'])->name('brand.details');
+
+//search brand 
+Route::get('/search-brands', [SiteController::class, 'searchBrands'])->name('search.brands');

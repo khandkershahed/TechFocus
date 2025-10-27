@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use Log;
 use App\Models\PageBanner;
 use App\Models\Admin\Brand;
 use Illuminate\Http\Request;
@@ -14,6 +15,7 @@ use App\Models\Admin\AboutPage;
 use App\Models\Admin\NewsTrend;
 use App\Models\Admin\TechGlossy;
 use App\Models\Admin\ClientStory;
+use Faker\Provider\de_DE\Company;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\SolutionDetail;
 use App\Models\Admin\SubSubCategory;
@@ -367,52 +369,137 @@ public function catalogDetails($slug)
     /**
      * Search functions remain unchanged
      */
-    public function globalSearch(Request $request)
-    {
-        try {
-            $query = $request->get('term', '');
+    // public function globalSearch(Request $request)
+    // {
+    //     try {
+    //         $query = $request->get('term', '');
 
-            $data['products'] = Product::join('brands', 'products.brand_id', '=', 'brands.id')
-                ->where('products.name', 'LIKE', '%' . $query . '%')
-                ->where('products.product_status', 'product')
-                ->where('brands.status', 'active')
-                ->limit(10)
-                ->get(['products.id', 'products.name', 'products.slug', 'products.thumbnail', 'products.price', 'products.discount', 'products.sku_code', 'products.rfq', 'products.qty', 'products.stock']);
+    //         $data['products'] = Product::join('brands', 'products.brand_id', '=', 'brands.id')
+    //             ->where('products.name', 'LIKE', '%' . $query . '%')
+    //             ->where('products.product_status', 'product')
+    //             ->where('brands.status', 'active')
+    //             ->limit(10)
+    //             ->get(['products.id', 'products.name', 'products.slug', 'products.thumbnail', 'products.price', 'products.discount', 'products.sku_code', 'products.rfq', 'products.qty', 'products.stock']);
 
-            $data['solutions'] = SolutionDetail::where('name', 'LIKE', '%' . $query . '%')->limit(5)->get(['id', 'name', 'slug']);
-            $data['industries'] = Industry::where('name', 'LIKE', '%' . $query . '%')->limit(5)->get(['id', 'name', 'slug']);
-            $data['blogs'] = NewsTrend::where('title', 'LIKE', '%' . $query . '%')->limit(5)->get(['id', 'title']);
-            $data['categorys'] = Category::where('title', 'LIKE', '%' . $query . '%')->limit(2)->get(['id', 'title', 'slug']);
-            $data['subcategorys'] = Category::where('title', 'LIKE', '%' . $query . '%')->limit(2)->get(['id', 'title', 'slug']);
-            $data['subsubcategorys'] = SubSubCategory::where('title', 'LIKE', '%' . $query . '%')->limit(1)->get(['id', 'title', 'slug']);
-            $data['brands'] = Brand::where('title', 'LIKE', '%' . $query . '%')->where('status', 'active')->limit(5)->get(['id', 'title', 'slug']);
-            $data['storys'] = ClientStory::where('title', 'LIKE', '%' . $query . '%')->limit(5)->get(['id', 'title', 'slug']);
-            $data['tech_glossys'] = TechGlossy::where('title', 'LIKE', '%' . $query . '%')->limit(5)->get(['id', 'title']);
+    //         $data['solutions'] = SolutionDetail::where('name', 'LIKE', '%' . $query . '%')->limit(5)->get(['id', 'name', 'slug']);
+    //         $data['industries'] = Industry::where('name', 'LIKE', '%' . $query . '%')->limit(5)->get(['id', 'name', 'slug']);
+    //         $data['blogs'] = NewsTrend::where('title', 'LIKE', '%' . $query . '%')->limit(5)->get(['id', 'title']);
+    //         $data['categorys'] = Category::where('title', 'LIKE', '%' . $query . '%')->limit(2)->get(['id', 'title', 'slug']);
+    //         $data['subcategorys'] = Category::where('title', 'LIKE', '%' . $query . '%')->limit(2)->get(['id', 'title', 'slug']);
+    //         $data['subsubcategorys'] = SubSubCategory::where('title', 'LIKE', '%' . $query . '%')->limit(1)->get(['id', 'title', 'slug']);
+    //         $data['brands'] = Brand::where('title', 'LIKE', '%' . $query . '%')->where('status', 'active')->limit(5)->get(['id', 'title', 'slug']);
+    //         $data['storys'] = ClientStory::where('title', 'LIKE', '%' . $query . '%')->limit(5)->get(['id', 'title', 'slug']);
+    //         $data['tech_glossys'] = TechGlossy::where('title', 'LIKE', '%' . $query . '%')->limit(5)->get(['id', 'title']);
 
-            return response()->json(view('frontend.partials.search', $data)->render());
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Global search error: ' . $e->getMessage()], 500);
-        }
-    }
+    //         return response()->json(view('frontend.partials.search', $data)->render());
+    //     } catch (\Exception $e) {
+    //         return response()->json(['error' => 'Global search error: ' . $e->getMessage()], 500);
+    //     }
+    // }
+public function globalSearch(Request $request)
+{
+    try {
+        $query = $request->get('term', '');
 
-    public function ProductSearch(Request $request)
-    {
-        $searchTerm = $request->input('q');
-
+        // Fetch products with brand
         $products = Product::with('brand')
-            ->where('name', 'LIKE', '%' . $searchTerm . '%')
-            ->where('status', 'active')
-            ->paginate(12);
+            ->where('name', 'LIKE', '%' . $query . '%')
+            ->where('product_status', 'product')
+            ->limit(20) // You can paginate if needed
+            ->get();
 
-        $categories = Category::with('children.children.children.children.children.children.children.children.children.children')
-            ->where('is_parent', '1')
-            ->get(['id', 'parent_id', 'name', 'slug']);
+        // Collect category IDs from products (assuming category_id is array/json)
+        $allCategoryIds = [];
+        foreach ($products as $product) {
+            if (is_array($product->category_id)) {
+                $allCategoryIds = array_merge($allCategoryIds, $product->category_id);
+            } elseif (is_string($product->category_id)) {
+                $decoded = json_decode($product->category_id, true);
+                if (is_array($decoded)) {
+                    $allCategoryIds = array_merge($allCategoryIds, $decoded);
+                }
+            }
+        }
+        $allCategoryIds = array_unique($allCategoryIds);
 
-        $solutions = SolutionDetail::latest()->limit(4)->get();
+        // Get only relevant categories
+        $categories = Category::whereIn('id', $allCategoryIds)->get();
+
+        $solutions = SolutionDetail::where('name', 'LIKE', '%' . $query . '%')->limit(5)->get();
         $news_trends = NewsTrend::where('type', 'trends')->limit(4)->get();
 
-        return view('frontend.pages.search.index', compact('products', 'searchTerm', 'categories', 'solutions', 'news_trends'));
+        // Pass all data to Blade
+        return view('frontend.pages.search.index', compact(
+            'products',
+            'query',       // optional, for search term
+            'categories',
+            'solutions',
+            'news_trends'
+        ));
+
+    } catch (\Exception $e) {
+        // Handle error
+        return redirect()->back()->with('error', 'Search error: ' . $e->getMessage());
     }
+}
+
+public function ProductSearch(Request $request)
+{
+    $searchTerm = $request->input('q');
+
+    // Get products with brand and solutions
+    $products = Product::with(['brand', 'solutions'])
+        ->where('name', 'LIKE', '%' . $searchTerm . '%')
+        ->where('status', 'active')
+        ->paginate(12);
+
+    // -------------------------
+    // Collect dynamic categories
+    // -------------------------
+    $allCategoryIds = [];
+    foreach ($products as $product) {
+        if (is_array($product->category_id)) {
+            $allCategoryIds = array_merge($allCategoryIds, $product->category_id);
+        } elseif (is_string($product->category_id)) {
+            $decoded = json_decode($product->category_id, true);
+            if (is_array($decoded)) {
+                $allCategoryIds = array_merge($allCategoryIds, $decoded);
+            }
+        }
+    }
+    $categories = Category::whereIn('id', array_unique($allCategoryIds))
+        ->get(['id', 'name', 'slug']);
+
+    // -------------------------
+    // Collect dynamic solutions
+    // -------------------------
+    $solutions = collect();
+    foreach ($products as $product) {
+        $solutions = $solutions->merge($product->solutions);
+    }
+    $solutions = $solutions->unique('id');
+
+    // -------------------------
+    // Collect dynamic news & trends by product IDs
+    // -------------------------
+    $productIds = $products->pluck('id')->toArray();
+    $news_trends = NewsTrend::where('type', 'trends')
+        ->whereIn('product_id', $productIds) // assuming NewsTrend has product_id column
+        ->get();
+
+    // -------------------------
+    // Return to search view
+    // -------------------------
+    return view('frontend.pages.search.index', compact(
+        'products',
+        'searchTerm',
+        'categories',
+        'solutions',
+        'news_trends'
+    ));
+}
+
+
 
     public function show($slug)
     {
@@ -429,16 +516,16 @@ public function catalogDetails($slug)
         return view('frontend.pages.product.show', compact('product', 'categories', 'solutions', 'news_trends'));
     }
 
-    public function newsDetails($slug)
-    {
-        $news = NewsTrend::where('slug', $slug)->firstOrFail();
+    // public function newsDetails($slug)
+    // {
+    //     $news = NewsTrend::where('slug', $slug)->firstOrFail();
 
-        $categories = Category::with('children')->where('is_parent', 1)->get();
-        $solutions = SolutionDetail::latest()->limit(4)->get();
-        $news_trends = NewsTrend::where('type', 'trends')->limit(4)->get();
+    //     $categories = Category::with('children')->where('is_parent', 1)->get();
+    //     $solutions = SolutionDetail::latest()->limit(4)->get();
+    //     $news_trends = NewsTrend::where('type', 'trends')->limit(4)->get();
 
-        return view('frontend.pages.news.details', compact('news', 'categories', 'solutions', 'news_trends'));
-    }
+    //     return view('frontend.pages.news.details', compact('news', 'categories', 'solutions', 'news_trends'));
+    // }
     
     //faqsearch
     public function faqSearch(Request $request)
@@ -469,5 +556,51 @@ public function faqByCategory($slug)
         return view('frontend.pages.others.faq', compact('category', 'faqs', 'categories'));
     }
 
+//addign search option brand 
+public function searchBrands(Request $request)
+{
+    \Log::info('=== SEARCH BRANDS CALLED ===');
+    \Log::info('Request URL: ' . $request->fullUrl());
+    \Log::info('All request data: ', $request->all());
+    \Log::info('Search parameter: "' . $request->input('search') . '"');
+    
+    $search = $request->input('search', '');
+    
+    \Log::info('Processing search for: "' . $search . '"');
+
+    try {
+        // If search is empty, return all brands
+        if (empty($search)) {
+            \Log::info('Loading ALL brands');
+            $top_brands = Brand::byCategory('Top')->latest()->paginate(18, ['*'], 'top_page');
+            $featured_brands = Brand::byCategory('Featured')->latest()->paginate(18, ['*'], 'featured_page');
+        } else {
+            \Log::info('Searching brands with term: "' . $search . '"');
+            $top_brands = Brand::where('title', 'like', "%{$search}%")
+                ->byCategory('Top')
+                ->latest()
+                ->paginate(18, ['*'], 'top_page');
+                
+            $featured_brands = Brand::where('title', 'like', "%{$search}%")
+                ->byCategory('Featured')
+                ->latest()
+                ->paginate(18, ['*'], 'featured_page');
+        }
+
+        \Log::info('Search completed:');
+        \Log::info('- Top brands found: ' . $top_brands->count());
+        \Log::info('- Featured brands found: ' . $featured_brands->count());
+
+        // Return the partial view
+        return view('frontend.pages.brand.partials.brand_list_content', compact('top_brands', 'featured_brands'));
+
+    } catch (\Exception $e) {
+        \Log::error('Search brands error: ' . $e->getMessage());
+        \Log::error('Stack trace: ' . $e->getTraceAsString());
+        
+        // Return error response
+        return response('<div class="alert alert-danger text-center">Error: ' . $e->getMessage() . '</div>');
+    }
+}
 
 }

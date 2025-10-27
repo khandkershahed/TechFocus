@@ -271,7 +271,15 @@ class NewsTrendController extends Controller
         $this->newsTrendRepository->destroyNewsTrend($id);
     }
 
+public function contentDetails($id)
+{
+    $newsTrend = NewsTrend::findOrFail($id);
 
+    // Get the first brand associated
+    $brand = $newsTrend->firstBrand();
+
+    return view('frontend.pages.brandPage.content_details', compact('newsTrend', 'brand'));
+}
 
 
 }
