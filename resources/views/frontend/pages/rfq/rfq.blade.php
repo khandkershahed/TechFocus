@@ -53,7 +53,7 @@
         <div class="col-lg-3">
             <div class="d-flex flex-column align-items-center">
                 <img class="mb-2 rfq-img rounded-circle"
-                    src="{{ 'https://img.directindustry.com/media/ps/images/common/rfq/ao-step-0' . ($i+1) . '.svg' }}"
+                    src="{{ asset('frontend/images/rfq-' . ($i+1) . '.svg') }}"
                     alt="No Image" style="width: 120px;">
                 <p class="text-center font-three">{{ $step }}</p>
             </div>

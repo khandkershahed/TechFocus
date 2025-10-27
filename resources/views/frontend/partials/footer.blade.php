@@ -59,17 +59,16 @@
             <div class="col-lg-8 offset-lg-2 d-flex">
                 @php
                 $brandLogos = [
-                'https://www.ngensoftware.com/storage/companyclient/logo/uUJbFPaf5J1759561216.png',
+                'https://ngenitltd.com/storage/LHhL5VKR2aoXEl2umO4UyKqj95qkKzvIPgZNfRNh.png',
                 'https://www.ngensoftware.com/storage/page-banner/logo/pINXJQPNZ11759560908.png',
                 'https://www.ngensoftware.com/storage/page-banner/logo/8KEBk4kOj51759572777.png',
-                'https://www.ngensoftware.com/storage/companyclient/logo/lPh0SvPTP91759561444.png',
                 'https://www.ngensoftware.com/storage/page-banner/logo/mr48RIhQIJ1759560955.png',
                 ];
                 @endphp
                 <div class="d-flex justify-content-center align-items-center">
                     <a href="{{ route('homepage') }}" class="border-left-side pe-lg-3">
                         <img src="{{ !empty($site->system_logo_white) && file_exists(public_path('storage/webSetting/systemLogoWhite/' . $site->system_logo_white)) ? asset('storage/webSetting/systemLogoWhite/' . $site->system_logo_white) : asset('backend/images/no-image-available.png') }}"
-                            width="350px" class="me-3" alt="" />
+                            style="width: 500px;" class="me-3" alt="" />
                     </a>
                     @foreach($brandLogos as $logo)
                     <a href="#" class="mb-3 me-4">
