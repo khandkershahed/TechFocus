@@ -234,3 +234,8 @@ Route::get('/faq/category/{slug}', [SiteController::class, 'faqByCategory'])->na
 Route::get('/faq/{slug}', [SiteController::class, 'faqByCategory'])->name('faq.by.category');
 
 Route::get('/brand/{slug}/details', [BrandController::class, 'contentDetails'])->name('brand.contentDetails');
+// web.php
+Route::get('/brand/{slug}', [BrandController::class, 'show'])->name('brand.details');
+
+//search brand 
+Route::get('/search-brands', [SiteController::class, 'searchBrands'])->name('search.brands');

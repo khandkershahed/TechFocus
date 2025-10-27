@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Session;
 use App\Repositories\Interfaces\BrandRepositoryInterface;
+use Illuminate\Http\Request;
 
 class BrandController extends Controller
 {
@@ -218,5 +219,6 @@ public function contentDetails($id)
     // Pass both to the view
     return view('frontend.pages.brandPage.content_details', compact('newsTrend', 'brand'));
 }
+
 
 }

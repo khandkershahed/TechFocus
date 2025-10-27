@@ -22,7 +22,15 @@
     <div class="container my-4">
         <div class="row mb-4">
             <div class="col-lg-12">
-                <input type="text" id="productSearch" class="form-control" placeholder="Search products...">
+                <div class="input-group">
+                    <input type="text" id="productSearch" class="form-control" placeholder="Search brands..." aria-label="Search brands">
+                    <button class="btn btn-primary" type="button" id="searchButton">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                    <button class="btn btn-outline-secondary" type="button" id="clearSearch">
+                        <i class="fas fa-times"></i> Clear
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -111,20 +119,86 @@
 @endsection
 
 @section('scripts')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
-        $('#productSearch').on('keyup', function() {
-            let query = $(this).val();
+        console.log('✅ Document ready - search script loaded');
+
+        // Function to perform search
+        function performSearch(query = null) {
+            let searchQuery = query !== null ? query : $('#productSearch').val();
+            console.log('🔎 Performing search for:', searchQuery);
+
+            // Show loading indicator
+            $('#brandsContainer').html('<div class="text-center py-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div><p class="mt-2">Searching brands...</p></div>');
+
+            // Use URL parameters instead of data object
+            let url = "{{ route('search.brands') }}";
+            if (searchQuery) {
+                url += '?search=' + encodeURIComponent(searchQuery);
+            }
+
+            console.log('🌐 Making request to:', url);
 
             $.ajax({
-                url: "{{ route('search.products') }}",
+                url: url,
                 type: "GET",
-                data: { search: query },
+                dataType: 'html',
                 success: function(data) {
-                    $('#brandsContainer').html(data); // update brands container with results
+                    console.log('✅ Search successful, data received');
+                    $('#brandsContainer').html(data);
+                },
+                error: function(xhr, status, error) {
+                    console.error('❌ Search error:', error);
+                    console.log('📊 XHR status:', xhr.status);
+                    console.log('📊 XHR response:', xhr.responseText);
+                    $('#brandsContainer').html('<div class="alert alert-danger text-center">Error searching brands. Please try again.</div>');
                 }
             });
+        }
+
+        // Search on button click
+        $('#searchButton').on('click', function() {
+            console.log('🖱️ Search button clicked');
+            performSearch();
+        });
+
+        // Clear search
+        $('#clearSearch').on('click', function() {
+            console.log('🖱️ Clear button clicked');
+            $('#productSearch').val('');
+            performSearch(''); // Pass empty string explicitly
+        });
+
+        // Search on Enter key press
+        $('#productSearch').on('keyup', function(e) {
+            if (e.key === 'Enter') {
+                console.log('⌨️ Enter key pressed');
+                performSearch();
+            }
+        });
+
+        // Optional: Auto-search with delay (remove if not needed)
+        let searchTimeout;
+        $('#productSearch').on('keyup', function() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(function() {
+                performSearch();
+            }, 800); // 800ms delay
         });
     });
 </script>
+
+<style>
+    .input-group .btn {
+        border-radius: 0 0.375rem 0.375rem 0;
+    }
+    .input-group .btn:not(:last-child) {
+        border-radius: 0;
+    }
+    .input-group .form-control {
+        border-radius: 0.375rem 0 0 0.375rem;
+    }
+</style>
+
 @endsection
