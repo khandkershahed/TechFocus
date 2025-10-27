@@ -6,17 +6,17 @@
 @section('content')
 <div class="container-fluid">
     <!-- Hero / Banner Section -->
-    <div class="row breadcrumb-banner-area p-5 text-white text-center"
+    <div class="p-5 text-center text-white row breadcrumb-banner-area"
          style="background: url('https://virtual-expo.my.site.com/Visitors/s/sfsites/c/file-asset/Background1?v=1') center/cover no-repeat;">
         <div class="col-lg-12">
-            <h1 class="display-5 fw-bold font-poppins text-uppercase my-4">
+            <h1 class="my-4 display-5 fw-bold font-poppins text-uppercase">
                 Welcome to the VirtualExpo <br> Knowledge Base
             </h1>
-            <div class="col-lg-6 mx-auto">
+            <div class="mx-auto col-lg-6">
                 <form method="GET" action="{{ route('faq.search') }}">
-                    <div class="input-group shadow-sm rounded-pill overflow-hidden">
-                        <input type="text" class="form-control border-0 px-4" placeholder="Search FAQ..." name="q" value="{{ request('q', $searchQuery ?? '') }}">
-                        <button type="submit" class="btn btn-primary px-4 rounded-0">
+                    <div class="overflow-hidden shadow-sm input-group rounded-pill">
+                        <input type="text" class="px-4 border-0 form-control" placeholder="Search FAQ..." name="q" value="{{ request('q', $searchQuery ?? '') }}">
+                        <button type="submit" class="px-4 btn btn-primary rounded-0">
                             <i class="fa fa-search"></i>
                         </button>
                     </div>
@@ -30,9 +30,9 @@
     <div class="row g-4">
         <!-- FAQ List -->
         <div class="col-lg-8 col-sm-12">
-            <div class="accordion shadow-sm" id="faqAccordion">
+            <div class="shadow-sm accordion" id="faqAccordion">
                 @forelse($faqs as $faq)
-                    <div class="accordion-item mb-3 border rounded-3">
+                    <div class="mb-3 border accordion-item rounded-3">
                         <h2 class="accordion-header" id="heading{{ $faq->id }}">
                             <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse{{ $faq->id }}" aria-expanded="false"
@@ -57,11 +57,11 @@
 
         <!-- FAQ Categories Sidebar -->
         <div class="col-lg-4 col-sm-12">
-            <div class="bg-white p-4 rounded-3 shadow-sm">
-                <h5 class="fw-bold font-poppins mb-3">FAQ Categories</h5>
+            <div class="p-4 bg-white shadow-sm rounded-3">
+                <h5 class="mb-3 fw-bold font-poppins">FAQ Categories</h5>
                 <ul class="list-group list-group-flush">
                     @foreach($categories as $cat)
-                        <li class="list-group-item d-flex justify-content-between align-items-center hover-shadow rounded-2 mb-2">
+                        <li class="mb-2 list-group-item d-flex justify-content-between align-items-center hover-shadow rounded-2">
                             <a href="{{ route('faq.category', $cat->slug) }}"
                                class="text-decoration-none {{ (isset($category) && $category->id == $cat->id) ? 'fw-bold text-primary' : '' }}">
                                 {{ $cat->name }}
@@ -71,7 +71,7 @@
                     @endforeach
                 </ul>
 
-                <a href="#" class="btn btn-primary w-100 mt-4">Contact Support</a>
+                <a href="{{ route('contact',) }}" class="mt-4 btn btn-primary w-100">Contact Support</a>
             </div>
         </div>
     </div>
