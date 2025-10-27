@@ -32,6 +32,7 @@ interface DynamicCategoryRepositoryInterface
      * @return mixed
      */
     public function findDynamicCategory(int $id);
+    public function getBySlug(string $slug);
 
     /**
      * Update a dynamic category by its ID

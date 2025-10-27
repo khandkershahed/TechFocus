@@ -60,4 +60,10 @@ class DynamicCategoryRepository implements DynamicCategoryRepositoryInterface
     {
         return DynamicCategory::destroy($id);
     }
+
+    public function getBySlug(string $slug)
+{
+    return DynamicCategory::where('slug', $slug)->first();
+}
+
 }

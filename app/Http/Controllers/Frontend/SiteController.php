@@ -292,13 +292,13 @@ public function catalogDetails($slug)
         $this->dynamicCategoryRepository = $dynamicCategoryRepository;
     }
 
-    public function faq()
-    {
-        return view('frontend.pages.others.faq', [
-            'faqs' => $this->faqRepository->allFaq(), // All FAQs
-            'categories' => $this->dynamicCategoryRepository->allDynamicActiveCategory('faqs'),
-        ]);
-    }
+    // public function faq()
+    // {
+    //     return view('frontend.pages.others.faq', [
+    //         'faqs' => $this->faqRepository->allFaq(), // All FAQs
+    //         'categories' => $this->dynamicCategoryRepository->allDynamicActiveCategory('faqs'),
+    //     ]);
+    // }
 
     public function terms()
     {
@@ -528,33 +528,33 @@ public function ProductSearch(Request $request)
     // }
     
     //faqsearch
-    public function faqSearch(Request $request)
-{
-    $query = $request->get('q');
+//     public function faqSearch(Request $request)
+// {
+//     $query = $request->get('q');
 
-    $faqs = $this->faqRepository->searchFaq($query); // we'll define this in the repo
-    $categories = $this->dynamicCategoryRepository->allDynamicActiveCategory('faqs');
+//     $faqs = $this->faqRepository->searchFaq($query); // we'll define this in the repo
+//     $categories = $this->dynamicCategoryRepository->allDynamicActiveCategory('faqs');
 
-    return view('frontend.pages.others.faq', [
-        'faqs' => $faqs,
-        'categories' => $categories,
-        'searchQuery' => $query,
-    ]);
-} 
+//     return view('frontend.pages.others.faq', [
+//         'faqs' => $faqs,
+//         'categories' => $categories,
+//         'searchQuery' => $query,
+//     ]);
+// } 
 
-public function faqByCategory($slug)
-    {
-        // load requested category or 404
-        $category = DynamicCategory::where('slug', $slug)->firstOrFail();
+// public function faqByCategory($slug)
+//     {
+//         // load requested category or 404
+//         $category = DynamicCategory::where('slug', $slug)->firstOrFail();
 
-        // published faqs for this category
-        $faqs = $category->faqs()->where('is_published', true)->orderBy('order')->get();
+//         // published faqs for this category
+//         $faqs = $category->faqs()->where('is_published', true)->orderBy('order')->get();
 
-        // load categories for sidebar
-        $categories = DynamicCategory::orderBy('name')->get();
+//         // load categories for sidebar
+//         $categories = DynamicCategory::orderBy('name')->get();
 
-        return view('frontend.pages.others.faq', compact('category', 'faqs', 'categories'));
-    }
+//         return view('frontend.pages.others.faq', compact('category', 'faqs', 'categories'));
+//     }
 
 //addign search option brand 
 public function searchBrands(Request $request)
@@ -602,5 +602,46 @@ public function searchBrands(Request $request)
         return response('<div class="alert alert-danger text-center">Error: ' . $e->getMessage() . '</div>');
     }
 }
+
+
+
+
+// All FAQs
+public function faq()
+{
+    return view('frontend.pages.others.faq', [
+        'faqs' => $this->faqRepository->allFaq(),
+        'categories' => $this->dynamicCategoryRepository->allDynamicActiveCategory('faqs'),
+    ]);
+}
+
+// Search FAQs
+public function faqSearch(Request $request)
+{
+    $query = $request->get('q');
+
+    $faqs = $this->faqRepository->searchFaq($query); // Make sure this searches question & answer
+    $categories = $this->dynamicCategoryRepository->allDynamicActiveCategory('faqs');
+
+    return view('frontend.pages.others.faq', [
+        'faqs' => $faqs,
+        'categories' => $categories,
+        'searchQuery' => $query,
+    ]);
+}
+
+// Filter by category
+public function faqByCategory($slug)
+{
+    $category = \App\Models\Admin\DynamicCategory::where('slug', $slug)->firstOrFail();
+
+    // now faqs() relationship works
+    $faqs = $category->faqs()->orderBy('order')->get();
+
+    $categories = $this->dynamicCategoryRepository->allDynamicActiveCategory('faqs');
+
+    return view('frontend.pages.others.faq', compact('category', 'faqs', 'categories'));
+}
+
 
 }

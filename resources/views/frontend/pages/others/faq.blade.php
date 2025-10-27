@@ -15,7 +15,7 @@
             <div class="col-lg-6 mx-auto">
                 <form method="GET" action="{{ route('faq.search') }}">
                     <div class="input-group shadow-sm rounded-pill overflow-hidden">
-                        <input type="text" class="form-control border-0 px-4" placeholder="Search FAQ..." name="q" value="{{ request('q') }}">
+                        <input type="text" class="form-control border-0 px-4" placeholder="Search FAQ..." name="q" value="{{ request('q', $searchQuery ?? '') }}">
                         <button type="submit" class="btn btn-primary px-4 rounded-0">
                             <i class="fa fa-search"></i>
                         </button>
@@ -60,12 +60,13 @@
             <div class="bg-white p-4 rounded-3 shadow-sm">
                 <h5 class="fw-bold font-poppins mb-3">FAQ Categories</h5>
                 <ul class="list-group list-group-flush">
-                    @foreach($categories as $category)
+                    @foreach($categories as $cat)
                         <li class="list-group-item d-flex justify-content-between align-items-center hover-shadow rounded-2 mb-2">
-                            <a href="{{ route('faq.category', $category->slug) }}" class="text-decoration-none">
-                                {{ $category->name }}
+                            <a href="{{ route('faq.category', $cat->slug) }}"
+                               class="text-decoration-none {{ (isset($category) && $category->id == $cat->id) ? 'fw-bold text-primary' : '' }}">
+                                {{ $cat->name }}
                             </a>
-                            <span class="badge bg-primary rounded-pill">{{ $category->faqs->count() }}</span>
+                            <span class="badge bg-primary rounded-pill">{{ $cat->faqs->count() }}</span>
                         </li>
                     @endforeach
                 </ul>
@@ -76,7 +77,6 @@
     </div>
 </div>
 
-<!-- Custom Styles -->
 @push('styles')
 <style>
     .hover-shadow:hover {
