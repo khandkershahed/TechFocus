@@ -8,7 +8,7 @@
     <div class="container">
         <!-- Product Details -->
         <div class="row align-items-center">
-            <div class="col-lg-12 col-sm-12">
+            <div class="px-0 col-lg-12 col-sm-12">
                 <div class="p-5 border-0 card rounded-0">
                     <div class="row">
                         <div class="col-lg-6 col-sm-12">
@@ -156,7 +156,7 @@
         <!-- Product Specification & Overview -->
         <div class="mt-5 mb-5 row">
             @if (!empty($product->specification))
-                <div class="{{ !empty($product->overview) ? 'col-lg-6' : 'col-lg-12' }}">
+                <div class="{{ !empty($product->overview) ? 'col-lg-6' : 'col-lg-12' }} ps-0">
                     <div class="text-justify bg-white shadow-sm" style="font-size: 16px">
                         <h2 class="description-title">Specification</h2>
                         <div class="specification-areas-brand">
@@ -168,7 +168,7 @@
                 </div>
             @endif
             @if (!empty($product->overview))
-                <div class="{{ !empty($product->specification) ? 'col-lg-6' : 'col-lg-12' }}">
+                <div class="{{ !empty($product->specification) ? 'col-lg-6' : 'col-lg-12' }} pe-0">
                     <div class="text-justify bg-white shadow-sm" style="font-size: 16px; line-height: 1.5">
                         <h2 class="description-title">Description</h2>
                         <div class="specification-areas-brand">
