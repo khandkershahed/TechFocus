@@ -57,7 +57,10 @@
                             <!-- RFQ Codes -->
                             <p><strong>RFQ Code:</strong> <span style="color:#e74c3c;">{{ $rfq->rfq_code }}</span></p>
                             <p><strong>Deal Code:</strong> <span style="color:#e74c3c;">{{ $rfq->deal_code }}</span></p>
-                            <p><strong>Submission Date:</strong> {{ optional($rfq->create_date)->format('F j, Y g:i A') ?? now()->format('F j, Y g:i A') }}</p>
+                          <p><strong>Submission Date:</strong>
+                                    {{ $rfq->create_date ? $rfq->create_date->format('F j, Y g:i A') : 'N/A' }}
+                                </p>
+
 
                             <!-- Product Table -->
                             @if(isset($products) && count($products) > 0)
