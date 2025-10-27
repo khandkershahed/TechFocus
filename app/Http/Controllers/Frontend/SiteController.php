@@ -92,28 +92,6 @@ public function homePage()
     return view('frontend.pages.home.index', $data);
 }
 
-    /**
-     * All Catalog Page
-     */
-    // public function allCatalog()
-    // {
-    //     $banners = PageBanner::where('page_name', 'catalog')->get();
-
-    //     $categories = Category::with([
-    //         'children.children.children.children',
-    //         'catalogs.attachments'
-    //     ])
-    //     ->where('is_parent', 1)
-    //     ->get(['id', 'parent_id', 'name', 'slug']);
-
-    //     $allCatalogs = Catalog::with('attachments')->get();
-
-    //     return view('frontend.pages.catalog.allCatalog', compact('categories', 'allCatalogs', 'banners'));
-    // }
-
-    /**
- * All Catalog Page - SAFE VERSION
- */
 public function allCatalog()
 {
     $banners = PageBanner::where('page_name', 'catalog')->get();
@@ -271,15 +249,6 @@ public function catalogDetails($slug)
         return view('frontend.pages.shop.filterProducts', $data);
     }
 
-    // public function faq()
-    // {
-    //     return view('frontend.pages.others.faq');
-    // }
-
-    // public function terms()
-    // {
-    //     return view('frontend.pages.others.terms');
-    // }
 
 
 
@@ -292,13 +261,6 @@ public function catalogDetails($slug)
         $this->dynamicCategoryRepository = $dynamicCategoryRepository;
     }
 
-    // public function faq()
-    // {
-    //     return view('frontend.pages.others.faq', [
-    //         'faqs' => $this->faqRepository->allFaq(), // All FAQs
-    //         'categories' => $this->dynamicCategoryRepository->allDynamicActiveCategory('faqs'),
-    //     ]);
-    // }
 
     public function terms()
     {
@@ -366,36 +328,7 @@ public function catalogDetails($slug)
         return view('frontend.pages.manufacturer.account');
     }
 
-    /**
-     * Search functions remain unchanged
-     */
-    // public function globalSearch(Request $request)
-    // {
-    //     try {
-    //         $query = $request->get('term', '');
-
-    //         $data['products'] = Product::join('brands', 'products.brand_id', '=', 'brands.id')
-    //             ->where('products.name', 'LIKE', '%' . $query . '%')
-    //             ->where('products.product_status', 'product')
-    //             ->where('brands.status', 'active')
-    //             ->limit(10)
-    //             ->get(['products.id', 'products.name', 'products.slug', 'products.thumbnail', 'products.price', 'products.discount', 'products.sku_code', 'products.rfq', 'products.qty', 'products.stock']);
-
-    //         $data['solutions'] = SolutionDetail::where('name', 'LIKE', '%' . $query . '%')->limit(5)->get(['id', 'name', 'slug']);
-    //         $data['industries'] = Industry::where('name', 'LIKE', '%' . $query . '%')->limit(5)->get(['id', 'name', 'slug']);
-    //         $data['blogs'] = NewsTrend::where('title', 'LIKE', '%' . $query . '%')->limit(5)->get(['id', 'title']);
-    //         $data['categorys'] = Category::where('title', 'LIKE', '%' . $query . '%')->limit(2)->get(['id', 'title', 'slug']);
-    //         $data['subcategorys'] = Category::where('title', 'LIKE', '%' . $query . '%')->limit(2)->get(['id', 'title', 'slug']);
-    //         $data['subsubcategorys'] = SubSubCategory::where('title', 'LIKE', '%' . $query . '%')->limit(1)->get(['id', 'title', 'slug']);
-    //         $data['brands'] = Brand::where('title', 'LIKE', '%' . $query . '%')->where('status', 'active')->limit(5)->get(['id', 'title', 'slug']);
-    //         $data['storys'] = ClientStory::where('title', 'LIKE', '%' . $query . '%')->limit(5)->get(['id', 'title', 'slug']);
-    //         $data['tech_glossys'] = TechGlossy::where('title', 'LIKE', '%' . $query . '%')->limit(5)->get(['id', 'title']);
-
-    //         return response()->json(view('frontend.partials.search', $data)->render());
-    //     } catch (\Exception $e) {
-    //         return response()->json(['error' => 'Global search error: ' . $e->getMessage()], 500);
-    //     }
-    // }
+ 
 public function globalSearch(Request $request)
 {
     try {
@@ -516,45 +449,7 @@ public function ProductSearch(Request $request)
         return view('frontend.pages.product.show', compact('product', 'categories', 'solutions', 'news_trends'));
     }
 
-    // public function newsDetails($slug)
-    // {
-    //     $news = NewsTrend::where('slug', $slug)->firstOrFail();
 
-    //     $categories = Category::with('children')->where('is_parent', 1)->get();
-    //     $solutions = SolutionDetail::latest()->limit(4)->get();
-    //     $news_trends = NewsTrend::where('type', 'trends')->limit(4)->get();
-
-    //     return view('frontend.pages.news.details', compact('news', 'categories', 'solutions', 'news_trends'));
-    // }
-    
-    //faqsearch
-//     public function faqSearch(Request $request)
-// {
-//     $query = $request->get('q');
-
-//     $faqs = $this->faqRepository->searchFaq($query); // we'll define this in the repo
-//     $categories = $this->dynamicCategoryRepository->allDynamicActiveCategory('faqs');
-
-//     return view('frontend.pages.others.faq', [
-//         'faqs' => $faqs,
-//         'categories' => $categories,
-//         'searchQuery' => $query,
-//     ]);
-// } 
-
-// public function faqByCategory($slug)
-//     {
-//         // load requested category or 404
-//         $category = DynamicCategory::where('slug', $slug)->firstOrFail();
-
-//         // published faqs for this category
-//         $faqs = $category->faqs()->where('is_published', true)->orderBy('order')->get();
-
-//         // load categories for sidebar
-//         $categories = DynamicCategory::orderBy('name')->get();
-
-//         return view('frontend.pages.others.faq', compact('category', 'faqs', 'categories'));
-//     }
 
 //addign search option brand 
 public function searchBrands(Request $request)
