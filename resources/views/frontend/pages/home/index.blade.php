@@ -469,7 +469,7 @@
                 </div>
                 <div class="row gx-5">
                     @foreach ($sectionFourNews as $news_trend)
-                        <div class="col-lg-3 col-md-12">
+                        <div class="col-lg-3 col-md-12 pe-0">
                             <a href="{{ route('content.details', $news_trend->slug) }}">
                                 <div class="card projects-card rounded-0">
                                     <img src="{{ asset('storage/content/' . $news_trend->thumbnail_image) }}"
