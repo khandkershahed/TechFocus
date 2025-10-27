@@ -15,7 +15,11 @@
             <div class="col-lg-6 mx-auto">
                 <form method="GET" action="{{ route('faq.search') }}">
                     <div class="input-group shadow-sm rounded-pill overflow-hidden">
-                        <input type="text" class="form-control border-0 px-4" placeholder="Search FAQ..." name="q" value="{{ request('q', $searchQuery ?? '') }}">
+                        <input type="text" 
+                               class="form-control border-0 px-4" 
+                               placeholder="Search FAQ..." 
+                               name="q" 
+                               value="{{ old('q', $searchQuery ?? '') }}">
                         <button type="submit" class="btn btn-primary px-4 rounded-0">
                             <i class="fa fa-search"></i>
                         </button>
@@ -30,27 +34,51 @@
     <div class="row g-4">
         <!-- FAQ List -->
         <div class="col-lg-8 col-sm-12">
+
+            {{-- Alert: Show category name if FAQs found --}}
+            @if(isset($searchQuery) && $faqs->isNotEmpty())
+                @php
+                    $firstFaq = $faqs->first();
+                    $categoryName = $firstFaq->dynamicCategory->name ?? 'Uncategorized';
+                @endphp
+                <div class="alert alert-success mb-4">
+                    Showing FAQs for category: <strong>{{ $categoryName }}</strong>
+                </div>
+            @elseif(isset($searchQuery) && $faqs->isEmpty())
+                <div class="alert alert-info mb-4">
+                    No FAQs available for "<strong>{{ $searchQuery }}</strong>".
+                </div>
+            @endif
+
+            {{-- FAQ Accordion --}}
             <div class="accordion shadow-sm" id="faqAccordion">
                 @forelse($faqs as $faq)
                     <div class="accordion-item mb-3 border rounded-3">
                         <h2 class="accordion-header" id="heading{{ $faq->id }}">
-                            <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapse{{ $faq->id }}" aria-expanded="false"
-                                aria-controls="collapse{{ $faq->id }}">
-                                {{ $faq->question }}
+                            <button class="accordion-button collapsed fw-semibold" type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#collapse{{ $faq->id }}"
+                                    aria-expanded="false"
+                                    aria-controls="collapse{{ $faq->id }}">
+                                {!! isset($searchQuery) && $searchQuery
+                                    ? preg_replace('/(' . preg_quote($searchQuery, '/') . ')/i', '<mark>$1</mark>', $faq->question)
+                                    : $faq->question !!}
                             </button>
                         </h2>
                         <div id="collapse{{ $faq->id }}" class="accordion-collapse collapse"
                              aria-labelledby="heading{{ $faq->id }}" data-bs-parent="#faqAccordion">
                             <div class="accordion-body">
-                                {!! $faq->answer !!}
+                                {!! isset($searchQuery) && $searchQuery
+                                    ? preg_replace('/(' . preg_quote($searchQuery, '/') . ')/i', '<mark>$1</mark>', $faq->answer)
+                                    : $faq->answer !!}
+                                @if($faq->dynamicCategory)
+                                    <p class="mt-2"><small class="text-muted">Category: {{ $faq->dynamicCategory->name }}</small></p>
+                                @endif
                             </div>
                         </div>
                     </div>
                 @empty
-                    <div class="alert alert-info">
-                        No FAQs available at the moment.
-                    </div>
+                    {{-- No FAQs handled by alert --}}
                 @endforelse
             </div>
         </div>
@@ -66,7 +94,7 @@
                                class="text-decoration-none {{ (isset($category) && $category->id == $cat->id) ? 'fw-bold text-primary' : '' }}">
                                 {{ $cat->name }}
                             </a>
-                            <span class="badge bg-primary rounded-pill">{{ $cat->faqs->count() }}</span>
+                            <span class="badge bg-primary rounded-pill">{{ $cat->faqs->where('is_published', '1')->count() }}</span>
                         </li>
                     @endforeach
                 </ul>
@@ -79,17 +107,24 @@
 
 @push('styles')
 <style>
-    .hover-shadow:hover {
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        transition: 0.3s;
-    }
-    .accordion-button {
-        font-size: 1rem;
-        color: #333;
-    }
-    .accordion-button:focus {
-        box-shadow: none;
-    }
+.hover-shadow:hover {
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: 0.3s;
+}
+.accordion-button {
+    font-size: 1rem;
+    color: #333;
+}
+.accordion-button:focus {
+    box-shadow: none;
+}
+mark {
+    background-color: #fffb91;
+}
+.fw-bold.text-primary {
+    font-weight: 600;
+    color: #0d6efd !important;
+}
 </style>
 @endpush
 @endsection

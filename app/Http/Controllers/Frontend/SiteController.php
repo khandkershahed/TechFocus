@@ -515,7 +515,7 @@ public function faqSearch(Request $request)
 {
     $query = $request->get('q');
 
-    $faqs = $this->faqRepository->searchFaq($query); // Make sure this searches question & answer
+    $faqs = $this->faqRepository->searchFaq($query);
     $categories = $this->dynamicCategoryRepository->allDynamicActiveCategory('faqs');
 
     return view('frontend.pages.others.faq', [
@@ -524,6 +524,7 @@ public function faqSearch(Request $request)
         'searchQuery' => $query,
     ]);
 }
+
 
 // Filter by category
 public function faqByCategory($slug)

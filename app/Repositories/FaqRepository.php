@@ -65,17 +65,42 @@ class FaqRepository implements FaqRepositoryInterface
     /**
      * Search FAQs by question or answer (with category)
      */
-    public function searchFaq($query)
-    {
-        return $this->model
-            ->with('dynamicCategory')
-            ->when($query, function ($q) use ($query) {
-                $q->where('question', 'LIKE', "%{$query}%")
-                  ->orWhere('answer', 'LIKE', "%{$query}%");
-            })
-            ->orderBy('order', 'asc')
-            ->get();
+public function searchFaq($query)
+{
+    $query = trim($query);
+
+    // Base query: only published FAQs
+    $faqsQuery = $this->model->with('dynamicCategory')->where('is_published', '1');
+
+    if (empty($query)) {
+        // No search query, return all
+        return $faqsQuery->orderBy('order', 'asc')->get();
     }
+
+    if (is_numeric($query)) {
+        // Search by FAQ ID
+        $faqsQuery->where('id', $query);
+    } else {
+        // Search by question, answer, or category name
+        $terms = explode(' ', $query);
+        $faqsQuery->where(function ($q) use ($terms) {
+            foreach ($terms as $term) {
+                if (strlen(trim($term)) >= 2) {
+                    $q->orWhere('question', 'LIKE', "%{$term}%")
+                      ->orWhere('answer', 'LIKE', "%{$term}%")
+                      ->orWhereHas('dynamicCategory', function ($qc) use ($term) {
+                          $qc->where('name', 'LIKE', "%{$term}%");
+                      });
+                }
+            }
+        });
+    }
+
+    return $faqsQuery->orderBy('order', 'asc')->get();
+}
+
+
+
 
     /**
      * Get FAQs by dynamic category ID
@@ -88,4 +113,5 @@ class FaqRepository implements FaqRepositoryInterface
             ->orderBy('order', 'asc')
             ->get();
     }
+    
 }
