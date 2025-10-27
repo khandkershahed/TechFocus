@@ -63,8 +63,10 @@ class NewsTrend extends Model
      */
     public function scopeForBrand($query, $brandId)
     {
-        return $query->whereJsonContains('brand_id', $brandId);
+        return $query->whereRaw('JSON_CONTAINS(brand_id, ?)', ['"' . $brandId . '"']);
     }
+
+
 
     /**
      * 🔹 Scope: featured only
@@ -108,12 +110,10 @@ class NewsTrend extends Model
         return Brand::find($ids[0] ?? null);
     }
 
-public function brand()
-{
-    // Get the first brand from the JSON array
-    $ids = is_array($this->brand_id) ? $this->brand_id : json_decode($this->brand_id, true) ?? [];
-    return $this->belongsTo(Brand::class, 'id')->whereIn('id', $ids);
-}
-
-
+    public function brand()
+    {
+        // Get the first brand from the JSON array
+        $ids = is_array($this->brand_id) ? $this->brand_id : json_decode($this->brand_id, true) ?? [];
+        return $this->belongsTo(Brand::class, 'id')->whereIn('id', $ids);
+    }
 }

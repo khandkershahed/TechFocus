@@ -84,44 +84,10 @@
                                                 <div class="gap-2 d-flex justify-content-center">
                                                     <!-- View -->
                                                     {{--
-                        <a href="#" class="btn btn-icon btn-light-info btn-sm" data-bs-toggle="modal" data-bs-target="#adminViewModal_{{ $admin->id }}">
-                                            <i class="fa-solid fa-eye"></i>
-                                            </a>
-                                            --}}
-<<<<<<< HEAD
-                                            <!-- Edit -->
-                                            <a href="#" class="btn btn-icon btn-light-warning btn-sm"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#adminEditModal-{{ $admin->id }}">
-                                                <i class="fa-solid fa-pen"></i>
-                                            </a>
-                                               @if (Auth::guard('admin')->user()->role == 'admin') 
-                                            <!-- Delete -->
-                                            <a href="#"
-                                                class="btn btn-icon btn-light-danger btn-sm"
-                                                onclick="event.preventDefault(); if(confirm('Are you sure you want to delete this employee?')) document.getElementById('delete-form-{{ $admin->id }}').submit();">
-                                                <i class="fa-solid fa-trash-can"></i>
-                                            </a>
-                                            
-                                            <form id="delete-form-{{ $admin->id }}"
-                                                action="{{ route('admin.employee.destroy', $admin->id) }}"
-                                                method="POST"
-                                                class="d-none">
-                                                @csrf
-                                                @method('DELETE')
-                                            </form>
-                                            @endif
-                                        </div>
-                                    </td>
-                                </tr>
-                                @empty
-                                <tr>
-                                    <td colspan="7" class="py-4 text-muted">No employees found.</td>
-                                </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-=======
+                                                    <a href="#" class="btn btn-icon btn-light-info btn-sm" data-bs-toggle="modal" data-bs-target="#adminViewModal_{{ $admin->id }}">
+                                                        <i class="fa-solid fa-eye"></i>
+                                                    </a>
+                                                    --}}
                                                     <!-- Edit -->
                                                     <a href="#" class="btn btn-icon btn-light-warning btn-sm"
                                                         data-bs-toggle="modal"
@@ -152,7 +118,6 @@
                                 </tbody>
                             </table>
                         </div>
->>>>>>> efbff55f600d59d232f164ca1aab201ef91eeff4
                     </div>
 
                 </div>

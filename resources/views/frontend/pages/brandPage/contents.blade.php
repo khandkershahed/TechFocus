@@ -11,7 +11,7 @@
                     <div class="col-lg-12">
                         <div class="devider-wrap">
                             <h4 class="devider-content mb-4">
-                                <span class="devider-text">PRODUCT TRENDS</span>
+                                <span class="devider-text">{{ $brand->title }} Contents</span>
                             </h4>
                         </div>
                     </div>
@@ -95,7 +95,7 @@
     </div>
 
     <!-- Localization Map Section -->
-    <div class="container">
+    {{-- <div class="container">
         <div class="row gx-5">
             <div class="col-lg-12">
                 <div class="devider-wrap">
@@ -125,5 +125,5 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 @endsection
