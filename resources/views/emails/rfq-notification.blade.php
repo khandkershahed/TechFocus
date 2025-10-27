@@ -9,7 +9,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>RFQ Notification</title>
     <style>
-        body { margin:0; padding:0; background:#f4f4f4; font-family: Arial, sans-serif; color:#83bff7; }
+        body { margin:0; padding:0; background:#f4f4f4; font-family: Arial, sans-serif; color:#333; }
         table { border-collapse: collapse; }
         a { color:#ae0a46; text-decoration:none; }
         @media only screen and (max-width: 620px) {
@@ -36,7 +36,7 @@
                                     <td align="left">
                                         <a href="https://ngenitltd.com" target="_blank">
                                             <img src="{{ !empty($site->system_logo_white) && file_exists(public_path('storage/webSetting/systemLogoWhite/' . $site->system_logo_white)) ? asset('storage/webSetting/systemLogoWhite/' . $site->system_logo_white) : asset('backend/images/no-image-available.png') }}"
-                    height="60px" alt="TechFocus" />
+                                                 height="60px" alt="TechFocus" />
                                         </a>
                                     </td>
                                     <td align="right" style="color:#ffffff;">
@@ -57,10 +57,9 @@
                             <!-- RFQ Codes -->
                             <p><strong>RFQ Code:</strong> <span style="color:#e74c3c;">{{ $rfq->rfq_code }}</span></p>
                             <p><strong>Deal Code:</strong> <span style="color:#e74c3c;">{{ $rfq->deal_code }}</span></p>
-                          <p><strong>Submission Date:</strong>
-                                    {{ $rfq->create_date ? $rfq->create_date->format('F j, Y g:i A') : 'N/A' }}
-                                </p>
-
+                            <p><strong>Submission Date:</strong>
+                                {{ $rfq->created_at ? $rfq->created_at->timezone('Asia/Dhaka')->format('F j, Y g:i A') : 'N/A' }}
+                            </p>
 
                             <!-- Product Table -->
                             @if(isset($products) && count($products) > 0)
@@ -126,12 +125,9 @@
                                 </tr>
                             </table>
 
-                            <!-- Quote Button -->
+                            <!-- Quote Button (Optional) -->
                             <div style="text-align:center; margin-top:30px;">
-                                {{-- <a href="{{ route('single-rfq.quoation_mail', $rfq->rfq_code) }}" --}}
-                                   {{-- style="background-color:#ae0a46; color:#fff; padding:12px 35px; font-size:16px; display:inline-block; border-radius:4px; text-decoration:none;">
-                                    Quote --}}
-                                </a>
+                                {{-- Add your quote button here if needed --}}
                             </div>
 
                         </td>
@@ -149,7 +145,7 @@
                                     <td class="mail-footers" style="text-align:right; font-size:14px; width:50%; vertical-align:top;">
                                         <p style="margin:0;"><a href="tel:+19177203055">(☏) +1 917-720-3055</a></p>
                                         <p style="margin:0;"><a href="tel:+8801714243446">(✆) +880 1714 243446</a></p>
-                                        <p style="margin:0;"><a href="mailto:sales@ngenitltd.com">(✉) sales@techfocusltd.com</a></p>
+                                        <p style="margin:0;"><a href="mailto:sales@techfocusltd.com">(✉) sales@techfocusltd.com</a></p>
                                     </td>
                                 </tr>
                             </table>

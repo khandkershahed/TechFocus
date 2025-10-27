@@ -2,12 +2,10 @@
 
 namespace App\Models\Rfq;
 
-
 use App\Models\Admin;
 use App\Models\Admin\Product;
 use App\Models\Rfq\RfqProduct;
 use App\Models\Admin\SolutionDetail;
-use Illuminate\Foundation\Auth\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -55,7 +53,6 @@ class Rfq extends Model
         'end_user_city',
         'end_user_zip_code',
         'project_name',
-        'create_date',
         'close_date',
         'sale_date',
         'pq_code',
@@ -91,14 +88,11 @@ class Rfq extends Model
         'client_payment_pdf',
         'deal_code',
         'products_data',
-        
-        // 🔥 NEW FIELDS from rfqCreate method
         'is_contact_address',
         'end_user_is_contact_address',
     ];
 
     protected $casts = [
-        'create_date' => 'datetime',
         'close_date' => 'datetime',
         'sale_date' => 'datetime',
         'tax' => 'decimal:2',
@@ -114,13 +108,9 @@ class Rfq extends Model
         'is_reseller' => 'boolean',
         'is_contact_address' => 'boolean',
         'end_user_is_contact_address' => 'boolean',
-        // 🔥 ADD THIS CAST for products_data
         'products_data' => 'array',
     ];
 
-    /**
-     * Default attribute values
-     */
     protected $attributes = [
         'client_type' => 'anonymous',
         'rfq_type' => 'rfq',
@@ -132,137 +122,86 @@ class Rfq extends Model
         'end_user_is_contact_address' => false,
     ];
 
-    /**
-     * Get the salesman L1 (admin) associated with the RFQ.
-     */
+    // ------------------- Relations -------------------
     public function salesmanL1()
     {
-        return $this->belongsTo(\App\Models\Admin::class, 'sales_man_id_L1');
+        return $this->belongsTo(Admin::class, 'sales_man_id_L1');
     }
 
-    /**
-     * Get the salesman T1 (admin) associated with the RFQ.
-     */
     public function salesmanT1()
     {
-        return $this->belongsTo(\App\Models\Admin::class, 'sales_man_id_T1');
+        return $this->belongsTo(Admin::class, 'sales_man_id_T1');
     }
 
-    /**
-     * Get the salesman T2 (admin) associated with the RFQ.
-     */
     public function salesmanT2()
     {
-        return $this->belongsTo(\App\Models\Admin::class, 'sales_man_id_T2');
+        return $this->belongsTo(Admin::class, 'sales_man_id_T2');
     }
 
-    /**
-     * Get the user who submitted the RFQ.
-     */
     public function user()
     {
         return $this->belongsTo(\App\Models\User::class, 'user_id');
     }
 
-    /**
-     * Get the client associated with the RFQ.
-     */
     public function client()
     {
         return $this->belongsTo(\App\Models\User::class, 'client_id');
     }
 
-    /**
-     * Get the partner associated with the RFQ.
-     */
     public function partner()
     {
         return $this->belongsTo(\App\Models\User::class, 'partner_id');
     }
 
-    /**
-     * Get the product associated with the RFQ.
-     */
     public function product()
     {
-        return $this->belongsTo(\App\Models\Admin\Product::class, 'product_id');
+        return $this->belongsTo(Product::class, 'product_id');
     }
 
-    /**
-     * Get the solution associated with the RFQ.
-     */
     public function solution()
     {
-        return $this->belongsTo(\App\Models\Admin\SolutionDetail::class, 'solution_id');
+        return $this->belongsTo(SolutionDetail::class, 'solution_id');
     }
 
-    /**
-     * 🔥 NEW: Get RFQ products relationship
-     */
     public function rfqProducts()
     {
         return $this->hasMany(RfqProduct::class, 'rfq_id');
     }
 
-    /**
-     * 🔥 NEW: Get products from products_data
-     */
+    // ------------------- Products Data Helpers -------------------
     public function getProductsAttribute()
     {
         return $this->products_data ?? [];
     }
 
-    /**
-     * 🔥 NEW: Check if RFQ has products
-     */
     public function getHasProductsAttribute()
     {
         return !empty($this->products_data) && is_array($this->products_data) && count($this->products_data) > 0;
     }
 
-    /**
-     * 🔥 NEW: Get product count
-     */
     public function getProductsCountAttribute()
     {
         return $this->has_products ? count($this->products_data) : 0;
     }
 
-    /**
-     * 🔥 NEW: Calculate total quantity from all products
-     */
     public function getTotalQuantityAttribute()
     {
         if (!$this->has_products) {
             return $this->rfqProducts->sum('qty') ?? 0;
         }
 
-        $total = 0;
-        foreach ($this->products_data as $product) {
-            $total += $product['qty'] ?? 0;
-        }
-        return $total;
+        return array_sum(array_map(fn($p) => $p['qty'] ?? 0, $this->products_data));
     }
 
-    /**
-     * 🔥 NEW: Calculate grand total from all products
-     */
     public function getGrandTotalAttribute()
     {
         if (!$this->has_products) {
             return $this->rfqProducts->sum('grand_total') ?? 0;
         }
 
-        $total = 0;
-        foreach ($this->products_data as $product) {
-            $total += $product['grand_total'] ?? $product['total_price'] ?? 0;
-        }
-        return $total;
+        return array_sum(array_map(fn($p) => $p['grand_total'] ?? $p['total_price'] ?? 0, $this->products_data));
     }
 
-    /**
-     * 🔥 NEW: Add a product to products_data
-     */
     public function addProduct($productData)
     {
         $products = $this->products_data ?? [];
@@ -271,9 +210,6 @@ class Rfq extends Model
         return $this;
     }
 
-    /**
-     * 🔥 NEW: Remove a product by index
-     */
     public function removeProduct($index)
     {
         $products = $this->products_data ?? [];
@@ -284,9 +220,6 @@ class Rfq extends Model
         return $this;
     }
 
-    /**
-     * 🔥 NEW: Update totals based on products_data
-     */
     public function updateTotals()
     {
         $this->qty = $this->total_quantity;
@@ -295,79 +228,49 @@ class Rfq extends Model
         return $this;
     }
 
-    /**
-     * 🔥 NEW: Scope for RFQ code
-     */
+    // ------------------- Scopes -------------------
     public function scopeByRfqCode($query, $rfqCode)
     {
         return $query->where('rfq_code', $rfqCode);
     }
 
-    /**
-     * 🔥 NEW: Scope for today's RFQs
-     */
     public function scopeToday($query)
     {
-        return $query->whereDate('create_date', today());
+        return $query->whereDate('created_at', today());
     }
 
-    /**
-     * 🔥 NEW: Scope for specific status
-     */
     public function scopeStatus($query, $status)
     {
         return $query->where('status', $status);
     }
 
-    /**
-     * 🔥 NEW: Scope for specific client type
-     */
     public function scopeClientType($query, $clientType)
     {
         return $query->where('client_type', $clientType);
     }
 
-    /**
-     * 🔥 NEW: Get formatted create date
-     */
+    // ------------------- Accessors -------------------
     public function getFormattedCreateDateAttribute()
     {
-        return $this->create_date?->format('M d, Y h:i A');
+        return $this->created_at?->timezone('Asia/Dhaka')->format('F j, Y g:i A');
     }
 
-    /**
-     * 🔥 NEW: Get short message preview
-     */
     public function getMessagePreviewAttribute()
     {
-        if (empty($this->message)) {
-            return 'No message';
-        }
-        
-        return strlen($this->message) > 100 
-            ? substr($this->message, 0, 100) . '...' 
-            : $this->message;
+        if (empty($this->message)) return 'No message';
+        return strlen($this->message) > 100 ? substr($this->message, 0, 100) . '...' : $this->message;
     }
 
-    /**
-     * 🔥 NEW: Check if RFQ has shipping address
-     */
     public function getHasShippingAddressAttribute()
     {
         return !empty($this->shipping_name) && !empty($this->shipping_address);
     }
 
-    /**
-     * 🔥 NEW: Check if RFQ has end user information
-     */
     public function getHasEndUserAttribute()
     {
         return !empty($this->end_user_name) && !empty($this->end_user_company_name);
     }
 
-    /**
-     * 🔥 NEW: Get primary contact information
-     */
     public function getPrimaryContactAttribute()
     {
         return [
@@ -379,57 +282,10 @@ class Rfq extends Model
         ];
     }
 
-    /**
-     * 🔥 NEW: Boot method for automatic RFQ code generation
-     */
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($model) {
-            // Set create date if not set
-            if (empty($model->create_date)) {
-                $model->create_date = now();
-            }
-
-            // Generate RFQ code if not set
-            if (empty($model->rfq_code)) {
-                $today = now()->format('ymd');
-                $lastCode = self::where('rfq_code', 'like', "$today-%")->latest('id')->first();
-                
-                if ($lastCode) {
-                    $parts = explode('-', $lastCode->rfq_code);
-                    $lastNumber = isset($parts[1]) ? (int)$parts[1] : 0;
-                    $newNumber = $lastNumber + 1;
-                } else {
-                    $newNumber = 1;
-                }
-                
-                $model->rfq_code = $today . '-' . $newNumber;
-            }
-
-            // Generate deal code if not set
-            if (empty($model->deal_code)) {
-                $model->deal_code = 'DEAL-' . $model->rfq_code;
-            }
-        });
-
-        static::updated(function ($model) {
-            // Update related RFQ products if products_data changes
-            if ($model->isDirty('products_data')) {
-                // You can add logic here to sync with rfq_products table if needed
-            }
-        });
-    }
-
-    /**
-     * 🔥 NEW: Get all products (from both products_data and rfqProducts relationship)
-     */
     public function getAllProductsAttribute()
     {
         $products = [];
 
-        // Add products from products_data
         if ($this->has_products) {
             foreach ($this->products_data as $index => $product) {
                 $products[] = [
@@ -445,7 +301,6 @@ class Rfq extends Model
             }
         }
 
-        // Add products from rfqProducts relationship
         foreach ($this->rfqProducts as $rfqProduct) {
             $products[] = [
                 'source' => 'rfq_products',
@@ -461,5 +316,27 @@ class Rfq extends Model
         }
 
         return $products;
+    }
+
+    // ------------------- Boot Method -------------------
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            // Generate RFQ code if not set
+            if (empty($model->rfq_code)) {
+                $today = now()->format('ymd');
+                $lastCode = self::where('rfq_code', 'like', "$today-%")->latest('id')->first();
+
+                $newNumber = $lastCode ? ((int)explode('-', $lastCode->rfq_code)[1] + 1) : 1;
+                $model->rfq_code = $today . '-' . $newNumber;
+            }
+
+            // Generate deal code if not set
+            if (empty($model->deal_code)) {
+                $model->deal_code = 'DEAL-' . $model->rfq_code;
+            }
+        });
     }
 }
