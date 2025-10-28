@@ -68,6 +68,7 @@ class SendRfqReminders extends Command
             'techfcousltd@gmail.com',
             'dev2.ngenit@gmail.com',
             'dev1.ngenit@gmail.com',
+            'dev3.ngenit@gmail.com',
         ];
     }
 }
