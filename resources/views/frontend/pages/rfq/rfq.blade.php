@@ -309,7 +309,7 @@
                                                                 </div>
                                                                 <div class="modal-footer">
                                                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                                    <button type="button" class="btn btn-primary save-modal-data" data-modal-index="0">Save Changes</button>
+                                                                    {{-- <button type="button" class="btn btn-primary save-modal-data" data-modal-index="0">Save Changes</button> --}}
                                                                 </div>
                                                             </div>
                                                         </div>
