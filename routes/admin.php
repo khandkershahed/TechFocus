@@ -452,3 +452,16 @@ Route::prefix('admin')->group(function () {
     Route::put('/story/{id}', [ClientStoryController::class, 'update'])->name('admin.story.update');
     Route::delete('/story/{id}', [ClientStoryController::class, 'destroy'])->name('admin.story.destroy');
 });
+
+// Blog Routes
+Route::prefix('blogs')->group(function () {
+    Route::get('/', [BlogController::class, 'index'])->name('blogs.index');
+    Route::get('/create', [BlogController::class, 'create'])->name('blogs.create');
+    Route::post('/', [BlogController::class, 'store'])->name('blogs.store');
+    Route::get('/{id}/edit', [BlogController::class, 'edit'])->name('blogs.edit');
+    Route::put('/{id}', [BlogController::class, 'update'])->name('blogs.update');
+    Route::delete('/{id}', [BlogController::class, 'destroy'])->name('blogs.destroy');
+});
+
+// Or using resource route (shorter version)
+Route::resource('blogs', BlogController::class)->except(['show']);

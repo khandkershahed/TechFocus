@@ -534,7 +534,7 @@
                                         <span class="menu-title">Indusry</span>
                                     </a>
                                 </div>
-                                <div class="menu-item">
+                                {{-- <div class="menu-item">
                                     <a class="menu-link {{ in_array(Route::current()->getName(), ['admin.solution-card.index', 'admin.solution-card.create', 'admin.solution-card.edit']) ? 'active' : '' }}"
                                         href="{{ route('admin.solution-card.index') }}">
                                         <span class="menu-bullet">
@@ -543,7 +543,7 @@
                                         </span>
                                         <span class="menu-title">Solution Cards</span>
                                     </a>
-                                </div>
+                                </div> --}}
                                 <div class="menu-item">
                                     <a class="menu-link {{ in_array(Route::current()->getName(), ['admin.row.index', 'admin.row.create', 'admin.row.edit']) ? 'active' : '' }}"
                                         href="{{ route('admin.row.index') }}">
@@ -554,7 +554,6 @@
                                         <span class="menu-title">Rows</span>
                                     </a>
                                 </div>
-
                             </div>
                         </div>
                         {{-- <div class="menu-item">
