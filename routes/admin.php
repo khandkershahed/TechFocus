@@ -439,3 +439,16 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('/profile/update', [App\Http\Controllers\Admin\ProfileController::class, 'update'])
         ->name('profile.update');
 });
+
+
+//client story
+Route::prefix('admin')->group(function () {
+    Route::resource('story', ClientStoryController::class);
+    // Or individually:
+    Route::get('/story', [ClientStoryController::class, 'index'])->name('admin.story.index');
+    Route::get('/story/create', [ClientStoryController::class, 'create'])->name('admin.story.create');
+    Route::post('/story', [ClientStoryController::class, 'store'])->name('admin.story.store');
+    Route::get('/story/{id}/edit', [ClientStoryController::class, 'edit'])->name('admin.story.edit');
+    Route::put('/story/{id}', [ClientStoryController::class, 'update'])->name('admin.story.update');
+    Route::delete('/story/{id}', [ClientStoryController::class, 'destroy'])->name('admin.story.destroy');
+});

@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Hash;
+use App\Models\Favorite;
+use App\Models\Admin\NewsTrend;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -102,5 +104,9 @@ class User extends Authenticatable implements MustVerifyEmail
         public function favourites()
     {
         return $this->hasMany(Favorite::class, 'user_id', 'id');
+    }
+      public function newsTrends()
+    {
+        return $this->hasMany(NewsTrend::class, 'added_by');
     }
 }

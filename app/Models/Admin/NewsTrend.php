@@ -5,7 +5,7 @@ namespace App\Models\Admin;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Admin\Brand; // ✅ Ensure Brand model is imported
-
+use App\Models\User; 
 class NewsTrend extends Model
 {
     use HasFactory;
@@ -89,7 +89,7 @@ class NewsTrend extends Model
      */
     public function addedBy()
     {
-        return $this->belongsTo(\App\Models\User::class, 'added_by');
+        return $this->belongsTo(User::class, 'added_by');
     }
 
     /**
