@@ -236,7 +236,7 @@ class SiteController extends Controller
 
         $products = Product::whereJsonContains('category_id', [$categoryId])
             ->orWhereRaw('JSON_UNQUOTE(category_id) LIKE ?', ['%"' . $categoryId . '"%'])
-            ->get();
+            ->paginate(16);
 
         //    dd($products);
 
