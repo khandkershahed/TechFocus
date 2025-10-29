@@ -229,16 +229,16 @@ public function catalogDetails($slug)
         $category = Category::where('slug', $slug)->first();
 
         if (!$category) {
-            Session::flash('warning', 'Category not found.');
+            Session::flash('error', 'Category not found.');
             return redirect()->back();
         }
 
        $products = $category->products;
 
-        if ($products->isEmpty()) {
-            Session::flash('warning', 'No Products Found for this Category');
-            return redirect()->back();
-        }
+        // if ($products->isEmpty()) {
+        //     Session::flash('warning', 'No Products Found for this Category');
+        //     return redirect()->back();
+        // }
 
         $data = [
             'category' => $category,

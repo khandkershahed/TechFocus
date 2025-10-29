@@ -42,6 +42,9 @@
 <div class="container my-4">
     <div class="row">
         <!-- 🟩 Category List Section -->
+   <div class="container my-4">
+    <div class="row">
+        <!-- 🟩 Subcategories Section -->
         <div class="col-lg-8 col-sm-12">
             <h4 class="text-center border-bottom industry_title">
                 {{ optional($category)->name }}
@@ -49,7 +52,7 @@
 
             <div class="hoverizeList mt-3">
                 <ul class="category-grouplist category-list">
-                    @forelse (($category->children ?? []) as $subcat)
+                    @forelse (($category->children->sortBy('name') ?? []) as $subcat)
                         <li>
                             <div class="imgSubCat {{ $loop->first ? '' : 'hidden' }}">
                                 <img src="{{ !empty($subcat->image) && file_exists(public_path('storage/category/image/' . $subcat->image)) 
@@ -58,7 +61,7 @@
                                     alt="{{ $subcat->name }}" />
                             </div>
 
-                            @if (!empty($subcat->children) && $subcat->children->isNotEmpty())
+                            @if ($subcat->children->count() > 0)
                                 <a href="{{ route('category', $subcat->slug) }}">{{ $subcat->name }}</a>
                             @else
                                 <a href="{{ route('filtering.products', $subcat->slug) }}">{{ $subcat->name }}</a>
@@ -77,16 +80,18 @@
                 <h4 class="text-center border-bottom industry_title">Products</h4>
 
                 @php
-                    $products = $category?->products ?? collect();
+                    // Sort products alphabetically by name
+                    $products = ($category?->products ?? collect())->sortBy('name');
                 @endphp
 
                 @if ($products->count() > 0)
                     <div class="row">
                         @foreach ($products as $product)
-                            <div class="mb-2 col-lg-3">
+                            <div class="mb-2 col-12 col-md-6">
                                 <a href="{{ route('product.details', ['id' => optional($product->brand)->slug, 'slug' => $product->slug]) }}">
                                     <img class="img-fluid w-100" src="{{ $product->thumbnail }}" alt="{{ $product->name }}">
                                 </a>
+                                <p class="mt-1 text-center">{{ $product->name }}</p>
                             </div>
                         @endforeach
                     </div>
@@ -94,6 +99,8 @@
                     <p class="text-center">No Products Found!</p>
                 @endif
             </div>
+   
+
 
             <!-- 🟨 Sidebar Newsletter Section -->
             <div class="text-center mt-4">

@@ -19,8 +19,6 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Models\User;
 use App\Http\Controllers\Admin\UserListController;
 
-
-
 Route::get('/', [SiteController::class, 'homePage'])->name('homepage');
 Route::get('solution/{slug}', [SiteController::class, 'solutionDetails'])->name('solution.details');
 Route::get('category/{slug}', [SiteController::class, 'category'])->name('category');

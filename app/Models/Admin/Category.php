@@ -42,4 +42,9 @@ class Category extends Model
     {
         return $this->hasMany(CatalogCategory::class, 'category_id', 'category_id');
     }
+    public function products()
+{
+    return $this->hasMany(Product::class)->orderBy('name', 'ASC');
+}
+
 }
