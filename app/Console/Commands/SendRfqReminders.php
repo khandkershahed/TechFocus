@@ -16,6 +16,7 @@ class SendRfqReminders extends Command
 
     public function handle()
     {
+        $this->info('=== Running RFQ Reminder Check ===');
         Log::info('=== Running RFQ Reminder Check ===');
 
         // Define reminder intervals (in hours)
@@ -25,38 +26,45 @@ class SendRfqReminders extends Command
             $this->sendRemindersForInterval($hours);
         }
 
+        $this->info('=== RFQ Reminder Check Complete ===');
         Log::info('=== RFQ Reminder Check Complete ===');
     }
 
     private function sendRemindersForInterval(int $hours)
     {
+        $this->info("🔍 Checking for RFQs pending for {$hours} hours...");
         Log::info("🔍 Checking for RFQs pending for {$hours} hours...");
 
-        // Select RFQs that are still 'rfq_created' and match the specific time window
+        $column = "reminder_{$hours}h_sent";
+
         $rfqs = Rfq::where('status', 'rfq_created')
             ->whereRaw('TIMESTAMPDIFF(HOUR, created_at, NOW()) >= ?', [$hours])
-            ->whereRaw('TIMESTAMPDIFF(HOUR, created_at, NOW()) < ?', [$hours + 1]) // within 1-hour window
-            ->whereColumn('created_at', '=', 'updated_at')
+            ->where($column, false) // only those not reminded yet
             ->get();
 
         if ($rfqs->isEmpty()) {
+            $this->info("No RFQs found for {$hours}-hour reminder.");
             Log::info("No RFQs found for {$hours}-hour reminder.");
             return;
         }
 
+        $this->info("Found {$rfqs->count()} RFQs for {$hours}-hour reminder.");
         Log::info("Found {$rfqs->count()} RFQs for {$hours}-hour reminder.");
 
         foreach ($rfqs as $rfq) {
             try {
-                $recipients = $this->getAdminEmails();
-
-                foreach ($recipients as $recipient) {
-                    Mail::to($recipient)->send(new RfqReminderMail($rfq, $hours)); // pass $hours to email
+                foreach ($this->getAdminEmails() as $recipient) {
+                    Mail::to($recipient)->send(new RfqReminderMail($rfq, $hours));
                 }
 
-                Log::info("{$hours}-hour reminder sent for RFQ: {$rfq->rfq_code}");
+                // Mark reminder as sent
+                $rfq->update([$column => true]);
+
+                $this->info("✅ {$hours}-hour reminder sent for RFQ: {$rfq->rfq_code}");
+                Log::info("✅ {$hours}-hour reminder sent for RFQ: {$rfq->rfq_code}");
             } catch (\Exception $e) {
-                Log::error(" Failed to send {$hours}-hour reminder for RFQ {$rfq->rfq_code}: " . $e->getMessage());
+                $this->error("❌ Failed to send {$hours}-hour reminder for RFQ {$rfq->rfq_code}: " . $e->getMessage());
+                Log::error("❌ Failed to send {$hours}-hour reminder for RFQ {$rfq->rfq_code}: " . $e->getMessage());
             }
         }
     }
