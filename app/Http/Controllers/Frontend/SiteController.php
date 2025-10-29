@@ -233,7 +233,7 @@ public function catalogDetails($slug)
             return redirect()->back();
         }
 
-       $products = Product::whereJsonContains('category_id', json_encode($category->id))->get();
+       $products = Product::whereJsonContains('category_id', '"[\'.(string) json_encode($category->id))->get();
     //    dd($products);
 
         // if ($products->isEmpty()) {
