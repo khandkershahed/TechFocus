@@ -39,7 +39,7 @@ class RfqController extends Controller
 
         // Fallback emails
         return $admin ?: [
-              ' site2.ngenit@gmail.com',
+           ' site2.ngenit@gmail.com',
              'techfcousltd@gmail.com',
              'dev2.ngenit@gmail.com',
              'dev1.ngenit@gmail.com',

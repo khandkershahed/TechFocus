@@ -273,6 +273,28 @@
                         <span class="menu-title">Business</span>
                         <span class="menu-arrow"></span>
                     </span>
+
+                            <div class="menu-sub menu-sub-accordion">
+                                
+                                <a class="menu-link {{ Route::current()->getName() == 'clients.list' ? 'active' : '' }}" 
+                                href="{{ route('clients.list') }}">
+                                    <span class="menu-bullet">
+                                        <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">Client List</span>
+                                </a>
+                            </div>
+
+                            <div class="menu-sub menu-sub-accordion">
+                                <a class="menu-link {{ Route::current()->getName() == 'partners.list' ? 'active' : '' }}" 
+                                href="{{ route('partners.list') }}">
+                                    <span class="menu-bullet">
+                                        <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">Partner List</span>
+                                </a>
+                            </div>
+
                     <div class="menu-sub menu-sub-accordion">
                         <div data-kt-menu-trigger="click"
                             class="menu-item menu-accordion {{ in_array(Route::current()->getName(), ['admin.rfq.index', 'admin.deal.index']) ? 'here show' : '' }}">
@@ -298,7 +320,9 @@
                                                 3</span></span>
                                     </a>
                                 </div> --}}
-                                <div class="menu-item">
+
+
+                                {{-- <div class="menu-item">
                                     <a class="menu-link {{ Route::current()->getName() == 'admin.rfq.index' ? 'active' : '' }}"
                                         href="{{ route('admin.rfq.index') }}">
                                         <span class="menu-bullet">
@@ -307,7 +331,7 @@
                                         </span>
                                         <span class="menu-title">Client RFQs</span>
                                     </a>
-                                </div>
+                                </div>  --}}
                                 <div class="menu-item">
                                     <a class="menu-link {{ Route::current()->getName() == 'admin.deal.index' ? 'active' : '' }}"
                                         href="{{ route('admin.deal.index') }}">

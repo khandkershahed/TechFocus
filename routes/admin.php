@@ -465,3 +465,5 @@ Route::prefix('blogs')->group(function () {
 
 // Or using resource route (shorter version)
 Route::resource('blogs', BlogController::class)->except(['show']);
+
+

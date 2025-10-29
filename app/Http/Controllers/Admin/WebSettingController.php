@@ -173,6 +173,7 @@ class WebSettingController extends Controller
             'upwork_url'                 => $request->upwork_url,
             'service_days'               => $request->service_days,
             'service_time'               => $request->service_time,
+             'address'                    => $request->address,
         ]);
 
         $toastMessage = $site->wasRecentlyCreated ? 'Data has been created successfully!' : 'Data has been updated successfully!';

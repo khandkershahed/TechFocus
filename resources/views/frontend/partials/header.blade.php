@@ -85,7 +85,7 @@
                                     </div>
                                 </div>
                                 <!--  -->
-                                <div class="dropdown">
+                                {{-- <div class="dropdown">
                                     <button class="mx-3 dropdown-toggle" type="button" id="dropdownMenuButton1"
                                         data-bs-toggle="dropdown" aria-expanded="false" data-aos="fade-left">
                                         EUR - €
@@ -97,7 +97,7 @@
                                         <li><a class="dropdown-item top-dropdown" href="#">JPY - ¥</a></li>
                                         <li><a class="dropdown-item top-dropdown" href="#">INR - ₹</a></li>
                                     </ul>
-                                </div>
+                                </div> --}}
 
                             </div>
                         </div>
