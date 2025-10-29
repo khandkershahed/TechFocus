@@ -7,6 +7,7 @@ use App\Models\PageBanner;
 use App\Models\Admin\Brand;
 use Illuminate\Http\Request;
 use App\Models\Admin\Catalog;
+use App\Models\Admin\Company;
 use App\Models\Admin\Product;
 use App\Models\Admin\Category;
 use App\Models\Admin\HomePage;
@@ -15,7 +16,6 @@ use App\Models\Admin\AboutPage;
 use App\Models\Admin\NewsTrend;
 use App\Models\Admin\TechGlossy;
 use App\Models\Admin\ClientStory;
-use Faker\Provider\de_DE\Company;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\SolutionDetail;
 use App\Models\Admin\SubSubCategory;
@@ -233,7 +233,8 @@ public function catalogDetails($slug)
             return redirect()->back();
         }
 
-       $products = $category->products;
+       $products = Product::whereJsonContains('category_id', json_encode($category->id))->get();
+    //    dd($products);
 
         // if ($products->isEmpty()) {
         //     Session::flash('warning', 'No Products Found for this Category');
@@ -454,23 +455,23 @@ public function ProductSearch(Request $request)
 //addign search option brand 
 public function searchBrands(Request $request)
 {
-    \Log::info('=== SEARCH BRANDS CALLED ===');
-    \Log::info('Request URL: ' . $request->fullUrl());
-    \Log::info('All request data: ', $request->all());
-    \Log::info('Search parameter: "' . $request->input('search') . '"');
+    // \Log::info('=== SEARCH BRANDS CALLED ===');
+    // \Log::info('Request URL: ' . $request->fullUrl());
+    // \Log::info('All request data: ', $request->all());
+    // \Log::info('Search parameter: "' . $request->input('search') . '"');
     
     $search = $request->input('search', '');
     
-    \Log::info('Processing search for: "' . $search . '"');
+    // \Log::info('Processing search for: "' . $search . '"');
 
     try {
         // If search is empty, return all brands
         if (empty($search)) {
-            \Log::info('Loading ALL brands');
+            // \Log::info('Loading ALL brands');
             $top_brands = Brand::byCategory('Top')->latest()->paginate(18, ['*'], 'top_page');
             $featured_brands = Brand::byCategory('Featured')->latest()->paginate(18, ['*'], 'featured_page');
         } else {
-            \Log::info('Searching brands with term: "' . $search . '"');
+            // \Log::info('Searching brands with term: "' . $search . '"');
             $top_brands = Brand::where('title', 'like', "%{$search}%")
                 ->byCategory('Top')
                 ->latest()
@@ -482,16 +483,16 @@ public function searchBrands(Request $request)
                 ->paginate(18, ['*'], 'featured_page');
         }
 
-        \Log::info('Search completed:');
-        \Log::info('- Top brands found: ' . $top_brands->count());
-        \Log::info('- Featured brands found: ' . $featured_brands->count());
+        // \Log::info('Search completed:');
+        // \Log::info('- Top brands found: ' . $top_brands->count());
+        // \Log::info('- Featured brands found: ' . $featured_brands->count());
 
         // Return the partial view
         return view('frontend.pages.brand.partials.brand_list_content', compact('top_brands', 'featured_brands'));
 
     } catch (\Exception $e) {
-        \Log::error('Search brands error: ' . $e->getMessage());
-        \Log::error('Stack trace: ' . $e->getTraceAsString());
+        // \Log::error('Search brands error: ' . $e->getMessage());
+        // \Log::error('Stack trace: ' . $e->getTraceAsString());
         
         // Return error response
         return response('<div class="alert alert-danger text-center">Error: ' . $e->getMessage() . '</div>');

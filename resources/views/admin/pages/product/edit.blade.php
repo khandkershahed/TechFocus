@@ -236,7 +236,7 @@
                                                     <div class="col-lg-3 mb-3">
                                                         <div class="fv-row mb-3">
                                                             <label class="form-label">Category Name</label>
-                                                            <select class="form-select form-select-solid form-select-sm"
+                                                            <select class="form-select form-select-solid form-select-sm" data-control="select2"
                                                                 id="category_id" name="category_id[]" multiple
                                                                 multiselect-search="true" multiselect-select-all="true"
                                                                 data-allow-clear="true">
@@ -262,7 +262,7 @@
                                                         <div class="fv-row mb-3">
                                                             <label class="form-label ">Industry Name</label>
                                                             <select class="form-select form-select-solid form-select-sm"
-                                                                name="industry_id[]" id="field2" multiple
+                                                                name="industry_id[]" id="industry_id" data-control="select2" multiple
                                                                 multiselect-search="true" multiselect-select-all="true"
                                                                 multiselect-max-items="2">
                                                                 @foreach ($industrys as $industrie)
@@ -282,7 +282,7 @@
                                                         <div class="fv-row mb-3">
                                                             <label class="form-label">Solution Name</label>
                                                             <select class="form-select form-select-solid form-select-sm"
-                                                                name="solution_id[]" id="field2" multiple
+                                                                name="solution_id[]" id="solution_id" data-control="select2" multiple
                                                                 multiselect-search="true" multiselect-select-all="true"
                                                                 multiselect-max-items="2">
                                                                 @foreach ($solutions as $solutionDetail)
