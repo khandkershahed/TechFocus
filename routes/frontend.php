@@ -257,5 +257,5 @@ Route::get('/partner-list', [UserListController::class, 'partnersList'])->name('
 Route::get('/partner/edit/{id}', [UserListController::class, 'editPartner'])->name('partner.edit');
 Route::put('/partner/update/{id}', [UserListController::class, 'updatePartner'])->name('partner.update');
 Route::delete('/partner/delete/{id}', [UserListController::class, 'deletePartner'])->name('partner.delete');
-//terms 
+
 

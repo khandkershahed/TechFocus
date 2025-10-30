@@ -254,25 +254,6 @@ class SiteController extends Controller
 
         return view('frontend.pages.shop.filterProducts', $data);
     }
-
-
-
-
-    // private $faqRepository;
-    // private $dynamicCategoryRepository;
-
-    // public function __construct(FaqRepositoryInterface $faqRepository, DynamicCategoryRepositoryInterface $dynamicCategoryRepository)
-    // {
-    //     $this->faqRepository = $faqRepository;
-    //     $this->dynamicCategoryRepository = $dynamicCategoryRepository;
-    // }
-
-
-    // public function terms()
-    // {
-    //     return view('frontend.pages.others.terms');
-    // }
-
     private $termsAndPolicyRepository;
     private $faqRepository;
     private $dynamicCategoryRepository;
@@ -392,7 +373,7 @@ class SiteController extends Controller
             // Pass all data to Blade
             return view('frontend.pages.search.index', compact(
                 'products',
-                'query',       // optional, for search term
+                'query',       
                 'categories',
                 'solutions',
                 'news_trends'
@@ -413,9 +394,8 @@ class SiteController extends Controller
             ->where('status', 'active')
             ->paginate(12);
 
-        // -------------------------
         // Collect dynamic categories
-        // -------------------------
+
         $allCategoryIds = [];
         foreach ($products as $product) {
             if (is_array($product->category_id)) {
@@ -430,26 +410,26 @@ class SiteController extends Controller
         $categories = Category::whereIn('id', array_unique($allCategoryIds))
             ->get(['id', 'name', 'slug']);
 
-        // -------------------------
         // Collect dynamic solutions
-        // -------------------------
+
         $solutions = collect();
         foreach ($products as $product) {
             $solutions = $solutions->merge($product->solutions);
         }
         $solutions = $solutions->unique('id');
 
-        // -------------------------
         // Collect dynamic news & trends by product IDs
-        // -------------------------
+
         $productIds = $products->pluck('id')->toArray();
         $news_trends = NewsTrend::where('type', 'trends')
-            ->whereIn('product_id', $productIds) // assuming NewsTrend has product_id column
+            ->whereIn('product_id', $productIds) 
             ->get();
 
-        // -------------------------
-        // Return to search view
-        // -------------------------
+
+
+
+            // Return to search view
+
         return view('frontend.pages.search.index', compact(
             'products',
             'searchTerm',
@@ -458,10 +438,7 @@ class SiteController extends Controller
             'news_trends'
         ));
     }
-
-
-
-    public function show($slug)
+   public function show($slug)
     {
         $product = Product::with('brand')->where('slug', $slug)->first();
 
@@ -480,16 +457,8 @@ class SiteController extends Controller
 
     //addign search option brand 
     public function searchBrands(Request $request)
-    {
-        // \Log::info('=== SEARCH BRANDS CALLED ===');
-        // \Log::info('Request URL: ' . $request->fullUrl());
-        // \Log::info('All request data: ', $request->all());
-        // \Log::info('Search parameter: "' . $request->input('search') . '"');
-
+    { 
         $search = $request->input('search', '');
-
-        // \Log::info('Processing search for: "' . $search . '"');
-
         try {
             // If search is empty, return all brands
             if (empty($search)) {
@@ -508,24 +477,14 @@ class SiteController extends Controller
                     ->latest()
                     ->paginate(18, ['*'], 'featured_page');
             }
-
-            // \Log::info('Search completed:');
-            // \Log::info('- Top brands found: ' . $top_brands->count());
-            // \Log::info('- Featured brands found: ' . $featured_brands->count());
-
             // Return the partial view
             return view('frontend.pages.brand.partials.brand_list_content', compact('top_brands', 'featured_brands'));
         } catch (\Exception $e) {
-            // \Log::error('Search brands error: ' . $e->getMessage());
-            // \Log::error('Stack trace: ' . $e->getTraceAsString());
-
+            
             // Return error response
             return response('<div class="alert alert-danger text-center">Error: ' . $e->getMessage() . '</div>');
         }
     }
-
-
-
 
     // All FAQs
     public function faq()
@@ -551,7 +510,6 @@ class SiteController extends Controller
         ]);
     }
 
-
     // Filter by category
     public function faqByCategory($slug)
     {
@@ -565,3 +523,5 @@ class SiteController extends Controller
         return view('frontend.pages.others.faq', compact('category', 'faqs', 'categories'));
     }
 }
+
+

@@ -1,5 +1,5 @@
 <!-- Search Results -->
-<div class="search-info mb-3 p-3 bg-light rounded">
+{{-- <div class="search-info mb-3 p-3 bg-light rounded">
     <small class="text-muted">
         @if(request()->has('search') && !empty(request('search')))
             Showing results for: "<strong>{{ request('search') }}</strong>"
@@ -7,13 +7,13 @@
             Showing all brands
         @endif
     </small>
-</div>
+</div> --}}
 
 <section class="mb-4">
     <div class="devider-wrap">
         <h4 class="mb-4 devider-content">
             <span class="devider-text">Top Brands</span>
-            <small class="text-muted">({{ $top_brands->total() }} found)</small>
+            {{-- <small class="text-muted">({{ $top_brands->total() }} found)</small> --}}
         </h4>
     </div>
     <div class="row brand-logos">
@@ -58,7 +58,7 @@
     <div class="devider-wrap">
         <h4 class="mb-4 devider-content">
             <span class="devider-text">Featured Brands</span>
-            <small class="text-muted">({{ $featured_brands->total() }} found)</small>
+            {{-- <small class="text-muted">({{ $featured_brands->total() }} found)</small> --}}
         </h4>
     </div>
     <div class="row brand-logos">
