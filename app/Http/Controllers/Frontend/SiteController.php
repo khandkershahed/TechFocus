@@ -22,6 +22,7 @@ use App\Models\Admin\SubSubCategory;
 use App\Models\Admin\DynamicCategory;
 use Illuminate\Support\Facades\Session;
 use App\Repositories\Interfaces\FaqRepositoryInterface;
+use App\Repositories\Interfaces\TermsAndPolicyRepositoryInterface;
 use App\Repositories\Interfaces\DynamicCategoryRepositoryInterface;
 
 
@@ -257,19 +258,41 @@ class SiteController extends Controller
 
 
 
+    // private $faqRepository;
+    // private $dynamicCategoryRepository;
+
+    // public function __construct(FaqRepositoryInterface $faqRepository, DynamicCategoryRepositoryInterface $dynamicCategoryRepository)
+    // {
+    //     $this->faqRepository = $faqRepository;
+    //     $this->dynamicCategoryRepository = $dynamicCategoryRepository;
+    // }
+
+
+    // public function terms()
+    // {
+    //     return view('frontend.pages.others.terms');
+    // }
+
+    private $termsAndPolicyRepository;
     private $faqRepository;
     private $dynamicCategoryRepository;
 
-    public function __construct(FaqRepositoryInterface $faqRepository, DynamicCategoryRepositoryInterface $dynamicCategoryRepository)
-    {
+    public function __construct(
+        TermsAndPolicyRepositoryInterface $termsAndPolicyRepository,
+        FaqRepositoryInterface $faqRepository, 
+        DynamicCategoryRepositoryInterface $dynamicCategoryRepository
+    ) {
+        $this->termsAndPolicyRepository = $termsAndPolicyRepository;
         $this->faqRepository = $faqRepository;
         $this->dynamicCategoryRepository = $dynamicCategoryRepository;
     }
 
-
     public function terms()
     {
-        return view('frontend.pages.others.terms');
+        // Get active terms and policies, you might want to filter by company or other criteria
+        $termsAndPolicies = $this->termsAndPolicyRepository->getActiveTermsAndPolicies();
+        
+        return view('frontend.pages.others.terms', compact('termsAndPolicies'));
     }
 
     public function about()

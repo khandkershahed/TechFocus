@@ -18,6 +18,7 @@ use App\Http\Controllers\Partner\DashboardController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Models\User;
 use App\Http\Controllers\Admin\UserListController;
+use App\Http\Controllers\admin\TermsAndPolicyController;
 
 Route::get('/', [SiteController::class, 'homePage'])->name('homepage');
 Route::get('solution/{slug}', [SiteController::class, 'solutionDetails'])->name('solution.details');
@@ -256,3 +257,5 @@ Route::get('/partner-list', [UserListController::class, 'partnersList'])->name('
 Route::get('/partner/edit/{id}', [UserListController::class, 'editPartner'])->name('partner.edit');
 Route::put('/partner/update/{id}', [UserListController::class, 'updatePartner'])->name('partner.update');
 Route::delete('/partner/delete/{id}', [UserListController::class, 'deletePartner'])->name('partner.delete');
+//terms 
+

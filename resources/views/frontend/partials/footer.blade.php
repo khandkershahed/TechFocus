@@ -84,7 +84,9 @@
                 <p class="text-center">© 2025 All rights reserved</p>
                 <ul class="d-flex justify-content-center ps-0">
                     <li>
-                        <a href="{{route('terms')}}">Terms - </a>
+                        {{-- <a href="{{route('terms')}}">Terms - </a> --}}
+                        <a href="{{ route('terms') }}">Terms & Policy</a>
+
                     </li>
                     <li>
                         <a href="privacy.html">Privacy Policy - </a>

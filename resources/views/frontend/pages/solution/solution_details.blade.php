@@ -10,7 +10,7 @@
             z-index: 1020;
             transition: all 0.3s;
         }
-
+        
         main {
             margin-top: 6rem;
         }
