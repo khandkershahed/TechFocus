@@ -60,10 +60,10 @@
             <div class="col-lg-8 offset-lg-2 d-flex">
                 @php
                 $brandLogos = [
-                '/img/pngwing.com.png',
-                '/img/pngwing.com.png',
-                '/img/pngwing.com.png',
-                '/img/pngwing.com.png',
+                '/frontend/images/NG IT Logo-01.png',
+                '/frontend/images/NG IT Logo-01.png',
+                '/frontend/images/NG IT Logo-01.png',
+                '/frontend/images/NG IT Logo-01.png',
                 ];
                 @endphp
                 <div class="d-flex justify-content-center align-items-center">
