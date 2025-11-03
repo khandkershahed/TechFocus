@@ -275,6 +275,7 @@ class SolutionDetailsController extends Controller
      */
     public function edit($id)
     {
+        
         return view('admin.pages.solutionDetails.edit', [
             'solutionDetail' => SolutionDetail::with('rowOne', 'rowFour', 'solutionCardOne', 'solutionCardTwo', 'solutionCardThree', 'solutionCardFour', 'solutionCardFive', 'solutionCardSix', 'solutionCardSeven', 'solutionCardEight')->find($id),
             'industries' => Industry::get(['id', 'name']),

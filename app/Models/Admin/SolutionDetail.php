@@ -117,4 +117,18 @@ class SolutionDetail extends Model
     {
         return $this->belongsTo(SolutionCard::class, 'solution_card_eight_id');
     }
+    // In SolutionDetail model
+// In SolutionDetail.php
+
+public function getIndustryIdsAttribute()
+{
+    return $this->industry_id ? json_decode($this->industry_id) : [];
+}
+
+public function getBrandIdsAttribute()
+{
+    return $this->brand_id ? json_decode($this->brand_id) : [];
+}
+
+
 }

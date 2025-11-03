@@ -101,8 +101,7 @@
                                                             <label class="form-label">Banner Image</label>
                                                             <input type="file"
                                                                 class="form-control form-control-solid form-control-sm"
-                                                                name="banner_image" id="validationCustom01"
-                                                                placeholder="Enter Banner Image">
+                                                                name="banner_image" id="banner_image" accept="image/*">
                                                             <div class="invalid-feedback"> Please Enter Banner Image</div>
                                                         </div>
                                                     </div>
@@ -111,8 +110,7 @@
                                                             <label class="form-label">Thumbnail Image</label>
                                                             <input type="file"
                                                                 class="form-control form-control-solid form-control-sm"
-                                                                name="thumbnail_image" id="validationCustom01"
-                                                                placeholder="Enter Thumbnail Image">
+                                                                name="thumbnail_image" id="thumbnail_image" accept="image/*">
                                                             <div class="invalid-feedback"> Please Enter Thumbnail Image
                                                             </div>
                                                         </div>
@@ -336,7 +334,7 @@
                                                                         <input type="file"
                                                                             class="form-control form-control-solid form-control-sm"
                                                                             name="solution_card_image_one"
-                                                                            id="validationCustom01"
+                                                                            id="solution_card_image_one" accept="image/*"
                                                                             placeholder="Enter Solution Card Image One">
                                                                         <div class="invalid-feedback"> Please Enter
                                                                             Solution
@@ -431,8 +429,8 @@
                                                                             Two</label>
                                                                         <input type="file"
                                                                             class="form-control form-control-solid form-control-sm"
-                                                                            name="solution_card_image_Two"
-                                                                            id="validationCustom01"
+                                                                            name="solution_card_image_two"
+                                                                            id="solution_card_image_two" accept="image/*"
                                                                             placeholder="Enter Solution Card Image Two">
                                                                         <div class="invalid-feedback"> Please Enter
                                                                             Solution
@@ -530,7 +528,7 @@
                                                                         <input type="file"
                                                                             class="form-control form-control-solid form-control-sm"
                                                                             name="solution_card_image_three"
-                                                                            id="validationCustom01"
+                                                                            id="solution_card_image_three" accept="image/*"
                                                                             placeholder="Enter Solution Card Image Three">
                                                                         <div class="invalid-feedback"> Please Enter
                                                                             Solution
@@ -626,7 +624,7 @@
                                                                         <input type="file"
                                                                             class="form-control form-control-solid form-control-sm"
                                                                             name="solution_card_image_four"
-                                                                            id="validationCustom01"
+                                                                            id="solution_card_image_four" accept="image/*"
                                                                             placeholder="Enter Solution Card Image Four">
                                                                         <div class="invalid-feedback"> Please Enter
                                                                             Solution
@@ -721,8 +719,8 @@
                                                                             Five</label>
                                                                         <input type="file"
                                                                             class="form-control form-control-solid form-control-sm"
-                                                                            name="solution_card_image_Five"
-                                                                            id="validationCustom01"
+                                                                            name="solution_card_image_five"
+                                                                            id="solution_card_image_five" accept="image/*"
                                                                             placeholder="Enter Solution Card Image Five">
                                                                         <div class="invalid-feedback"> Please Enter
                                                                             Solution
@@ -883,7 +881,7 @@
                                                             <label class="form-label">Rows Image Four</label>
                                                             <input type="file"
                                                                 class="form-control form-control-solid form-control-sm"
-                                                                name="banner_image" id="validationCustom01"
+                                                                name="rows_image_four" id="rows_image_four" accept="image/*"
                                                                 placeholder="Enter Rows Image Four">
                                                             <div class="invalid-feedback"> Please Enter Rows Image Four
                                                             </div>
@@ -1041,8 +1039,8 @@
                                                                             Six</label>
                                                                         <input type="file"
                                                                             class="form-control form-control-solid form-control-sm"
-                                                                            name="solution_card_image_Six"
-                                                                            id="validationCustom01"
+                                                                            name="solution_card_image_six"
+                                                                            id="solution_card_image_six" accept="image/*"
                                                                             placeholder="Enter Solution Card Image Six">
                                                                         <div class="invalid-feedback"> Please Enter
                                                                             Solution
@@ -1137,8 +1135,8 @@
                                                                             Seven</label>
                                                                         <input type="file"
                                                                             class="form-control form-control-solid form-control-sm"
-                                                                            name="solution_card_image_Seven"
-                                                                            id="validationCustom01"
+                                                                            name="solution_card_image_seven"
+                                                                            id="solution_card_image_seven" accept="image/*"
                                                                             placeholder="Enter Solution Card Image Seven">
                                                                         <div class="invalid-feedback"> Please Enter
                                                                             Solution
@@ -1233,8 +1231,8 @@
                                                                             Eight</label>
                                                                         <input type="file"
                                                                             class="form-control form-control-solid form-control-sm"
-                                                                            name="solution_card_image_Eight"
-                                                                            id="validationCustom01"
+                                                                            name="solution_card_image_eight"
+                                                                            id="solution_card_image_eight" accept="image/*"
                                                                             placeholder="Enter Solution Card Image Eight">
                                                                         <div class="invalid-feedback"> Please Enter
                                                                             Solution
@@ -1337,30 +1335,32 @@
             function validateAndSwitchTab(targetTabId) {
                 let isValid = true;
 
-
                 // Get the index of the tab to be shown
                 const activeTabHref = $('.tab-trigger.active').attr('href');
                 $(activeTabHref).find('input, textarea, select').each(function() {
                     var $field = $(this);
 
-
                     // Check if it's a Select2 element
                     var isSelect2 = $field.hasClass('select2-hidden-accessible');
+                    var isFileInput = $field.attr('type') === 'file';
 
-
-                    if ($field.prop('required') && $field.val() === '') {
+                    if ($field.prop('required') && !$field.val()) {
                         isValid = false;
-
 
                         if (isSelect2) {
                             // Apply CSS based on the element type
                             $field.next('.select2-container').addClass('is-invalid');
+                        } else if (isFileInput) {
+                            $field.addClass('is-invalid');
+                            // Add file validation feedback
+                            if (!$field.next('.file-feedback').length) {
+                                $field.after('<div class="file-feedback invalid-feedback">Please select a file</div>');
+                            }
                         } else {
                             $field.addClass('is-invalid');
                         }
                     }
                 });
-
 
                 if (!isValid) {
                     // Fields are not valid, prevent the tab switch
@@ -1372,33 +1372,32 @@
                 }
             }
 
-
             // Function to switch tabs
             function switchTab(targetTabId) {
                 $('.nav-link[href="' + targetTabId + '"]').tab('show');
             }
-
 
             // Event handler for tab switch
             $('.tab-trigger').on('show.bs.tab', function(event) {
                 return validateAndSwitchTab($(this).data('bs-target'));
             });
 
-
             // Event handler for input change
             $('.tab-content').on('input change', 'input, textarea, select', function() {
                 var $field = $(this);
                 var isSelect2 = $field.hasClass('select2-hidden-accessible');
-
+                var isFileInput = $field.attr('type') === 'file';
 
                 // Remove red border when user interacts with the field
                 if (isSelect2) {
                     $field.next('.select2-container').removeClass('is-invalid');
+                } else if (isFileInput) {
+                    $field.removeClass('is-invalid');
+                    $field.next('.file-feedback').remove();
                 } else {
                     $field.removeClass('is-invalid');
                 }
             });
-
 
             // Event handler for multi-select change
             $('.multiple-select').on('change', function() {
@@ -1407,23 +1406,19 @@
                 $multiSelect.removeClass('is-invalid');
             });
 
-
             // Event handler for the "Continue" button
             $('.tab-trigger-next').on('click', function(event) {
                 // Assuming the data-bs-target attribute contains the tab ID to switch to
                 const targetTabId = $(this).data('bs-target');
 
-
                 // Validate and switch to the next tab
                 validateAndSwitchTab(targetTabId);
             });
-
 
             // Event handler for the "Previous" button
             $('.tab-trigger-previous').on('click', function(event) {
                 // Assuming the data-bs-target attribute contains the tab ID to switch to
                 const targetTabId = $(this).data('bs-target');
-
 
                 // Validate and switch to the previous tab
                 validateAndSwitchTab(targetTabId);
