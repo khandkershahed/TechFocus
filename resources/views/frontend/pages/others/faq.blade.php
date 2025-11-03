@@ -5,7 +5,7 @@
 
 @section('content')
 <div class="faq-banner">
-    <img src="{{ asset('/img/jak_stahnout_wordpress_featured.webp') }}" alt="FAQ Banner">
+    <img src="{{ asset('/img/FAQ(1920x525).webp') }}" alt="FAQ Banner">
 </div>
 
 <div class="container my-5">
