@@ -117,7 +117,7 @@
 
 <div class="px-0 col-lg-12 px-lg-0">
     <div class="container">
-        <div class="pt-4 row">
+        <div class="pt-3 row">
             @foreach ($chunks as $chunkKey => $chunk)
                 <div class="col-md-4 {{ $chunkKey == 0 ? 'pe-0 ps-0' : 'pe-0' }}">
                     @foreach ($chunk as $key => $category)
@@ -191,17 +191,17 @@
                         <div class="col-lg-6 col-sm-12">
                             <div class="holder-main-text">
                                 @if($homePage->section_one_badge)
-                                <h6 style="width: 28%; line-height: 1.4;">
+                                <h6 style="line-height: 1.4;">
                                     {{ $homePage->section_one_badge }}
                                 </h6>
                                 @endif
                                 
-                                <h2 class="pb-2 mb-0 w-75">
+                                <h2 class="pb-2 mb-0">
                                     {{ $homePage->section_one_title }}
                                 </h2>
                                 
                                 @if($homePage->section_one_description)
-                                <p class="py-3 mt-0 w-75" style="text-align: justify">
+                                <p class="py-3 mt-0 text-black" style="text-align: justify">
                                     {!! $homePage->section_one_description !!}
                                 </p>
                                 @endif
@@ -307,8 +307,10 @@
                         <div class="col-lg-3 col-12">
                             <div class="mb-4 url-box">
                                 <div class="border-0 card rounded-0 h-product">
-                                    <div class="bg-white card-header d-flex justify-content-between">
-                                        <span class="product_badge">New</span>
+                                    <div class="overflow-hidden bg-white card-header d-flex justify-content-between">
+                                         <div class="badge-new">
+                                            <span class="">New</span>
+                                        </div>
                                         <img src="{{ asset('storage/brand/logo/' . optional($product->brand)->logo) }}"
                                             height="20px" alt="{{ optional($product->brand)->title }}"
                                             loading="lazy" />
@@ -326,7 +328,7 @@
 
                                             <div class="mb-3">
                                                 @if (!empty($product->sku_code))
-                                                    <p class="p-0 pb-2 m-0">
+                                                    <p class="p-0 pb-0 m-0">
                                                         <a href="javascript:void(0)">
                                                             <i
                                                                 class="fa-solid fa-paperclip main-color tags-text me-2"></i>
@@ -724,17 +726,17 @@
                                 <div class="col-lg-6">
                                     <div class="holder-main-text">
                                         @if ($homePage->section_seven_badge)
-                                            <h6 style="width: 23%; line-height: 25px">
+                                            <h6 style="line-height: 25px">
                                                 {{ $homePage->section_seven_badge }}
                                             </h6>
                                         @endif
 
-                                        <h2 class="pt-3 pb-2 mb-0 w-75 text-capitalize">
+                                        <h2 class="pt-3 pb-2 mb-0 text-capitalize">
                                             {{ $homePage->section_seven_title }}
                                         </h2>
 
                                         @if ($homePage->section_seven_description)
-                                            <p class="pt-2 mt-0 w-75" style="text-align: justify">
+                                            <p class="pt-2 mt-0 text-black" style="text-align: justify">
                                                 {!! $homePage->section_seven_description !!}
                                             </p>
                                         @endif

@@ -1,7 +1,7 @@
 <div class="container-fluid" style="background-color: var(--secondary-color)">
     <div class="container text-white" style="font-size: 14px">
         <div class="row align-items-center">
-            <div class="p-4 text-center col-lg-3 text-lg-start border-left-side">
+            <div class="p-4 text-center col-lg-2 text-lg-start border-left-side">
                 <div>
                     <a href="{{ route('buying.guide') }}">HOW TO BUY PRODUCTS </a>
                 </div>
@@ -16,23 +16,25 @@
                     <a href="{{route('faq')}}">FAQ </a>
                 </div>
             </div>
-            <div class="p-4 col-lg-5 d-flex justify-content-between align-items-center social-area">
+            <div class="p-4 text-center col-lg-2 border-left-side">
+                <div>
+                    <a href="{{route('about')}}">About Us</a>
+                </div>
+            </div>
+            <div class="p-4 col-lg-4 d-flex justify-content-between align-items-center social-area">
                 <ul class="">
                     <li class="pt-2">
-                        <a href="{{route('brand.list')}}">Brand list</a>
+                        <a href="{{route('brand.list')}}">Our Brands</a>
                     </li>
-                    <li class="pt-2">
+                    <!-- <li class="pt-2">
                         <a href="{{ route('manufacturer.account') }}"> Manufacturer account</a>
-                    </li>
-                    <li class="pt-2">
+                    </li> -->
+                    <!-- <li class="pt-2">
                         <a href="{{route('service')}}"> Our Service</a>
-                    </li>
-                    <li class="pt-2">
+                    </li> -->
+                    <!-- <li class="pt-2">
                         <a href="{{route('subscription')}}"> Subscriptions</a>
-                    </li>
-                    <li class="pt-2">
-                        <a href="{{route('about')}}">About Us</a>
-                    </li>
+                    </li> -->
                 </ul>
                 <div class="social-icons-btn">
                     <a class="icons twitter" href="https://www.x.com/ngenit">
@@ -58,47 +60,40 @@
             <div class="col-lg-8 offset-lg-2 d-flex">
                 @php
                 $brandLogos = [
-                'https://ngenitltd.com/storage/LHhL5VKR2aoXEl2umO4UyKqj95qkKzvIPgZNfRNh.png',
-                'https://www.ngensoftware.com/storage/page-banner/logo/pINXJQPNZ11759560908.png',
-                'https://www.ngensoftware.com/storage/page-banner/logo/8KEBk4kOj51759572777.png',
-                'https://www.ngensoftware.com/storage/page-banner/logo/mr48RIhQIJ1759560955.png',
+                '/img/pngwing.com.png',
+                '/img/pngwing.com.png',
+                '/img/pngwing.com.png',
+                '/img/pngwing.com.png',
                 ];
                 @endphp
                 <div class="d-flex justify-content-center align-items-center">
                     <a href="{{ route('homepage') }}" class="border-left-side pe-lg-3">
-                        <img src="{{ !empty($site->system_logo_white) && file_exists(public_path('storage/webSetting/systemLogoWhite/' . $site->system_logo_white)) ? asset('storage/webSetting/systemLogoWhite/' . $site->system_logo_white) : asset('backend/images/no-image-available.png') }}"
-                            style="width: 500px;" class="me-3" alt="" />
+                        <img src="{{ !empty($site->system_logo_white) && file_exists(public_path('storage/webSetting/systemLogoWhite/' . $site->system_logo_white)) ? asset('storage/webSetting/systemLogoWhite/' . $site->system_logo_white) : asset('https://www.techfocusltd.com/storage/webSetting/systemLogoWhite/Tech-Focus_Rl8twpWh.png') }}"
+                            style="width: 400px;" class="me-3" alt="" />
                     </a>
                     @foreach($brandLogos as $logo)
-                    <a href="#" class="mb-3 me-4">
+                    <a href="#" class="mb-3 me-4 ms-5">
                         <img src="{{ $logo }}"
-                            width="300px"
+                            width="200px"
                             alt="Brand Logo"
-                            onerror="this.onerror=null; this.src='{{ asset('backend/images/no-image-available.png') }}';">
+                            onerror="this.onerror=null; this.src='{{ asset('https://www.techfocusltd.com/storage/webSetting/systemLogoWhite/Tech-Focus_Rl8twpWh.png') }}';">
                     </a>
                     @endforeach
                 </div>
             </div>
-            <div class="text-white col-lg-12 mt-lg-5 mb-lg-5">
-                <p class="text-center">© 2025 All rights reserved</p>
-                <ul class="d-flex justify-content-center ps-0">
-                    <li>
-                      
-                        <a href="{{ route('terms') }}">Terms & Policy</a>
 
-                    </li>
-                    <li>
-                        <a href="#">Privacy Policy - </a>
-                    </li>
-                    <li>
-                        <a href="{{route('terms')}}">General Terms - </a>
-                    </li>
-                    <li>
-                        <a href="">Manage Cookies - </a>
-                    </li>
-                    <li>
-                        <a href="#">Distributors List </a>
-                    </li>
+        </div>
+        <div class="pt-5 mt-5 row">
+            <div class="text-white col-lg-6">
+                <a href="{{ route('homepage') }}">
+                    <p class="text-start">© 2025 All rights reserved {{ $site->site_name ?? "Techfocus LTD"}}</p>
+                </a>
+            </div>
+            <div class="text-center col-lg-6 footer-bottom-menu text-lg-end">
+                <ul class="flex-wrap gap-3 p-0 m-0 footer-links list-unstyled d-inline-flex">
+                    <li><a href="{{ route('terms') }}">Terms & Conditions</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Manage Cookies</a></li>
                 </ul>
             </div>
         </div>

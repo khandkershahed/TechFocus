@@ -570,9 +570,15 @@ textarea {
   color: white;
 }
 
-/* .solution-feature-container {
-  width: 18rem;
-} */
+.solution-feature-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* ensures equal height */
+}
+
+.solution-feature-cards {
+    flex-grow: 1;
+}
 
 .section_text_wrapper h4 {
   margin: 10px 0px;
