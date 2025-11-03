@@ -35,11 +35,10 @@
                     </li>
                 </ul>
                 <div class="social-icons-btn">
-                    <a class="icons twitter" href="https://www.x.com/ngenit
-">
+                    <a class="icons twitter" href="https://www.x.com/ngenit">
                         <i class="fa-brands fa-twitter"></i>
                     </a>
-                    <a class="icons facebook" href="https://www.facebook.com/share/1FZ8jpvcis/">
+                    <a class="icons facebook" href="https://www.facebook.com/ngenitltd/">
                         <i class="fa-brands fa-facebook-f"></i>
                     </a>
                     <a class="icons instagram" href="https://www.instagram.com/ngenitltd">
@@ -89,7 +88,7 @@
 
                     </li>
                     <li>
-                        <a href="privacy.html">Privacy Policy - </a>
+                        <a href="#">Privacy Policy - </a>
                     </li>
                     <li>
                         <a href="{{route('terms')}}">General Terms - </a>
@@ -98,7 +97,7 @@
                         <a href="">Manage Cookies - </a>
                     </li>
                     <li>
-                        <a href="distibutors.html">Distributors List </a>
+                        <a href="#">Distributors List </a>
                     </li>
                 </ul>
             </div>
