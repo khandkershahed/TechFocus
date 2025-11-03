@@ -155,11 +155,13 @@
                         <p>{{ $aboutPage->section_three_tab_one_detailed_description }}</p>
                         <!-- Optional Button -->
                         @if ($aboutPage->section_three_tab_one_button_name)
-                        <div class="pt-4">
-                            <a href="{{ $aboutPage->section_three_tab_one_button_link }}"
-                                class="text-btn main-color">{{ $aboutPage->section_three_tab_one_button_name }} <i
-                                    class="fa-solid fa-chevron-right"></i></a>
-                        </div>
+                     <div class="pt-4">
+                                <a href="{{ route('contact') }}" class="text-btn main-color">
+                                    {{ $aboutPage->section_three_tab_one_button_name }} 
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </a>
+                            </div>
+
                         @endif
                     </div>
                     <!-- Optional Quote Section -->

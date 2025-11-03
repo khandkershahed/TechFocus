@@ -92,7 +92,7 @@
             </div>
         </div>
 
-        <!-- 🟦 Products Section -->
+        {{-- <!-- 🟦 Products Section -->
         <div class="col-lg-4 col-sm-12">
             <div class="mb-3">
                 <h4 class="text-center border-bottom industry_title">Products</h4>
@@ -117,49 +117,152 @@
                     <p class="text-center">No Products Found!</p>
                 @endif
             </div>
-   
 
 
-            <!-- 🟨 Sidebar Newsletter Section -->
-            <div class="text-center mt-4">
-                @if (!empty($subcat?->image) && file_exists(public_path('storage/category/image/' . $subcat->image)))
-                    <div class="d-flex justify-content-center mb-3">
-                        <img class="img-fluid" src="{{ asset('storage/category/image/' . $subcat->image) }}" alt="">
-                    </div>
-                @endif
+        <!-- Right: Content -->
+        <div class="col-md-6 bg-dark text-white d-flex flex-column justify-content-center p-4">
+            <h4 class="fw-semibold mb-2">Subscribe to our newsletter</h4>
+            <p class="small mb-3">Receive updates on this section every two weeks.</p>
 
-                <div class="p-5 text-white bg-black rounded">
-                    <div>
-                        <h3 class="main-color">Subscribe to our newsletter</h3>
-                        <p class="mb-3">Receive updates on this section <br /> every two weeks.</p>
-                    </div>
-                    <div class="input-group">
-                        <input type="text" class="form-control rounded-0" placeholder="Enter your email"
-                            aria-label="email" aria-describedby="basic-addon2">
-                        <div class="input-group-append">
-                            <button class="p-3 input-group-text rounded-0" id="basic-addon2">
-                                <i class="fa-solid fa-magnifying-glass"></i>
-                            </button>
+            <form id="newsletterForm" class="d-flex">
+                @csrf
+                <input type="email" name="email" class="form-control rounded-0 border-0" placeholder="Enter your email" required>
+                <button type="submit" class="btn btn-warning rounded-0 px-3">OK</button>
+            </form>
+
+            <p class="mt-3 small">
+                <i>
+                    Please refer to our <a href="#" class="text-warning">Privacy Policy</a>
+                    for details on how DirectIndustry processes your personal data.
+                </i>
+            </p>
+        </div>
+    </div> --}}
+<div class="row g-4">
+    <!-- 🟦 Products Section -->
+    <div class="col-lg-6 col-md-12">
+        <div class="mb-3">
+            <h4 class="text-center border-bottom industry_title">Products</h4>
+
+            @php
+                // Sort products alphabetically by name
+                $products = ($category?->products ?? collect())->sortBy('name');
+            @endphp
+
+            @if ($products->count() > 0)
+                <div class="row">
+                    @foreach ($products as $product)
+                        <div class="mb-3 col-6 col-md-6">
+                            <a href="{{ route('product.details', ['id' => optional($product->brand)->slug, 'slug' => $product->slug]) }}">
+                                <img class="img-fluid w-100" src="{{ $product->thumbnail }}" alt="{{ $product->name }}">
+                            </a>
+                            <p class="mt-1 text-center">{{ $product->name }}</p>
                         </div>
-                    </div>
+                    @endforeach
                 </div>
-
-                <p class="mt-3">
-                    <i>
-                        Please refer to our <a href="#" class="main-color">Privacy Policy</a>
-                        for details on how DirectIndustry processes your personal data.
-                    </i>
-                </p>
-            </div>
+            @else
+                <p class="text-center">No Products Found!</p>
+            @endif
         </div>
     </div>
 
-    <div class="row">
-        <span class="my-4 text-sm text-center sub-color w-100" style="font-size: 10px;">
-            *Prices are pre-tax. They exclude delivery charges and customs duties and do not include
-            additional charges for installation or activation options. Prices are indicative only and
-            may vary by country, with changes to the cost of raw materials and exchange rates.
-        </span>
+    <!-- 🟩 Newsletter Section -->
+    <div class="col-lg-6 col-md-12">
+        <div class="newsletter-card bg-dark text-white d-flex flex-column justify-content-center p-4 h-100">
+            <h4 class="fw-semibold mb-2 text-center">Subscribe to our newsletter</h4>
+            <p class="small mb-3 text-center">Receive updates on this section every two weeks.</p>
+
+            <form id="newsletterForm" class="d-flex">
+                @csrf
+                <input type="email" name="email" class="form-control rounded-0 border-0" placeholder="Enter your email" required>
+                <button type="submit" class="btn btn-warning rounded-0 px-3 ms-2">OK</button>
+            </form>
+
+            <p class="mt-3 small text-center">
+                <i>
+                    Please refer to our <a href="#" class="text-warning">Privacy Policy</a>
+                    for details on how DirectIndustry processes your personal data.
+                </i>
+            </p>
+        </div>
     </div>
 </div>
+
+
+<style>
+    .newsletter-card {
+        max-width: 600px;
+        margin: auto;
+        box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+    .newsletter-card img {
+        object-fit: cover;
+        height: 100%;
+    }
+    .newsletter-card .btn-warning {
+        background-color: #f7941d;
+        color: #fff;
+        border: none;
+    }
+    .newsletter-card .btn-warning:hover {
+        background-color: #d97e12;
+    }
+</style>
+
+<!-- jQuery and SweetAlert2 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#newsletterForm').on('submit', function(e) {
+            e.preventDefault(); // Prevent normal form submission
+
+            var form = $(this);
+            var url = "{{ route('newsletter.subscribe') }}";
+            var token = $('input[name="_token"]', form).val();
+            var email = $('input[name="email"]', form).val();
+
+            $.ajax({
+                url: url,
+                method: "POST",
+                data: {
+                    _token: token,
+                    email: email
+                },
+                success: function(response) {
+                    // Clear the input
+                    form[0].reset();
+
+                    // Show SweetAlert success
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Subscribed!',
+                        text: response.message || 'You have successfully subscribed!',
+                        timer: 3000,
+                        showConfirmButton: false
+                    });
+                },
+                error: function(xhr) {
+                    // Get error message
+                    var errMsg = 'Something went wrong!';
+                    if(xhr.responseJSON && xhr.responseJSON.message){
+                        errMsg = xhr.responseJSON.message;
+                    }
+
+                    // Show SweetAlert error
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: errMsg,
+                        timer: 3000,
+                        showConfirmButton: false
+                    });
+                }
+            });
+        });
+    });
+</script>
+
+
 @endsection

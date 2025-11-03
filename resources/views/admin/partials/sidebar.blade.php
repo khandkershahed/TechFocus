@@ -275,6 +275,15 @@
                     </span>
 
                             <div class="menu-sub menu-sub-accordion">
+                                      <a class="menu-link {{ Route::currentRouteName() == 'newsletter.index' ? 'active' : '' }}"
+                                        href="{{ route('newsletter.index') }}">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                        <span class="menu-title">Newsletter Subscribers</span>
+                                    </a>
+                                                  
                                 
                                 <a class="menu-link {{ Route::current()->getName() == 'clients.list' ? 'active' : '' }}" 
                                 href="{{ route('clients.list') }}">

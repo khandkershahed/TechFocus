@@ -1,5 +1,5 @@
 <?php
-
+use App\Http\Controllers\Admin\NewsLetterController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HR\HRController;
 use App\Http\Controllers\HR\TaskController;
@@ -469,3 +469,15 @@ Route::resource('blogs', BlogController::class)->except(['show']);
 Route::post('/product/delete-image', [ProductController::class, 'deleteImage'])
     ->name('product.deleteImage');
 
+
+
+// Frontend newsletter subscription
+Route::post('/newsletter/subscribe', [NewsLetterController::class, 'subscribe'])->name('newsletter.subscribe');
+
+// Admin routes
+Route::prefix('admin')->group(function () {
+    // Newsletter list page
+    Route::get('newsletter', [NewsLetterController::class, 'index'])->name('newsletter.index');
+    // Delete subscriber
+    Route::delete('newsletter/{id}', [NewsLetterController::class, 'destroy'])->name('admin.newsletter.destroy');
+});
