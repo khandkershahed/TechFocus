@@ -93,35 +93,62 @@ class SiteController extends Controller
         return view('frontend.pages.home.index', $data);
     }
 
-    public function allCatalog()
-    {
-        $banners = PageBanner::where('page_name', 'catalog')->get();
+    // public function allCatalog()
+    // {
+    //     $banners = PageBanner::where('page_name', 'catalog')->get();
 
-        // Get all unique catalog categories (brand, product, industry, solution, company)
-        $catalogCategories = Catalog::distinct()->pluck('category');
+    //     // Get all unique catalog categories (brand, product, industry, solution, company)
+    //     $catalogCategories = Catalog::distinct()->pluck('category');
 
-        // Get all catalogs for the "All" tab with relationships
-        $allCatalogs = Catalog::with(['attachments'])
+    //     // Get all catalogs for the "All" tab with relationships
+    //     $allCatalogs = Catalog::with(['attachments'])
+    //         ->latest()
+    //         ->get();
+
+    //     // Get catalogs grouped by category
+    //     $catalogsByCategory = [];
+    //     foreach ($catalogCategories as $category) {
+    //         $catalogsByCategory[$category] = Catalog::with(['attachments'])
+    //             ->where('category', $category)
+    //             ->latest()
+    //             ->get();
+    //     }
+
+    //     return view('frontend.pages.catalog.allCatalog', compact(
+    //         'catalogCategories',
+    //         'allCatalogs',
+    //         'catalogsByCategory',
+    //         'banners'
+    //     ));
+    // }
+public function allCatalog()
+{
+    $banners = PageBanner::where('page_name', 'catalog')->get();
+
+    // Get all unique catalog categories (brand, product, industry, solution, company)
+    $catalogCategories = Catalog::distinct()->pluck('category');
+
+    // Get all catalogs for the "All" tab with relationships
+    $allCatalogs = Catalog::with(['attachments'])
+        ->latest()
+        ->get();
+
+    // Get catalogs grouped by category
+    $catalogsByCategory = [];
+    foreach ($catalogCategories as $category) {
+        $catalogsByCategory[$category] = Catalog::with(['attachments'])
+            ->where('category', $category)
             ->latest()
             ->get();
-
-        // Get catalogs grouped by category
-        $catalogsByCategory = [];
-        foreach ($catalogCategories as $category) {
-            $catalogsByCategory[$category] = Catalog::with(['attachments'])
-                ->where('category', $category)
-                ->latest()
-                ->get();
-        }
-
-        return view('frontend.pages.catalog.allCatalog', compact(
-            'catalogCategories',
-            'allCatalogs',
-            'catalogsByCategory',
-            'banners'
-        ));
     }
 
+    return view('frontend.pages.catalog.allCatalog', compact(
+        'catalogCategories',
+        'allCatalogs',
+        'catalogsByCategory',
+        'banners'
+    ));
+}
     /**
      * Catalog Details Page
      */

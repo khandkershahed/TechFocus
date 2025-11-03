@@ -61,30 +61,70 @@
                                     <div class="card projects-card rounded-0 h-100 catalog-card"
                                          style="cursor: pointer;"
                                          data-pdf-url="{{ $catalog->document ? asset('storage/catalog/document/' . $catalog->document) : '' }}">
-                                        <img src="{{ $catalog->thumbnail ? asset('storage/catalog/thumbnail/' . $catalog->thumbnail) : asset('frontend/images/no-image.jpg') }}"
+                                        <img src="{{ $catalog->thumbnail ? asset('storage/catalog/thumbnail/' . $catalog->thumbnail) : asset('frontend/images/no-shop-imge.png') }}"
                                              class="card-img-top img-fluid rounded-0"
                                              alt="{{ $catalog->name }}"
                                              style="height: 200px; object-fit: cover;" 
-                                             onerror="this.onerror=null;this.src='{{ asset('frontend/images/error-image.avif') }}';"/>
+                                             onerror="this.onerror=null;this.src='{{ asset('frontend/images/no-shop-imge.png') }}';"/>
                                         <div class="card-body d-flex flex-column">
                                             <p class="text-center flex-grow-1">{{ $catalog->name }}</p>
 
-                                            {{-- Catalog Logo --}}
+                                            {{-- Catalog Logo with Debugging --}}
                                             @php
-                                                $logoUrl = asset('frontend/images/no-logo.png');
+                                                $logoUrl = asset('frontend/images/no-shop-imge.png');
                                                 $logoTitle = 'No Logo';
+                                                $logoAlt = 'No Logo';
 
-                                                if($catalog->category == 'brand' && $catalog->brands->first()?->logo) {
-                                                    $logoUrl = asset('storage/brand/logo/' . $catalog->brands->first()->logo);
-                                                    $logoTitle = $catalog->brands->first()->title;
-                                                } elseif($catalog->category == 'company' && $catalog->companies->first()?->logo) {
-                                                    $logoUrl = asset('storage/company/logo/' . $catalog->companies->first()->logo);
-                                                    $logoTitle = $catalog->companies->first()->name;
+                                                // Debug information
+                                                $debugInfo = [
+                                                    'category' => $catalog->category,
+                                                    'brands_count' => $catalog->brands->count(),
+                                                    'companies_count' => $catalog->companies->count(),
+                                                    'brand_id' => $catalog->brand_id,
+                                                    'company_id' => $catalog->company_id
+                                                ];
+
+                                                if($catalog->category == 'brand' && $catalog->brands->count() > 0) {
+                                                    $firstBrand = $catalog->brands->first();
+                                                    if($firstBrand && $firstBrand->logo) {
+                                                        $logoUrl = asset('storage/brand/logo/' . $firstBrand->logo);
+                                                        $logoTitle = $firstBrand->title;
+                                                        $logoAlt = $firstBrand->title;
+                                                    } else {
+                                                        // If brand exists but no logo, use brand name as text
+                                                        $logoTitle = $firstBrand->title ?? 'Brand';
+                                                        $logoAlt = $firstBrand->title ?? 'Brand';
+                                                    }
+                                                } elseif($catalog->category == 'company' && $catalog->companies->count() > 0) {
+                                                    $firstCompany = $catalog->companies->first();
+                                                    if($firstCompany && $firstCompany->logo) {
+                                                        $logoUrl = asset('storage/company/logo/' . $firstCompany->logo);
+                                                        $logoTitle = $firstCompany->name;
+                                                        $logoAlt = $firstCompany->name;
+                                                    } else {
+                                                        // If company exists but no logo, use company name as text
+                                                        $logoTitle = $firstCompany->name ?? 'Company';
+                                                        $logoAlt = $firstCompany->name ?? 'Company';
+                                                    }
                                                 }
+
+                                                // For debugging - uncomment to see what's happening
+                                                // {{-- <div style="display: none;">Debug: {{ json_encode($debugInfo) }}</div> --}}
                                             @endphp
+
                                             <div class="mb-2 text-center">
-                                                <img src="{{ $logoUrl }}" title="{{ $logoTitle }}" style="max-height: 40px; max-width: 100px;"
-                                                     onerror="this.onerror=null;this.src='{{ asset('frontend/images/error-image.avif') }}';">
+                                                @if($logoUrl != asset('frontend/images/no-shop-imge.png'))
+                                                    <img src="{{ $logoUrl }}" 
+                                                         title="{{ $logoTitle }}" 
+                                                         alt="{{ $logoAlt }}"
+                                                         style="max-height: 40px; max-width: 100px; object-fit: contain;"
+                                                         onerror="this.onerror=null;this.src='{{ asset('frontend/images/no-shop-imge.png') }}';">
+                                                @else
+                                                    <div class="d-flex align-items-center justify-content-center" 
+                                                         style="height: 40px; max-width: 100px; margin: 0 auto;">
+                                                        <span class="small text-muted">{{ $logoTitle }}</span>
+                                                    </div>
+                                                @endif
                                                 <p class="mt-2 mb-0 small">{{ $catalog->page_number ?? 0 }} Pages</p>
                                             </div>
                                         </div>
@@ -117,19 +157,39 @@
 
                                                     {{-- Catalog Logo --}}
                                                     @php
-                                                        $logoUrl = asset('frontend/images/no-logo.png');
+                                                        $logoUrl = asset('frontend/images/no-shop-imge.png');
                                                         $logoTitle = 'No Logo';
-                                                        if($catalog->category == 'brand' && $catalog->brands->first()?->logo) {
-                                                            $logoUrl = asset('storage/brand/logo/' . $catalog->brands->first()->logo);
-                                                            $logoTitle = $catalog->brands->first()->title;
-                                                        } elseif($catalog->category == 'company' && $catalog->companies->first()?->logo) {
-                                                            $logoUrl = asset('storage/company/logo/' . $catalog->companies->first()->logo);
-                                                            $logoTitle = $catalog->companies->first()->name;
+                                                        $logoAlt = 'No Logo';
+
+                                                        if($catalog->category == 'brand' && $catalog->brands->count() > 0) {
+                                                            $firstBrand = $catalog->brands->first();
+                                                            if($firstBrand && $firstBrand->logo) {
+                                                                $logoUrl = asset('storage/brand/logo/' . $firstBrand->logo);
+                                                                $logoTitle = $firstBrand->title;
+                                                                $logoAlt = $firstBrand->title;
+                                                            }
+                                                        } elseif($catalog->category == 'company' && $catalog->companies->count() > 0) {
+                                                            $firstCompany = $catalog->companies->first();
+                                                            if($firstCompany && $firstCompany->logo) {
+                                                                $logoUrl = asset('storage/company/logo/' . $firstCompany->logo);
+                                                                $logoTitle = $firstCompany->name;
+                                                                $logoAlt = $firstCompany->name;
+                                                            }
                                                         }
                                                     @endphp
                                                     <div class="mb-2 text-center">
-                                                        <img src="{{ $logoUrl }}" title="{{ $logoTitle }}" style="max-height: 40px; max-width: 100px;"
-                                                             onerror="this.onerror=null;this.src='{{ asset('frontend/images/no-logo.png') }}';">
+                                                        @if($logoUrl != asset('frontend/images/no-shop-imge.png'))
+                                                            <img src="{{ $logoUrl }}" 
+                                                                 title="{{ $logoTitle }}" 
+                                                                 alt="{{ $logoAlt }}"
+                                                                 style="max-height: 40px; max-width: 100px; object-fit: contain;"
+                                                                 onerror="this.onerror=null;this.src='{{ asset('frontend/images/no-shop-imge.png') }}';">
+                                                        @else
+                                                            <div class="d-flex align-items-center justify-content-center" 
+                                                                 style="height: 40px; max-width: 100px; margin: 0 auto;">
+                                                                <span class="small text-muted">{{ $logoTitle }}</span>
+                                                            </div>
+                                                        @endif
                                                         <p class="mt-2 mb-0 small">{{ $catalog->page_number ?? 0 }} Pages</p>
                                                     </div>
                                                 </div>
@@ -157,7 +217,7 @@ document.addEventListener('DOMContentLoaded', function() {
         card.addEventListener('click', function() {
             const pdfUrl = this.dataset.pdfUrl;
             if(pdfUrl) {
-                window.open(pdfUrl, '_blank'); // open PDF in new tab
+                window.open(pdfUrl, '_blank');
             } else {
                 alert('PDF not available for this catalog.');
             }
