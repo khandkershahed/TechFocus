@@ -1,7 +1,7 @@
 @extends('frontend.master')
 @section('metadata')
     <meta name="description" content="Read our Terms & Conditions and Privacy Policy">
-    <title>Terms & Policy - {{ config('app.name') }}</title>
+    <title>Terms & Conditions - {{ config('app.name') }}</title>
 @endsection
 @section('content')
 <style>

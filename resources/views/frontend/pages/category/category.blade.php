@@ -92,41 +92,36 @@
             </div>
         </div>
 
-        {{-- <!-- 🟦 Products Section -->
-        <div class="col-lg-4 col-sm-12">
-            <div class="mb-3">
-                <h4 class="text-center border-bottom industry_title">Products</h4>
 
-                @php
-                    // Sort products alphabetically by name
-                    $products = ($category?->products ?? collect())->sortBy('name');
-                @endphp
-
-                @if ($products->count() > 0)
-                    <div class="row">
-                        @foreach ($products as $product)
-                            <div class="mb-2 col-12 col-md-6">
-                                <a href="{{ route('product.details', ['id' => optional($product->brand)->slug, 'slug' => $product->slug]) }}">
-                                    <img class="img-fluid w-100" src="{{ $product->thumbnail }}" alt="{{ $product->name }}">
-                                </a>
-                                <p class="mt-1 text-center">{{ $product->name }}</p>
-                            </div>
-                        @endforeach
+<div class="row">
+    <!-- Left Column: Products -->
+    <div class="col-lg-6 col-sm-12 mb-4">
+        <h4 class="text-center border-bottom industry_title">New products</h4>
+        @if ($products->count() > 0)
+            <div class="row g-2">
+                @foreach ($products as $product)
+                    <div class="col-6 col-md-3">
+                        <a href="{{ route('product.details', ['id' => optional($product->brand)->slug, 'slug' => $product->slug]) }}">
+                            <img class="img-fluid w-100" src="{{ $product->thumbnail }}" alt="{{ $product->name }}">
+                        </a>
                     </div>
-                @else
-                    <p class="text-center">No Products Found!</p>
-                @endif
+                @endforeach
             </div>
+        @else
+            <p class="text-center">No Products Found!</p>
+        @endif
+    </div>
 
-
-        <!-- Right: Content -->
-        <div class="col-md-6 bg-dark text-white d-flex flex-column justify-content-center p-4">
+    <!-- Right Column: Newsletter + Exhibit -->
+    <div class="col-lg-6 col-sm-12">
+        <!-- Newsletter -->
+        <div class="bg-dark text-white p-4 mb-3">
             <h4 class="fw-semibold mb-2">Subscribe to our newsletter</h4>
             <p class="small mb-3">Receive updates on this section every two weeks.</p>
 
             <form id="newsletterForm" class="d-flex">
                 @csrf
-                <input type="email" name="email" class="form-control rounded-0 border-0" placeholder="Enter your email" required>
+                <input type="email" name="email" class="form-control rounded-0 border-0 me-2" placeholder="Enter your email" required>
                 <button type="submit" class="btn btn-warning rounded-0 px-3">OK</button>
             </form>
 
@@ -137,57 +132,8 @@
                 </i>
             </p>
         </div>
-    </div> --}}
-<div class="row g-4">
-    <!-- 🟦 Products Section -->
-    <div class="col-lg-6 col-md-12">
-        <div class="mb-3">
-            <h4 class="text-center border-bottom industry_title">Products</h4>
 
-            @php
-                // Sort products alphabetically by name
-                $products = ($category?->products ?? collect())->sortBy('name');
-            @endphp
-
-            @if ($products->count() > 0)
-                <div class="row">
-                    @foreach ($products as $product)
-                        <div class="mb-3 col-6 col-md-6">
-                            <a href="{{ route('product.details', ['id' => optional($product->brand)->slug, 'slug' => $product->slug]) }}">
-                                <img class="img-fluid w-100" src="{{ $product->thumbnail }}" alt="{{ $product->name }}">
-                            </a>
-                            <p class="mt-1 text-center">{{ $product->name }}</p>
-                        </div>
-                    @endforeach
-                </div>
-            @else
-                <p class="text-center">No Products Found!</p>
-            @endif
-        </div>
-    </div>
-
-    <!-- 🟩 Newsletter Section -->
-    <div class="col-lg-6 col-md-12">
-        <div class="newsletter-card bg-dark text-white d-flex flex-column justify-content-center p-4 h-100">
-            <h4 class="fw-semibold mb-2 text-center">Subscribe to our newsletter</h4>
-            <p class="small mb-3 text-center">Receive updates on this section every two weeks.</p>
-
-            <form id="newsletterForm" class="d-flex">
-                @csrf
-                <input type="email" name="email" class="form-control rounded-0 border-0" placeholder="Enter your email" required>
-                <button type="submit" class="btn btn-warning rounded-0 px-3 ms-2">OK</button>
-            </form>
-
-            <p class="mt-3 small text-center">
-                <i>
-                    Please refer to our <a href="#" class="text-warning">Privacy Policy</a>
-                    for details on how DirectIndustry processes your personal data.
-                </i>
-            </p>
-        </div>
-    </div>
-</div>
-
+        
 
 <style>
     .newsletter-card {

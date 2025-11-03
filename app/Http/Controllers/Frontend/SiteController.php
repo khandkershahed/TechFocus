@@ -243,17 +243,93 @@ public function allCatalog()
         return view('frontend.pages.solution.solution_details', $data);
     }
 
-  public function category($slug)
+// public function category($slug)
+// {
+//     $category = Category::with('children')->where('slug', $slug)->first();
+
+//     if (!$category) {
+//         Session::flash('error', 'Category not found.');
+//         return redirect()->back();
+//     }
+
+//     // Get all category IDs recursively (current + all subcategories)
+//     $categoryIds = $this->getAllCategoryIds($category)->toArray();
+
+//     // Fetch products where category_id JSON contains any of these IDs
+//     $products = Product::where(function($query) use ($categoryIds) {
+//         foreach ($categoryIds as $id) {
+//             $query->orWhereJsonContains('category_id', [$id])
+//                   ->orWhereRaw('JSON_UNQUOTE(category_id) LIKE ?', ['%"' . $id . '"%']);
+//         }
+//     })->get()->sortBy('name'); // Sort alphabetically
+
+//     // Load banners for this page
+//     $banners = PageBanner::where('page_name', 'category')
+//                 ->where('status', 'active')
+//                 ->get();
+
+//     return view('frontend.pages.category.category', compact('category', 'banners', 'products'));
+// }
+
+// /**
+//  * Recursively get all category IDs (current + all descendants)
+//  */
+// private function getAllCategoryIds($category)
+// {
+//     $ids = collect([$category->id]);
+
+//     if ($category->children->count() > 0) {
+//         foreach ($category->children as $child) {
+//             $ids = $ids->merge($this->getAllCategoryIds($child));
+//         }
+//     }
+
+//     return $ids;
+// }
+public function category($slug)
 {
     $category = Category::with('children')->where('slug', $slug)->first();
 
-    // ✅ Load banners for this page
-    $banners = PageBanner::where('page_name', 'category') // or 'category_' . $slug if you want per-category
+    if (!$category) {
+        Session::flash('error', 'Category not found.');
+        return redirect()->back();
+    }
+
+    // Get all category IDs recursively
+    $categoryIds = $this->getAllCategoryIds($category)->toArray();
+
+    // Fetch random 8 products from this category + subcategories
+    $products = Product::where(function($query) use ($categoryIds) {
+        foreach ($categoryIds as $id) {
+            $query->orWhereJsonContains('category_id', [$id])
+                  ->orWhereRaw('JSON_UNQUOTE(category_id) LIKE ?', ['%"' . $id . '"%']);
+        }
+    })->inRandomOrder()->take(8)->get();
+
+    // Load banners
+    $banners = PageBanner::where('page_name', 'category')
                 ->where('status', 'active')
                 ->get();
 
-    return view('frontend.pages.category.category', compact('category', 'banners'));
+    return view('frontend.pages.category.category', compact('category', 'banners', 'products'));
 }
+
+/**
+ * Recursively get all category IDs (current + all descendants)
+ */
+private function getAllCategoryIds($category)
+{
+    $ids = collect([$category->id]);
+
+    if ($category->children->count() > 0) {
+        foreach ($category->children as $child) {
+            $ids = $ids->merge($this->getAllCategoryIds($child));
+        }
+    }
+
+    return $ids;
+}
+
 
     public function filterProducts($slug)
     {
