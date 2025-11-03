@@ -47,7 +47,7 @@
                 @php
                     $chunks = $categories->chunk(4);
                 @endphp
-                <div class="px-0 col-lg-12 px-lg-0">
+                {{-- <div class="px-0 col-lg-12 px-lg-0">
                     <div class="container">
                         <div class="pt-4 row">
                             @foreach ($chunks as $chunkKey => $chunk)
@@ -103,7 +103,79 @@
                             @endforeach
                         </div>
                     </div>
+                </div> --}}
+@php
+    // Sort all categories alphabetically
+    $sortedCategories = $categories->sortBy('name')->values();
+
+    // Number of columns
+    $columns = 3;
+
+    // Split into chunks for balanced columns
+    $chunks = $sortedCategories->chunk(ceil($sortedCategories->count() / $columns));
+@endphp
+
+<div class="px-0 col-lg-12 px-lg-0">
+    <div class="container">
+        <div class="pt-4 row">
+            @foreach ($chunks as $chunkKey => $chunk)
+                <div class="col-md-4 {{ $chunkKey == 0 ? 'pe-0 ps-0' : 'pe-0' }}">
+                    @foreach ($chunk as $key => $category)
+                        <div class="accordion accordion-flush" id="accordionFlushExample-{{ $chunkKey }}-{{ $key }}">
+                            <div class="mb-2 accordion-item">
+                                <h2 class="accordion-header" id="flush-heading-{{ $chunkKey }}-{{ $key }}">
+                                    <button class="p-3 accordion-button collapsed" type="button"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#flush-collapse-{{ $chunkKey }}-{{ $key }}"
+                                        aria-expanded="false"
+                                        aria-controls="flush-collapse-{{ $chunkKey }}-{{ $key }}">
+                                        <div class="d-flex align-items-center w-100">
+                                            <img src="{{ asset('frontend/assets/img/Icon.svg') }}" alt="" />
+                                            <p class="mb-0 ms-2">{{ $category->name }}</p>
+                                        </div>
+                                    </button>
+                                </h2>
+
+                                <div id="flush-collapse-{{ $chunkKey }}-{{ $key }}"
+                                    class="accordion-collapse collapse"
+                                    aria-labelledby="flush-heading-{{ $chunkKey }}-{{ $key }}"
+                                    data-bs-parent="#accordionFlushExample-{{ $chunkKey }}-{{ $key }}">
+                                    <div class="accordion-body">
+                                       @if ($category->children->count() > 0)
+    @foreach ($category->children->sortBy('name') as $sub_cat)
+        <li class="mb-2 menu-single-items">
+            <a href="{{ route('category', $sub_cat->slug) }}">
+                {{ $sub_cat->name }}
+            </a>
+
+            @if ($sub_cat->products->count() > 0)
+                <ul class="ps-3">
+                    @foreach ($sub_cat->products as $product)
+                        <li class="mb-1">
+                            <a href="{{ route('product.show', $product->slug) }}">
+                                {{ $product->name }}
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
+            @endif
+        </li>
+    @endforeach
+@endif
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
+            @endforeach
+        </div>
+    </div>
+</div>
+
+
             </div>
 
             <!-- Section 3: Dynamic Hero Section One -->

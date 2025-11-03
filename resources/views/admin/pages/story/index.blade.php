@@ -30,11 +30,10 @@
                                 </div>
                                 <div class="col-lg-4 col-sm-12 text-lg-center text-sm-center">
                                     <div class="card-title table_title">
-                                        <h2 class="text-center">Client Storys </h2>
+                                        <h2 class="text-center">Client Stories</h2>
                                     </div>
                                 </div>
                                 <div class="col-lg-4 col-sm-12 text-lg-end text-sm-center">
-
                                     <a href="{{ route('admin.story.create') }}" type="button"
                                         class="btn btn-sm btn-success rounded-0">
                                         Add New
@@ -53,47 +52,57 @@
                                     <th width="40%">Title</th>
                                     <th width="15%">Author</th>
                                     <th width="15%">Added By</th>
-                                    <th width="15%">Category</th>
+                                    {{-- <th width="15%">Category</th> --}}
                                     <th class="text-center" width="10%">Action</th>
                                 </tr>
                             </thead>
                             <tbody class="fw-bold text-gray-600 text-center">
-                                @if ($contents)
+                                @if ($contents && $contents->count() > 0)
                                     @foreach ($contents as $content)
                                         <tr class="odd">
-                                            <td>
-                                                {{ $loop->iteration }}
-                                            </td>
+                                            <td>{{ $loop->iteration }}</td>
                                             <td>{{ $content->title }}</td>
+                                            <td>{{ $content->author }}</td>
                                             <td>
-                                                {{ $content->author }}
+                                                {{-- FIXED: Check if addedBy relationship exists --}}
+                                                @if($content->addedBy)
+                                                    {{ $content->addedBy->name }}
+                                                @else
+                                                    <span class="text-muted">N/A</span>
+                                                @endif
                                             </td>
+                                            {{-- <td>{{ ucfirst($content->type) }}</td> --}}
                                             <td>
-                                                {{ $content->addedBy->name }}
-                                            </td>
-                                            <td>
-                                                {{ ucfirst($content->type) }}
-                                            </td>
-                                            <td>
-                                                <div class="d-flex justify-content-between align-items-center">
-                                                    {{-- <a href="#"
-                                                        class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
-                                                        data-bs-toggle="modal" data-bs-target="#categoryViewModal">
-                                                        <i class="fa-solid fa-expand"></i>
-                                                    </a> --}}
+                                                <div class="d-flex justify-content-center gap-2">
                                                     <a href="{{ route('admin.story.edit', $content->id) }}"
-                                                        class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1">
+                                                        class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm rounded-1"
+                                                        data-bs-toggle="tooltip" title="Edit">
                                                         <i class="fa-solid fa-pen"></i>
                                                     </a>
-                                                    <a href="{{ route('admin.news-trend.destroy', $content->id) }}"
-                                                        class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1 delete"
-                                                        data-kt-docs-table-filter="delete_row">
-                                                        <i class="fa-solid fa-trash-can-arrow-up"></i>
-                                                    </a>
+                                                    <form action="{{ route('admin.story.destroy', $content->id) }}" method="POST" class="d-inline">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" 
+                                                            class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm rounded-1 delete-btn"
+                                                            data-bs-toggle="tooltip" 
+                                                            title="Delete"
+                                                            onclick="return confirm('Are you sure you want to delete this client story?')">
+                                                            <i class="fa-solid fa-trash-can-arrow-up"></i>
+                                                        </button>
+                                                    </form>
                                                 </div>
                                             </td>
                                         </tr>
                                     @endforeach
+                                @else
+                                    <tr>
+                                        <td colspan="6" class="text-center py-4">
+                                            <div class="d-flex flex-column align-items-center">
+                                                <i class="las la-inbox fs-2x text-muted mb-2"></i>
+                                                <span class="text-muted">No client stories found.</span>
+                                            </div>
+                                        </td>
+                                    </tr>
                                 @endif
                             </tbody>
                         </table>
@@ -102,4 +111,67 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('scripts')
+<script>
+    $(document).ready(function() {
+        // Initialize DataTable
+        $('#kt_datatable_example').DataTable({
+            "pageLength": 25,
+            "order": [[0, 'asc']],
+            "language": {
+                "search": "",
+                "searchPlaceholder": "Search...",
+                "emptyTable": "No client stories available",
+                "info": "Showing _START_ to _END_ of _TOTAL_ entries",
+                "infoEmpty": "Showing 0 to 0 of 0 entries",
+                "infoFiltered": "(filtered from _MAX_ total entries)",
+                "lengthMenu": "Show _MENU_ entries",
+                "paginate": {
+                    "first": "First",
+                    "last": "Last",
+                    "next": "Next",
+                    "previous": "Previous"
+                }
+            },
+            "responsive": true,
+            "autoWidth": false
+        });
+
+        // Search functionality
+        $('[data-kt-filter="search"]').on('keyup', function() {
+            const value = $(this).val().toLowerCase();
+            $('#kt_datatable_example tbody tr').filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+            });
+        });
+
+        // Initialize tooltips
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    });
+</script>
+
+<style>
+.table_header_bg {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.btn-icon {
+    width: 35px;
+    height: 35px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.table > :not(caption) > * > * {
+    padding: 12px 8px;
+    vertical-align: middle;
+}
+</style>
 @endsection

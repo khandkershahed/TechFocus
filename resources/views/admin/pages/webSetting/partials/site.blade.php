@@ -179,6 +179,19 @@
                 @enderror
             </div>
         </div>
+
+        <div class="col-lg-6">
+    <div class="fv-row mb-3">
+        <label class="form-label">Address / Location</label>
+        <textarea name="address"
+            class="form-control form-control-sm form-control-solid @error('address') is-invalid @enderror"
+            placeholder="Enter Address or Location">{{ optional($site)->address }}</textarea>
+        @error('address')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
+</div>
+
         <div class="col-lg-3">
             <div class="fv-row mb-3">
                 <label class="form-label">Whatsapp Number</label>

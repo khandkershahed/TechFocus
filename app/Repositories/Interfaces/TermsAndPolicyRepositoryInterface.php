@@ -9,4 +9,6 @@ interface TermsAndPolicyRepositoryInterface
     public function findTermsAndPolicy(int $id);
     public function updateTermsAndPolicy(array $data, int $id);
     public function destroyTermsAndPolicy(int $id);
+    public function getActiveTermsAndPolicies();
+
 }

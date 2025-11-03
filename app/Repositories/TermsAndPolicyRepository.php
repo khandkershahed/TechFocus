@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Repositories;
-
 use App\Models\Admin\TermsAndPolicy;
 use App\Repositories\Interfaces\TermsAndPolicyRepositoryInterface;
 
@@ -31,4 +29,11 @@ class TermsAndPolicyRepository implements TermsAndPolicyRepositoryInterface
     {
         return TermsAndPolicy::destroy($id);
     }
+    public function getActiveTermsAndPolicies()
+{
+    return TermsAndPolicy::where('is_active', 1)
+        ->where('expiration_date', '>', now())
+        ->orderBy('created_at', 'desc')
+        ->get();
+}
 }

@@ -16,11 +16,9 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\Auth\PartnerLoginController;
 use App\Http\Controllers\Partner\DashboardController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-
-
-
-
-
+use App\Models\User;
+use App\Http\Controllers\Admin\UserListController;
+use App\Http\Controllers\admin\TermsAndPolicyController;
 
 Route::get('/', [SiteController::class, 'homePage'])->name('homepage');
 Route::get('solution/{slug}', [SiteController::class, 'solutionDetails'])->name('solution.details');
@@ -239,3 +237,25 @@ Route::get('/brand/{slug}', [BrandController::class, 'show'])->name('brand.detai
 
 //search brand 
 Route::get('/search-brands', [SiteController::class, 'searchBrands'])->name('search.brands');
+
+
+
+//Client list page
+Route::get('/client-list', [UserListController::class, 'clientsList'])->name('clients.list');
+
+// Client CRUD
+Route::get('/client/edit/{id}', [UserListController::class, 'editClient'])->name('client.edit');
+Route::put('/client/update/{id}', [UserListController::class, 'updateClient'])->name('client.update');
+Route::delete('/client/delete/{id}', [UserListController::class, 'deleteClient'])->name('client.delete');
+
+// ---------------------- Partner Routes ----------------------
+
+// Partner list page
+Route::get('/partner-list', [UserListController::class, 'partnersList'])->name('partners.list');
+
+// Partner CRUD
+Route::get('/partner/edit/{id}', [UserListController::class, 'editPartner'])->name('partner.edit');
+Route::put('/partner/update/{id}', [UserListController::class, 'updatePartner'])->name('partner.update');
+Route::delete('/partner/delete/{id}', [UserListController::class, 'deletePartner'])->name('partner.delete');
+
+

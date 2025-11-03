@@ -439,3 +439,31 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('/profile/update', [App\Http\Controllers\Admin\ProfileController::class, 'update'])
         ->name('profile.update');
 });
+
+
+//client story
+Route::prefix('admin')->group(function () {
+    Route::resource('story', ClientStoryController::class);
+    // Or individually:
+    Route::get('/story', [ClientStoryController::class, 'index'])->name('admin.story.index');
+    Route::get('/story/create', [ClientStoryController::class, 'create'])->name('admin.story.create');
+    Route::post('/story', [ClientStoryController::class, 'store'])->name('admin.story.store');
+    Route::get('/story/{id}/edit', [ClientStoryController::class, 'edit'])->name('admin.story.edit');
+    Route::put('/story/{id}', [ClientStoryController::class, 'update'])->name('admin.story.update');
+    Route::delete('/story/{id}', [ClientStoryController::class, 'destroy'])->name('admin.story.destroy');
+});
+
+// Blog Routes
+Route::prefix('blogs')->group(function () {
+    Route::get('/', [BlogController::class, 'index'])->name('blogs.index');
+    Route::get('/create', [BlogController::class, 'create'])->name('blogs.create');
+    Route::post('/', [BlogController::class, 'store'])->name('blogs.store');
+    Route::get('/{id}/edit', [BlogController::class, 'edit'])->name('blogs.edit');
+    Route::put('/{id}', [BlogController::class, 'update'])->name('blogs.update');
+    Route::delete('/{id}', [BlogController::class, 'destroy'])->name('blogs.destroy');
+});
+
+// Or using resource route (shorter version)
+Route::resource('blogs', BlogController::class)->except(['show']);
+
+

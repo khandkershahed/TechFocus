@@ -309,7 +309,7 @@
                                                                 </div>
                                                                 <div class="modal-footer">
                                                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                                    <button type="button" class="btn btn-primary save-modal-data" data-modal-index="0">Save Changes</button>
+                                                                    {{-- <button type="button" class="btn btn-primary save-modal-data" data-modal-index="0">Save Changes</button> --}}
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1300,6 +1300,9 @@
 <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
 <!-- jQuery Repeater -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.repeater/1.2.1/jquery.repeater.min.js"></script>
+<!-- ✅ SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
     $(document).ready(function() {
         let currentStep = 1;
@@ -1474,28 +1477,63 @@
         });
 
 
-        let isSubmitting = false;
+ $(document).ready(function () {
+    $('#stepperForm').on('submit', function (e) {
+        e.preventDefault(); // Stop normal submission
 
-        $("#stepperForm").on("submit", function(e) {
-            if (isSubmitting) {
-                e.preventDefault();
-                return;
-            }
+        const form = $(this);
 
-            if ($(this).valid()) {
-                isSubmitting = true;
+        // Validate form before submitting
+        if (!form.valid()) {
+            return; // Stop if validation fails
+        }
 
-                // Optional: Disable submit button
-                $(this).find('button[type="submit"]').prop('disabled', true);
-                $(this).find('button[type="submit"]').html('Submitting...');
+        // Create FormData (works with file uploads)
+        const formData = new FormData(this);
 
-                // Use native form submission
-                this.submit();
-            } else {
-                e.preventDefault(); // Prevent submission if invalid
+        // Disable submit button to prevent multiple clicks
+        const submitBtn = form.find('button[type="submit"]');
+        submitBtn.prop('disabled', true).html('Submitting...');
+
+        $.ajax({
+            url: form.attr('action'),
+            type: form.attr('method') || 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                // ✅ SweetAlert success popup
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Your RFQ has been submitted successfully!',
+                    text: 'Redirecting to thank you page...',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    timerProgressBar: true,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                // ✅ Optional redirect (after alert closes)
+                setTimeout(() => {
+                    window.location.href = "{{ route('rfq') }}"; 
+                    // 🔁 Replace with your actual thank-you route
+                }, 2000);
+            },
+            error: function (xhr, status, error) {
+                // ❌ Handle errors gracefully
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Submission Failed',
+                    text: 'Something went wrong. Please try again later.',
+                    confirmButtonText: 'OK'
+                });
+                submitBtn.prop('disabled', false).html('Submit');
             }
         });
-
+    });
+});
 
 
         function handleCheckboxVisibility() {
@@ -1822,4 +1860,5 @@ $(document).ready(function() {
     }
 });
 </script> 
+
 @endsection

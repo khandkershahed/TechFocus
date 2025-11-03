@@ -426,18 +426,18 @@
                 </div>
                 <div class="row my-3">
                     @foreach ($products as $product)
-                        <div class="col-lg-3 col-sm-12">
-                            <div class="card border-0 card-news-trends" style="height: 360px">
+                        <div class="col-lg-3 col-sm-12 mb-5">
+                            <div class="card border-0 card-news-trends" style="height: 400px">
                                 <div class="content">
                                     <div class="front">
-                                        <img class="profile" width="100%" src="{{ $product->thumbnail }}"
+                                        <img class="profile" width="100%" height="200px" src="{{ $product->thumbnail }}"
                                             alt="{{ $product->name }}" />
-                                        <div class="d-flex align-items-center justify-content-between p-3 mt-3">
+                                        <div class="d-flex align-items-center justify-content-between px-3 py-2 mt-3">
                                             <div>
                                                 <a href="{{ route('product.details', ['id' => optional($product->brand)->slug, 'slug' => optional($product)->slug]) }}">
-                                                    <h5 class="text-start mb-0">
-                                                        {{ $product->name }}
-                                                    </h5>
+                                                    <h6 class="text-start mb-0">
+                                                        {{ Str::words( $product->name , 7) }}
+                                                    </h6>
                                                 </a>
                                             </div>
 
@@ -477,16 +477,14 @@
                         </div>
                     @endforeach
                 </div>
-                {{-- <div class="row mt-5">
+                <div class="row mt-5">
                     <div class="col-lg-12">
                         <p class="text-center">Choose By Page</p>
                         <div class="d-flex justify-content-center">
-                            <div class="pagination">
-
-                            </div>
+                                {{ $products->links() }}
                         </div>
                     </div>
-                </div> --}}
+                </div>
             </div>
         </div>
     </div>

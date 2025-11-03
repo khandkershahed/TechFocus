@@ -27,9 +27,9 @@
                     <button class="btn btn-primary" type="button" id="searchButton">
                         <i class="fas fa-search"></i> Search
                     </button>
-                    <button class="btn btn-outline-secondary" type="button" id="clearSearch">
+                    {{-- <button class="btn btn-outline-secondary" type="button" id="clearSearch">
                         <i class="fas fa-times"></i> Clear
-                    </button>
+                    </button> --}}
                 </div>
             </div>
         </div>
