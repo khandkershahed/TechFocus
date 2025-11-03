@@ -361,12 +361,12 @@
                                                         <!-- Display existing images -->
                                                         <div class="existing-images">
                                                             @foreach ($product->multiImages as $image)
-                                                                <div class="img-thumb-wrapper card shadow">
-                                                                    <img class="img-thumb" src="{{ $image->photo }}"
-                                                                        title="{{ $image->photo }}" />
-                                                                    <br />
-                                                                    <span class="remove">Remove</span>
-                                                                </div>
+                                                                <div class="img-thumb-wrapper card shadow" data-id="{{ $image->id }}">
+                                                                        <img class="img-thumb" src="{{ $image->photo }}" title="{{ $image->photo }}" />
+                                                                        <br />
+                                                                        <span class="remove">Remove</span>
+                                                                    </div>
+
                                                             @endforeach
                                                         </div>
                                                     </div>
@@ -408,7 +408,7 @@
                                                         <div class="fv-row mb-3">
                                                             <label class="form-label">Product Colors</label>
                                                             <select class="form-select form-select-solid form-select-sm"
-                                                                name="color_id[]" id="field2" multiple
+                                                                name="color_id[]" id="color_id" multiple data-control="select2"
                                                                 multiselect-search="true" multiselect-select-all="true"
                                                                 multiselect-max-items="2">
                                                                 @if (count($colors) > 0)
@@ -423,11 +423,11 @@
                                                         </div>
 
                                                     </div>
-                                                    <div class="col-lg-6 mb-3">
+                                                    {{-- <div class="col-lg-6 mb-3">
                                                         <div class="fv-row mb-3">
                                                             <label class="form-label">Parent Products</label>
                                                             <select class="form-select form-select-solid form-select-sm"
-                                                                name="parent_id[]" id="field2" multiple
+                                                                name="parent_id[]" id="parent_id" multiple data-control="select2"
                                                                 multiselect-search="true" multiselect-select-all="true"
                                                                 multiselect-max-items="2">
 
@@ -459,7 +459,7 @@
                                                         <div class="fv-row mb-3">
                                                             <label class="form-label">Child Products</label>
                                                             <select class="form-select form-select-solid form-select-sm"
-                                                                name="child_id[]" id="field2" multiple
+                                                                name="child_id[]" id="child_id" multiple data-control="select2"
                                                                 multiselect-search="true" multiselect-select-all="true"
                                                                 multiselect-max-items="2">
                                                                 @if (!empty($product->child_id))
@@ -485,7 +485,57 @@
                                                             <div class="invalid-feedback"> Please Enter Child Products.
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div> --}}
+                                                    <div class="col-lg-6 mb-3">
+                                                            <div class="fv-row mb-3">
+                                                                <label class="form-label">Parent Products</label>
+                                                                <select class="form-select form-select-solid form-select-sm"
+                                                                        name="parent_id[]" id="parent_id" multiple data-control="select2"
+                                                                        multiselect-search="true" multiselect-select-all="true"
+                                                                        multiselect-max-items="2">
+
+                                                                    @php
+                                                                        $parentIds = !empty($product->parent_id)
+                                                                            ? (is_string($product->parent_id) ? json_decode($product->parent_id, true) : $product->parent_id)
+                                                                            : [];
+                                                                        $parents = App\Models\Admin\Product::pluck('name', 'id')->toArray();
+                                                                    @endphp
+
+                                                                    @foreach ($parents as $id => $name)
+                                                                        <option value="{{ $id }}" {{ in_array($id, $parentIds) ? 'selected' : '' }}>
+                                                                            {{ $name }}
+                                                                        </option>
+                                                                    @endforeach
+                                                                </select>
+                                                                <div class="invalid-feedback"> Please Enter Parent Product. </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-lg-6 mb-3">
+                                                            <div class="fv-row mb-3">
+                                                                <label class="form-label">Child Products</label>
+                                                                <select class="form-select form-select-solid form-select-sm"
+                                                                        name="child_id[]" id="child_id" multiple data-control="select2"
+                                                                        multiselect-search="true" multiselect-select-all="true"
+                                                                        multiselect-max-items="2">
+
+                                                                    @php
+                                                                        $childIds = !empty($product->child_id)
+                                                                            ? (is_string($product->child_id) ? json_decode($product->child_id, true) : $product->child_id)
+                                                                            : [];
+                                                                        $childs = App\Models\Admin\Product::pluck('name', 'id')->toArray();
+                                                                    @endphp
+
+                                                                    @foreach ($childs as $id => $name)
+                                                                        <option value="{{ $id }}" {{ in_array($id, $childIds) ? 'selected' : '' }}>
+                                                                            {{ $name }}
+                                                                        </option>
+                                                                    @endforeach
+                                                                </select>
+                                                                <div class="invalid-feedback"> Please Enter Child Products. </div>
+                                                            </div>
+                                                        </div>
+
                                                     <div class="col-lg-3 mb-3">
                                                         <div class="fv-row mb-3">
                                                             <label class="form-label">Currency</label>
@@ -1242,4 +1292,37 @@
             });
         });
     </script>
+<script>
+$(document).ready(function() {
+    $('.existing-images').on('click', '.remove', function() {
+        var $wrapper = $(this).closest('.img-thumb-wrapper');
+        var imageId = $wrapper.data('id');
+
+        if (!confirm('Are you sure you want to delete this image?')) {
+            return;
+        }
+
+        $.ajax({
+            url: '{{ route("product.deleteImage") }}',
+            type: 'POST',
+            data: {
+                id: imageId,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(response) {
+                if (response.success) {
+                    $wrapper.remove();
+                } else {
+                    alert('Image could not be deleted.');
+                }
+            },
+            error: function() {
+                alert('Something went wrong. Please try again.');
+            }
+        });
+    });
+});
+</script>
+
+
 @endpush
