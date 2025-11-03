@@ -37,32 +37,8 @@
     </section>
 
 @include('frontend.pages.rfq.partials.rfq_css')
-<div class="container mm">
-    <!-- Header Section -->
-    <div class="row align-items-center">
-        <div class="my-5 text-center col-lg-12">
-            <h2 class="mb-1 titles font-two">RECEIVE AND <span class="main-color">COMPARE</span></h2>
-            <h2 class="titles font-two"><span class="main-color">QUOTATIONS</span> FOR FREE</h2>
-            <p class="pt-2">Take advantage of our supplier network to complete your purchasing projects.</p>
-        </div>
-    </div>
 
-    <!-- Steps Icons -->
-    <div class="mb-5 row align-items-center">
-        @foreach(['Company Info', 'Shipping Details', 'End User Info', 'Additional Details'] as $i => $step)
-        <div class="col-lg-3">
-            <div class="d-flex flex-column align-items-center">
-                <img class="mb-2 rfq-img rounded-circle"
-                    src="{{ asset('frontend/images/rfq-' . ($i+1) . '.svg') }}"
-                    alt="No Image" style="width: 120px;">
-                <p class="text-center font-three">{{ $step }}</p>
-            </div>
-        </div>
-        @endforeach
-    </div>
-</div>
-
-<section class="py-5 pt-0 d-flex align-items-center justify-content-center min-vh-100 bg-light">
+<section class="py-5 pt-5 d-flex align-items-center justify-content-center min-vh-100 bg-light">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-10">

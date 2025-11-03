@@ -14,7 +14,7 @@
                         </div>
                         <div>
                             <ul class="nav nav-tabs flex-column" id="myTab" role="tablist">
-                                <li class="nav-item p-0 mt-1 shadow-sm univers-group-item" role="presentation">
+                                <li class="p-0 mt-1 shadow-sm nav-item univers-group-item" role="presentation">
                                     <a href="">
                                         <span class="nav-link ps-3 active" id="home-tab" data-bs-toggle="tab"
                                             data-bs-target="#home" type="button" role="tab" aria-controls="home"
@@ -23,7 +23,7 @@
                                         </span>
                                     </a>
                                 </li>
-                                <li class="nav-item p-0 mt-1 shadow-sm univers-group-item" role="presentation">
+                                <li class="p-0 mt-1 shadow-sm nav-item univers-group-item" role="presentation">
                                     <a href="">
                                         <span class="nav-link ps-3" id="profile-tab" data-bs-toggle="tab"
                                             data-bs-target="#profile" type="button" role="tab" aria-controls="profile"
@@ -32,7 +32,7 @@
                                         </span>
                                     </a>
                                 </li>
-                                <li class="nav-item p-0 mt-1 shadow-sm univers-group-item" role="presentation">
+                                <li class="p-0 mt-1 shadow-sm nav-item univers-group-item" role="presentation">
                                     <a href="">
                                         <span class="nav-link ps-3" id="contact-tab" data-bs-toggle="tab"
                                             data-bs-target="#contact" type="button" role="tab" aria-controls="contact"
@@ -46,23 +46,23 @@
                     </div>
                     <div class="col-lg-9">
                         <div class="devider-wrap">
-                            <h4 class="devider-content mb-4">
+                            <h4 class="mb-4 devider-content">
                                 <span class="devider-text">OUR BUYING GUIDES</span>
                             </h4>
                         </div>
                         <div>
                             <!-- Content -->
                             <div class="row">
-                                <div class="col-lg-3 col-sm-12 pt-4">
+                                <div class="pt-4 col-lg-3 col-sm-12">
                                     <a href="">
                                         <div class="card projects-card rounded-0">
                                             <img src="https://guide.directindustry.com/wp-content/uploads/2022-08-26-10_28_38-Trancheuse-de-lard-Icone-700-Bacon-Dadaux-SAS-automatique-_-en-continu-400x400.png"
-                                                class="card-img-top img-fluid rounded-0 p-4" alt="..." />
+                                                class="p-4 card-img-top img-fluid rounded-0" alt="..." />
                                             <div class="card-body">
                                                 <div class="mb-2">
-                                                    <span class="badge rounded-0 font-small"
+                                                    <span class="badge rounded-pill font-small"
                                                         style="background-color: var(--primary-color);">FOOD INDUSTRY</span>
-                                                    <span class="badge rounded-0 font-small"
+                                                    <span class="badge rounded-pill font-small"
                                                         style="background-color: var(--primary-color);">UNCLASSIFIED</span>
                                                 </div>
                                                 <p class="card-text project-para fw-bold">
@@ -77,22 +77,22 @@
                                                     
                                                 </ul>
                                                 <div>
-                                                    <a href="" class="btn signin w-auto rounded-0">Learn More</a>
+                                                    <a href="" class="w-auto btn signin rounded-0">Learn More</a>
                                                 </div>
                                             </div>
                                         </div>
                                     </a>
                                 </div>
-                                <div class="col-lg-3 col-sm-12 pt-4">
+                                <div class="pt-4 col-lg-3 col-sm-12">
                                     <a href="">
                                         <div class="card projects-card rounded-0">
                                             <img src="https://guide.directindustry.com/wp-content/uploads/175044-9958635-400x400.jpg"
-                                                class="card-img-top img-fluid rounded-0 p-4" alt="..." />
+                                                class="p-4 card-img-top img-fluid rounded-0" alt="..." />
                                             <div class="card-body">
                                                 <div class="mb-2">
-                                                    <span class="badge rounded-0 font-small"
+                                                    <span class="badge rounded-pill font-small"
                                                         style="background-color: var(--primary-color);">FOOD INDUSTRY</span>
-                                                    <span class="badge rounded-0 font-small"
+                                                    <span class="badge rounded-pill font-small"
                                                         style="background-color: var(--primary-color);">UNCLASSIFIED</span>
                                                 </div>
                                                 <p class="card-text project-para fw-bold">
@@ -107,22 +107,22 @@
                                                     
                                                 </ul>
                                                 <div>
-                                                    <a href="" class="btn signin w-auto rounded-0">Learn More</a>
+                                                    <a href="" class="w-auto btn signin rounded-0">Learn More</a>
                                                 </div>
                                             </div>
                                         </div>
                                     </a>
                                 </div>
-                                <div class="col-lg-3 col-sm-12 pt-4">
+                                <div class="pt-4 col-lg-3 col-sm-12">
                                     <a href="">
                                         <div class="card projects-card rounded-0">
                                             <img src="https://guide.directindustry.com/wp-content/uploads/18813-15791752-400x400.jpg"
-                                                class="card-img-top img-fluid rounded-0 p-4" alt="..." />
+                                                class="p-4 card-img-top img-fluid rounded-0" alt="..." />
                                             <div class="card-body">
                                                 <div class="mb-2">
-                                                    <span class="badge rounded-0 font-small"
+                                                    <span class="badge rounded-pill font-small"
                                                         style="background-color: var(--primary-color);">FOOD INDUSTRY</span>
-                                                    <span class="badge rounded-0 font-small"
+                                                    <span class="badge rounded-pill font-small"
                                                         style="background-color: var(--primary-color);">UNCLASSIFIED</span>
                                                 </div>
                                                 <p class="card-text project-para fw-bold">
@@ -137,17 +137,17 @@
                                                     
                                                 </ul>
                                                 <div>
-                                                    <a href="" class="btn signin w-auto rounded-0">Learn More</a>
+                                                    <a href="" class="w-auto btn signin rounded-0">Learn More</a>
                                                 </div>
                                             </div>
                                         </div>
                                     </a>
                                 </div>
-                                <div class="col-lg-3 col-sm-12 pt-4">
+                                <div class="pt-4 col-lg-3 col-sm-12">
                                     <a href="">
                                         <div class="card projects-card rounded-0">
                                             <img src="https://guide.directindustry.com/wp-content/uploads/196527-12308205-400x400.jpg"
-                                                class="card-img-top img-fluid rounded-0 p-4" alt="..." />
+                                                class="p-4 card-img-top img-fluid rounded-0" alt="..." />
                                             <div class="card-body">
                                                 <div class="mb-2">
                                                     <span class="badge rounded-0 font-small"
@@ -167,17 +167,17 @@
                                                     
                                                 </ul>
                                                 <div>
-                                                    <a href="" class="btn signin w-auto rounded-0">Learn More</a>
+                                                    <a href="" class="w-auto btn signin rounded-0">Learn More</a>
                                                 </div>
                                             </div>
                                         </div>
                                     </a>
                                 </div>
-                                <div class="col-lg-3 col-sm-12 pt-4">
+                                <div class="pt-4 col-lg-3 col-sm-12">
                                     <a href="">
                                         <div class="card projects-card rounded-0">
                                             <img src="https://guide.directindustry.com/wp-content/uploads/2022-08-26-10_28_38-Trancheuse-de-lard-Icone-700-Bacon-Dadaux-SAS-automatique-_-en-continu-400x400.png"
-                                                class="card-img-top img-fluid rounded-0 p-4" alt="..." />
+                                                class="p-4 card-img-top img-fluid rounded-0" alt="..." />
                                             <div class="card-body">
                                                 <div class="mb-2">
                                                     <span class="badge rounded-0 font-small"
@@ -197,7 +197,7 @@
                                                     
                                                 </ul>
                                                 <div>
-                                                    <a href="" class="btn signin w-auto rounded-0">Learn More</a>
+                                                    <a href="" class="w-auto btn signin rounded-0">Learn More</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -210,7 +210,7 @@
             </div>
         </div>
     </div>
-    <div class="container my-5 pt-5">
+    <div class="container pt-5 my-5">
         <div class="row">
             <div class="col-lg-12">
                 <p class="text-center">CHOOSE BY COMPANY NAME</p>
@@ -275,7 +275,7 @@
         </div>
         <div class="row">
             <div class="col-lg-12 col-sm-12">
-                <p class="sub-color text-center w-75 mx-auto"> *Prices are pre-tax. They exclude delivery charges and customs duties
+                <p class="mx-auto text-center sub-color w-75"> *Prices are pre-tax. They exclude delivery charges and customs duties
                     and do not include additional charges for installation or activation options. Prices are indicative only
                     and may vary by country, with changes to the cost of raw materials and exchange rates. </p>
             </div>

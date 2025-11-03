@@ -11,12 +11,7 @@
                     <div class="row ps-0">
                         <div class="col-lg-12 ps-0">
                             <div class="px-1 d-flex justify-content-end align-items-center">
-                                <!-- RFQ Link -->
-                                <div class="me-4" data-aos="fade-left">
-                                    <a class="nav-link custom-nav" data-aos="fade-right" href="{{ route('rfq') }}">
-                                        RFQ
-                                    </a>
-                                </div>
+
                                 <!-- My Techfocus -->
                                 <div class="popover__wrapper">
                                     <a href="#">
@@ -84,6 +79,13 @@
                                         </ul>
                                     </div>
                                 </div>
+                                <!-- RFQ Link -->
+                                <div class="mx-4" data-aos="fade-left">
+                                    <a class="nav-link custom-nav" data-aos="fade-right" href="{{ route('rfq') }}">
+                                        RFQ
+                                    </a>
+                                </div>
+
                                 <!--  -->
                                 {{-- <div class="dropdown">
                                     <button class="mx-3 dropdown-toggle" type="button" id="dropdownMenuButton1"
@@ -542,7 +544,7 @@
                                 Subscriptions</a>
                         </li>
                         <li>
-                            <i class="fa fa-star m-2"></i>
+                            <i class="m-2 fa fa-star"></i>
                             <a href="{{ route('favorites.index') }}" class="">My Favorites</a>
                         </li>
                         <li>
