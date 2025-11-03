@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\Admin\ProductRequest;
 use Illuminate\Support\Facades\Notification;
 
+
 class ProductController extends Controller
 {
     /**
@@ -413,4 +414,22 @@ class ProductController extends Controller
             $img->delete();
         }
     }
+public function deleteImage(Request $request)
+{
+    $image = ProductImage::find($request->id);
+
+    if ($image) {
+        // Remove physical file if it exists
+        if (file_exists(public_path($image->photo))) {
+            unlink(public_path($image->photo));
+        }
+
+        // Remove database record
+        $image->delete();
+
+        return response()->json(['success' => true]);
+    }
+
+    return response()->json(['success' => false]);
+}
 }

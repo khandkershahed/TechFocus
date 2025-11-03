@@ -196,7 +196,7 @@
                                 </h6>
                                 @endif
                                 
-                                <h2 class="pb-2 mb-0 w-75">
+                                <h2 class="pb-2 mb-0 w-80">
                                     {{ $homePage->section_one_title }}
                                 </h2>
                                 

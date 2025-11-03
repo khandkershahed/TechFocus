@@ -466,4 +466,6 @@ Route::prefix('blogs')->group(function () {
 // Or using resource route (shorter version)
 Route::resource('blogs', BlogController::class)->except(['show']);
 
+Route::post('/product/delete-image', [ProductController::class, 'deleteImage'])
+    ->name('product.deleteImage');
 
