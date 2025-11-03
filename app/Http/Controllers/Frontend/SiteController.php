@@ -216,13 +216,17 @@ class SiteController extends Controller
         return view('frontend.pages.solution.solution_details', $data);
     }
 
-    public function category($slug)
-    {
-        $data = [
-            'category' => Category::with('children')->where('slug', $slug)->first(),
-        ];
-        return view('frontend.pages.category.category', $data);
-    }
+  public function category($slug)
+{
+    $category = Category::with('children')->where('slug', $slug)->first();
+
+    // ✅ Load banners for this page
+    $banners = PageBanner::where('page_name', 'category') // or 'category_' . $slug if you want per-category
+                ->where('status', 'active')
+                ->get();
+
+    return view('frontend.pages.category.category', compact('category', 'banners'));
+}
 
     public function filterProducts($slug)
     {
@@ -299,18 +303,48 @@ class SiteController extends Controller
         return view('frontend.pages.others.subscription');
     }
 
+    // public function brandList()
+    // {
+    //     $banners = PageBanner::where('page_name', 'brandlist')
+    //             ->where('status', 'active')
+    //             ->get();
+
+    // return view('frontend.pages.brand.brand_list', compact('banners'));
+    //     $paginationSettings = ['*'];
+
+    //     $data = [
+    //         'top_brands' => Brand::byCategory('Top')->latest('id')->paginate(18, $paginationSettings, 'top_brands'),
+    //         'featured_brands' => Brand::byCategory('Featured')->latest('id')->paginate(18, $paginationSettings, 'featured_brands'),
+    //         'others' => Brand::with('brandPage')->select('id', 'slug', 'title')->get(),
+    //     ];
+
+    //     return view('frontend.pages.brand.brand_list', $data);
+    // }
     public function brandList()
-    {
-        $paginationSettings = ['*'];
+{
+    // ✅ Load banners for brandlist page
+    $banners = PageBanner::where('page_name', 'brandlist')
+                ->where('status', 'active')
+                ->get();
 
-        $data = [
-            'top_brands' => Brand::byCategory('Top')->latest('id')->paginate(18, $paginationSettings, 'top_brands'),
-            'featured_brands' => Brand::byCategory('Featured')->latest('id')->paginate(18, $paginationSettings, 'featured_brands'),
-            'others' => Brand::with('brandPage')->select('id', 'slug', 'title')->get(),
-        ];
+    // ✅ Load brand data
+    $paginationSettings = ['*'];
 
-        return view('frontend.pages.brand.brand_list', $data);
-    }
+    $top_brands = Brand::byCategory('Top')->latest('id')->paginate(18, $paginationSettings, 'top_brands');
+
+    $featured_brands = Brand::byCategory('Featured')->latest('id')->paginate(18, $paginationSettings, 'featured_brands');
+
+    $others = Brand::with('brandPage')->select('id', 'slug', 'title')->get();
+
+    // ✅ Send all data in one array
+    return view('frontend.pages.brand.brand_list', compact(
+        'banners',
+        'top_brands',
+        'featured_brands',
+        'others'
+    ));
+}
+
 
     public function service()
     {
@@ -487,41 +521,55 @@ class SiteController extends Controller
     }
 
     // All FAQs
-    public function faq()
-    {
-        return view('frontend.pages.others.faq', [
-            'faqs' => $this->faqRepository->allFaq(),
-            'categories' => $this->dynamicCategoryRepository->allDynamicActiveCategory('faqs'),
-        ]);
-    }
+public function faq()
+{
+    $banners = PageBanner::where('page_name', 'faq')
+                ->where('status', 'active')
+                ->get();
+
+    return view('frontend.pages.others.faq', [
+        'faqs' => $this->faqRepository->allFaq(),
+        'categories' => $this->dynamicCategoryRepository->allDynamicActiveCategory('faqs'),
+        'banners' => $banners, // ✅ Banners included
+    ]);
+}
+
 
     // Search FAQs
-    public function faqSearch(Request $request)
-    {
-        $query = $request->get('q');
+public function faqSearch(Request $request)
+{
+    $query = $request->get('q');
 
-        $faqs = $this->faqRepository->searchFaq($query);
-        $categories = $this->dynamicCategoryRepository->allDynamicActiveCategory('faqs');
+    $faqs = $this->faqRepository->searchFaq($query);
+    $categories = $this->dynamicCategoryRepository->allDynamicActiveCategory('faqs');
 
-        return view('frontend.pages.others.faq', [
-            'faqs' => $faqs,
-            'categories' => $categories,
-            'searchQuery' => $query,
-        ]);
-    }
+    $banners = PageBanner::where('page_name', 'faq')
+                ->where('status', 'active')
+                ->get();
+
+    return view('frontend.pages.others.faq', [
+        'faqs' => $faqs,
+        'categories' => $categories,
+        'searchQuery' => $query,
+        'banners' => $banners, // ✅ Add this line
+    ]);
+}
+
 
     // Filter by category
-    public function faqByCategory($slug)
-    {
-        $category = \App\Models\Admin\DynamicCategory::where('slug', $slug)->firstOrFail();
+public function faqByCategory($slug)
+{
+    $category = \App\Models\Admin\DynamicCategory::where('slug', $slug)->firstOrFail();
+    $faqs = $category->faqs()->orderBy('order')->get();
+    $categories = $this->dynamicCategoryRepository->allDynamicActiveCategory('faqs');
 
-        // now faqs() relationship works
-        $faqs = $category->faqs()->orderBy('order')->get();
+    $banners = PageBanner::where('page_name', 'faq')
+                ->where('status', 'active')
+                ->get();
 
-        $categories = $this->dynamicCategoryRepository->allDynamicActiveCategory('faqs');
+    return view('frontend.pages.others.faq', compact('category', 'faqs', 'categories', 'banners'));
+}
 
-        return view('frontend.pages.others.faq', compact('category', 'faqs', 'categories'));
-    }
 }
 
 

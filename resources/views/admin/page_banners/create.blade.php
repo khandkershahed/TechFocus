@@ -30,16 +30,21 @@
                         <form action="{{ route('page_banners.store') }}" method="POST" enctype="multipart/form-data">
                             @csrf
 
-                            <div class="mb-3">
-                                <label class="form-label">Page Name</label>
-                                <select name="page_name" class="form-select" required>
-                                    <option value="">Select Page</option>
-                                    <option value="home">Home</option>
-                                    <option value="catalog">Catalog</option>
-                                    <option value="rfq">RFQ</option>
-                                    <option value="contact">Contact</option>
-                                </select>
-                            </div>
+                       <div class="mb-3">
+                                    <label class="form-label">Page Name</label>
+                                    <select name="page_name" class="form-select" required>
+                                        <option value="">Select Page</option>
+                                        <option value="home">Home</option>
+                                        <option value="catalog">Catalog</option>
+                                        <option value="rfq">RFQ</option>
+                                        <option value="contact">Contact</option>
+
+                                        <!-- Added -->
+                                        <option value="brandlist">Brand List</option>
+                                        <option value="faq">FAQ</option>
+                                        <option value="category">Category</option>
+                                    </select>
+                                </div>
 
                             <div class="mb-3">
                                 <label class="form-label">Banner Image</label>
