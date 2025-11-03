@@ -306,8 +306,8 @@
                     @foreach ($featuredProducts as $product)
                         <div class="col-lg-3 col-12">
                             <div class="mb-4 url-box">
-                                <div class="border-0 card rounded-0 h-product">
-                                    <div class="overflow-hidden bg-white card-header d-flex justify-content-between">
+                                <div class="overflow-hidden border-0 card rounded-0 h-product">
+                                    <div class="bg-white card-header d-flex justify-content-between">
                                          <div class="badge-new">
                                             <span class="">New</span>
                                         </div>

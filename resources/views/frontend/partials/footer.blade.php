@@ -3,12 +3,12 @@
         <div class="row align-items-center">
             <div class="p-4 text-center col-lg-2 text-lg-start border-left-side">
                 <div>
-                    <a href="{{ route('buying.guide') }}">HOW TO BUY PRODUCTS </a>
+                    <a href="{{ route('buying.guide') }}">Send RFQ </a>
                 </div>
             </div>
             <div class="p-4 text-center col-lg-2 border-left-side">
                 <div>
-                    <a href="{{ route('exhibit') }}">EXHIBIT WITH US </a>
+                    <a href="{{ route('exhibit') }}">Exhibit With Us </a>
                 </div>
             </div>
             <div class="p-4 text-center col-lg-2 border-left-side">
