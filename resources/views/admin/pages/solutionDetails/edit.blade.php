@@ -434,7 +434,7 @@
                                                                         <label class="form-label">Solution Card Image Two</label>
                                                                         <input type="file"
                                                                             class="form-control form-control-solid form-control-sm"
-                                                                            name="solution_card_image_Two">
+                                                                            name="solution_card_image_two">
                                                                         @if(isset($solutionDetail->solutionCardTwo->image) && $solutionDetail->solutionCardTwo->image)
                                                                         <div class="mt-2">
                                                                             <small class="text-muted">Current Image:</small>
@@ -655,7 +655,7 @@
                                                                         <label class="form-label">Solution Card Image Five</label>
                                                                         <input type="file"
                                                                             class="form-control form-control-solid form-control-sm"
-                                                                            name="solution_card_image_Five">
+                                                                            name="solution_card_image_five">
                                                                         @if(isset($solutionDetail->solutionCardFive->image) && $solutionDetail->solutionCardFive->image)
                                                                         <div class="mt-2">
                                                                             <small class="text-muted">Current Image:</small>
