@@ -1,9 +1,9 @@
 <div class="container-fluid" style="background-color: var(--secondary-color)">
     <div class="container text-white" style="font-size: 14px">
         <div class="row align-items-center">
-            <div class="p-4 text-center col-lg-2 text-lg-start border-left-side">
+            <div class="p-4 text-center col-lg-2 text-lg-cennter border-left-side">
                 <div>
-                    <a href="{{ route('buying.guide') }}">Send RFQ </a>
+                    <a href="{{ route('rfq') }}">Send RFQ </a>
                 </div>
             </div>
             <div class="p-4 text-center col-lg-2 border-left-side">
@@ -16,19 +16,14 @@
                     <a href="{{route('faq')}}">FAQ </a>
                 </div>
             </div>
-            <div class="p-4 text-center col-lg-2 border-left-side">
-                <div>
-                    <a href="{{route('about')}}">About Us</a>
-                </div>
-            </div>
-            <div class="p-4 col-lg-4 d-flex justify-content-between align-items-center social-area">
+            <div class="p-4 col-lg-3 d-flex justify-content-between align-items-center social-area">
                 <ul class="">
                     <li class="pt-2">
                         <a href="{{route('brand.list')}}">Our Brands</a>
                     </li>
-                    <!-- <li class="pt-2">
-                        <a href="{{ route('manufacturer.account') }}"> Manufacturer account</a>
-                    </li> -->
+                    <li class="pt-2">
+                        <a href="{{route('about')}}">About Us</a>
+                    </li>
                     <!-- <li class="pt-2">
                         <a href="{{route('service')}}"> Our Service</a>
                     </li> -->
@@ -36,7 +31,9 @@
                         <a href="{{route('subscription')}}"> Subscriptions</a>
                     </li> -->
                 </ul>
-                <div class="social-icons-btn">
+            </div>
+            <div class="col-lg-3">
+                <div class="social-icons-btn d-flex justify-content-end">
                     <a class="icons twitter" href="https://www.x.com/ngenit">
                         <i class="fa-brands fa-twitter"></i>
                     </a>
@@ -83,19 +80,20 @@
             </div>
 
         </div>
-        <div class="pt-5 mt-5 row">
-            <div class="text-white col-lg-6">
-                <a href="{{ route('homepage') }}">
-                    <p class="text-start">© 2025 All rights reserved {{ $site->site_name ?? "Techfocus LTD"}}</p>
-                </a>
-            </div>
-            <div class="text-center col-lg-6 footer-bottom-menu text-lg-end">
-                <ul class="flex-wrap gap-3 p-0 m-0 footer-links list-unstyled d-inline-flex">
+        <div class="pt-5 mt-5 text-center row">
+            <div class="col-12">
+                <ul class="flex-wrap gap-3 p-0 m-0 text-white d-inline-flex justify-content-center list-unstyled footer-links">
                     <li><a href="{{ route('terms') }}">Terms & Conditions</a></li>
                     <li><a href="#">Privacy Policy</a></li>
                     <li><a href="#">Manage Cookies</a></li>
                 </ul>
             </div>
+            <div class="mt-3 mb-5 col-12">
+                <a href="{{ route('homepage') }}" class="text-white text-decoration-none">
+                    <p class="mb-0 small">© 2025 All rights reserved {{ $site->site_name ?? 'Techfocus LTD' }}</p>
+                </a>
+            </div>
         </div>
+
     </div>
 </div>

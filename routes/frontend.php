@@ -261,3 +261,6 @@ Route::delete('/partner/delete/{id}', [UserListController::class, 'deletePartner
 
 
 Route::get('solution-test', [SiteController::class, 'solutionTest'])->name('solution.test');
+Route::get('solution-test-details', [SiteController::class, 'solutionTestDetails'])->name('solution.test.details');
+Route::get('industry-test', [SiteController::class, 'industryTest'])->name('industry.test');
+Route::get('industry-test-details', [SiteController::class, 'industryTestDetails'])->name('industry.test.details');
