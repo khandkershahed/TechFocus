@@ -570,7 +570,7 @@
             <div class="text-start">
                 <a class="mb-0 navbar-brand" href="{{ route('homepage') }}" data-aos="fade-right">
                     <img src="{{ !empty($site->system_logo_white) && file_exists(public_path('storage/webSetting/systemLogoWhite/' . $site->system_logo_white)) ? asset('storage/webSetting/systemLogoWhite/' . $site->system_logo_white) : asset('backend/images/no-image-available.png') }}"
-                        height="60px" alt="TechFocus" style="margin: 7px 6px;" / />
+                        height="60px" alt="TechFocus" style="margin: 7px 6px;" />
                 </a>
             </div>
             <div data-aos="fade-left">

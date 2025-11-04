@@ -619,7 +619,7 @@ private function getAllCategoryIds($category)
         } catch (\Exception $e) {
             
             // Return error response
-            return response('<div class="alert alert-danger text-center">Error: ' . $e->getMessage() . '</div>');
+            return response('<div class="text-center alert alert-danger">Error: ' . $e->getMessage() . '</div>');
         }
     }
 

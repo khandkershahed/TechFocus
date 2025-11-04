@@ -14,9 +14,9 @@
             </h1>
             <div class="mx-auto col-lg-6">
                 <form method="GET" action="{{ route('faq.search') }}">
-                    <div class="input-group shadow-sm rounded-pill overflow-hidden">
-                        <input type="text" class="form-control border-0 px-4" placeholder="Search FAQ..." name="q" value="{{ request('q', $searchQuery ?? '') }}">
-                        <button type="submit" class="btn btn-primary px-4 rounded-0">
+                    <div class="overflow-hidden shadow-sm input-group rounded-pill">
+                        <input type="text" class="px-4 border-0 form-control" placeholder="Search FAQ..." name="q" value="{{ request('q', $searchQuery ?? '') }}">
+                        <button type="submit" class="px-4 btn btn-primary rounded-0">
                             <i class="fa fa-search"></i>
                         </button>
                     </div>
@@ -30,7 +30,7 @@
     <div class="row g-4">
         <!-- FAQ List -->
         <div class="col-lg-8 col-sm-12">
-            <div class="accordion shadow-sm" id="faqAccordion">
+            <div class="shadow-sm accordion" id="faqAccordion">
                 @forelse($faqs as $faq)
                     <div class="mb-3 border accordion-item rounded-3">
                         <h2 class="accordion-header" id="heading{{ $faq->id }}">
