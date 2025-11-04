@@ -10,7 +10,6 @@
 
 <div class="container my-5">
     <div class="row g-4">
-        <!-- FAQ List -->
         <!-- FAQ Categories Sidebar -->
         <div class="col-lg-3 col-sm-12">
             <div class="p-4 bg-white shadow-sm rounded-3">

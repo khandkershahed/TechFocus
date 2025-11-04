@@ -482,7 +482,7 @@ class SiteController extends Controller
         } catch (\Exception $e) {
             
             // Return error response
-            return response('<div class="alert alert-danger text-center">Error: ' . $e->getMessage() . '</div>');
+            return response('<div class="text-center alert alert-danger">Error: ' . $e->getMessage() . '</div>');
         }
     }
 
@@ -521,6 +521,11 @@ class SiteController extends Controller
         $categories = $this->dynamicCategoryRepository->allDynamicActiveCategory('faqs');
 
         return view('frontend.pages.others.faq', compact('category', 'faqs', 'categories'));
+    }
+
+    public function solutionTest()
+    {
+        return view('frontend.pages.test.solutionTest');
     }
 }
 
