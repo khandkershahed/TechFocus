@@ -126,6 +126,57 @@ class CartController extends Controller
 
 
    // In CartController - addToCart method
+// public function addToCart(Request $request)
+// {
+//     try {
+//         $productId = $request->product_id;
+//         $quantity = $request->quantity ?? 1;
+//         $isRfq = $request->boolean('is_rfq', false);
+
+//         $product = Product::with('brand')->find($productId);
+        
+//         if (!$product) {
+//             return response()->json([
+//                 'success' => false,
+//                 'message' => 'Product not found'
+//             ], 404);
+//         }
+
+//         if ($isRfq) {
+//             // Add to RFQ session
+//             $rfqItems = session()->get('rfq_items', []);
+            
+//             $rfqItems[$productId] = [
+//                 'id' => $product->id,
+//                 'name' => $product->name,
+//                 'sku_code' => $product->sku_code,
+//                 'product_code' => $product->product_code,
+//                 'mf_code' => $product->mf_code,
+//                 'brand' => $product->brand->name ?? 'N/A',
+//                 'thumbnail' => $product->thumbnail,
+//                 'quantity' => $quantity,
+//                 'added_at' => now()->timestamp
+//             ];
+            
+//             session()->put('rfq_items', $rfqItems);
+            
+//             return response()->json([
+//                 'success' => true,
+//                 'message' => 'Product added to RFQ successfully',
+//                 'rfq_count' => count($rfqItems)
+//             ]);
+//         } else {
+//             // Regular cart logic...
+//         }
+
+//     } catch (\Exception $e) {
+//         Log::error('Add to cart error: ' . $e->getMessage());
+//         return response()->json([
+//             'success' => false,
+//             'message' => 'Server error: ' . $e->getMessage()
+//         ], 500);
+//     }
+// }
 public function addToCart(Request $request)
 {
     try {
@@ -134,18 +185,18 @@ public function addToCart(Request $request)
         $isRfq = $request->boolean('is_rfq', false);
 
         $product = Product::with('brand')->find($productId);
-        
+
         if (!$product) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Product not found'
-            ], 404);
+            if ($request->ajax()) {
+                return response()->json(['success' => false, 'message' => 'Product not found'], 404);
+            }
+            return back()->with('error', 'Product not found');
         }
 
         if ($isRfq) {
-            // Add to RFQ session
+            // 🟦 RFQ Logic
             $rfqItems = session()->get('rfq_items', []);
-            
+
             $rfqItems[$productId] = [
                 'id' => $product->id,
                 'name' => $product->name,
@@ -157,26 +208,67 @@ public function addToCart(Request $request)
                 'quantity' => $quantity,
                 'added_at' => now()->timestamp
             ];
-            
+
             session()->put('rfq_items', $rfqItems);
-            
+
+            // ✅ If request is AJAX, return JSON with redirect link
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Product added to RFQ successfully',
+                    'rfq_count' => count($rfqItems),
+                    'redirect_url' => route('rfq', ['source' => 'session'])
+                ]);
+            }
+
+            // ✅ If normal POST (not AJAX), redirect immediately
+            return redirect()->route('rfq', ['source' => 'session'])
+                ->with('success', 'Product added to RFQ successfully.');
+        }
+
+        // 🟩 Regular Cart Logic
+        $cart = session()->get('cart', []);
+
+        if (isset($cart[$productId])) {
+            $cart[$productId]['quantity'] += $quantity;
+        } else {
+            $cart[$productId] = [
+                'id' => $product->id,
+                'name' => $product->name,
+                'price' => $product->sas_price ?? 0,
+                'quantity' => $quantity,
+                'thumbnail' => $product->thumbnail,
+                'brand' => $product->brand->name ?? 'N/A',
+                'added_at' => now()->timestamp
+            ];
+        }
+
+        session()->put('cart', $cart);
+
+        if ($request->ajax()) {
             return response()->json([
                 'success' => true,
-                'message' => 'Product added to RFQ successfully',
-                'rfq_count' => count($rfqItems)
+                'message' => 'Product added to cart successfully',
+                'cart_count' => array_sum(array_column($cart, 'quantity'))
             ]);
-        } else {
-            // Regular cart logic...
         }
+
+        return back()->with('success', 'Product added to cart successfully.');
 
     } catch (\Exception $e) {
         Log::error('Add to cart error: ' . $e->getMessage());
-        return response()->json([
-            'success' => false,
-            'message' => 'Server error: ' . $e->getMessage()
-        ], 500);
+
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Server error: ' . $e->getMessage()
+            ], 500);
+        }
+
+        return back()->with('error', 'Something went wrong. Please try again.');
     }
 }
+
     /**
      * Add product to RFQ session
      */

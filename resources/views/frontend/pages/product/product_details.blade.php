@@ -82,7 +82,7 @@
                                             data-product-brand="{{ $product->brand->name ?? '' }}"
                                             data-product-thumbnail="{{ asset($product->thumbnail) }}">
                                         <i class="fas fa-shopping-cart me-2"></i> $ Request Price Options
-                                    </button>
+                                    </button> 
 
                                     <button class="w-auto btn signin rounded-0 add-to-cart-and-rfq"
                                         data-product-id="{{ $product->id }}" data-product-name="{{ $product->name }}"
@@ -182,7 +182,7 @@
         </div>
     </div>
 
-    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+    <<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
@@ -201,213 +201,287 @@
         });
 
        
-        // 
-    </script>
-    //
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        
+   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <script>
-        $(document).ready(function() {
-            console.log('%c[Cart + RFQ System Initialized]', 'color: green; font-weight: bold;');
+<script>
+$(document).ready(function() {
+    console.log('%c[Cart + RFQ System Initialized]', 'color: green; font-weight: bold;');
 
-            /** ============================
-             *  ✅ CART: Add Product (Request Price)
-             * ============================ */
-            $('.add-to-cart-btn').off('click').on('click', function(e) {
-                e.preventDefault();
+    /** ============================
+     *  ✅ CART: Add Product (Request Price)
+     * ============================ */
+    $('.add-to-cart-btn').off('click').on('click', function(e) {
+        e.preventDefault();
 
-                const button = $(this);
-                const productId = button.data('product-id');
-                const productName = button.data('product-name');
-                const productPrice = button.data('product-price') ?? 0;
-                const originalHtml = button.html();
+        const button = $(this);
+        const productId = button.data('product-id');
+        const productName = button.data('product-name');
+        const originalHtml = button.html();
 
-                console.log('[Cart] Adding product:', {
-                    id: productId,
-                    name: productName
-                });
+        console.log('[Cart] Adding product:', { id: productId, name: productName });
 
-                button.html('<i class="fa fa-spinner fa-spin"></i> Adding...').prop('disabled', true);
+        button.html('<i class="fa fa-spinner fa-spin"></i> Adding...').prop('disabled', true);
 
-                $.ajax({
-                    url: '{{ route('cart.add') }}',
-                    method: 'POST',
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        product_id: productId,
-                        quantity: 1 // Always 1 item only
-                    },
-                    success: function(response) {
-                        console.log('[Cart] Success:', response);
+        $.ajax({
+            url: '{{ route('cart.add') }}',
+            method: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                product_id: productId,
+                quantity: 1 // Always 1 item only
+            },
+            success: function(response) {
+                console.log('[Cart] Success:', response);
 
-                        if (response.success) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Added to Cart!',
-                                text: response.message ||
-                                    `${productName} added to your cart.`,
-                                showConfirmButton: false,
-                                timer: 1500
-                            });
-
-                            // Update cart count if available
-                            if (response.cart_count !== undefined) {
-                                $('.cart-count, #cart-count').text(response.cart_count);
-                                console.log('[Cart] Updated count:', response.cart_count);
-                            }
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: response.message ||
-                                    'Could not add product to cart.'
-                            });
-                        }
-                    },
-                    error: function(xhr) {
-                        console.error('[Cart] AJAX Error:', xhr);
-                        handleAjaxError(xhr, 'cart');
-                    },
-                    complete: function() {
-                        button.html(originalHtml).prop('disabled', false);
-                    }
-                });
-            });
-
-            /** ============================
-             *  ✅ RFQ: Add Product + Redirect
-             * ============================ */
-            $('.add-to-cart-and-rfq').off('click').on('click', function(e) {
-                e.preventDefault();
-
-                const button = $(this);
-                const productId = button.data('product-id');
-                const productName = button.data('product-name');
-                const productSku = button.data('product-sku');
-                const productBrand = button.data('product-brand');
-                const originalHtml = button.html();
-
-                console.log('[RFQ] Adding product to RFQ:', {
-                    id: productId,
-                    name: productName
-                });
-
-                button.html('<i class="fa fa-spinner fa-spin"></i> Processing...').prop('disabled', true);
-
-                $.ajax({
-                    url: '{{ route('cart.add') }}',
-                    method: 'POST',
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        product_id: productId,
-                        quantity: 1, // Always 1 only
-                        is_rfq: true
-                    },
-                    success: function(response) {
-                        console.log('[RFQ] Success:', response);
-
-                        if (response.success) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Added to RFQ!',
-                                text: 'Redirecting to quotation form...',
-                                showConfirmButton: false,
-                                timer: 1200,
-                                willClose: () => {
-                                    window.location.href =
-                                        '{{ route('rfq') }}?source=session';
-                                }
-                            });
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: response.message ||
-                                    'Could not add product to RFQ.'
-                            });
-                        }
-                    },
-                    error: function(xhr) {
-                        console.error('[RFQ] AJAX Error:', xhr);
-
-                        // Fallback redirect if session RFQ fails
-                        const rfqUrl = '{{ route('rfq') }}' +
-                            '?product_id=' + productId +
-                            '&product_name=' + encodeURIComponent(productName) +
-                            '&product_sku=' + encodeURIComponent(productSku) +
-                            '&product_brand=' + encodeURIComponent(productBrand) +
-                            '&source=product_page&direct=true';
-
-                        Swal.fire({
-                            icon: 'warning',
-                            title: 'Redirecting to RFQ',
-                            text: 'Session unavailable — redirecting directly...',
-                            showConfirmButton: false,
-                            timer: 1500,
-                            willClose: () => {
-                                window.location.href = rfqUrl;
-                            }
-                        });
-                    },
-                    complete: function() {
-                        button.html(originalHtml).prop('disabled', false);
-                    }
-                });
-            });
-
-            /** ============================
-             *  ✅ Helper: Update Counts
-             * ============================ */
-            function updateCartCount() {
-                $.get('{{ route('cart.count') }}', function(response) {
-                    if (response.success) $('.cart-count, #cart-count').text(response.count);
-                });
-            }
-
-            function updateRfqCount() {
-                $.get('{{ route('cart.rfq-count') }}', function(response) {
-                    if (response.success) $('.rfq-count, #rfq-count').text(response.count);
-                });
-            }
-
-            /** ============================
-             *  ⚙️ Helper: Handle AJAX Errors
-             * ============================ */
-            function handleAjaxError(xhr, context) {
-                let message = 'Something went wrong. Please try again.';
-
-                if (xhr.status === 419) {
-                    message = 'Session expired. Reloading...';
+                if (response.success) {
                     Swal.fire({
-                        icon: 'warning',
-                        title: 'Session Expired',
-                        text: message,
+                        icon: 'success',
+                        title: 'Added to Cart!',
+                        text: response.message || `${productName} added to your cart.`,
                         showConfirmButton: false,
-                        timer: 1500,
-                        willClose: () => location.reload()
+                        timer: 1500
                     });
-                    return;
-                }
 
-                if (xhr.status === 500) {
-                    message = 'Server error occurred. Check console for details.';
-                } else if (xhr.responseJSON?.message) {
-                    message = xhr.responseJSON.message;
+                    // Update cart count
+                    if (response.cart_count !== undefined) {
+                        $('.cart-count, #cart-count').text(response.cart_count);
+                        console.log('[Cart] Updated count:', response.cart_count);
+                    }
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: response.message || 'Could not add product to cart.'
+                    });
                 }
+            },
+            error: function(xhr) {
+                console.error('[Cart] AJAX Error:', xhr);
+                handleAjaxError(xhr, 'cart');
+            },
+            complete: function() {
+                button.html(originalHtml).prop('disabled', false);
+            }
+        });
+    });
+
+    /** ============================
+     *  ✅ RFQ: Add Product + Redirect
+     * ============================ */
+    $('.add-to-cart-and-rfq').off('click').on('click', function(e) {
+        e.preventDefault();
+
+        const button = $(this);
+        const productId = button.data('product-id');
+        const productName = button.data('product-name');
+        const productSku = button.data('product-sku');
+        const productBrand = button.data('product-brand');
+        const originalHtml = button.html();
+
+        console.log('[RFQ] Adding product to RFQ:', { id: productId, name: productName });
+
+        button.html('<i class="fa fa-spinner fa-spin"></i> Processing...').prop('disabled', true);
+
+        $.ajax({
+            url: '{{ route('cart.add') }}',
+            method: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                product_id: productId,
+                quantity: 1,
+                is_rfq: true
+            },
+            success: function(response) {
+                console.log('[RFQ] Success:', response);
+
+                if (response.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Added to RFQ!',
+                        text: 'Redirecting to quotation form...',
+                        showConfirmButton: false,
+                        timer: 1200,
+                        willClose: () => {
+                            // ✅ Use redirect_url from controller response
+                            if(response.redirect_url) {
+                                window.location.href = response.redirect_url;
+                            } else {
+                                window.location.href = '{{ route('rfq') }}?source=session';
+                            }
+                        }
+                    });
+
+                    // Update RFQ count dynamically
+                    if(response.rfq_count !== undefined) {
+                        $('.rfq-count, #rfq-count').text(response.rfq_count);
+                        console.log('[RFQ] Updated count:', response.rfq_count);
+                    }
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: response.message || 'Could not add product to RFQ.'
+                    });
+                }
+            },
+            error: function(xhr) {
+                console.error('[RFQ] AJAX Error:', xhr);
+
+                // Fallback redirect if session RFQ fails
+                const rfqUrl = '{{ route('rfq') }}' +
+                    '?product_id=' + productId +
+                    '&product_name=' + encodeURIComponent(productName) +
+                    '&product_sku=' + encodeURIComponent(productSku) +
+                    '&product_brand=' + encodeURIComponent(productBrand) +
+                    '&source=product_page&direct=true';
 
                 Swal.fire({
+                    icon: 'warning',
+                    title: 'Redirecting to RFQ',
+                    text: 'Session unavailable — redirecting directly...',
+                    showConfirmButton: false,
+                    timer: 1500,
+                    willClose: () => {
+                        window.location.href = rfqUrl;
+                    }
+                });
+            },
+            complete: function() {
+                button.html(originalHtml).prop('disabled', false);
+            }
+        });
+    });
+
+    /** ============================
+     *  ⚙️ Helper: Update Counts
+     * ============================ */
+    function updateCartCount() {
+        $.get('{{ route('cart.count') }}', function(response) {
+            if (response.success) $('.cart-count, #cart-count').text(response.count);
+        });
+    }
+
+    function updateRfqCount() {
+        $.get('{{ route('cart.rfq-count') }}', function(response) {
+            if (response.success) $('.rfq-count, #rfq-count').text(response.count);
+        });
+    }
+
+    /** ============================
+ *  ✅ Ask Price / Add to RFQ
+ * ============================ */
+$('.add-to-cart-btn').off('click').on('click', function(e) {
+    e.preventDefault();
+
+    const button = $(this);
+    const productId = button.data('product-id');
+    const productName = button.data('product-name');
+    const productSku = button.data('product-sku');
+    const productBrand = button.data('product-brand');
+    const originalHtml = button.html();
+
+    button.html('<i class="fa fa-spinner fa-spin"></i> Processing...').prop('disabled', true);
+
+    $.ajax({
+        url: '{{ route('cart.add') }}',
+        method: 'POST',
+        data: {
+            _token: '{{ csrf_token() }}',
+            product_id: productId,
+            quantity: 1,
+            is_rfq: true // 🔑 Important: mark as RFQ
+        },
+        success: function(response) {
+            if (response.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Added to Cart!',
+                    text: 'Redirecting to quotation form...',
+                    showConfirmButton: false,
+                    timer: 1200,
+                    willClose: () => {
+                        // 🔑 Use redirect_url from controller
+                        if(response.redirect_url){
+                            window.location.href = response.redirect_url;
+                        } else {
+                            window.location.href = '{{ route('rfq') }}?source=session';
+                        }
+                    }
+                });
+            } else {
+                Swal.fire({
                     icon: 'error',
-                    title: context === 'cart' ? 'Cart Error' : 'RFQ Error',
-                    text: message
+                    title: 'Error',
+                    text: response.message || 'Could not add product to RFQ.'
                 });
             }
+        },
+        error: function(xhr) {
+            // Fallback direct redirect
+            const rfqUrl = '{{ route('rfq') }}' +
+                '?product_id=' + productId +
+                '&product_name=' + encodeURIComponent(productName) +
+                '&product_sku=' + encodeURIComponent(productSku) +
+                '&product_brand=' + encodeURIComponent(productBrand) +
+                '&source=product_page&direct=true';
 
-            /** Initialize counts on load */
-            updateCartCount();
-            updateRfqCount();
+            Swal.fire({
+                icon: 'warning',
+                title: 'Redirecting to RFQ',
+                text: 'Session unavailable — redirecting directly...',
+                showConfirmButton: false,
+                timer: 1500,
+                willClose: () => window.location.href = rfqUrl
+            });
+        },
+        complete: function() {
+            button.html(originalHtml).prop('disabled', false);
+        }
+    });
+});
+
+
+    /** ============================
+     *  ⚙️ Helper: Handle AJAX Errors
+     * ============================ */
+    function handleAjaxError(xhr, context) {
+        let message = 'Something went wrong. Please try again.';
+
+        if (xhr.status === 419) {
+            message = 'Session expired. Reloading...';
+            Swal.fire({
+                icon: 'warning',
+                title: 'Session Expired',
+                text: message,
+                showConfirmButton: false,
+                timer: 1500,
+                willClose: () => location.reload()
+            });
+            return;
+        }
+
+        if (xhr.status === 500) {
+            message = 'Server error occurred. Check console for details.';
+        } else if (xhr.responseJSON?.message) {
+            message = xhr.responseJSON.message;
+        }
+
+        Swal.fire({
+            icon: 'error',
+            title: context === 'cart' ? 'Cart Error' : 'RFQ Error',
+            text: message
         });
-    </script>
+    }
 
+    /** ============================
+     *  Initialize counts on page load
+     * ============================ */
+    updateCartCount();
+    updateRfqCount();
+});
+</script>
+ 
 
 @endsection
