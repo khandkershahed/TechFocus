@@ -99,7 +99,7 @@
                                                                             <div class="mb-3">
                                                                                 <label class="form-label fw-normal">SKU / Part No.</label>
                                                                                 <input type="text" class="form-control modal-sku-no" 
-                                                                                    value="{{ $product['sku_code'] ?? '' }}" 
+                                                                                    {{-- value="{{ $product['sku_code'] ?? '' }}"  --}}
                                                                                     placeholder="Enter SKU / Part No.">
                                                                             </div>
                                                                         </div>
@@ -122,7 +122,7 @@
                                                                             <div class="mb-3">
                                                                                 <label class="form-label fw-normal">Quantity</label>
                                                                                 <input type="number" class="form-control modal-additional-qty" 
-                                                                                    value="{{ $product['quantity'] ?? 1 }}" 
+                                                                                    {{-- value="{{ $product['quantity'] ?? 1 }}"  --}}
                                                                                     placeholder="Enter Quantity">
                                                                             </div>
                                                                         </div>
@@ -130,7 +130,7 @@
                                                                             <div class="mb-3">
                                                                                 <label class="form-label fw-normal">Item Name</label>
                                                                                 <input type="text" class="form-control modal-additional-product-name" 
-                                                                                    value="{{ $product['name'] ?? '' }}" 
+                                                                                    {{-- value="{{ $product['name'] ?? '' }}"  --}}
                                                                                     placeholder="Enter Item Name">
                                                                             </div>
                                                                         </div>
