@@ -36,81 +36,106 @@ class Catalog extends Model
         'company_id' => 'array',
     ];
 
-
-
-//  protected static function boot()
-//     {
-//         parent::boot();
-
-//         static::creating(function ($catalog) {
-//             if (empty($catalog->slug) && !empty($catalog->name)) {
-//                 $catalog->slug = Str::slug($catalog->name);
-//             }
-//         });
-
-//         static::updating(function ($catalog) {
-//             if (empty($catalog->slug) && !empty($catalog->name)) {
-//                 $catalog->slug = Str::slug($catalog->name);
-//             }
-//         });
-//     }
-
-    // Remove the many-to-many relationships and replace with accessors
-
+    // Improved accessors with better error handling
     public function getBrandsAttribute()
     {
-        if (!$this->brand_id || $this->brand_id === '[]') {
+        try {
+            if (!$this->brand_id || $this->brand_id === '[]' || $this->brand_id === 'null') {
+                return collect();
+            }
+            
+            $brandIds = json_decode($this->brand_id, true);
+            
+            if (empty($brandIds) || !is_array($brandIds)) {
+                return collect();
+            }
+            
+            // Filter out any null or empty values
+            $brandIds = array_filter($brandIds);
+            
+            if (empty($brandIds)) {
+                return collect();
+            }
+            
+            return Brand::whereIn('id', $brandIds)->get();
+        } catch (\Exception $e) {
             return collect();
         }
-        
-        $brandIds = json_decode($this->brand_id, true);
-        if (empty($brandIds)) {
-            return collect();
-        }
-        
-        return Brand::whereIn('id', $brandIds)->get();
     }
 
     public function getProductsAttribute()
     {
-        if (!$this->product_id || $this->product_id === '[]') {
+        try {
+            if (!$this->product_id || $this->product_id === '[]' || $this->product_id === 'null') {
+                return collect();
+            }
+            
+            $productIds = json_decode($this->product_id, true);
+            
+            if (empty($productIds) || !is_array($productIds)) {
+                return collect();
+            }
+            
+            $productIds = array_filter($productIds);
+            
+            if (empty($productIds)) {
+                return collect();
+            }
+            
+            return Product::whereIn('id', $productIds)->get();
+        } catch (\Exception $e) {
             return collect();
         }
-        
-        $productIds = json_decode($this->product_id, true);
-        if (empty($productIds)) {
-            return collect();
-        }
-        
-        return Product::whereIn('id', $productIds)->get();
     }
 
     public function getIndustriesAttribute()
     {
-        if (!$this->industry_id || $this->industry_id === '[]') {
+        try {
+            if (!$this->industry_id || $this->industry_id === '[]' || $this->industry_id === 'null') {
+                return collect();
+            }
+            
+            $industryIds = json_decode($this->industry_id, true);
+            
+            if (empty($industryIds) || !is_array($industryIds)) {
+                return collect();
+            }
+            
+            $industryIds = array_filter($industryIds);
+            
+            if (empty($industryIds)) {
+                return collect();
+            }
+            
+            return Industry::whereIn('id', $industryIds)->get();
+        } catch (\Exception $e) {
             return collect();
         }
-        
-        $industryIds = json_decode($this->industry_id, true);
-        if (empty($industryIds)) {
-            return collect();
-        }
-        
-        return Industry::whereIn('id', $industryIds)->get();
     }
 
     public function getCompaniesAttribute()
     {
-        if (!$this->company_id || $this->company_id === '[]') {
+        try {
+            if (!$this->company_id || $this->company_id === '[]' || $this->company_id === 'null') {
+                return collect();
+            }
+            
+            $companyIds = json_decode($this->company_id, true);
+            
+            if (empty($companyIds) || !is_array($companyIds)) {
+                return collect();
+            }
+            
+            $companyIds = array_filter($companyIds);
+            
+            if (empty($companyIds)) {
+                return collect();
+            }
+            
+            return Company::whereIn('id', $companyIds)->get();
+        } catch (\Exception $e) {
             return collect();
         }
-        
-        $companyIds = json_decode($this->company_id, true);
-        if (empty($companyIds)) {
-            return collect();
-        }
-        
-        return Company::whereIn('id', $companyIds)->get();
     }
 
     public function attachments()

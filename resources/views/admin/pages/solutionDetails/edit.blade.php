@@ -13,7 +13,7 @@
                         </div>
                     </div>
                     <div class="col-lg-7 col-sm-12 d-flex justify-content-end">
-                        <h4 class="text-white p-0 m-0 fw-bold">Solution Details Add</h4>
+                        <h4 class="text-white p-0 m-0 fw-bold">Solution Details Edit</h4>
                     </div>
                 </div>
                 <div class="card-body p-0 pt-1">
@@ -67,44 +67,72 @@
                                             </div>
                                             <div class="fv-row">
                                                 <div class="row">
-                                                    <div class="col-lg-6">
-                                                        <div class="fv-row mb-3">
-                                                            <label class="form-label">Industry Name</label>
-                                                            <select class="form-select form-select-solid"
-                                                                name="industry_id[]" id="field2" multiple
-                                                                multiselect-search="true" multiselect-select-all="true"
-                                                                multiselect-max-items="3"
-                                                                onchange="console.log(this.selectedOptions)">
-                                                                @foreach ($industries as $industry)
-                                                                    <option value="{{ $industry->id }}">
-                                                                        {{ $industry->name }}</option>
-                                                                @endforeach
-                                                            </select>
-                                                            <div class="invalid-feedback"> Please Enter Product Name.</div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-6">
-                                                        <div class="fv-row mb-3">
-                                                            <label class="form-label">Brand Name</label>
-                                                            <select class="form-select form-select-solid" name="brand_id[]"
-                                                                id="field2" multiple multiselect-search="true"
-                                                                multiselect-select-all="true" multiselect-max-items="3"
-                                                                onchange="console.log(this.selectedOptions)">
-                                                                @foreach ($brands as $brand)
-                                                                    <option value="{{ $brand->id }}">{{ $brand->title }}
-                                                                    </option>
-                                                                @endforeach
-                                                            </select>
-                                                            <div class="invalid-feedback"> Please Enter Brand Name.</div>
-                                                        </div>
-                                                    </div>
+@php
+    // Decode JSON, ensure it is always an array
+    $selectedIndustries = json_decode($solutionDetail->industry_id, true);
+    if (!is_array($selectedIndustries)) {
+        $selectedIndustries = $selectedIndustries ? [$selectedIndustries] : [];
+    }
+
+    $selectedBrands = json_decode($solutionDetail->brand_id, true);
+    if (!is_array($selectedBrands)) {
+        $selectedBrands = $selectedBrands ? [$selectedBrands] : [];
+    }
+@endphp
+
+<div class="col-lg-6">
+    <div class="fv-row mb-3">
+        <label class="form-label">Industry Name</label>
+        <select class="form-select form-select-solid"
+                name="industry_id[]" id="industrySelect" multiple
+                multiselect-search="true" multiselect-select-all="true"
+                multiselect-max-items="3">
+            @foreach ($industries as $industry)
+                <option value="{{ $industry->id }}"
+                    {{ in_array($industry->id, $selectedIndustries) ? 'selected' : '' }}>
+                    {{ $industry->name }}
+                </option>
+            @endforeach
+        </select>
+        <div class="invalid-feedback"> Please Enter Industry Name.</div>
+    </div>
+</div>
+
+<div class="col-lg-6">
+    <div class="fv-row mb-3">
+        <label class="form-label">Brand Name</label>
+        <select class="form-select form-select-solid" name="brand_id[]"
+                id="brandSelect" multiple multiselect-search="true"
+                multiselect-select-all="true" multiselect-max-items="3">
+            @foreach ($brands as $brand)
+                <option value="{{ $brand->id }}"
+                    {{ in_array($brand->id, $selectedBrands) ? 'selected' : '' }}>
+                    {{ $brand->title }}
+                </option>
+            @endforeach
+        </select>
+        <div class="invalid-feedback"> Please Enter Brand Name.</div>
+    </div>
+</div>
+
+
                                                     <div class="col-lg-4">
                                                         <div class="fv-row mb-3">
                                                             <label class="form-label">Banner Image</label>
                                                             <input type="file"
                                                                 class="form-control form-control-solid form-control-sm"
-                                                                name="banner_image" id="validationCustom01"
-                                                                placeholder="Enter Banner Image">
+                                                                name="banner_image" id="banner_image">
+                                                            
+                                                            @if($solutionDetail->banner_image)
+                                                            <div class="mt-2">
+                                                                <small class="text-muted">Current Image:</small>
+                                                                <div class="d-flex align-items-center mt-1">
+                                                                    <img src="{{ asset('storage/' . $solutionDetail->banner_image) }}" 
+                                                                         alt="Banner Image" class="img-thumbnail me-2" style="max-height: 50px;">
+                                                                    <span class="text-muted">{{ basename($solutionDetail->banner_image) }}</span>
+                                                                </div>
+                                                            </div>
+                                                            @endif
                                                             <div class="invalid-feedback"> Please Enter Banner Image</div>
                                                         </div>
                                                     </div>
@@ -113,10 +141,19 @@
                                                             <label class="form-label">Thumbnail Image</label>
                                                             <input type="file"
                                                                 class="form-control form-control-solid form-control-sm"
-                                                                name="thumbnail_image" id="validationCustom01"
-                                                                placeholder="Enter Thumbnail Image">
-                                                            <div class="invalid-feedback"> Please Enter Thumbnail Image
+                                                                name="thumbnail_image" id="thumbnail_image">
+                                                            
+                                                            @if($solutionDetail->thumbnail_image)
+                                                            <div class="mt-2">
+                                                                <small class="text-muted">Current Image:</small>
+                                                                <div class="d-flex align-items-center mt-1">
+                                                                    <img src="{{ asset('storage/' . $solutionDetail->thumbnail_image) }}" 
+                                                                         alt="Thumbnail Image" class="img-thumbnail me-2" style="max-height: 50px;">
+                                                                    <span class="text-muted">{{ basename($solutionDetail->thumbnail_image) }}</span>
+                                                                </div>
                                                             </div>
+                                                            @endif
+                                                            <div class="invalid-feedback"> Please Enter Thumbnail Image</div>
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-4">
@@ -124,17 +161,16 @@
                                                             <label class="form-label">Name</label>
                                                             <input type="text"
                                                                 class="form-control form-control-solid form-control-sm"
-                                                                name="name" value="{{ $solutionDetail->name }}"
+                                                                name="name" value="{{ old('name', $solutionDetail->name) }}"
                                                                 id="validationCustom01" placeholder="Enter Name">
-                                                            <div class="invalid-feedback"> Please Enter Name
-                                                            </div>
+                                                            <div class="invalid-feedback"> Please Enter Name</div>
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-12">
                                                         <div class="fv-row mb-3">
                                                             <label class="form-label">Header</label>
                                                             <textarea rows="1" name="header" class="form-control form-control-sm form-control-solid"
-                                                                placeholder="Enter Header">{{ $solutionDetail->header }}</textarea>
+                                                                placeholder="Enter Header">{{ old('header', $solutionDetail->header) }}</textarea>
                                                             <div class="invalid-feedback"> Please Enter Header</div>
                                                         </div>
                                                     </div>
@@ -166,15 +202,10 @@
                                                 <div class="row">
                                                     <div class="col-lg-6">
                                                         <div class="fv-row mb-3">
-                                                            <div class="fv-row mb-3">
-                                                                <label class="form-label">Row One Short Description</label>
-                                                                <textarea rows="1" name="row_one_short_des" class="form-control form-control-sm form-control-solid"
-                                                                    placeholder="Enter Row One Short Description">{{ $solutionDetail->rowOne->short_des }}</textarea>
-                                                                <div class="invalid-feedback"> Please Enter Row One Short
-                                                                    Description</div>
-                                                            </div>
-                                                            <div class="invalid-feedback"> Please Enter One Short
-                                                                Description</div>
+                                                            <label class="form-label">Row One Short Description</label>
+                                                            <textarea rows="1" name="row_one_short_des" class="form-control form-control-sm form-control-solid"
+                                                                placeholder="Enter Row One Short Description">{{ old('row_one_short_des', $solutionDetail->rowOne->short_des ?? '') }}</textarea>
+                                                            <div class="invalid-feedback"> Please Enter Row One Short Description</div>
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-6">
@@ -183,10 +214,9 @@
                                                             <input type="text"
                                                                 class="form-control form-control-solid form-control-sm"
                                                                 name="row_one_badge"
-                                                                value="{{ $solutionDetail->rowOne->badge }}"
-                                                                id="validationCustom01" placeholder="Enter Row One Badge">
-                                                            <div class="invalid-feedback"> Please Enter Row One Badge
-                                                            </div>
+                                                                value="{{ old('row_one_badge', $solutionDetail->rowOne->badge ?? '') }}"
+                                                                placeholder="Enter Row One Badge">
+                                                            <div class="invalid-feedback"> Please Enter Row One Badge</div>
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-4">
@@ -195,8 +225,8 @@
                                                             <input type="text"
                                                                 class="form-control form-control-solid form-control-sm"
                                                                 name="row_one_title"
-                                                                value="{{ $solutionDetail->rowOne->title }}"
-                                                                id="validationCustom01" placeholder="Enter Row One Title">
+                                                                value="{{ old('row_one_title', $solutionDetail->rowOne->title ?? '') }}"
+                                                                placeholder="Enter Row One Title">
                                                             <div class="invalid-feedback"> Please Enter Row One Title</div>
                                                         </div>
                                                     </div>
@@ -206,11 +236,9 @@
                                                             <input type="text"
                                                                 class="form-control form-control-solid form-control-sm"
                                                                 name="row_one_list_title"
-                                                                value="{{ $solutionDetail->rowOne->list_title }}"
-                                                                id="validationCustom01"
+                                                                value="{{ old('row_one_list_title', $solutionDetail->rowOne->list_title ?? '') }}"
                                                                 placeholder="Enter Row One List Title">
-                                                            <div class="invalid-feedback"> Please Enter Row One List Title
-                                                            </div>
+                                                            <div class="invalid-feedback"> Please Enter Row One List Title</div>
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-4">
@@ -219,11 +247,9 @@
                                                             <input type="text"
                                                                 class="form-control form-control-solid form-control-sm"
                                                                 name="row_one_list_one"
-                                                                value="{{ $solutionDetail->rowOne->list_one }}"
-                                                                id="validationCustom01"
-                                                                placeholder="Enter Row One List Title">
-                                                            <div class="invalid-feedback"> Please Enter Row One List Title
-                                                            </div>
+                                                                value="{{ old('row_one_list_one', $solutionDetail->rowOne->list_one ?? '') }}"
+                                                                placeholder="Enter Row One List One">
+                                                            <div class="invalid-feedback"> Please Enter Row One List One</div>
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-4">
@@ -232,11 +258,9 @@
                                                             <input type="text"
                                                                 class="form-control form-control-solid form-control-sm"
                                                                 name="row_one_list_two"
-                                                                value="{{ $solutionDetail->rowOne->list_two }}"
-                                                                id="validationCustom01"
-                                                                placeholder="Enter Row One List Title">
-                                                            <div class="invalid-feedback"> Please Enter Row One List Title
-                                                            </div>
+                                                                value="{{ old('row_one_list_two', $solutionDetail->rowOne->list_two ?? '') }}"
+                                                                placeholder="Enter Row One List Two">
+                                                            <div class="invalid-feedback"> Please Enter Row One List Two</div>
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-4">
@@ -245,11 +269,9 @@
                                                             <input type="text"
                                                                 class="form-control form-control-solid form-control-sm"
                                                                 name="row_one_list_three"
-                                                                value="{{ $solutionDetail->rowOne->list_three }}"
-                                                                id="validationCustom01"
+                                                                value="{{ old('row_one_list_three', $solutionDetail->rowOne->list_three ?? '') }}"
                                                                 placeholder="Enter Row One List Three">
-                                                            <div class="invalid-feedback"> Please Enter Row One List Three
-                                                            </div>
+                                                            <div class="invalid-feedback"> Please Enter Row One List Three</div>
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-4">
@@ -258,11 +280,9 @@
                                                             <input type="text"
                                                                 class="form-control form-control-solid form-control-sm"
                                                                 name="row_one_list_four"
-                                                                value="{{ $solutionDetail->rowOne->list_four }}"
-                                                                id="validationCustom01"
+                                                                value="{{ old('row_one_list_four', $solutionDetail->rowOne->list_four ?? '') }}"
                                                                 placeholder="Enter Row One List Four">
-                                                            <div class="invalid-feedback"> Please Enter Row One List Four
-                                                            </div>
+                                                            <div class="invalid-feedback"> Please Enter Row One List Four</div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -305,10 +325,9 @@
                                                             <input type="text"
                                                                 class="form-control form-control-solid form-control-sm"
                                                                 name="row_two_title"
-                                                                value="{{ $solutionDetail->row_two_title }}"
-                                                                id="validationCustom01" placeholder="Enter Row Two Title">
-                                                            <div class="invalid-feedback"> Please Enter Row Two Title
-                                                            </div>
+                                                                value="{{ old('row_two_title', $solutionDetail->row_two_title) }}"
+                                                                placeholder="Enter Row Two Title">
+                                                            <div class="invalid-feedback"> Please Enter Row Two Title</div>
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-6">
@@ -317,517 +336,373 @@
                                                             <input type="text"
                                                                 class="form-control form-control-solid form-control-sm"
                                                                 name="row_two_header"
-                                                                value="{{ $solutionDetail->row_two_header }}"
-                                                                id="validationCustom01"
+                                                                value="{{ old('row_two_header', $solutionDetail->row_two_header) }}"
                                                                 placeholder="Enter Row Two Header">
-                                                            <div class="invalid-feedback"> Please Enter Row Two Header
-                                                            </div>
+                                                            <div class="invalid-feedback"> Please Enter Row Two Header</div>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="row mt-4 pt-4">
+                                                    <!-- Column One -->
                                                     <div class="col-lg-6">
                                                         <div class="row border p-4 m-1">
-                                                            <p class="badge badge-info custom-badge"
-                                                                style="margin-top: -15px; width: 13%">Column One</span>
+                                                            <p class="badge badge-info custom-badge" style="margin-top: -15px; width: 13%">Column One</p>
                                                             <div class="col-lg-12 col-sm-12">
                                                                 <div class="row">
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label">Solution Card One
-                                                                            Badge</label>
+                                                                        <label class="form-label">Solution Card One Badge</label>
                                                                         <input type="text"
                                                                             class="form-control form-control-solid form-control-sm"
                                                                             name="solutionCardOneId_badge"
-                                                                            value="{{ $solutionDetail->solutionCardOne->badge }}"
-                                                                            id="validationCustom01"
+                                                                            value="{{ old('solutionCardOneId_badge', $solutionDetail->solutionCardOne->badge ?? '') }}"
                                                                             placeholder="Enter Solution Card One Badge">
-                                                                        <div class="invalid-feedback"> Please Enter
-                                                                            Solution
-                                                                            Card One Badge
-                                                                        </div>
+                                                                        <div class="invalid-feedback">Please Enter Solution Card One Badge</div>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label">Solution Card Image
-                                                                            One</label>
+                                                                        <label class="form-label">Solution Card Image One</label>
                                                                         <input type="file"
                                                                             class="form-control form-control-solid form-control-sm"
-                                                                            name="solution_card_image_one"
-                                                                            id="validationCustom01"
-                                                                            placeholder="Enter Solution Card Image One">
-                                                                        <div class="invalid-feedback"> Please Enter
-                                                                            Solution
-                                                                            Card Image One
+                                                                            name="solution_card_image_one">
+                                                                        @if(isset($solutionDetail->solutionCardOne->image) && $solutionDetail->solutionCardOne->image)
+                                                                        <div class="mt-2">
+                                                                            <small class="text-muted">Current Image:</small>
+                                                                            <div class="d-flex align-items-center mt-1">
+                                                                                <img src="{{ asset('storage/' . $solutionDetail->solutionCardOne->image) }}" 
+                                                                                     alt="Solution Card One" class="img-thumbnail me-2" style="max-height: 50px;">
+                                                                                <span class="text-muted">{{ basename($solutionDetail->solutionCardOne->image) }}</span>
+                                                                            </div>
                                                                         </div>
+                                                                        @endif
+                                                                        <div class="invalid-feedback">Please Enter Solution Card Image One</div>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label">Solution Card One Title
-                                                                        </label>
+                                                                        <label class="form-label">Solution Card One Title</label>
                                                                         <input type="text"
                                                                             class="form-control form-control-solid form-control-sm"
                                                                             name="solutionCardOneId_title"
-                                                                            value="{{ $solutionDetail->solutionCardOne->title }}"
-                                                                            id="validationCustom01"
+                                                                            value="{{ old('solutionCardOneId_title', $solutionDetail->solutionCardOne->title ?? '') }}"
                                                                             placeholder="Enter Solution Card One Title">
-                                                                        <div class="invalid-feedback"> Please Enter
-                                                                            Solution
-                                                                            Card One Title
-                                                                        </div>
+                                                                        <div class="invalid-feedback">Please Enter Solution Card One Title</div>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label">Solution Card One Short
-                                                                            Description
-                                                                        </label>
+                                                                        <label class="form-label">Solution Card One Short Description</label>
                                                                         <input type="text"
                                                                             class="form-control form-control-solid form-control-sm"
                                                                             name="solutionCardOneId_short_des"
-                                                                            value="{{ $solutionDetail->solutionCardOne->short_des }}"
-                                                                            id="validationCustom01"
+                                                                            value="{{ old('solutionCardOneId_short_des', $solutionDetail->solutionCardOne->short_des ?? '') }}"
                                                                             placeholder="Enter Solution Card One Short Description">
-                                                                        <div class="invalid-feedback"> Please Enter
-                                                                            Solution
-                                                                            Card One Short Description
-                                                                        </div>
+                                                                        <div class="invalid-feedback">Please Enter Solution Card One Short Description</div>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label">Solution Card One Link
-                                                                        </label>
+                                                                        <label class="form-label">Solution Card One Link</label>
                                                                         <input type="url"
                                                                             class="form-control form-control-solid form-control-sm"
                                                                             name="solutionCardOneId_link"
-                                                                            value="{{ $solutionDetail->solutionCardOne->link }}"
-                                                                            id="validationCustom01"
+                                                                            value="{{ old('solutionCardOneId_link', $solutionDetail->solutionCardOne->link ?? '') }}"
                                                                             placeholder="Enter Solution Card One Link">
-                                                                        <div class="invalid-feedback"> Please Enter
-                                                                            Solution
-                                                                            Card One Link
-                                                                        </div>
+                                                                        <div class="invalid-feedback">Please Enter Solution Card One Link</div>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label">Solution Card One Button
-                                                                            Name
-                                                                        </label>
+                                                                        <label class="form-label">Solution Card One Button Name</label>
                                                                         <input type="text"
                                                                             class="form-control form-control-solid form-control-sm"
                                                                             name="solutionCardOneId_button_name"
-                                                                            value="{{ $solutionDetail->solutionCardOne->button_name }}"
-                                                                            id="validationCustom01"
+                                                                            value="{{ old('solutionCardOneId_button_name', $solutionDetail->solutionCardOne->button_name ?? '') }}"
                                                                             placeholder="Enter Solution Card One Button Name">
-                                                                        <div class="invalid-feedback"> Please Enter
-                                                                            Solution
-                                                                            Card One Button Name
-                                                                        </div>
+                                                                        <div class="invalid-feedback">Please Enter Solution Card One Button Name</div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    <!-- Column Two -->
                                                     <div class="col-lg-6">
                                                         <div class="row border p-4 m-1">
-                                                            <p class="badge badge-info custom-badge"
-                                                                style="margin-top: -15px; width: 13%">Column Two</span>
+                                                            <p class="badge badge-info custom-badge" style="margin-top: -15px; width: 13%">Column Two</p>
                                                             <div class="col-lg-12 col-sm-12">
                                                                 <div class="row">
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label">Solution Card Two
-                                                                            Badge</label>
+                                                                        <label class="form-label">Solution Card Two Badge</label>
                                                                         <input type="text"
                                                                             class="form-control form-control-solid form-control-sm"
                                                                             name="solutionCardTwoId_badge"
-                                                                            value="{{ $solutionDetail->solutionCardTwo->badge }}"
-                                                                            id="validationCustom01"
+                                                                            value="{{ old('solutionCardTwoId_badge', $solutionDetail->solutionCardTwo->badge ?? '') }}"
                                                                             placeholder="Enter Solution Card Two Badge">
-                                                                        <div class="invalid-feedback"> Please Enter
-                                                                            Solution
-                                                                            Card Two Badge
-                                                                        </div>
+                                                                        <div class="invalid-feedback">Please Enter Solution Card Two Badge</div>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label">Solution Card Image
-                                                                            Two</label>
+                                                                        <label class="form-label">Solution Card Image Two</label>
                                                                         <input type="file"
                                                                             class="form-control form-control-solid form-control-sm"
-                                                                            name="solution_card_image_Two"
-                                                                            id="validationCustom01"
-                                                                            placeholder="Enter Solution Card Image Two">
-                                                                        <div class="invalid-feedback"> Please Enter
-                                                                            Solution
-                                                                            Card Image Two
+                                                                            name="solution_card_image_two">
+                                                                        @if(isset($solutionDetail->solutionCardTwo->image) && $solutionDetail->solutionCardTwo->image)
+                                                                        <div class="mt-2">
+                                                                            <small class="text-muted">Current Image:</small>
+                                                                            <div class="d-flex align-items-center mt-1">
+                                                                                <img src="{{ asset('storage/' . $solutionDetail->solutionCardTwo->image) }}" 
+                                                                                     alt="Solution Card Two" class="img-thumbnail me-2" style="max-height: 50px;">
+                                                                                <span class="text-muted">{{ basename($solutionDetail->solutionCardTwo->image) }}</span>
+                                                                            </div>
                                                                         </div>
+                                                                        @endif
+                                                                        <div class="invalid-feedback">Please Enter Solution Card Image Two</div>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label">Solution Card Two Title
-                                                                        </label>
+                                                                        <label class="form-label">Solution Card Two Title</label>
                                                                         <input type="text"
                                                                             class="form-control form-control-solid form-control-sm"
                                                                             name="solutionCardTwoId_title"
-                                                                            value="{{ $solutionDetail->solutionCardTwo->title }}"
-                                                                            id="validationCustom01"
+                                                                            value="{{ old('solutionCardTwoId_title', $solutionDetail->solutionCardTwo->title ?? '') }}"
                                                                             placeholder="Enter Solution Card Two Title">
-                                                                        <div class="invalid-feedback"> Please Enter
-                                                                            Solution
-                                                                            Card Two Title
-                                                                        </div>
+                                                                        <div class="invalid-feedback">Please Enter Solution Card Two Title</div>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label">Solution Card Two Short
-                                                                            Description
-                                                                        </label>
+                                                                        <label class="form-label">Solution Card Two Short Description</label>
                                                                         <input type="text"
                                                                             class="form-control form-control-solid form-control-sm"
                                                                             name="solutionCardTwoId_short_des"
-                                                                            value="{{ $solutionDetail->solutionCardTwo->short_des }}"
-                                                                            id="validationCustom01"
+                                                                            value="{{ old('solutionCardTwoId_short_des', $solutionDetail->solutionCardTwo->short_des ?? '') }}"
                                                                             placeholder="Enter Solution Card Two Short Description">
-                                                                        <div class="invalid-feedback"> Please Enter
-                                                                            Solution
-                                                                            Card Two Short Description
-                                                                        </div>
+                                                                        <div class="invalid-feedback">Please Enter Solution Card Two Short Description</div>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label">Solution Card Two Link
-                                                                        </label>
+                                                                        <label class="form-label">Solution Card Two Link</label>
                                                                         <input type="url"
                                                                             class="form-control form-control-solid form-control-sm"
                                                                             name="solutionCardTwoId_link"
-                                                                            value="{{ $solutionDetail->solutionCardTwo->link }}"
-                                                                            id="validationCustom01"
+                                                                            value="{{ old('solutionCardTwoId_link', $solutionDetail->solutionCardTwo->link ?? '') }}"
                                                                             placeholder="Enter Solution Card Two Link">
-                                                                        <div class="invalid-feedback"> Please Enter
-                                                                            Solution
-                                                                            Card Two Link
-                                                                        </div>
+                                                                        <div class="invalid-feedback">Please Enter Solution Card Two Link</div>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label">Solution Card Two Button
-                                                                            Name
-                                                                        </label>
+                                                                        <label class="form-label">Solution Card Two Button Name</label>
                                                                         <input type="text"
                                                                             class="form-control form-control-solid form-control-sm"
                                                                             name="solutionCardTwoId_button_name"
-                                                                            value="{{ $solutionDetail->solutionCardTwo->button_name }}"
-                                                                            id="validationCustom01"
+                                                                            value="{{ old('solutionCardTwoId_button_name', $solutionDetail->solutionCardTwo->button_name ?? '') }}"
                                                                             placeholder="Enter Solution Card Two Button Name">
-                                                                        <div class="invalid-feedback"> Please Enter
-                                                                            Solution
-                                                                            Card Two Button Name
-                                                                        </div>
+                                                                        <div class="invalid-feedback">Please Enter Solution Card Two Button Name</div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <!-- Continue with similar pattern for other columns (Three, Four, Five) -->
+                                                <!-- Column Three -->
                                                 <div class="row mt-4 pt-4">
                                                     <div class="col-lg-6">
                                                         <div class="row border p-4 m-1">
-                                                            <p class="badge badge-info custom-badge"
-                                                                style="margin-top: -15px; width: 15%">Column Three</span>
+                                                            <p class="badge badge-info custom-badge" style="margin-top: -15px; width: 15%">Column Three</p>
                                                             <div class="col-lg-12 col-sm-12">
                                                                 <div class="row">
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label">Solution Card Three
-                                                                            Badge</label>
+                                                                        <label class="form-label">Solution Card Three Badge</label>
                                                                         <input type="text"
                                                                             class="form-control form-control-solid form-control-sm"
                                                                             name="solutionCardThreeId_badge"
-                                                                            value="{{ $solutionDetail->solutionCardThree->badge }}"
-                                                                            id="validationCustom01"
+                                                                            value="{{ old('solutionCardThreeId_badge', $solutionDetail->solutionCardThree->badge ?? '') }}"
                                                                             placeholder="Enter Solution Card Three Badge">
-                                                                        <div class="invalid-feedback"> Please Enter
-                                                                            Solution
-                                                                            Card Three Badge
-                                                                        </div>
+                                                                        <div class="invalid-feedback">Please Enter Solution Card Three Badge</div>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label">Solution Card Image
-                                                                            Three</label>
+                                                                        <label class="form-label">Solution Card Image Three</label>
                                                                         <input type="file"
                                                                             class="form-control form-control-solid form-control-sm"
-                                                                            name="solution_card_image_three"
-                                                                            id="validationCustom01"
-                                                                            placeholder="Enter Solution Card Image Three">
-                                                                        <div class="invalid-feedback"> Please Enter
-                                                                            Solution
-                                                                            Card Image Three
+                                                                            name="solution_card_image_three">
+                                                                        @if(isset($solutionDetail->solutionCardThree->image) && $solutionDetail->solutionCardThree->image)
+                                                                        <div class="mt-2">
+                                                                            <small class="text-muted">Current Image:</small>
+                                                                            <div class="d-flex align-items-center mt-1">
+                                                                                <img src="{{ asset('storage/' . $solutionDetail->solutionCardThree->image) }}" 
+                                                                                     alt="Solution Card Three" class="img-thumbnail me-2" style="max-height: 50px;">
+                                                                                <span class="text-muted">{{ basename($solutionDetail->solutionCardThree->image) }}</span>
+                                                                            </div>
                                                                         </div>
+                                                                        @endif
+                                                                        <div class="invalid-feedback">Please Enter Solution Card Image Three</div>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label">Solution Card Three Title
-                                                                        </label>
+                                                                        <label class="form-label">Solution Card Three Title</label>
                                                                         <input type="text"
                                                                             class="form-control form-control-solid form-control-sm"
                                                                             name="solutionCardThreeId_title"
-                                                                            value="{{ $solutionDetail->solutionCardThree->title }}"
-                                                                            id="validationCustom01"
+                                                                            value="{{ old('solutionCardThreeId_title', $solutionDetail->solutionCardThree->title ?? '') }}"
                                                                             placeholder="Enter Solution Card Three Title">
-                                                                        <div class="invalid-feedback"> Please Enter
-                                                                            Solution
-                                                                            Card Three Title
-                                                                        </div>
+                                                                        <div class="invalid-feedback">Please Enter Solution Card Three Title</div>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label">Solution Card Three Short
-                                                                            Description
-                                                                        </label>
+                                                                        <label class="form-label">Solution Card Three Short Description</label>
                                                                         <input type="text"
                                                                             class="form-control form-control-solid form-control-sm"
                                                                             name="solutionCardThreeId_short_des"
-                                                                            value="{{ $solutionDetail->solutionCardThree->short_des }}"
-                                                                            id="validationCustom01"
+                                                                            value="{{ old('solutionCardThreeId_short_des', $solutionDetail->solutionCardThree->short_des ?? '') }}"
                                                                             placeholder="Enter Solution Card Three Short Description">
-                                                                        <div class="invalid-feedback"> Please Enter
-                                                                            Solution
-                                                                            Card Three Short Description
-                                                                        </div>
+                                                                        <div class="invalid-feedback">Please Enter Solution Card Three Short Description</div>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label">Solution Card Three Link
-                                                                        </label>
+                                                                        <label class="form-label">Solution Card Three Link</label>
                                                                         <input type="url"
                                                                             class="form-control form-control-solid form-control-sm"
                                                                             name="solutionCardThreeId_link"
-                                                                            value="{{ $solutionDetail->solutionCardThree->link }}"
-                                                                            id="validationCustom01"
+                                                                            value="{{ old('solutionCardThreeId_link', $solutionDetail->solutionCardThree->link ?? '') }}"
                                                                             placeholder="Enter Solution Card Three Link">
-                                                                        <div class="invalid-feedback"> Please Enter
-                                                                            Solution
-                                                                            Card Three Link
-                                                                        </div>
+                                                                        <div class="invalid-feedback">Please Enter Solution Card Three Link</div>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label">Solution Card Three Button
-                                                                            Name
-                                                                        </label>
+                                                                        <label class="form-label">Solution Card Three Button Name</label>
                                                                         <input type="text"
                                                                             class="form-control form-control-solid form-control-sm"
                                                                             name="solutionCardThreeId_button_name"
-                                                                            value="{{ $solutionDetail->solutionCardThree->button_name }}"
-                                                                            id="validationCustom01"
+                                                                            value="{{ old('solutionCardThreeId_button_name', $solutionDetail->solutionCardThree->button_name ?? '') }}"
                                                                             placeholder="Enter Solution Card Three Button Name">
-                                                                        <div class="invalid-feedback"> Please Enter
-                                                                            Solution
-                                                                            Card Three Button Name
-                                                                        </div>
+                                                                        <div class="invalid-feedback">Please Enter Solution Card Three Button Name</div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    <!-- Column Four -->
                                                     <div class="col-lg-6">
                                                         <div class="row border p-4 m-1">
-                                                            <p class="badge badge-info custom-badge"
-                                                                style="margin-top: -15px; width: 13%">Column Four</span>
+                                                            <p class="badge badge-info custom-badge" style="margin-top: -15px; width: 13%">Column Four</p>
                                                             <div class="col-lg-12 col-sm-12">
                                                                 <div class="row">
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label">Solution Card Four
-                                                                            Badge</label>
+                                                                        <label class="form-label">Solution Card Four Badge</label>
                                                                         <input type="text"
                                                                             class="form-control form-control-solid form-control-sm"
                                                                             name="solutionCardFourId_badge"
-                                                                            value="{{ $solutionDetail->solutionCardFour->badge }}"
-                                                                            id="validationCustom01"
+                                                                            value="{{ old('solutionCardFourId_badge', $solutionDetail->solutionCardFour->badge ?? '') }}"
                                                                             placeholder="Enter Solution Card Four Badge">
-                                                                        <div class="invalid-feedback"> Please Enter
-                                                                            Solution
-                                                                            Card Four Badge
-                                                                        </div>
+                                                                        <div class="invalid-feedback">Please Enter Solution Card Four Badge</div>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label">Solution Card Image
-                                                                            Four</label>
+                                                                        <label class="form-label">Solution Card Image Four</label>
                                                                         <input type="file"
                                                                             class="form-control form-control-solid form-control-sm"
-                                                                            name="solution_card_image_four"
-                                                                            id="validationCustom01"
-                                                                            placeholder="Enter Solution Card Image Four">
-                                                                        <div class="invalid-feedback"> Please Enter
-                                                                            Solution
-                                                                            Card Image Four
+                                                                            name="solution_card_image_four">
+                                                                        @if(isset($solutionDetail->solutionCardFour->image) && $solutionDetail->solutionCardFour->image)
+                                                                        <div class="mt-2">
+                                                                            <small class="text-muted">Current Image:</small>
+                                                                            <div class="d-flex align-items-center mt-1">
+                                                                                <img src="{{ asset('storage/' . $solutionDetail->solutionCardFour->image) }}" 
+                                                                                     alt="Solution Card Four" class="img-thumbnail me-2" style="max-height: 50px;">
+                                                                                <span class="text-muted">{{ basename($solutionDetail->solutionCardFour->image) }}</span>
+                                                                            </div>
                                                                         </div>
+                                                                        @endif
+                                                                        <div class="invalid-feedback">Please Enter Solution Card Image Four</div>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label">Solution Card Four Title
-                                                                        </label>
+                                                                        <label class="form-label">Solution Card Four Title</label>
                                                                         <input type="text"
                                                                             class="form-control form-control-solid form-control-sm"
                                                                             name="solutionCardFourId_title"
-                                                                            value="{{ $solutionDetail->solutionCardFour->title }}"
-                                                                            id="validationCustom01"
+                                                                            value="{{ old('solutionCardFourId_title', $solutionDetail->solutionCardFour->title ?? '') }}"
                                                                             placeholder="Enter Solution Card Four Title">
-                                                                        <div class="invalid-feedback"> Please Enter
-                                                                            Solution
-                                                                            Card Four Title
-                                                                        </div>
+                                                                        <div class="invalid-feedback">Please Enter Solution Card Four Title</div>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label">Solution Card Four Short
-                                                                            Description
-                                                                        </label>
+                                                                        <label class="form-label">Solution Card Four Short Description</label>
                                                                         <input type="text"
                                                                             class="form-control form-control-solid form-control-sm"
                                                                             name="solutionCardFourId_short_des"
-                                                                            value="{{ $solutionDetail->solutionCardFour->short_des }}"
-                                                                            id="validationCustom01"
+                                                                            value="{{ old('solutionCardFourId_short_des', $solutionDetail->solutionCardFour->short_des ?? '') }}"
                                                                             placeholder="Enter Solution Card Four Short Description">
-                                                                        <div class="invalid-feedback"> Please Enter
-                                                                            Solution
-                                                                            Card Four Short Description
-                                                                        </div>
+                                                                        <div class="invalid-feedback">Please Enter Solution Card Four Short Description</div>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label">Solution Card Four Link
-                                                                        </label>
+                                                                        <label class="form-label">Solution Card Four Link</label>
                                                                         <input type="url"
                                                                             class="form-control form-control-solid form-control-sm"
                                                                             name="solutionCardFourId_link"
-                                                                            value="{{ $solutionDetail->solutionCardFour->link }}"
-                                                                            id="validationCustom01"
+                                                                            value="{{ old('solutionCardFourId_link', $solutionDetail->solutionCardFour->link ?? '') }}"
                                                                             placeholder="Enter Solution Card Four Link">
-                                                                        <div class="invalid-feedback"> Please Enter
-                                                                            Solution
-                                                                            Card Four Link
-                                                                        </div>
+                                                                        <div class="invalid-feedback">Please Enter Solution Card Four Link</div>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label">Solution Card Four Button
-                                                                            Name
-                                                                        </label>
+                                                                        <label class="form-label">Solution Card Four Button Name</label>
                                                                         <input type="text"
                                                                             class="form-control form-control-solid form-control-sm"
                                                                             name="solutionCardFourId_button_name"
-                                                                            value="{{ $solutionDetail->solutionCardFour->button_name }}"
-                                                                            id="validationCustom01"
+                                                                            value="{{ old('solutionCardFourId_button_name', $solutionDetail->solutionCardFour->button_name ?? '') }}"
                                                                             placeholder="Enter Solution Card Four Button Name">
-                                                                        <div class="invalid-feedback"> Please Enter
-                                                                            Solution
-                                                                            Card Four Button Name
-                                                                        </div>
+                                                                        <div class="invalid-feedback">Please Enter Solution Card Four Button Name</div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
+                                                </div>
+                                                <!-- Column Five -->
+                                                <div class="row mt-4 pt-4">
                                                     <div class="col-lg-12">
-                                                        <div class="row border p-4 m-1 mt-4">
-                                                            <p class="badge badge-info custom-badge"
-                                                                style="margin-top: -15px; width: 13%">Column Five</span>
+                                                        <div class="row border p-4 m-1">
+                                                            <p class="badge badge-info custom-badge" style="margin-top: -15px; width: 13%">Column Five</p>
                                                             <div class="col-lg-12 col-sm-12">
                                                                 <div class="row">
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label">Solution Card Five
-                                                                            Badge</label>
+                                                                        <label class="form-label">Solution Card Five Badge</label>
                                                                         <input type="text"
                                                                             class="form-control form-control-solid form-control-sm"
                                                                             name="solutionCardFiveId_badge"
-                                                                            value="{{ $solutionDetail->solutionCardFive->badge }}"
-                                                                            id="validationCustom01"
+                                                                            value="{{ old('solutionCardFiveId_badge', $solutionDetail->solutionCardFive->badge ?? '') }}"
                                                                             placeholder="Enter Solution Card Five Badge">
-                                                                        <div class="invalid-feedback"> Please Enter
-                                                                            Solution
-                                                                            Card Five Badge
-                                                                        </div>
+                                                                        <div class="invalid-feedback">Please Enter Solution Card Five Badge</div>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label">Solution Card Image
-                                                                            Five</label>
+                                                                        <label class="form-label">Solution Card Image Five</label>
                                                                         <input type="file"
                                                                             class="form-control form-control-solid form-control-sm"
-                                                                            name="solution_card_image_Five"
-                                                                            id="validationCustom01"
-                                                                            placeholder="Enter Solution Card Image Five">
-                                                                        <div class="invalid-feedback"> Please Enter
-                                                                            Solution
-                                                                            Card Image Five
+                                                                            name="solution_card_image_five">
+                                                                        @if(isset($solutionDetail->solutionCardFive->image) && $solutionDetail->solutionCardFive->image)
+                                                                        <div class="mt-2">
+                                                                            <small class="text-muted">Current Image:</small>
+                                                                            <div class="d-flex align-items-center mt-1">
+                                                                                <img src="{{ asset('storage/' . $solutionDetail->solutionCardFive->image) }}" 
+                                                                                     alt="Solution Card Five" class="img-thumbnail me-2" style="max-height: 50px;">
+                                                                                <span class="text-muted">{{ basename($solutionDetail->solutionCardFive->image) }}</span>
+                                                                            </div>
                                                                         </div>
+                                                                        @endif
+                                                                        <div class="invalid-feedback">Please Enter Solution Card Image Five</div>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label">Solution Card Five Title
-                                                                        </label>
+                                                                        <label class="form-label">Solution Card Five Title</label>
                                                                         <input type="text"
                                                                             class="form-control form-control-solid form-control-sm"
                                                                             name="solutionCardFiveId_title"
-                                                                            value="{{ $solutionDetail->solutionCardFive->title }}"
-                                                                            id="validationCustom01"
+                                                                            value="{{ old('solutionCardFiveId_title', $solutionDetail->solutionCardFive->title ?? '') }}"
                                                                             placeholder="Enter Solution Card Five Title">
-                                                                        <div class="invalid-feedback"> Please Enter
-                                                                            Solution
-                                                                            Card Five Title
-                                                                        </div>
+                                                                        <div class="invalid-feedback">Please Enter Solution Card Five Title</div>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label">Solution Card Five Short
-                                                                            Description
-                                                                        </label>
+                                                                        <label class="form-label">Solution Card Five Short Description</label>
                                                                         <input type="text"
                                                                             class="form-control form-control-solid form-control-sm"
                                                                             name="solutionCardFiveId_short_des"
-                                                                            value="{{ $solutionDetail->solutionCardFive->short_des }}"
-                                                                            id="validationCustom01"
+                                                                            value="{{ old('solutionCardFiveId_short_des', $solutionDetail->solutionCardFive->short_des ?? '') }}"
                                                                             placeholder="Enter Solution Card Five Short Description">
-                                                                        <div class="invalid-feedback"> Please Enter
-                                                                            Solution
-                                                                            Card Five Short Description
-                                                                        </div>
+                                                                        <div class="invalid-feedback">Please Enter Solution Card Five Short Description</div>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label">Solution Card Five Link
-                                                                        </label>
+                                                                        <label class="form-label">Solution Card Five Link</label>
                                                                         <input type="url"
                                                                             class="form-control form-control-solid form-control-sm"
                                                                             name="solutionCardFiveId_link"
-                                                                            value="{{ $solutionDetail->solutionCardFive->link }}"
-                                                                            id="validationCustom01"
+                                                                            value="{{ old('solutionCardFiveId_link', $solutionDetail->solutionCardFive->link ?? '') }}"
                                                                             placeholder="Enter Solution Card Five Link">
-                                                                        <div class="invalid-feedback"> Please Enter
-                                                                            Solution
-                                                                            Card Five Link
-                                                                        </div>
+                                                                        <div class="invalid-feedback">Please Enter Solution Card Five Link</div>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label">Solution Card Five Button
-                                                                            Name
-                                                                        </label>
+                                                                        <label class="form-label">Solution Card Five Button Name</label>
                                                                         <input type="text"
                                                                             class="form-control form-control-solid form-control-sm"
                                                                             name="solutionCardFiveId_button_name"
-                                                                            value="{{ $solutionDetail->solutionCardFive->button_name }}"
-                                                                            id="validationCustom01"
+                                                                            value="{{ old('solutionCardFiveId_button_name', $solutionDetail->solutionCardFive->button_name ?? '') }}"
                                                                             placeholder="Enter Solution Card Five Button Name">
-                                                                        <div class="invalid-feedback"> Please Enter
-                                                                            Solution
-                                                                            Card Five Button Name
-                                                                        </div>
+                                                                        <div class="invalid-feedback">Please Enter Solution Card Five Button Name</div>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -868,24 +743,21 @@
                                             <div class="fv-row">
                                                 <div class="row">
                                                     <div class="col-md-6 mb-2">
-                                                        <label for="validationCustom01" class="form-label">Row Three
-                                                            Title</label>
+                                                        <label for="validationCustom01" class="form-label">Row Three Title</label>
                                                         <input type="text"
                                                             class="form-control form-control-solid form-control-sm"
                                                             name="row_three_title"
-                                                            value="{{ $solutionDetail->row_three_title }}"
-                                                            id="validationCustom01" placeholder="Enter Row Three Title">
-                                                        <div class="invalid-feedback"> Please Enter Row Three Title
-                                                        </div>
+                                                            value="{{ old('row_three_title', $solutionDetail->row_three_title) }}"
+                                                            placeholder="Enter Row Three Title">
+                                                        <div class="invalid-feedback"> Please Enter Row Three Title</div>
                                                     </div>
                                                     <div class="col-md-6 mb-2">
-                                                        <label for="validationCustom01" class="form-label">Row Three
-                                                            Header</label>
+                                                        <label for="validationCustom01" class="form-label">Row Three Header</label>
                                                         <input type="text"
                                                             class="form-control form-control-solid form-control-sm"
                                                             name="row_three_header"
-                                                            value="{{ $solutionDetail->row_three_header }}"
-                                                            id="validationCustom01" placeholder="Enter Row Three Header">
+                                                            value="{{ old('row_three_header', $solutionDetail->row_three_header) }}"
+                                                            placeholder="Enter Row Three Header">
                                                         <div class="invalid-feedback"> Please Enter Row Three Header </div>
                                                     </div>
                                                 </div>
@@ -927,10 +799,18 @@
                                                             <label class="form-label">Rows Image Four</label>
                                                             <input type="file"
                                                                 class="form-control form-control-solid form-control-sm"
-                                                                name="rows_image_four" id="validationCustom01"
-                                                                placeholder="Enter Rows Image Four">
-                                                            <div class="invalid-feedback"> Please Enter Rows Image Four
+                                                                name="rows_image_four">
+                                                            @if($solutionDetail->rowFour->image ?? false)
+                                                            <div class="mt-2">
+                                                                <small class="text-muted">Current Image:</small>
+                                                                <div class="d-flex align-items-center mt-1">
+                                                                    <img src="{{ asset('storage/' . $solutionDetail->rowFour->image) }}" 
+                                                                         alt="Row Four Image" class="img-thumbnail me-2" style="max-height: 50px;">
+                                                                    <span class="text-muted">{{ basename($solutionDetail->rowFour->image) }}</span>
+                                                                </div>
                                                             </div>
+                                                            @endif
+                                                            <div class="invalid-feedback"> Please Enter Rows Image Four</div>
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-4">
@@ -939,11 +819,9 @@
                                                             <input type="text"
                                                                 class="form-control form-control-solid form-control-sm"
                                                                 name="row_four_badge"
-                                                                value="{{ $solutionDetail->rowFour->badge }}"
-                                                                id="validationCustom01"
+                                                                value="{{ old('row_four_badge', $solutionDetail->rowFour->badge ?? '') }}"
                                                                 placeholder="Enter Row Four Badge">
-                                                            <div class="invalid-feedback"> Please Enter Row Four Badge
-                                                            </div>
+                                                            <div class="invalid-feedback"> Please Enter Row Four Badge</div>
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-4">
@@ -952,11 +830,9 @@
                                                             <input type="text"
                                                                 class="form-control form-control-solid form-control-sm"
                                                                 name="row_four_title"
-                                                                value="{{ $solutionDetail->rowFour->title }}"
-                                                                id="validationCustom01"
+                                                                value="{{ old('row_four_title', $solutionDetail->rowFour->title ?? '') }}"
                                                                 placeholder="Enter Row Four Title">
-                                                            <div class="invalid-feedback"> Please Enter Row Four Title
-                                                            </div>
+                                                            <div class="invalid-feedback"> Please Enter Row Four Title</div>
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-4">
@@ -965,11 +841,9 @@
                                                             <input type="text"
                                                                 class="form-control form-control-solid form-control-sm"
                                                                 name="row_four_btn_name"
-                                                                value="{{ $solutionDetail->rowFour->btn_name }}"
-                                                                id="validationCustom01"
+                                                                value="{{ old('row_four_btn_name', $solutionDetail->rowFour->btn_name ?? '') }}"
                                                                 placeholder="Enter Row Four Btn Name">
-                                                            <div class="invalid-feedback"> Please Enter Row Four Btn Name
-                                                            </div>
+                                                            <div class="invalid-feedback"> Please Enter Row Four Btn Name</div>
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-4">
@@ -978,20 +852,17 @@
                                                             <input type="text"
                                                                 class="form-control form-control-solid form-control-sm"
                                                                 name="row_four_link"
-                                                                value="{{ $solutionDetail->rowFour->link }}"
-                                                                id="validationCustom01" placeholder="Enter Row Four Link">
-                                                            <div class="invalid-feedback"> Please Enter Row Four Link
-                                                            </div>
+                                                                value="{{ old('row_four_link', $solutionDetail->rowFour->link ?? '') }}"
+                                                                placeholder="Enter Row Four Link">
+                                                            <div class="invalid-feedback"> Please Enter Row Four Link</div>
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-4">
                                                         <div class="fv-row mb-3">
                                                             <label class="form-label">Row Four Description</label>
                                                             <textarea rows="1" name="row_four_description" class="form-control form-control-sm form-control-solid"
-                                                                placeholder="Enter Row Four Description">{{ $solutionDetail->rowFour->description }}</textarea>
-                                                            <div class="invalid-feedback"> Please Enter Row Four
-                                                                Description
-                                                            </div>
+                                                                placeholder="Enter Row Four Description">{{ old('row_four_description', $solutionDetail->rowFour->description ?? '') }}</textarea>
+                                                            <div class="invalid-feedback"> Please Enter Row Four Description</div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1034,11 +905,9 @@
                                                             <input type="text"
                                                                 class="form-control form-control-solid form-control-sm"
                                                                 name="row_five_title"
-                                                                value="{{ $solutionDetail->row_five_title }}"
-                                                                id="validationCustom01"
+                                                                value="{{ old('row_five_title', $solutionDetail->row_five_title) }}"
                                                                 placeholder="Enter Row Five Title">
-                                                            <div class="invalid-feedback"> Please Enter Row Five Title
-                                                            </div>
+                                                            <div class="invalid-feedback"> Please Enter Row Five Title</div>
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-6">
@@ -1047,313 +916,226 @@
                                                             <input type="text"
                                                                 class="form-control form-control-solid form-control-sm"
                                                                 name="row_five_header"
-                                                                value="{{ $solutionDetail->row_five_header }}"
-                                                                id="validationCustom01"
+                                                                value="{{ old('row_five_header', $solutionDetail->row_five_header) }}"
                                                                 placeholder="Enter Row Five Header">
-                                                            <div class="invalid-feedback"> Please Enter Row Five Header
-                                                            </div>
+                                                            <div class="invalid-feedback"> Please Enter Row Five Header</div>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="row mt-4 pt-4">
+                                                    <!-- Column One -->
                                                     <div class="col-lg-6">
                                                         <div class="row border p-4 m-1">
-                                                            <p class="badge badge-info custom-badge"
-                                                                style="margin-top: -15px; width: 13%">Column One</span>
+                                                            <p class="badge badge-info custom-badge" style="margin-top: -15px; width: 13%">Column One</p>
                                                             <div class="col-lg-12 col-sm-12">
                                                                 <div class="row">
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label">Solution Card Six
-                                                                            Badge</label>
+                                                                        <label class="form-label">Solution Card Six Badge</label>
                                                                         <input type="text"
                                                                             class="form-control form-control-solid form-control-sm"
                                                                             name="solutionCardSixId_badge"
-                                                                            value="{{ $solutionDetail->solutionCardSix->badge }}"
-                                                                            id="validationCustom01"
+                                                                            value="{{ old('solutionCardSixId_badge', $solutionDetail->solutionCardSix->badge ?? '') }}"
                                                                             placeholder="Enter Solution Card Six Badge">
-                                                                        <div class="invalid-feedback"> Please Enter
-                                                                            Solution
-                                                                            Card Six Badge
-                                                                        </div>
+                                                                        <div class="invalid-feedback">Please Enter Solution Card Six Badge</div>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label">Solution Card Six Title
-                                                                        </label>
+                                                                        <label class="form-label">Solution Card Six Title</label>
                                                                         <input type="text"
                                                                             class="form-control form-control-solid form-control-sm"
                                                                             name="solutionCardSixId_title"
-                                                                            value="{{ $solutionDetail->solutionCardSix->title }}"
-                                                                            id="validationCustom01"
+                                                                            value="{{ old('solutionCardSixId_title', $solutionDetail->solutionCardSix->title ?? '') }}"
                                                                             placeholder="Enter Solution Card Six Title">
-                                                                        <div class="invalid-feedback"> Please Enter
-                                                                            Solution
-                                                                            Card Six Title
-                                                                        </div>
+                                                                        <div class="invalid-feedback">Please Enter Solution Card Six Title</div>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label">Solution Card Image
-                                                                            Six</label>
+                                                                        <label class="form-label">Solution Card Image Six</label>
                                                                         <input type="file"
                                                                             class="form-control form-control-solid form-control-sm"
-                                                                            name="solution_card_image_Six"
-                                                                            id="validationCustom01"
-                                                                            placeholder="Enter Solution Card Image Six">
-                                                                        <div class="invalid-feedback"> Please Enter
-                                                                            Solution
-                                                                            Card Image Six
+                                                                            name="solution_card_image_Six">
+                                                                        @if(isset($solutionDetail->solutionCardSix->image) && $solutionDetail->solutionCardSix->image)
+                                                                        <div class="mt-2">
+                                                                            <small class="text-muted">Current Image:</small>
+                                                                            <div class="d-flex align-items-center mt-1">
+                                                                                <img src="{{ asset('storage/' . $solutionDetail->solutionCardSix->image) }}" 
+                                                                                     alt="Solution Card Six" class="img-thumbnail me-2" style="max-height: 50px;">
+                                                                                <span class="text-muted">{{ basename($solutionDetail->solutionCardSix->image) }}</span>
+                                                                            </div>
                                                                         </div>
+                                                                        @endif
+                                                                        <div class="invalid-feedback">Please Enter Solution Card Image Six</div>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label">Solution Card Six Short
-                                                                            Description
-                                                                        </label>
+                                                                        <label class="form-label">Solution Card Six Short Description</label>
                                                                         <input type="text"
                                                                             class="form-control form-control-solid form-control-sm"
                                                                             name="solutionCardSixId_short_des"
-                                                                            value="{{ $solutionDetail->solutionCardSix->short_des }}"
-                                                                            id="validationCustom01"
+                                                                            value="{{ old('solutionCardSixId_short_des', $solutionDetail->solutionCardSix->short_des ?? '') }}"
                                                                             placeholder="Enter Solution Card Six Short Description">
-                                                                        <div class="invalid-feedback"> Please Enter
-                                                                            Solution
-                                                                            Card Six Short Description
-                                                                        </div>
+                                                                        <div class="invalid-feedback">Please Enter Solution Card Six Short Description</div>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label">Solution Card Six Link
-                                                                        </label>
+                                                                        <label class="form-label">Solution Card Six Link</label>
                                                                         <input type="url"
                                                                             class="form-control form-control-solid form-control-sm"
                                                                             name="solutionCardSixId_link"
-                                                                            value="{{ $solutionDetail->solutionCardSix->link }}"
-                                                                            id="validationCustom01"
+                                                                            value="{{ old('solutionCardSixId_link', $solutionDetail->solutionCardSix->link ?? '') }}"
                                                                             placeholder="Enter Solution Card Six Link">
-                                                                        <div class="invalid-feedback"> Please Enter
-                                                                            Solution
-                                                                            Card Six Link
-                                                                        </div>
+                                                                        <div class="invalid-feedback">Please Enter Solution Card Six Link</div>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label">Solution Card Six Button
-                                                                            Name
-                                                                        </label>
+                                                                        <label class="form-label">Solution Card Six Button Name</label>
                                                                         <input type="text"
                                                                             class="form-control form-control-solid form-control-sm"
                                                                             name="solutionCardSixId_button_name"
-                                                                            value="{{ $solutionDetail->solutionCardSix->button_name }}"
-                                                                            id="validationCustom01"
+                                                                            value="{{ old('solutionCardSixId_button_name', $solutionDetail->solutionCardSix->button_name ?? '') }}"
                                                                             placeholder="Enter Solution Card Six Button Name">
-                                                                        <div class="invalid-feedback"> Please Enter
-                                                                            Solution
-                                                                            Card Six Button Name
-                                                                        </div>
+                                                                        <div class="invalid-feedback">Please Enter Solution Card Six Button Name</div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    <!-- Column Two -->
                                                     <div class="col-lg-6">
                                                         <div class="row border p-4 m-1">
-                                                            <p class="badge badge-info custom-badge"
-                                                                style="margin-top: -15px; width: 13%">Column Two</span>
+                                                            <p class="badge badge-info custom-badge" style="margin-top: -15px; width: 13%">Column Two</p>
                                                             <div class="col-lg-12 col-sm-12">
                                                                 <div class="row">
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label">Solution Card Seven
-                                                                            Badge</label>
+                                                                        <label class="form-label">Solution Card Seven Badge</label>
                                                                         <input type="text"
                                                                             class="form-control form-control-solid form-control-sm"
                                                                             name="solutionCardSevenId_badge"
-                                                                            value="{{ $solutionDetail->solutionCardSeven->badge }}"
-                                                                            id="validationCustom01"
+                                                                            value="{{ old('solutionCardSevenId_badge', $solutionDetail->solutionCardSeven->badge ?? '') }}"
                                                                             placeholder="Enter Solution Card Seven Badge">
-                                                                        <div class="invalid-feedback"> Please Enter
-                                                                            Solution
-                                                                            Card Seven Badge
-                                                                        </div>
+                                                                        <div class="invalid-feedback">Please Enter Solution Card Seven Badge</div>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label">Solution Card Seven Title
-                                                                        </label>
+                                                                        <label class="form-label">Solution Card Seven Title</label>
                                                                         <input type="text"
                                                                             class="form-control form-control-solid form-control-sm"
                                                                             name="solutionCardSevenId_title"
-                                                                            value="{{ $solutionDetail->solutionCardSeven->title }}"
-                                                                            id="validationCustom01"
+                                                                            value="{{ old('solutionCardSevenId_title', $solutionDetail->solutionCardSeven->title ?? '') }}"
                                                                             placeholder="Enter Solution Card Seven Title">
-                                                                        <div class="invalid-feedback"> Please Enter
-                                                                            Solution
-                                                                            Card Seven Title
-                                                                        </div>
+                                                                        <div class="invalid-feedback">Please Enter Solution Card Seven Title</div>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label">Solution Card Image
-                                                                            Seven</label>
+                                                                        <label class="form-label">Solution Card Image Seven</label>
                                                                         <input type="file"
                                                                             class="form-control form-control-solid form-control-sm"
-                                                                            name="solution_card_image_Seven"
-                                                                            id="validationCustom01"
-                                                                            placeholder="Enter Solution Card Image Seven">
-                                                                        <div class="invalid-feedback"> Please Enter
-                                                                            Solution
-                                                                            Card Image Seven
+                                                                            name="solution_card_image_seven">
+                                                                        @if(isset($solutionDetail->solutionCardSeven->image) && $solutionDetail->solutionCardSeven->image)
+                                                                        <div class="mt-2">
+                                                                            <small class="text-muted">Current Image:</small>
+                                                                            <div class="d-flex align-items-center mt-1">
+                                                                                <img src="{{ asset('storage/' . $solutionDetail->solutionCardSeven->image) }}" 
+                                                                                     alt="Solution Card Seven" class="img-thumbnail me-2" style="max-height: 50px;">
+                                                                                <span class="text-muted">{{ basename($solutionDetail->solutionCardSeven->image) }}</span>
+                                                                            </div>
                                                                         </div>
+                                                                        @endif
+                                                                        <div class="invalid-feedback">Please Enter Solution Card Image Seven</div>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label">Solution Card Seven Short
-                                                                            Description
-                                                                        </label>
+                                                                        <label class="form-label">Solution Card Seven Short Description</label>
                                                                         <input type="text"
                                                                             class="form-control form-control-solid form-control-sm"
                                                                             name="solutionCardSevenId_short_des"
-                                                                            value="{{ $solutionDetail->solutionCardSeven->short_des }}"
-                                                                            id="validationCustom01"
+                                                                            value="{{ old('solutionCardSevenId_short_des', $solutionDetail->solutionCardSeven->short_des ?? '') }}"
                                                                             placeholder="Enter Solution Card Seven Short Description">
-                                                                        <div class="invalid-feedback"> Please Enter
-                                                                            Solution
-                                                                            Card Seven Short Description
-                                                                        </div>
+                                                                        <div class="invalid-feedback">Please Enter Solution Card Seven Short Description</div>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label">Solution Card Seven Link
-                                                                        </label>
+                                                                        <label class="form-label">Solution Card Seven Link</label>
                                                                         <input type="url"
                                                                             class="form-control form-control-solid form-control-sm"
                                                                             name="solutionCardSevenId_link"
-                                                                            value="{{ $solutionDetail->solutionCardSeven->link }}"
-                                                                            id="validationCustom01"
+                                                                            value="{{ old('solutionCardSevenId_link', $solutionDetail->solutionCardSeven->link ?? '') }}"
                                                                             placeholder="Enter Solution Card Seven Link">
-                                                                        <div class="invalid-feedback"> Please Enter
-                                                                            Solution
-                                                                            Card Seven Link
-                                                                        </div>
+                                                                        <div class="invalid-feedback">Please Enter Solution Card Seven Link</div>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label">Solution Card Seven Button
-                                                                            Name
-                                                                        </label>
+                                                                        <label class="form-label">Solution Card Seven Button Name</label>
                                                                         <input type="text"
                                                                             class="form-control form-control-solid form-control-sm"
                                                                             name="solutionCardSevenId_button_name"
-                                                                            value="{{ $solutionDetail->solutionCardSeven->button_name }}"
-                                                                            id="validationCustom01"
+                                                                            value="{{ old('solutionCardSevenId_button_name', $solutionDetail->solutionCardSeven->button_name ?? '') }}"
                                                                             placeholder="Enter Solution Card Seven Button Name">
-                                                                        <div class="invalid-feedback"> Please Enter
-                                                                            Solution
-                                                                            Card Seven Button Name
-                                                                        </div>
+                                                                        <div class="invalid-feedback">Please Enter Solution Card Seven Button Name</div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
+                                                </div>
+                                                <!-- Column Three -->
+                                                <div class="row mt-4 pt-4">
                                                     <div class="col-lg-12">
-                                                        <div class="row border p-4 m-1 mt-4 pt-4">
-                                                            <p class="badge badge-info custom-badge"
-                                                                style="margin-top: -15px; width: 13%">Column Three</span>
+                                                        <div class="row border p-4 m-1">
+                                                            <p class="badge badge-info custom-badge" style="margin-top: -15px; width: 13%">Column Three</p>
                                                             <div class="col-lg-12 col-sm-12">
                                                                 <div class="row">
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label">Solution Card Eight
-                                                                            Badge</label>
+                                                                        <label class="form-label">Solution Card Eight Badge</label>
                                                                         <input type="text"
                                                                             class="form-control form-control-solid form-control-sm"
                                                                             name="solutionCardEightId_badge"
-                                                                            value="{{ $solutionDetail->solutionCardEight->badge }}"
-                                                                            id="validationCustom01"
+                                                                            value="{{ old('solutionCardEightId_badge', $solutionDetail->solutionCardEight->badge ?? '') }}"
                                                                             placeholder="Enter Solution Card Eight Badge">
-                                                                        <div class="invalid-feedback"> Please Enter
-                                                                            Solution
-                                                                            Card Eight Badge
-                                                                        </div>
+                                                                        <div class="invalid-feedback">Please Enter Solution Card Eight Badge</div>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label">Solution Card Eight Title
-                                                                        </label>
+                                                                        <label class="form-label">Solution Card Eight Title</label>
                                                                         <input type="text"
                                                                             class="form-control form-control-solid form-control-sm"
                                                                             name="solutionCardEightId_title"
-                                                                            value="{{ $solutionDetail->solutionCardEight->title }}"
-                                                                            id="validationCustom01"
+                                                                            value="{{ old('solutionCardEightId_title', $solutionDetail->solutionCardEight->title ?? '') }}"
                                                                             placeholder="Enter Solution Card Eight Title">
-                                                                        <div class="invalid-feedback"> Please Enter
-                                                                            Solution
-                                                                            Card Eight Title
-                                                                        </div>
+                                                                        <div class="invalid-feedback">Please Enter Solution Card Eight Title</div>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label">Solution Card Image
-                                                                            Eight</label>
+                                                                        <label class="form-label">Solution Card Image Eight</label>
                                                                         <input type="file"
                                                                             class="form-control form-control-solid form-control-sm"
-                                                                            name="solution_card_image_Eight"
-                                                                            id="validationCustom01"
-                                                                            placeholder="Enter Solution Card Image Eight">
-                                                                        <div class="invalid-feedback"> Please Enter
-                                                                            Solution
-                                                                            Card Image Eight
+                                                                            name="solution_card_image_eight">
+                                                                        @if(isset($solutionDetail->solutionCardEight->image) && $solutionDetail->solutionCardEight->image)
+                                                                        <div class="mt-2">
+                                                                            <small class="text-muted">Current Image:</small>
+                                                                            <div class="d-flex align-items-center mt-1">
+                                                                                <img src="{{ asset('storage/' . $solutionDetail->solutionCardEight->image) }}" 
+                                                                                     alt="Solution Card Eight" class="img-thumbnail me-2" style="max-height: 50px;">
+                                                                                <span class="text-muted">{{ basename($solutionDetail->solutionCardEight->image) }}</span>
+                                                                            </div>
                                                                         </div>
+                                                                        @endif
+                                                                        <div class="invalid-feedback">Please Enter Solution Card Image Eight</div>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label">Solution Card Eight Short
-                                                                            Description
-                                                                        </label>
+                                                                        <label class="form-label">Solution Card Eight Short Description</label>
                                                                         <input type="text"
                                                                             class="form-control form-control-solid form-control-sm"
                                                                             name="solutionCardEightId_short_des"
-                                                                            value="{{ $solutionDetail->solutionCardEight->short_des }}"
-                                                                            id="validationCustom01"
+                                                                            value="{{ old('solutionCardEightId_short_des', $solutionDetail->solutionCardEight->short_des ?? '') }}"
                                                                             placeholder="Enter Solution Card Eight Short Description">
-                                                                        <div class="invalid-feedback"> Please Enter
-                                                                            Solution
-                                                                            Card Eight Short Description
-                                                                        </div>
+                                                                        <div class="invalid-feedback">Please Enter Solution Card Eight Short Description</div>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label">Solution Card Eight Link
-                                                                        </label>
+                                                                        <label class="form-label">Solution Card Eight Link</label>
                                                                         <input type="url"
                                                                             class="form-control form-control-solid form-control-sm"
                                                                             name="solutionCardEightId_link"
-                                                                            value="{{ $solutionDetail->solutionCardEight->link }}"
-                                                                            id="validationCustom01"
+                                                                            value="{{ old('solutionCardEightId_link', $solutionDetail->solutionCardEight->link ?? '') }}"
                                                                             placeholder="Enter Solution Card Eight Link">
-                                                                        <div class="invalid-feedback"> Please Enter
-                                                                            Solution
-                                                                            Card Eight Link
-                                                                        </div>
+                                                                        <div class="invalid-feedback">Please Enter Solution Card Eight Link</div>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
-                                                                        <label for="validationCustom01"
-                                                                            class="form-label">Solution Card Eight Button
-                                                                            Name
-                                                                        </label>
+                                                                        <label class="form-label">Solution Card Eight Button Name</label>
                                                                         <input type="text"
                                                                             class="form-control form-control-solid form-control-sm"
                                                                             name="solutionCardEightId_button_name"
-                                                                            value="{{ $solutionDetail->solutionCardEight->button_name }}"
-                                                                            id="validationCustom01"
+                                                                            value="{{ old('solutionCardEightId_button_name', $solutionDetail->solutionCardEight->button_name ?? '') }}"
                                                                             placeholder="Enter Solution Card Eight Button Name">
-                                                                        <div class="invalid-feedback"> Please Enter
-                                                                            Solution
-                                                                            Card Eight Button Name
-                                                                        </div>
+                                                                        <div class="invalid-feedback">Please Enter Solution Card Eight Button Name</div>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -1365,13 +1147,15 @@
                                                         <a class="btn btn-lg btn-info rounded-0 tab-trigger-previous"
                                                             data-bs-target="#row-four" aria-selected="false"
                                                             role="tab" tabindex="-1">
-                                                            Previous
                                                             <span class="svg-icon svg-icon-4 ms-1 me-0">
-                                                                <i class="fa-solid fa-arrow-right"></i>
+                                                                <i class="fa-solid fa-arrow-left"></i>
                                                             </span>
+                                                             Previous
                                                         </a>
+                                                           
+                                                           
                                                         <button class="btn btn-lg btn-info rounded-0" type="submit">
-                                                            Submit
+                                                            Update
                                                             <span class="svg-icon svg-icon-4 ms-1 me-0">
                                                                 <i class="fa-solid fa-arrow-right"></i>
                                                             </span>
@@ -1390,11 +1174,15 @@
         </div>
     </div>
 @endsection
+
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-multiselect@0.9.16/dist/js/bootstrap-multiselect.min.js"></script>
     <script>
         $(document).ready(function() {
+            // Initialize multi-select
+            $('#industrySelect, #brandSelect').multiselect();
+            
             $('.nav-tabs a').click(function() {
                 $(this).tab('show');
             });
@@ -1407,20 +1195,16 @@
             function validateAndSwitchTab(targetTabId) {
                 let isValid = true;
 
-
                 // Get the index of the tab to be shown
                 const activeTabHref = $('.tab-trigger.active').attr('href');
                 $(activeTabHref).find('input, textarea, select').each(function() {
                     var $field = $(this);
 
-
                     // Check if it's a Select2 element
                     var isSelect2 = $field.hasClass('select2-hidden-accessible');
 
-
                     if ($field.prop('required') && $field.val() === '') {
                         isValid = false;
-
 
                         if (isSelect2) {
                             // Apply CSS based on the element type
@@ -1430,7 +1214,6 @@
                         }
                     }
                 });
-
 
                 if (!isValid) {
                     // Fields are not valid, prevent the tab switch
@@ -1442,24 +1225,20 @@
                 }
             }
 
-
             // Function to switch tabs
             function switchTab(targetTabId) {
                 $('.nav-link[href="' + targetTabId + '"]').tab('show');
             }
-
 
             // Event handler for tab switch
             $('.tab-trigger').on('show.bs.tab', function(event) {
                 return validateAndSwitchTab($(this).data('bs-target'));
             });
 
-
             // Event handler for input change
             $('.tab-content').on('input change', 'input, textarea, select', function() {
                 var $field = $(this);
                 var isSelect2 = $field.hasClass('select2-hidden-accessible');
-
 
                 // Remove red border when user interacts with the field
                 if (isSelect2) {
@@ -1469,7 +1248,6 @@
                 }
             });
 
-
             // Event handler for multi-select change
             $('.multiple-select').on('change', function() {
                 // Remove validation error only from the changed multi-select field
@@ -1477,23 +1255,19 @@
                 $multiSelect.removeClass('is-invalid');
             });
 
-
             // Event handler for the "Continue" button
             $('.tab-trigger-next').on('click', function(event) {
                 // Assuming the data-bs-target attribute contains the tab ID to switch to
                 const targetTabId = $(this).data('bs-target');
 
-
                 // Validate and switch to the next tab
                 validateAndSwitchTab(targetTabId);
             });
-
 
             // Event handler for the "Previous" button
             $('.tab-trigger-previous').on('click', function(event) {
                 // Assuming the data-bs-target attribute contains the tab ID to switch to
                 const targetTabId = $(this).data('bs-target');
-
 
                 // Validate and switch to the previous tab
                 validateAndSwitchTab(targetTabId);

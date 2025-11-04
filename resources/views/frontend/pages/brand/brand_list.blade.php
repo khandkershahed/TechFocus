@@ -2,7 +2,7 @@
 @section('metadata')
 @endsection
 @section('content')
-    <!--Banner -->
+    {{-- <!--Banner -->
     <div class="swiper bannerSwiper">
         <div class="swiper-wrapper">
             <div class="swiper-slide">
@@ -14,6 +14,20 @@
             <div class="swiper-slide">
                 <img src="https://img.directindustry.com/images_di/bnr/69508/hd/54314.jpg" class="img-fluid" alt="" />
             </div>
+        </div>
+        <div class="swiper-pagination"></div>
+    </div> --}}
+        <div class="swiper bannerSwiper">
+        <div class="swiper-wrapper">
+            @foreach ($banners as $banner)
+                <div class="swiper-slide">
+                    <a href="">
+                        <img src="{{ asset('uploads/page_banners/' . $banner->image) }}" class="img-fluid"
+                            alt="{{ $banner->title ?? 'Banner' }}"
+                            onerror="this.onerror=null;this.src='{{ asset('frontend/images/no-banner(1920-330).png') }}';" />
+                    </a>
+                </div>
+            @endforeach
         </div>
         <div class="swiper-pagination"></div>
     </div>

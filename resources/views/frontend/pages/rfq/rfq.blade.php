@@ -114,7 +114,7 @@
                                                                             <div class="mb-3">
                                                                                 <label class="form-label fw-normal">Brand Name</label>
                                                                                 <input type="text" class="form-control modal-brand-name" 
-                                                                                    value="{{ $product['brand'] ?? '' }}" 
+                                                                                    {{-- value="{{ $product['brand'] ?? '' }}"  --}}
                                                                                     placeholder="Enter Brand Name">
                                                                             </div>
                                                                         </div>

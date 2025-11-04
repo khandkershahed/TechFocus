@@ -93,35 +93,62 @@ class SiteController extends Controller
         return view('frontend.pages.home.index', $data);
     }
 
-    public function allCatalog()
-    {
-        $banners = PageBanner::where('page_name', 'catalog')->get();
+    // public function allCatalog()
+    // {
+    //     $banners = PageBanner::where('page_name', 'catalog')->get();
 
-        // Get all unique catalog categories (brand, product, industry, solution, company)
-        $catalogCategories = Catalog::distinct()->pluck('category');
+    //     // Get all unique catalog categories (brand, product, industry, solution, company)
+    //     $catalogCategories = Catalog::distinct()->pluck('category');
 
-        // Get all catalogs for the "All" tab with relationships
-        $allCatalogs = Catalog::with(['attachments'])
+    //     // Get all catalogs for the "All" tab with relationships
+    //     $allCatalogs = Catalog::with(['attachments'])
+    //         ->latest()
+    //         ->get();
+
+    //     // Get catalogs grouped by category
+    //     $catalogsByCategory = [];
+    //     foreach ($catalogCategories as $category) {
+    //         $catalogsByCategory[$category] = Catalog::with(['attachments'])
+    //             ->where('category', $category)
+    //             ->latest()
+    //             ->get();
+    //     }
+
+    //     return view('frontend.pages.catalog.allCatalog', compact(
+    //         'catalogCategories',
+    //         'allCatalogs',
+    //         'catalogsByCategory',
+    //         'banners'
+    //     ));
+    // }
+public function allCatalog()
+{
+    $banners = PageBanner::where('page_name', 'catalog')->get();
+
+    // Get all unique catalog categories (brand, product, industry, solution, company)
+    $catalogCategories = Catalog::distinct()->pluck('category');
+
+    // Get all catalogs for the "All" tab with relationships
+    $allCatalogs = Catalog::with(['attachments'])
+        ->latest()
+        ->get();
+
+    // Get catalogs grouped by category
+    $catalogsByCategory = [];
+    foreach ($catalogCategories as $category) {
+        $catalogsByCategory[$category] = Catalog::with(['attachments'])
+            ->where('category', $category)
             ->latest()
             ->get();
-
-        // Get catalogs grouped by category
-        $catalogsByCategory = [];
-        foreach ($catalogCategories as $category) {
-            $catalogsByCategory[$category] = Catalog::with(['attachments'])
-                ->where('category', $category)
-                ->latest()
-                ->get();
-        }
-
-        return view('frontend.pages.catalog.allCatalog', compact(
-            'catalogCategories',
-            'allCatalogs',
-            'catalogsByCategory',
-            'banners'
-        ));
     }
 
+    return view('frontend.pages.catalog.allCatalog', compact(
+        'catalogCategories',
+        'allCatalogs',
+        'catalogsByCategory',
+        'banners'
+    ));
+}
     /**
      * Catalog Details Page
      */
@@ -216,13 +243,93 @@ class SiteController extends Controller
         return view('frontend.pages.solution.solution_details', $data);
     }
 
-    public function category($slug)
-    {
-        $data = [
-            'category' => Category::with('children')->where('slug', $slug)->first(),
-        ];
-        return view('frontend.pages.category.category', $data);
+// public function category($slug)
+// {
+//     $category = Category::with('children')->where('slug', $slug)->first();
+
+//     if (!$category) {
+//         Session::flash('error', 'Category not found.');
+//         return redirect()->back();
+//     }
+
+//     // Get all category IDs recursively (current + all subcategories)
+//     $categoryIds = $this->getAllCategoryIds($category)->toArray();
+
+//     // Fetch products where category_id JSON contains any of these IDs
+//     $products = Product::where(function($query) use ($categoryIds) {
+//         foreach ($categoryIds as $id) {
+//             $query->orWhereJsonContains('category_id', [$id])
+//                   ->orWhereRaw('JSON_UNQUOTE(category_id) LIKE ?', ['%"' . $id . '"%']);
+//         }
+//     })->get()->sortBy('name'); // Sort alphabetically
+
+//     // Load banners for this page
+//     $banners = PageBanner::where('page_name', 'category')
+//                 ->where('status', 'active')
+//                 ->get();
+
+//     return view('frontend.pages.category.category', compact('category', 'banners', 'products'));
+// }
+
+// /**
+//  * Recursively get all category IDs (current + all descendants)
+//  */
+// private function getAllCategoryIds($category)
+// {
+//     $ids = collect([$category->id]);
+
+//     if ($category->children->count() > 0) {
+//         foreach ($category->children as $child) {
+//             $ids = $ids->merge($this->getAllCategoryIds($child));
+//         }
+//     }
+
+//     return $ids;
+// }
+public function category($slug)
+{
+    $category = Category::with('children')->where('slug', $slug)->first();
+
+    if (!$category) {
+        Session::flash('error', 'Category not found.');
+        return redirect()->back();
     }
+
+    // Get all category IDs recursively
+    $categoryIds = $this->getAllCategoryIds($category)->toArray();
+
+    // Fetch random 8 products from this category + subcategories
+    $products = Product::where(function($query) use ($categoryIds) {
+        foreach ($categoryIds as $id) {
+            $query->orWhereJsonContains('category_id', [$id])
+                  ->orWhereRaw('JSON_UNQUOTE(category_id) LIKE ?', ['%"' . $id . '"%']);
+        }
+    })->inRandomOrder()->take(8)->get();
+
+    // Load banners
+    $banners = PageBanner::where('page_name', 'category')
+                ->where('status', 'active')
+                ->get();
+
+    return view('frontend.pages.category.category', compact('category', 'banners', 'products'));
+}
+
+/**
+ * Recursively get all category IDs (current + all descendants)
+ */
+private function getAllCategoryIds($category)
+{
+    $ids = collect([$category->id]);
+
+    if ($category->children->count() > 0) {
+        foreach ($category->children as $child) {
+            $ids = $ids->merge($this->getAllCategoryIds($child));
+        }
+    }
+
+    return $ids;
+}
+
 
     public function filterProducts($slug)
     {
@@ -299,18 +406,48 @@ class SiteController extends Controller
         return view('frontend.pages.others.subscription');
     }
 
+    // public function brandList()
+    // {
+    //     $banners = PageBanner::where('page_name', 'brandlist')
+    //             ->where('status', 'active')
+    //             ->get();
+
+    // return view('frontend.pages.brand.brand_list', compact('banners'));
+    //     $paginationSettings = ['*'];
+
+    //     $data = [
+    //         'top_brands' => Brand::byCategory('Top')->latest('id')->paginate(18, $paginationSettings, 'top_brands'),
+    //         'featured_brands' => Brand::byCategory('Featured')->latest('id')->paginate(18, $paginationSettings, 'featured_brands'),
+    //         'others' => Brand::with('brandPage')->select('id', 'slug', 'title')->get(),
+    //     ];
+
+    //     return view('frontend.pages.brand.brand_list', $data);
+    // }
     public function brandList()
-    {
-        $paginationSettings = ['*'];
+{
+    // ✅ Load banners for brandlist page
+    $banners = PageBanner::where('page_name', 'brandlist')
+                ->where('status', 'active')
+                ->get();
 
-        $data = [
-            'top_brands' => Brand::byCategory('Top')->latest('id')->paginate(18, $paginationSettings, 'top_brands'),
-            'featured_brands' => Brand::byCategory('Featured')->latest('id')->paginate(18, $paginationSettings, 'featured_brands'),
-            'others' => Brand::with('brandPage')->select('id', 'slug', 'title')->get(),
-        ];
+    // ✅ Load brand data
+    $paginationSettings = ['*'];
 
-        return view('frontend.pages.brand.brand_list', $data);
-    }
+    $top_brands = Brand::byCategory('Top')->latest('id')->paginate(18, $paginationSettings, 'top_brands');
+
+    $featured_brands = Brand::byCategory('Featured')->latest('id')->paginate(18, $paginationSettings, 'featured_brands');
+
+    $others = Brand::with('brandPage')->select('id', 'slug', 'title')->get();
+
+    // ✅ Send all data in one array
+    return view('frontend.pages.brand.brand_list', compact(
+        'banners',
+        'top_brands',
+        'featured_brands',
+        'others'
+    ));
+}
+
 
     public function service()
     {
@@ -487,46 +624,55 @@ class SiteController extends Controller
     }
 
     // All FAQs
-    public function faq()
-    {
-        return view('frontend.pages.others.faq', [
-            'faqs' => $this->faqRepository->allFaq(),
-            'categories' => $this->dynamicCategoryRepository->allDynamicActiveCategory('faqs'),
-        ]);
-    }
+public function faq()
+{
+    $banners = PageBanner::where('page_name', 'faq')
+                ->where('status', 'active')
+                ->get();
+
+    return view('frontend.pages.others.faq', [
+        'faqs' => $this->faqRepository->allFaq(),
+        'categories' => $this->dynamicCategoryRepository->allDynamicActiveCategory('faqs'),
+        'banners' => $banners, // ✅ Banners included
+    ]);
+}
+
 
     // Search FAQs
-    public function faqSearch(Request $request)
-    {
-        $query = $request->get('q');
+public function faqSearch(Request $request)
+{
+    $query = $request->get('q');
 
-        $faqs = $this->faqRepository->searchFaq($query);
-        $categories = $this->dynamicCategoryRepository->allDynamicActiveCategory('faqs');
+    $faqs = $this->faqRepository->searchFaq($query);
+    $categories = $this->dynamicCategoryRepository->allDynamicActiveCategory('faqs');
 
-        return view('frontend.pages.others.faq', [
-            'faqs' => $faqs,
-            'categories' => $categories,
-            'searchQuery' => $query,
-        ]);
-    }
+    $banners = PageBanner::where('page_name', 'faq')
+                ->where('status', 'active')
+                ->get();
+
+    return view('frontend.pages.others.faq', [
+        'faqs' => $faqs,
+        'categories' => $categories,
+        'searchQuery' => $query,
+        'banners' => $banners, // ✅ Add this line
+    ]);
+}
+
 
     // Filter by category
-    public function faqByCategory($slug)
-    {
-        $category = \App\Models\Admin\DynamicCategory::where('slug', $slug)->firstOrFail();
+public function faqByCategory($slug)
+{
+    $category = \App\Models\Admin\DynamicCategory::where('slug', $slug)->firstOrFail();
+    $faqs = $category->faqs()->orderBy('order')->get();
+    $categories = $this->dynamicCategoryRepository->allDynamicActiveCategory('faqs');
 
-        // now faqs() relationship works
-        $faqs = $category->faqs()->orderBy('order')->get();
+    $banners = PageBanner::where('page_name', 'faq')
+                ->where('status', 'active')
+                ->get();
 
-        $categories = $this->dynamicCategoryRepository->allDynamicActiveCategory('faqs');
+    return view('frontend.pages.others.faq', compact('category', 'faqs', 'categories', 'banners'));
+}
 
-        return view('frontend.pages.others.faq', compact('category', 'faqs', 'categories'));
-    }
-
-    public function solutionTest()
-    {
-        return view('frontend.pages.test.solutionTest');
-    }
 }
 
 
