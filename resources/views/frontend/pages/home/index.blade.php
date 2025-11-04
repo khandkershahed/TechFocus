@@ -376,13 +376,15 @@
                         <div class="col-lg-3 col-12">
                             <div class="mb-4 url-box">
                                 <div class="overflow-hidden border-0 card rounded-0 h-product">
-                                    <div class="bg-white card-header d-flex justify-content-between">
+                                    <div class="bg-white card-header d-flex justify-content-between home-logo">
                                          <div class="badge-new">
                                             <span class="">New</span>
                                         </div>
-                                        <img src="{{ asset('storage/brand/logo/' . optional($product->brand)->logo) }}"
+                                        <div>
+                                            <img src="{{ asset('storage/brand/logo/' . optional($product->brand)->logo) }}"
                                             height="20px" alt="{{ optional($product->brand)->title }}"
                                             loading="lazy" />
+                                        </div>
                                     </div>
                                     <div class="p-0 card-body">
                                         <div class="">
