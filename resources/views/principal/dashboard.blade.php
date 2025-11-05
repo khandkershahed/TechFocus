@@ -1,7 +1,4 @@
-@extends('frontend.master')
-@section('metadata')
-@endsection
-@section('content')
+
 <div class="flex items-center justify-between mb-6">
     <h1 class="text-2xl font-bold">Welcome Principal, {{ auth('principal')->user()->name }}</h1>
 
@@ -13,4 +10,3 @@
         </button>
     </form>
 </div>
-@endsection
