@@ -43,6 +43,13 @@
         </div>
     </div>
 
+    <!-- Filter Form -->
+    <form method="GET" id="filterForm" action="{{ route('filtering.products', $category->slug) }}">
+        <input type="hidden" name="search" id="searchInput" value="{{ request('search') }}">
+        <input type="hidden" name="whats_new" id="whatsNewInput" value="{{ request('whats_new') }}">
+        <input type="hidden" name="brand_id" id="brandInput" value="{{ request('brand_id') }}">
+    </form>
+
     <!-- Main content -->
     <div class="container my-3">
         <div class="row mt-5 bg-white p-3 mx-4">
@@ -67,38 +74,38 @@
             <div class="col-lg-2 col-sm-12">
 
                 {{-- What's New --}}
-                <form method="GET" action="{{ route('filtering.products', $category->slug) }}">
-                    @if(request('brand_id')) <input type="hidden" name="brand_id" value="{{ request('brand_id') }}"> @endif
-                    @if(request('search')) <input type="hidden" name="search" value="{{ request('search') }}"> @endif
-                    <div class="bg-white p-2 mb-2 mt-3 category-border-top">
-                        <div class="checkbox-wrapper-15">
-                            <input class="inp-cbx" id="cbx-whats-new" type="checkbox" name="whats_new" value="1"
-                                   style="display: none" onchange="this.form.submit()"
-                                   {{ request('whats_new') == '1' ? 'checked' : '' }} />
-                            <label class="cbx" for="cbx-whats-new">
-                                <span>
-                                    <svg width="12px" height="9px" viewBox="0 0 12 9">
-                                        <polyline points="1 5 4 8 11 1"></polyline>
-                                    </svg>
-                                </span>
-                                <span>What's New</span>
-                            </label>
-                        </div>
+                <div class="bg-white p-2 mb-2 mt-3 category-border-top">
+                    <div class="checkbox-wrapper-15">
+                        <input class="inp-cbx" id="cbx-whats-new" type="checkbox"
+                               style="display: none"
+                               onchange="
+                               document.getElementById('whatsNewInput').value = this.checked ? 1 : '';
+                               document.getElementById('filterForm').submit();
+                               "
+                               {{ request('whats_new') == '1' ? 'checked' : '' }} />
+                        <label class="cbx" for="cbx-whats-new">
+                            <span>
+                                <svg width="12px" height="9px" viewBox="0 0 12 9">
+                                    <polyline points="1 5 4 8 11 1"></polyline>
+                                </svg>
+                            </span>
+                            <span>What's New</span>
+                        </label>
                     </div>
-                </form>
+                </div>
 
                 {{-- Search --}}
                 <div class="bg-white p-2 mb-2 category-border-top">
-                    <form method="GET" action="{{ route('filtering.products', $category->slug) }}">
-                        @if(request('whats_new')) <input type="hidden" name="whats_new" value="{{ request('whats_new') }}"> @endif
-                        @if(request('brand_id')) <input type="hidden" name="brand_id" value="{{ request('brand_id') }}"> @endif
-                        <div class="pt-3">
-                            <input type="text" name="search" id="autocomplete_company"
-                                   class="form-control shadow-sm rounded-0 p-0 m-0"
-                                   placeholder="Search" value="{{ request('search') }}" />
-                            <button type="submit" class="btn btn-sm btn-primary mt-2 w-100">Search</button>
-                        </div>
-                    </form>
+                    <div class="pt-3">
+                        <input type="text" id="searchBox"
+                               class="form-control shadow-sm rounded-0 p-0 m-0"
+                               placeholder="Search" value="{{ request('search') }}">
+                        <button type="button" class="btn btn-sm btn-primary mt-2 w-100"
+                                onclick="
+                                document.getElementById('searchInput').value = document.getElementById('searchBox').value;
+                                document.getElementById('filterForm').submit();
+                                ">Search</button>
+                    </div>
                 </div>
 
                 {{-- Brands / Manufacturers --}}
@@ -119,24 +126,23 @@
                                         <ul class="m-0 p-0">
                                             @foreach ($brands as $brand)
                                                 <li class="p-2">
-                                                    <form method="GET" action="{{ route('filtering.products', $category->slug) }}">
-                                                        @if(request('whats_new')) <input type="hidden" name="whats_new" value="{{ request('whats_new') }}"> @endif
-                                                        @if(request('search')) <input type="hidden" name="search" value="{{ request('search') }}"> @endif
-                                                        <input type="hidden" name="brand_id" value="{{ $brand->id }}">
-                                                        <div class="checkbox-wrapper-15">
-                                                            <input class="inp-cbx" id="cbx-{{ $brand->id }}" type="checkbox"
-                                                                   style="display: none" onchange="this.form.submit()"
-                                                                   {{ request('brand_id') == $brand->id ? 'checked' : '' }} />
-                                                            <label class="cbx" for="cbx-{{ $brand->id }}">
-                                                                <span>
-                                                                    <svg width="12px" height="9px" viewBox="0 0 12 9">
-                                                                        <polyline points="1 5 4 8 11 1"></polyline>
-                                                                    </svg>
-                                                                </span>
-                                                                <span class="font-six">{{ $brand->title }}</span>
-                                                            </label>
-                                                        </div>
-                                                    </form>
+                                                    <div class="checkbox-wrapper-15">
+                                                        <input class="inp-cbx" id="cbx-{{ $brand->id }}" type="checkbox"
+                                                               style="display: none"
+                                                               onchange="
+                                                               document.getElementById('brandInput').value = this.checked ? '{{ $brand->id }}' : '';
+                                                               document.getElementById('filterForm').submit();
+                                                               "
+                                                               {{ request('brand_id') == $brand->id ? 'checked' : '' }} />
+                                                        <label class="cbx" for="cbx-{{ $brand->id }}">
+                                                            <span>
+                                                                <svg width="12px" height="9px" viewBox="0 0 12 9">
+                                                                    <polyline points="1 5 4 8 11 1"></polyline>
+                                                                </svg>
+                                                            </span>
+                                                            <span class="font-six">{{ $brand->title }}</span>
+                                                        </label>
+                                                    </div>
                                                 </li>
                                             @endforeach
                                         </ul>
