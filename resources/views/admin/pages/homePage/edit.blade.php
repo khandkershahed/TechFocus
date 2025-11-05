@@ -75,7 +75,7 @@
                                                             <label class="form-label">Country Name</label>
                                                             <select
                                                                 class="form-select form-select-solid @error('country_id') is-invalid @enderror"
-                                                                name="country_id" id="field2" multiple
+                                                                name="country_id" id="country_id" multiple data-control="select2" data-allow-clear="true"
                                                                 multiselect-search="true" multiselect-select-all="true"
                                                                 multiselect-max-items="4"
                                                                 onchange="console.log(this.selectedOptions)">
@@ -220,7 +220,7 @@
                                                                     class="form-control form-control-solid form-control-sm @error('section_two_name') is-invalid @enderror"
                                                                     name="section_two_name"
                                                                     value="{{ $homePage->section_two_name }}"
-                                                                    id="validationCustom01"
+                                                                    id="section_two_name"
                                                                     placeholder="Enter Row One Badge">
                                                                 @error('section_two_name')
                                                                     <div class="invalid-feedback d-block">{{ $message }}
@@ -234,7 +234,7 @@
                                                             <label class="form-label">Section Two Name</label>
                                                             <select
                                                                 class="form-select form-select-solid @error('section_two_products') is-invalid @enderror"
-                                                                name="section_two_products[]" id="field2" multiple
+                                                                name="section_two_products[]" id="field2" multiple multiple data-control="select2" data-allow-clear="true"
                                                                 multiselect-search="true" multiselect-select-all="true"
                                                                 multiselect-max-items="4"
                                                                 onchange="console.log(this.selectedOptions)">
@@ -570,7 +570,7 @@
                                                                 class="form-control form-control-solid form-control-sm @error('section_four_name') is-invalid @enderror"
                                                                 name="section_four_name"
                                                                 value="{{ $homePage->section_four_name }}"
-                                                                id="validationCustom01"
+                                                                id="section_four_name"
                                                                 placeholder="Enter Section Four Name">
                                                             @error('section_four_name')
                                                                 <div class="invalid-feedback d-block">{{ $message }}
@@ -583,7 +583,7 @@
                                                             <label class="form-label">Section Four Contents</label>
                                                             <select
                                                                 class="form-select form-select-solid @error('section_four_contents') is-invalid @enderror"
-                                                                name="section_four_contents[]" id="field2" multiple
+                                                                name="section_four_contents[]" id="section_four_contents[]" multiple multiple data-control="select2" data-allow-clear="true"
                                                                 multiselect-search="true" multiselect-select-all="true"
                                                                 multiselect-max-items="4"
                                                                 onchange="console.log(this.selectedOptions)">
