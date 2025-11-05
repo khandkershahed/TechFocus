@@ -1699,7 +1699,7 @@ $(document).ready(function() {
     $('.tab-trigger-previous').on('click', function() {
         const targetTabId = $(this).data('bs-target');
         validateAndSwitchTab(targetTabId);
-    });
+    }); 
 });
 </script>
 
