@@ -37,9 +37,14 @@ class RegisterController extends Controller
 
         // Fire email verification
         event(new Registered($principal));
-
-        // Redirect to email verification notice WITHOUT logging in
-        return redirect()->route('principal.verification.notice')
-            ->with('success', 'Registration successful! Please check your email for verification link.');
+// dd($principal);
+        // Redirect to email verification notice WITH SweetAlert
+        return view('principal.auth.verify-email')
+            ->with('swal', [
+                'icon' => 'success',
+                'title' => 'Registration Successful!',
+                'text' => 'Please check your email for verification link.',
+                'timer' => 5000
+            ]);
     }
 }

@@ -1,5 +1,4 @@
 <?php
-use App\Http\Controllers\Admin\NewsLetterController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HR\HRController;
 use App\Http\Controllers\HR\TaskController;
@@ -35,10 +34,12 @@ use App\Http\Controllers\Admin\AttributeController;
 use App\Http\Controllers\Admin\BioMetricController;
 use App\Http\Controllers\Admin\BrandPageController;
 use App\Http\Controllers\Admin\NewsTrendController;
+use App\Http\Controllers\Admin\PrincipalController;
 use App\Http\Controllers\Admin\VatAndTaxController;
 use App\Http\Controllers\HR\EmployeeTaskController;
 use App\Http\Controllers\Admin\AttendanceController;
 use App\Http\Controllers\Admin\DynamicCssController;
+use App\Http\Controllers\Admin\NewsLetterController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\ProductSasController;
 use App\Http\Controllers\Admin\WebSettingController;
@@ -480,4 +481,12 @@ Route::prefix('admin')->group(function () {
     Route::get('newsletter', [NewsLetterController::class, 'index'])->name('newsletter.index');
     // Delete subscriber
     Route::delete('newsletter/{id}', [NewsLetterController::class, 'destroy'])->name('admin.newsletter.destroy');
+});
+//admin principal
+// Admin Principal Management Routes
+Route::prefix('admin')->name('admin.')->middleware(['auth:admin', 'verified'])->group(function () {
+    Route::get('principals', [PrincipalController::class, 'index'])->name('principals.index');
+    Route::get('principals/{principal}', [PrincipalController::class, 'show'])->name('principals.show');
+    Route::patch('principals/{principal}/status', [PrincipalController::class, 'updateStatus'])->name('principals.update-status');
+    Route::get('principals-stats', [PrincipalController::class, 'getStats'])->name('principals.stats');
 });

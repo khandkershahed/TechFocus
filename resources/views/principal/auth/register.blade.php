@@ -1,6 +1,8 @@
 @extends('frontend.master')
+
 @section('metadata')
 @endsection
+
 @section('content')
     <h2 class="text-center text-2xl font-bold mb-4">Principal Register</h2>
 
@@ -35,3 +37,28 @@
         <a href="{{ route('principal.login') }}" class="text-blue-500 underline">Login here</a>
     </p>
 @endsection
+
+{{-- ADD SWEETALERT FOR VALIDATION ERRORS IN REGISTER FORM --}}
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    @if($errors->any())
+        Swal.fire({
+            icon: 'error',
+            title: 'Registration Failed',
+            html: `
+                <div class="text-left">
+                    <p>Please fix the following errors:</p>
+                    <ul class="list-disc list-inside mt-2">
+                        @foreach($errors->all() as $error)
+                            <li class="text-sm">{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            `,
+        });
+    @endif
+});
+</script>
+@endpush

@@ -57,6 +57,14 @@
                         <span class="menu-title">Dashboard</span>
                     </a>
                 </div>
+<!-- In your admin sidebar or navigation -->
+<li class="nav-item">
+    <a class="nav-link" href="{{ route('admin.principals.index') }}">
+        <i class="fas fa-users me-2"></i>
+        Principals
+        <span class="badge bg-primary float-end">{{ \App\Models\Principal::count() }}</span>
+    </a>
+</li>
 
                 {{-- <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ Route::current()->getName() == 'admin.dashboard' ? 'here show' : '' }}">
                     <span class="menu-link">

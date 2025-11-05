@@ -97,4 +97,13 @@ class Principal extends Authenticatable implements MustVerifyEmail
     {
         $this->notify(new PrincipalVerifyEmail);
     }
+    // In your Principal model
+public function updateLastSeen()
+{
+    $this->update(['last_seen' => now()]);
+}
+    public function country()
+    {
+        return $this->belongsTo(Country::class, 'country_id');
+    }
 }

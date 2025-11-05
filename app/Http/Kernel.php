@@ -37,6 +37,7 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             // \App\Http\Middleware\ConfigureSmtpMail::class,
+          \App\Http\Middleware\TrackPrincipalActivity::class,
         ],
 
         'api' => [
@@ -67,5 +68,8 @@ class Kernel extends HttpKernel
         'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
         'checkBan' => \App\Http\Middleware\CheckBanStatus::class,
          'verified.principal' => \App\Http\Middleware\EnsurePrincipalEmailIsVerified::class,
+        'auth.principal' => \App\Http\Middleware\Authenticate::class, // if not exists
+    'check.principal.status' => \App\Http\Middleware\CheckPrincipalStatus::class,
+    'verified.principal' => \App\Http\Middleware\EnsurePrincipalEmailIsVerified::class,
     ];
 }

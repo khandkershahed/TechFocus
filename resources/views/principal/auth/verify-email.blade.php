@@ -70,3 +70,45 @@
     </div>
 </div>
 @endsection
+
+{{-- ADD THIS SWEETALERT SCRIPT SECTION --}}
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Show SweetAlert for success message
+    @if(session('success'))
+        Swal.fire({
+            icon: 'success',
+            title: 'Registration Successful!',
+            text: '{{ session('success') }}',
+            timer: 5000,
+            showConfirmButton: false,
+            timerProgressBar: true,
+            position: 'top-end',
+            toast: true,
+        });
+    @endif
+
+    // For other message types
+    @if(session('message'))
+        Swal.fire({
+            icon: 'info',
+            title: 'Notice',
+            text: '{{ session('message') }}',
+            timer: 4000,
+            showConfirmButton: false,
+            timerProgressBar: true,
+        });
+    @endif
+
+    @if(session('error'))
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: '{{ session('error') }}',
+        });
+    @endif
+});
+</script>
+@endpush
