@@ -37,25 +37,21 @@
                                         </div>
                                         <div class="d-flex justify-content-center align-items-center">
                                             <!-- Client Login/Register -->
-                                            <a href="{{ route('login') }}" class="mb-2 btn signin rounded-0 me-2">Client</a>
+                                            <a href="{{ route('login') }}" class="mb-2 btn btn-sm signin rounded-0 me-2">Client</a>
                                             <!-- Partner Login/Register -->
-                                            <a href="{{ route('partner.login') }}" class="mb-2 btn signin rounded-0">Partner</a>
-
+                                            <a href="{{ route('partner.login') }}" class="mb-2 btn-sm btn signin rounded-0 me-2">Partner</a>
+                                            <a href="{{ route('principal.login') }}" class="mb-2 btn-sm btn signin rounded-0 ">Principal</a>
                                             @endauth
                                         </div>
                                         <div class="text-muted">
                                             First time here?
                                             <a href="{{ route('register') }}" class="main-color">
-
-
-                                                Sign Up</a>
-                                            
+                                                Sign Up</a> or Register as  <a href="{{ route('principal.register') }}" class="main-color">
+                                                principal !</a>
                                         </div>
 
                                         <!-- Partner Login/Register -->
-                                        <a href="{{ route('partner.login') }}" class="mt-2 mb-2 btn signin rounded-0">Partner Log In</a>
-                                        <a href="{{ route('principal.login') }}" class="btn btn-primary">Login as Principal</a>
-                                        <a href="{{ route('principal.register') }}" class="btn btn-success">Register as Principal</a>
+
 
 
                                         <hr class="text-muted" />
