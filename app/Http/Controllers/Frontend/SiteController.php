@@ -314,6 +314,7 @@ private function getAllCategoryIds($category)
     // }
 public function filterProducts(Request $request, $slug)
 {
+    // Get category by slug
     $category = Category::where('slug', $slug)->first();
 
     if (!$category) {
@@ -323,29 +324,42 @@ public function filterProducts(Request $request, $slug)
 
     $categoryId = (string) $category->id;
 
+    // Base query: products in this category (JSON stored category_id)
     $productsQuery = Product::whereJsonContains('category_id', [$categoryId])
         ->orWhereRaw('JSON_UNQUOTE(category_id) LIKE ?', ['%"' . $categoryId . '"%']);
 
-    // Filter by brand if brand_id is provided
-    if ($request->has('brand_id') && $request->brand_id) {
+    // Filter by brand if provided
+    if ($request->filled('brand_id')) {
         $productsQuery->where('brand_id', $request->brand_id);
     }
 
-    // Check if "What's New" is requested
-    if ($request->has('whats_new') && $request->whats_new == '1') {
+    // Search filter
+    if ($request->filled('search')) {
+        $search = $request->search;
+
+        $productsQuery->where(function($q) use ($search) {
+            // Replace 'name' and 'short_desc' with your actual column names
+            $q->where('name', 'like', "%{$search}%")
+              ->orWhere('short_desc', 'like', "%{$search}%");
+        });
+    }
+
+    // Sort by newest products if "What's New" is checked
+    if ($request->filled('whats_new') && $request->whats_new == '1') {
         $productsQuery->orderBy('created_at', 'desc');
     }
 
+    // Paginate results and preserve filters in pagination links
     $products = $productsQuery->paginate(16)->appends($request->all());
 
-    $data = [
+    // Pass data to the view
+    return view('frontend.pages.shop.filterProducts', [
         'category' => $category,
         'products' => $products,
         'brands'   => Brand::latest()->get(),
-    ];
-
-    return view('frontend.pages.shop.filterProducts', $data);
+    ]);
 }
+
 
 
     private $termsAndPolicyRepository;
