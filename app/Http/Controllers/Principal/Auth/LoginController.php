@@ -91,18 +91,42 @@ class LoginController extends Controller
         }
     }
 
-    // Handle logout
-    public function logout(Request $request)
-    {
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-        Auth::guard('principal')->logout();
+    // // Handle logout
+    // public function logout(Request $request)
+    // {
+    //     $request->session()->invalidate();
+    //     $request->session()->regenerateToken();
+    //     Auth::guard('principal')->logout();
 
-        return redirect()->route('principal.login')->with('swal', [
-            'icon' => 'success',
-            'title' => 'Logged Out',
-            'text' => 'You have been successfully logged out.',
-            'timer' => 3000
-        ]);
+    //     return redirect()->route('principal.login')->with('swal', [
+    //         'icon' => 'success',
+    //         'title' => 'Logged Out',
+    //         'text' => 'You have been successfully logged out.',
+    //         'timer' => 3000
+    //     ]);
+    // }
+    // Handle logout - Simple Technique
+public function logout(Request $request)
+{
+    // Get the principal before logging out (if needed for any operations)
+    $principal = Auth::guard('principal')->user();
+    
+    // Update last seen before logout (optional)
+    if ($principal) {
+        $principal->update(['last_seen' => now()]);
     }
+    
+    // Simple logout process
+    Auth::guard('principal')->logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+
+    // Redirect with success message
+    return redirect()->route('principal.login')->with('swal', [
+        'icon' => 'success',
+        'title' => 'Logged Out Successfully',
+        'text' => 'You have been logged out of your account.',
+        'timer' => 3000
+    ]);
+}
 }
