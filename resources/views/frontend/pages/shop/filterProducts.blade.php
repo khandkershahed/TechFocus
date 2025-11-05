@@ -544,25 +544,4 @@
             </div>
         </div>
     </div>
-    <div class="container">
-        <div class="row p-3 bg-white">
-            <div class="col-lg-12 col-sm-12 pt-3">
-                <p class="text-center">Average score: 4.0/5 (53 votes)</p>
-                <p class="text-center">
-                    With DirectIndustry you can: Find the product, subcontractor or
-                    service provider you need | Find a nearby distributor or reseller|
-                    Contact the manufacturer to get a quote or a price | Examine
-                    product characteristics and technical specifications for major
-                    brands | View PDF catalogues and other online documentation
-                </p>
-                <p class="sub-color text-center w-75 mx-auto">
-                    *Prices are pre-tax. They exclude delivery charges and customs
-                    duties and do not include additional charges for installation or
-                    activation options. Prices are indicative only and may vary by
-                    country, with changes to the cost of raw materials and exchange
-                    rates.
-                </p>
-            </div>
-        </div>
-    </div> --}}
 @endsection

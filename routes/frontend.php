@@ -266,3 +266,4 @@ Route::delete('/partner/delete/{id}', [UserListController::class, 'deletePartner
 
 Route::get('solution-test', [SiteController::class, 'solutionTest'])->name('solution.test');
 
+

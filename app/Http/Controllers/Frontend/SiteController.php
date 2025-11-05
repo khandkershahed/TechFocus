@@ -282,36 +282,86 @@ private function getAllCategoryIds($category)
     return $ids;
 }
 
-    public function filterProducts($slug)
-    {
-        $category = Category::where('slug', $slug)->first();
+    // public function filterProducts($slug)
+    // {
+    //     $category = Category::where('slug', $slug)->first();
 
-        if (!$category) {
-            Session::flash('error', 'Category not found.');
-            return redirect()->back();
-        }
+    //     if (!$category) {
+    //         Session::flash('error', 'Category not found.');
+    //         return redirect()->back();
+    //     }
 
-        $categoryId = (string) $category->id;
+    //     $categoryId = (string) $category->id;
 
-        $products = Product::whereJsonContains('category_id', [$categoryId])
-            ->orWhereRaw('JSON_UNQUOTE(category_id) LIKE ?', ['%"' . $categoryId . '"%'])
-            ->paginate(16);
+    //     $products = Product::whereJsonContains('category_id', [$categoryId])
+    //         ->orWhereRaw('JSON_UNQUOTE(category_id) LIKE ?', ['%"' . $categoryId . '"%'])
+    //         ->paginate(16);
 
-        //    dd($products);
+    //     //    dd($products);
 
-        // if ($products->isEmpty()) {
-        //     Session::flash('warning', 'No Products Found for this Category');
-        //     return redirect()->back();
-        // }
+    //     // if ($products->isEmpty()) {
+    //     //     Session::flash('warning', 'No Products Found for this Category');
+    //     //     return redirect()->back();
+    //     // }
 
-        $data = [
-            'category' => $category,
-            'products' => $products,
-            'brands'   => Brand::latest()->get(),
-        ];
+    //     $data = [
+    //         'category' => $category,
+    //         'products' => $products,
+    //         'brands'   => Brand::latest()->get(),
+    //     ];
 
-        return view('frontend.pages.shop.filterProducts', $data);
+    //     return view('frontend.pages.shop.filterProducts', $data);
+    // }
+public function filterProducts(Request $request, $slug)
+{
+    // Get category by slug
+    $category = Category::where('slug', $slug)->first();
+
+    if (!$category) {
+        Session::flash('error', 'Category not found.');
+        return redirect()->back();
     }
+
+    $categoryId = (string) $category->id;
+
+    // Base query: products in this category (JSON stored category_id)
+    $productsQuery = Product::whereJsonContains('category_id', [$categoryId])
+        ->orWhereRaw('JSON_UNQUOTE(category_id) LIKE ?', ['%"' . $categoryId . '"%']);
+
+    // Filter by brand if provided
+    if ($request->filled('brand_id')) {
+        $productsQuery->where('brand_id', $request->brand_id);
+    }
+
+    // Search filter
+    if ($request->filled('search')) {
+        $search = $request->search;
+
+        $productsQuery->where(function($q) use ($search) {
+            // Replace 'name' and 'short_desc' with your actual column names
+            $q->where('name', 'like', "%{$search}%")
+              ->orWhere('short_desc', 'like', "%{$search}%");
+        });
+    }
+
+    // Sort by newest products if "What's New" is checked
+    if ($request->filled('whats_new') && $request->whats_new == '1') {
+        $productsQuery->orderBy('created_at', 'desc');
+    }
+
+    // Paginate results and preserve filters in pagination links
+    $products = $productsQuery->paginate(16)->appends($request->all());
+
+    // Pass data to the view
+    return view('frontend.pages.shop.filterProducts', [
+        'category' => $category,
+        'products' => $products,
+        'brands'   => Brand::latest()->get(),
+    ]);
+}
+
+
+
     private $termsAndPolicyRepository;
     private $faqRepository;
     private $dynamicCategoryRepository;
