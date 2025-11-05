@@ -16,7 +16,7 @@
                                             <img src="{{ asset('uploads/page_banners/' . $banner->image) }}"
                                                  class="img-fluid"
                                                  alt="{{ $banner->title ?? 'Banner' }}"
-                                                 onerror="this.onerror=null;this.src='{{ asset('frontend/images/no-banner(1920-330).png') }}';" />
+                                                 onerror="this.onerror=null;this.src='{{ asset('/img/TechFocus-Catalog-Page-Banner-(1920x525).png') }}';" />
                                         </a>
                                     </div>
                                 @endif
@@ -24,14 +24,14 @@
                         </div>
                     </div>
                 @else
-                    <img src="{{ asset('frontend/images/no-banner(1920-330).png') }}" class="img-fluid" alt="No Banner">
+                    <img src="{{ asset('/img/TechFocus-Catalog-Page-Banner-(1920x525).png') }}" class="img-fluid" alt="No Banner">
                 @endif
             </div>
         </div>
     </section>
 
     <!-- Catalogs Section -->
-    <div class="container my-4">
+    <div class="container my-4 mt-5">
         <div class="row">
             <div class="col-lg-3">
                 <h6 class="mb-3">Catalogs by Categories</h6>
