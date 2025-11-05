@@ -20,7 +20,7 @@
                                             <img src="{{ asset('uploads/page_banners/' . $banner->image) }}"
                                                  class="img-fluid"
                                                  alt="{{ $banner->title ?? 'Banner' }}"
-                                                 onerror="this.onerror=null;this.src='{{ asset('frontend/images/no-banner(1920-330).png') }}';" />
+                                                 onerror="this.onerror=null;this.src='{{ asset('/img/TechFocus-RFQ-Page-Banner-(1920x525).webp') }}';" />
                                         </a>
                                     </div>
                                 @endif
@@ -28,7 +28,7 @@
                         </div>
                     </div>
                 @else
-                    <img src="{{ asset('frontend/images/no-banner(1920-330).png') }}"
+                    <img src="{{ asset('/img/TechFocus-RFQ-Page-Banner-(1920x525).webp') }}"
                          class="img-fluid"
                          alt="No Banner">
                 @endif
