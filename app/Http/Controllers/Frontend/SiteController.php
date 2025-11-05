@@ -240,35 +240,47 @@ class SiteController extends Controller
 // }
 public function category($slug)
 {
-    // Get category with children
-    $category = Category::with('children')->where('slug', $slug)->firstOrFail();
+    $category = Category::with('children')->where('slug', $slug)->first();
 
-    // Fetch banners (you can filter by page/section if needed)
-    $banners = Banner::all();
+    if (!$category) {
+        Session::flash('error', 'Category not found.');
+        return redirect()->back();
+    }
 
-    // Collect IDs of this category + its subcategories
-    $categoryIds = $category->children->pluck('id')->toArray();
-    $categoryIds[] = $category->id; // include parent category
+    // Get all category IDs recursively
+    $categoryIds = $this->getAllCategoryIds($category)->toArray();
 
-    // Fetch products belonging to the category or any of its subcategories
-    // Assuming your Product model has a 'category_id' column (JSON array or single id)
-    $products = Product::where(function ($query) use ($categoryIds) {
-        foreach ($categoryIds as $catId) {
-            $query->orWhereJsonContains('category_id', $catId); // works if category_id is JSON
-            $query->orWhere('category_id', $catId); // works if category_id is single integer
+    // Fetch random 8 products from this category + subcategories
+    $products = Product::where(function($query) use ($categoryIds) {
+        foreach ($categoryIds as $id) {
+            $query->orWhereJsonContains('category_id', [$id])
+                  ->orWhereRaw('JSON_UNQUOTE(category_id) LIKE ?', ['%"' . $id . '"%']);
         }
-    })->latest()->get();
+    })->inRandomOrder()->take(8)->get();
 
-    // Pass data to view
-    return view('frontend.pages.category.category', [
-        'category'      => $category,
-        'subcategories' => $category->children,
-        'products'      => $products,
-        'banners'       => $banners,
-    ]);
+    // Load banners
+    $banners = PageBanner::where('page_name', 'category')
+                ->where('status', 'active')
+                ->get();
+
+    return view('frontend.pages.category.category', compact('category', 'banners', 'products'));
 }
 
+/**
+ * Recursively get all category IDs (current + all descendants)
+ */
+private function getAllCategoryIds($category)
+{
+    $ids = collect([$category->id]);
 
+    if ($category->children->count() > 0) {
+        foreach ($category->children as $child) {
+            $ids = $ids->merge($this->getAllCategoryIds($child));
+        }
+    }
+
+    return $ids;
+}
 
     public function filterProducts($slug)
     {

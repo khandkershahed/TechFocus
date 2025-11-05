@@ -735,6 +735,4 @@ private function sendRfqConfirmationEmail(Rfq $rfq): bool
         return false;
     }
 }
-
-
 }

@@ -94,6 +94,4 @@ public function newsTrends()
 {
     return $this->belongsToMany(NewsTrend::class, 'news_trend_products', 'product_id', 'news_trend_id');
 }
-
-
 }
