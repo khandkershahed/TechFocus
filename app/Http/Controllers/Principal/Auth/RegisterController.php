@@ -13,7 +13,7 @@ class RegisterController extends Controller
     // Show registration form
     public function show()
     {
-        return view('principal.auth.register'); // create this Blade
+        return view('principal.auth.register');
     }
 
     // Handle registration
@@ -32,11 +32,14 @@ class RegisterController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        // Store email in session for verification resend
+        $request->session()->put('principal_email', $principal->email);
+
         // Fire email verification
         event(new Registered($principal));
 
-        // Redirect to email verification notice
+        // Redirect to email verification notice WITHOUT logging in
         return redirect()->route('principal.verification.notice')
-            ->with('success', 'Registration successful! Please verify your email.');
+            ->with('success', 'Registration successful! Please check your email for verification link.');
     }
 }

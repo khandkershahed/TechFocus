@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Principal\Auth\PrincipalAuthController;
 use App\Http\Controllers\Principal\Auth\EmailVerificationController;
 use App\Http\Controllers\Principal\PrincipalDashboardController;
+use App\Http\Controllers\Principal\Auth\LoginController;
+use App\Http\Controllers\Principal\Auth\RegisterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,29 +37,34 @@ require __DIR__ . '/client.php';
 //         ->name('profile');
 // });
 
+// Public verification route - accessible without authentication
+Route::get('/principal/verify-email/{id}/{hash}', [EmailVerificationController::class, 'verify'])
+    ->middleware('signed')
+    ->name('principal.verification.verify');
 
-
-// Guest routes
+// Guest routes (including verification notice)
 Route::prefix('principal')->name('principal.')->middleware('guest:principal')->group(function () {
-    Route::get('login', [PrincipalAuthController::class, 'showLoginForm'])->name('login');
-    Route::post('login', [PrincipalAuthController::class, 'login'])->name('login.submit');
+    Route::get('login', [LoginController::class, 'show'])->name('login');
+    Route::post('login', [LoginController::class, 'login'])->name('login.submit');
 
-    Route::get('register', [PrincipalAuthController::class, 'showRegisterForm'])->name('register');
-    Route::post('register', [PrincipalAuthController::class, 'register'])->name('register.submit');
-});
+    Route::get('register', [RegisterController::class, 'show'])->name('register');
+    Route::post('register', [RegisterController::class, 'register'])->name('register.submit');
 
-// Public email verification
-Route::get('principal/verify-email/{id}/{hash}', [EmailVerificationController::class, 'verify'])
-    ->name('principal.verification.verify')
-    ->middleware('signed');
-
-// Authenticated routes
-Route::prefix('principal')->name('principal.')->middleware('auth:principal')->group(function () {
-    Route::get('dashboard', [PrincipalDashboardController::class, 'index'])->name('dashboard');
-    Route::post('logout', [PrincipalAuthController::class, 'logout'])->name('logout');
-
-    Route::get('verify-email', [EmailVerificationController::class, 'notice'])->name('verification.notice');
+    // Verification notice should be accessible to guests
+    Route::get('verify-email', [EmailVerificationController::class, 'notice'])
+        ->name('verification.notice');
+        
     Route::post('email/verification-notification', [EmailVerificationController::class, 'send'])
         ->middleware('throttle:6,1')
         ->name('verification.send');
+});
+
+// Authenticated principal routes
+Route::prefix('principal')->name('principal.')->middleware(['auth:principal'])->group(function () {
+    // Protected routes that require verification
+    Route::middleware(['verified.principal'])->group(function () {
+        Route::get('dashboard', [PrincipalDashboardController::class, 'index'])->name('dashboard');
+    });
+
+    Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 });

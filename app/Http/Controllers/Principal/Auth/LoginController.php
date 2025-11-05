@@ -25,15 +25,20 @@ class LoginController extends Controller
         $credentials = $request->only('email', 'password');
 
         if (Auth::guard('principal')->attempt($credentials, $request->filled('remember'))) {
-            $request->session()->regenerate();
-
+            $principal = Auth::guard('principal')->user();
+            
             // Check email verification
-            if (!Auth::guard('principal')->user()->hasVerifiedEmail()) {
+            if (!$principal->hasVerifiedEmail()) {
                 Auth::guard('principal')->logout();
-                return redirect()->route('principal.login')
-                    ->with('error', 'Please verify your email first.');
+                
+                // Store email in session for verification resend
+                $request->session()->put('principal_email', $request->email);
+                
+                return redirect()->route('principal.verification.notice')
+                    ->with('error', 'Please verify your email first. We have sent a new verification link.');
             }
 
+            $request->session()->regenerate();
             return redirect()->intended(route('principal.dashboard'));
         }
 

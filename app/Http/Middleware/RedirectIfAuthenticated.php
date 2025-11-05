@@ -23,12 +23,19 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
-                //Default route
+                // Default route for regular users
                 $route = 'client.dashboard';
-                //Admin route
-                if($guard === 'admin'){
+                
+                // Admin route
+                if ($guard === 'admin') {
                     $route = 'admin.dashboard';
                 }
+                
+                // Principal route
+                if ($guard === 'principal') {
+                    $route = 'principal.dashboard';
+                }
+                
                 return redirect()->route($route);
             }
         }

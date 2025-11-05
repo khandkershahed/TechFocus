@@ -23,7 +23,20 @@
             A verification link has been sent to your email address. Please check your inbox and click the link to activate your account.
         </p>
 
+        <!-- Show email if available -->
+        @if(session('principal_email') || auth('principal')->user())
+            <div class="mb-4 px-4 py-3 bg-blue-100 text-blue-800 rounded-lg">
+                Verification email sent to: <strong>{{ session('principal_email') ?? auth('principal')->user()->email }}</strong>
+            </div>
+        @endif
+
         <!-- Flash messages -->
+        @if(session('success'))
+            <div class="mb-4 px-4 py-3 bg-green-100 text-green-800 rounded-lg text-left">
+                {{ session('success') }}
+            </div>
+        @endif
+
         @if(session('message'))
             <div class="mb-4 px-4 py-3 bg-green-100 text-green-800 rounded-lg text-left">
                 {{ session('message') }}
@@ -39,16 +52,19 @@
         <!-- Resend Verification Form -->
         <form method="POST" action="{{ route('principal.verification.send') }}" class="mb-4">
             @csrf
+            @if(session('principal_email'))
+                <input type="hidden" name="email" value="{{ session('principal_email') }}">
+            @endif
             <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-xl transition duration-200">
                 Resend Verification Email
             </button>
         </form>
 
-        <!-- Already Verified -->
+        <!-- Login link -->
         <p class="mt-6 text-gray-500 text-sm">
             Already verified? 
-            <a href="{{ route('principal.dashboard') }}" class="text-blue-500 font-semibold underline hover:text-blue-600 transition duration-150">
-                Go to Dashboard
+            <a href="{{ route('principal.login') }}" class="text-blue-500 font-semibold underline hover:text-blue-600 transition duration-150">
+                Login here
             </a>
         </p>
     </div>
