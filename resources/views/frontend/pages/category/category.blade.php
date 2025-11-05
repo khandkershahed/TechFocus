@@ -5,15 +5,13 @@
 
 @section('content')
 
-<!--Banner -->
+<!-- Banner Section -->
 <section class="ban_sec section_one">
     <div class="container-fluid p-0">
         <div class="ban_img">
-
             @if(isset($banners) && $banners->count() > 0)
                 <div class="swiper bannerSwiper">
                     <div class="swiper-wrapper">
-
                         @foreach($banners as $banner)
                             @if($banner->image)
                                 <div class="swiper-slide">
@@ -26,47 +24,34 @@
                                 </div>
                             @endif
                         @endforeach
-
                     </div>
                 </div>
             @else
-                <img src="{{ asset('frontend/images/no-banner(1920-330).png') }}"
-                     class="img-fluid"
-                     alt="No Banner">
+                <img src="{{ asset('frontend/images/no-banner(1920-330).png') }}" class="img-fluid" alt="No Banner">
             @endif
-
         </div>
     </div>
 </section>
 
-<!-- content start -->
-<div class="container">
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="breadcrumbs">
-                <div>
-                    <a href="{{ route('homepage') }}" class="fw-bold">Home</a> &gt;
-                    @if (!empty($category) && $category->parent_id)
-                        <a href="{{ route('category', optional($category->parent)->slug) }}"
-                            class="txt-mcl active">{{ optional($category->parent)->name }}</a> &gt;
-                    @endif
-                    <span class="txt-mcl active fw-bold">{{ optional($category)->name }}</span>
-                </div>
-            </div>
-        </div>
+<!-- Breadcrumbs -->
+<div class="container my-3">
+    <div class="breadcrumbs">
+        <a href="{{ route('homepage') }}" class="fw-bold">Home</a> &gt;
+        @if (!empty($category) && $category->parent_id)
+            <a href="{{ route('category', optional($category->parent)->slug) }}" class="txt-mcl active">
+                {{ optional($category->parent)->name }}
+            </a> &gt;
+        @endif
+        <span class="txt-mcl active fw-bold">{{ optional($category)->name }}</span>
     </div>
 </div>
 
 <div class="container my-4">
     <div class="row">
-        <!-- 🟩 Category List Section -->
-   <div class="container my-4">
-    <div class="row">
-        <!-- 🟩 Subcategories Section -->
+
+        <!-- Subcategories / Left Column -->
         <div class="col-lg-8 col-sm-12">
-            <h4 class="text-center border-bottom industry_title">
-                {{ optional($category)->name }}
-            </h4>
+            <h4 class="text-center border-bottom industry_title">{{ optional($category)->name }}</h4>
 
             <div class="hoverizeList mt-3">
                 <ul class="category-grouplist category-list">
@@ -90,60 +75,52 @@
                     @endforelse
                 </ul>
             </div>
+
+            <!-- Products -->
+            <h4 class="text-center border-bottom industry_title mt-4">New Products</h4>
+            @if(isset($products) && $products->count() > 0)
+                <div class="row g-2">
+                    @foreach ($products as $product)
+                        <div class="col-6 col-md-3">
+                            <a href="{{ route('product.details', ['id' => optional($product->brand)->slug, 'slug' => $product->slug]) }}">
+                                <img class="img-fluid w-100" src="{{ $product->thumbnail }}" alt="{{ $product->name }}">
+                            </a>
+                        </div>
+                    @endforeach
+                </div>
+            @else
+                <p class="text-center">No Products Found!</p>
+            @endif
         </div>
 
+        <!-- Right Column: Newsletter -->
+        <div class="col-lg-4 col-sm-12">
+            <div class="bg-dark text-white p-4 mb-3 newsletter-card">
+                <h4 class="fw-semibold mb-2">Subscribe to our newsletter</h4>
+                <p class="small mb-3">Receive updates on this section every two weeks.</p>
 
-<div class="row">
-    <!-- Left Column: Products -->
-    <div class="col-lg-6 col-sm-12 mb-4">
-        <h4 class="text-center border-bottom industry_title">New products</h4>
-        @if ($products->count() > 0)
-            <div class="row g-2">
-                @foreach ($products as $product)
-                    <div class="col-6 col-md-3">
-                        <a href="{{ route('product.details', ['id' => optional($product->brand)->slug, 'slug' => $product->slug]) }}">
-                            <img class="img-fluid w-100" src="{{ $product->thumbnail }}" alt="{{ $product->name }}">
-                        </a>
-                    </div>
-                @endforeach
+                <form id="newsletterForm" class="d-flex">
+                    @csrf
+                    <input type="email" name="email" class="form-control rounded-0 border-0 me-2" placeholder="Enter your email" required>
+                    <button type="submit" class="btn btn-warning rounded-0 px-3">OK</button>
+                </form>
+
+                <p class="mt-3 small">
+                    <i>
+                        Please refer to our <a href="#" class="text-warning">Privacy Policy</a>
+                        for details on how DirectIndustry processes your personal data.
+                    </i>
+                </p>
             </div>
-        @else
-            <p class="text-center">No Products Found!</p>
-        @endif
-    </div>
-
-    <!-- Right Column: Newsletter + Exhibit -->
-    <div class="col-lg-6 col-sm-12">
-        <!-- Newsletter -->
-        <div class="bg-dark text-white p-4 mb-3">
-            <h4 class="fw-semibold mb-2">Subscribe to our newsletter</h4>
-            <p class="small mb-3">Receive updates on this section every two weeks.</p>
-
-            <form id="newsletterForm" class="d-flex">
-                @csrf
-                <input type="email" name="email" class="form-control rounded-0 border-0 me-2" placeholder="Enter your email" required>
-                <button type="submit" class="btn btn-warning rounded-0 px-3">OK</button>
-            </form>
-
-            <p class="mt-3 small">
-                <i>
-                    Please refer to our <a href="#" class="text-warning">Privacy Policy</a>
-                    for details on how DirectIndustry processes your personal data.
-                </i>
-            </p>
         </div>
 
-        
+    </div>
+</div>
 
+<!-- Styles -->
 <style>
     .newsletter-card {
-        max-width: 600px;
-        margin: auto;
         box-shadow: 0 0 15px rgba(0,0,0,0.1);
-    }
-    .newsletter-card img {
-        object-fit: cover;
-        height: 100%;
     }
     .newsletter-card .btn-warning {
         background-color: #f7941d;
@@ -155,14 +132,14 @@
     }
 </style>
 
-<!-- jQuery and SweetAlert2 -->
+<!-- Scripts -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
     $(document).ready(function () {
         $('#newsletterForm').on('submit', function(e) {
-            e.preventDefault(); // Prevent normal form submission
+            e.preventDefault();
 
             var form = $(this);
             var url = "{{ route('newsletter.subscribe') }}";
@@ -172,15 +149,9 @@
             $.ajax({
                 url: url,
                 method: "POST",
-                data: {
-                    _token: token,
-                    email: email
-                },
+                data: {_token: token, email: email},
                 success: function(response) {
-                    // Clear the input
                     form[0].reset();
-
-                    // Show SweetAlert success
                     Swal.fire({
                         icon: 'success',
                         title: 'Subscribed!',
@@ -190,13 +161,10 @@
                     });
                 },
                 error: function(xhr) {
-                    // Get error message
                     var errMsg = 'Something went wrong!';
                     if(xhr.responseJSON && xhr.responseJSON.message){
                         errMsg = xhr.responseJSON.message;
                     }
-
-                    // Show SweetAlert error
                     Swal.fire({
                         icon: 'error',
                         title: 'Oops...',
@@ -209,4 +177,5 @@
         });
     });
 </script>
+
 @endsection

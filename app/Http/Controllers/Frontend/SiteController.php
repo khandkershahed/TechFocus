@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use Log;
 use App\Models\PageBanner;
 use App\Models\Admin\Brand;
+use App\Models\Admin\Banner;
 use Illuminate\Http\Request;
 use App\Models\Admin\Catalog;
 use App\Models\Admin\Company;
@@ -216,13 +217,58 @@ class SiteController extends Controller
         return view('frontend.pages.solution.solution_details', $data);
     }
 
-    public function category($slug)
-    {
-        $data = [
-            'category' => Category::with('children')->where('slug', $slug)->first(),
-        ];
-        return view('frontend.pages.category.category', $data);
-    }
+    // public function category($slug)
+    // {
+    //     $data = [
+    //         'category' => Category::with('children')->where('slug', $slug)->first(),
+    //     ];
+    //     return view('frontend.pages.category.category', $data);
+    // }
+//     public function category($slug)
+// {
+//     $category = Category::with('children')->where('slug', $slug)->firstOrFail();
+
+//     // Fetch products related to this category
+//     $products = $category->products()->latest()->get(); // adjust query as needed
+
+//     // Pass data to view
+//     return view('frontend.pages.category.category', [
+//         'category' => $category,
+//         'products' => $products,
+//         'subcategories' => $category->children, 
+//     ]);
+// }
+public function category($slug)
+{
+    // Get category with children
+    $category = Category::with('children')->where('slug', $slug)->firstOrFail();
+
+    // Fetch banners (you can filter by page/section if needed)
+    $banners = Banner::all();
+
+    // Collect IDs of this category + its subcategories
+    $categoryIds = $category->children->pluck('id')->toArray();
+    $categoryIds[] = $category->id; // include parent category
+
+    // Fetch products belonging to the category or any of its subcategories
+    // Assuming your Product model has a 'category_id' column (JSON array or single id)
+    $products = Product::where(function ($query) use ($categoryIds) {
+        foreach ($categoryIds as $catId) {
+            $query->orWhereJsonContains('category_id', $catId); // works if category_id is JSON
+            $query->orWhere('category_id', $catId); // works if category_id is single integer
+        }
+    })->latest()->get();
+
+    // Pass data to view
+    return view('frontend.pages.category.category', [
+        'category'      => $category,
+        'subcategories' => $category->children,
+        'products'      => $products,
+        'banners'       => $banners,
+    ]);
+}
+
+
 
     public function filterProducts($slug)
     {
@@ -298,19 +344,21 @@ class SiteController extends Controller
     {
         return view('frontend.pages.others.subscription');
     }
+public function brandList()
+{
+    $banners = Banner::all(); // fetch banners
+    $paginationSettings = ['*'];
 
-    public function brandList()
-    {
-        $paginationSettings = ['*'];
+    $data = [
+        'banners' => $banners, // <-- pass banners here
+        'top_brands' => Brand::byCategory('Top')->latest('id')->paginate(18, $paginationSettings, 'top_brands'),
+        'featured_brands' => Brand::byCategory('Featured')->latest('id')->paginate(18, $paginationSettings, 'featured_brands'),
+        'others' => Brand::with('brandPage')->select('id', 'slug', 'title')->get(),
+    ];
 
-        $data = [
-            'top_brands' => Brand::byCategory('Top')->latest('id')->paginate(18, $paginationSettings, 'top_brands'),
-            'featured_brands' => Brand::byCategory('Featured')->latest('id')->paginate(18, $paginationSettings, 'featured_brands'),
-            'others' => Brand::with('brandPage')->select('id', 'slug', 'title')->get(),
-        ];
+    return view('frontend.pages.brand.brand_list', $data);
+}
 
-        return view('frontend.pages.brand.brand_list', $data);
-    }
 
     public function service()
     {

@@ -49,12 +49,12 @@
 
 
                                                 Sign Up</a>
+                                            
                                         </div>
 
                                         <!-- Partner Login/Register -->
                                         <a href="{{ route('partner.login') }}" class="mt-2 mb-2 btn signin rounded-0">Partner Log In</a>
-
-                                        @endauth
+                                        
 
                                         <hr class="text-muted" />
                                         <ul class="p-0 account text-muted text-start">
