@@ -54,7 +54,9 @@
 
                                         <!-- Partner Login/Register -->
                                         <a href="{{ route('partner.login') }}" class="mt-2 mb-2 btn signin rounded-0">Partner Log In</a>
-                                        
+                                        <a href="{{ route('principal.login') }}" class="btn btn-primary">Login as Principal</a>
+                                        <a href="{{ route('principal.register') }}" class="btn btn-success">Register as Principal</a>
+
 
                                         <hr class="text-muted" />
                                         <ul class="p-0 account text-muted text-start">
