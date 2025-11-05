@@ -53,7 +53,7 @@
                                         </div>
 
                                         <!-- Partner Login/Register -->
-                                        <a href="{{ route('partner.login') }}" class="mt-2 mb-2 btn signin rounded-0">Partner Log In</a>
+                                        <!-- <a href="{{ route('partner.login') }}" class="mt-2 mb-2 btn signin rounded-0">Partner Log In</a> -->
                                         
 
                                         <hr class="text-muted" />
