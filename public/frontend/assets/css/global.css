@@ -444,8 +444,32 @@
   object-fit: cover;
 }
 
-.swiper-pagination-bullet-active {
+/* .swiper-pagination-bullet-active {
   background-color: var(--primary-color);
+} */
+/* Basic bullets */
+.swiper-pagination-bullet {
+  width: 10px;
+  height: 10px;
+  background: #ccc;
+  opacity: 1;
+  transition: all 0.3s ease;
+  border-radius: 50%;
+  margin: 0 6px !important;
+}
+
+/* Active bullet = pill shape */
+.swiper-pagination-bullet-active {
+  width: 28px;
+  background: linear-gradient(135deg, #007bff, #00c6ff);
+  border-radius: 20px;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+}
+
+/* Optional hover effect */
+.swiper-pagination-bullet:hover {
+  background: #007bff;
+  transform: scale(1.1);
 }
 
 .devider-wrap {
@@ -1655,7 +1679,6 @@ figure img {
 }
 
 .breadcrumb-banner-area {
-  background-attachment: fixed;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;

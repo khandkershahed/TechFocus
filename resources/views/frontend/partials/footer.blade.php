@@ -54,24 +54,26 @@
 <div class="container-fluid" style="background-color: var(--secondary-deep-color)">
     <div class="container footer-logo">
         <div class="pt-5 row">
-            <div class="col-lg-8 offset-lg-2 d-flex">
+            <div class="col-lg-12 d-flex justify-content-center align-items-center">
                 @php
                 $brandLogos = [
-                '/frontend/images/NG IT Logo-01.png',
-                '/frontend/images/NG IT Logo-01.png',
-                '/frontend/images/NG IT Logo-01.png',
-                '/frontend/images/NG IT Logo-01.png',
+                '/img/TechFocusLogo/agro.png',
+                '/img/TechFocusLogo/aviation.png',
+                '/img/TechFocusLogo/medical.png',
+                '/img/TechFocusLogo/nautic.png',
+                '/img/TechFocusLogo/robotics.png',
                 ];
+                // '/img/TechFocusLogo/security.png',
                 @endphp
                 <div class="d-flex justify-content-center align-items-center">
                     <a href="{{ route('homepage') }}" class="border-left-side pe-lg-3">
                         <img src="{{ !empty($site->system_logo_white) && file_exists(public_path('storage/webSetting/systemLogoWhite/' . $site->system_logo_white)) ? asset('storage/webSetting/systemLogoWhite/' . $site->system_logo_white) : asset('https://www.techfocusltd.com/storage/webSetting/systemLogoWhite/Tech-Focus_Rl8twpWh.png') }}"
-                            style="width: 400px;" class="me-3" alt="" />
+                            style="width: 300px;" class="me-3" alt="" />
                     </a>
                     @foreach($brandLogos as $logo)
-                    <a href="#" class="mb-3 me-4 ms-5">
+                    <a href="#" class="mb-3 ">
                         <img src="{{ $logo }}"
-                            width="200px"
+                            style="width: 150px;"
                             alt="Brand Logo"
                             onerror="this.onerror=null; this.src='{{ asset('https://www.techfocusltd.com/storage/webSetting/systemLogoWhite/Tech-Focus_Rl8twpWh.png') }}';">
                     </a>

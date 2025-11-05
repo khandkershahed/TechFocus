@@ -15,14 +15,18 @@
   }
 </style>
 
-<div class="container-fluid">
-  <div class="p-5 row breadcrumb-banner-area"
-    style="background-image: url(https://img.virtual-expo.com/media/ps/images/di/source/block-01.jpg);">
-    <div class="col-lg-12">
-      <div class="breadcrumbs">
-        <div>
-          <a href="{{ url('/') }}" class="">Home</a> &gt;
-          <span class="txt-mcl">Terms & Conditions</span>
+<div class="container-fluid px-0">
+  <div class="p-5 breadcrumb-banner-area"
+    style="background-image: url('{{ asset('/img/TechFocusTermsandConditionsPageBanner(1920x525).webp') }}')">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="breadcrumbs">
+            <div class="text-white fw-bold">
+              <a href="{{ url('/') }}" class="">Home</a> -
+              <span class="txt-mcl">Terms & Conditions</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
