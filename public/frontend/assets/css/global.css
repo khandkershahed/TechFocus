@@ -1043,8 +1043,8 @@ figure img {
 }
 
 .card-img-top {
-  height: 250px;
-  object-fit: cover;
+  height: 230px;
+  object-fit: contain !important;
 }
 .p-card-img-top {
   height: 250px;

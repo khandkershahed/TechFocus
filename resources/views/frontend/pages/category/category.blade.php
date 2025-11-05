@@ -75,15 +75,18 @@
                     @endforelse
                 </ul>
             </div>
+        </div>
 
+        <!-- Right Column: Newsletter -->
+        <div class="col-lg-4 col-sm-12">
             <!-- Products -->
-            <h4 class="text-center border-bottom industry_title mt-4">New Products</h4>
+            <h4 class="text-center border-bottom industry_title">New Products</h4>
             @if(isset($products) && $products->count() > 0)
                 <div class="row g-2">
                     @foreach ($products as $product)
                         <div class="col-6 col-md-3">
                             <a href="{{ route('product.details', ['id' => optional($product->brand)->slug, 'slug' => $product->slug]) }}">
-                                <img class="img-fluid w-100" src="{{ $product->thumbnail }}" alt="{{ $product->name }}">
+                                <img class="img-fluid w-100 border" src="{{ $product->thumbnail }}" alt="{{ $product->name }}">
                             </a>
                         </div>
                     @endforeach
@@ -91,10 +94,6 @@
             @else
                 <p class="text-center">No Products Found!</p>
             @endif
-        </div>
-
-        <!-- Right Column: Newsletter -->
-        <div class="col-lg-4 col-sm-12">
             <div class="bg-dark text-white p-4 mb-3 newsletter-card">
                 <h4 class="fw-semibold mb-2">Subscribe to our newsletter</h4>
                 <p class="small mb-3">Receive updates on this section every two weeks.</p>
