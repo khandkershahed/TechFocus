@@ -376,13 +376,15 @@
                         <div class="col-lg-3 col-12">
                             <div class="mb-4 url-box">
                                 <div class="overflow-hidden border-0 card rounded-0 h-product">
-                                    <div class="bg-white card-header d-flex justify-content-between">
+                                    <div class="bg-white card-header d-flex justify-content-between home-logo">
                                          <div class="badge-new">
                                             <span class="">New</span>
                                         </div>
-                                        <img src="{{ asset('storage/brand/logo/' . optional($product->brand)->logo) }}"
+                                        <div>
+                                            <img src="{{ asset('storage/brand/logo/' . optional($product->brand)->logo) }}"
                                             height="20px" alt="{{ optional($product->brand)->title }}"
                                             loading="lazy" />
+                                        </div>
                                     </div>
                                     <div class="p-0 card-body">
                                         <div class="">
@@ -427,7 +429,7 @@
 
             <!-- Section 6: Services/Features (Dynamic) -->
             @if ($homePage && $homePage->section_three_title)
-                <div class="row">
+                <div class="row pe-0">
                     <div class="col-lg-12">
                         <div class="devider-wrap">
                             <h4 class="devider-content">
@@ -438,7 +440,7 @@
                     </div>
                 </div>
 
-                <div class="mb-3 border-0 card bg-primary"
+                <div class="mb-3 border-0 card bg-primary pe-0"
                     style="border-top-right-radius: 40px; border-bottom-left-radius: 40px; background: linear-gradient(90deg, #0069bf 0%, #38b6ff 100%);">
                     <div class="bg-transparent border-0 card-header">
                         <div class="px-5 row">
@@ -612,7 +614,7 @@
                 </div>
                 <div class="row gx-5">
                     @foreach ($sectionFourNews as $news_trend)
-                        <div class="col-lg-3 col-md-12 pe-0">
+                        <div class="col-lg-3 col-md-12">
                             <a href="{{ route('content.details', $news_trend->slug) }}">
                                 <div class="card projects-card rounded-0">
                                     <img src="{{ asset('storage/content/' . $news_trend->thumbnail_image) }}"

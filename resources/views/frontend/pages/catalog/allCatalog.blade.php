@@ -26,7 +26,7 @@
                         </div>
                     </div>
                 @else
-                    <img src="{{ asset('frontend/images/no-banner(1920-330).png') }}" class="img-fluid" alt="No Banner">
+                    <img src="{{ asset('/img/TechFocus-Catalog-Page-Banner-(1920x525).png') }}" class="img-fluid" alt="No Banner">
                 @endif
             </div>
         </div>

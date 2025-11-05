@@ -85,7 +85,7 @@
                         onerror="this.onerror=null;this.src='https://img.freepik.com/free-photo/about-as-service-contact-information-concept_53876-138509.jpg?semt=ais_hybrid&w=740';" />
                     <div class="overlay">
                         <h2 class="mb-1">{{ $aboutPage->section_two_secondary_image_count }}</h2>
-                        <p>{{ $aboutPage->section_two_secondary_image_title }}</p>
+                        <!-- <p>{{ $aboutPage->section_two_secondary_image_title }}</p> -->
 
                     </div>
                 </div>
@@ -155,12 +155,12 @@
                         <p>{{ $aboutPage->section_three_tab_one_detailed_description }}</p>
                         <!-- Optional Button -->
                         @if ($aboutPage->section_three_tab_one_button_name)
-                     <div class="pt-4">
-                                <a href="{{ route('contact') }}" class="text-btn main-color">
-                                    {{ $aboutPage->section_three_tab_one_button_name }} 
-                                    <i class="fa-solid fa-chevron-right"></i>
-                                </a>
-                            </div>
+                        <div class="pt-4">
+                            <a href="{{ route('contact') }}" class="text-btn main-color">
+                                {{ $aboutPage->section_three_tab_one_button_name }}
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </a>
+                        </div>
 
                         @endif
                     </div>
@@ -508,13 +508,12 @@
         </div>
     </div>
 </section>
-<section class="section_seven">
-    <div class="container p-0 pt-5 custom-spacer">
-        <h2 class="text-center">Our Brands</h2>
+<section class="bg-white section_seven">
+    <div class="container p-0 py-3 mb-0 custom-spacer">
         <div class="customer-logos slider">
             @foreach ($brands as $brand)
             <div class="slide">
-                <img class="img-fluid" src="{{ !empty($brand->logo) && file_exists(public_path('storage/brand/logo/' . $brand->logo)) ? asset('storage/brand/logo/' . $brand->logo) : asset('backend/images/no-image-available.png') }}" alt="">
+                <img style="width: 150px !important;" class="img-fluid" src="{{ !empty($brand->logo) && file_exists(public_path('storage/brand/logo/' . $brand->logo)) ? asset('storage/brand/logo/' . $brand->logo) : asset('backend/images/no-image-available.png') }}" alt="">
             </div>
             @endforeach
         </div>
@@ -534,9 +533,18 @@
             arrows: false,
             dots: false,
             pauseOnHover: false,
-            responsive: [
-                { breakpoint: 768, settings: { slidesToShow: 4 } },
-                { breakpoint: 520, settings: { slidesToShow: 3 } }
+            responsive: [{
+                    breakpoint: 768,
+                    settings: {
+                        slidesToShow: 4
+                    }
+                },
+                {
+                    breakpoint: 520,
+                    settings: {
+                        slidesToShow: 3
+                    }
+                }
             ]
         });
     });

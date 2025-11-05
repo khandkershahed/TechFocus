@@ -30,8 +30,19 @@
                                             <button type="submit" class="mb-2 btn signin rounded-0">Log Out</button>
                                         </form>
                                         @else
-                                        <!-- Client Login/Register -->
-                                        <a href="{{ route('login') }}" class="mb-2 btn signin rounded-0">Client Log In</a>
+                                        <div>
+                                            <div class="mb-2 text-muted">
+                                                Login As:
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-center align-items-center">
+                                            <!-- Client Login/Register -->
+                                            <a href="{{ route('login') }}" class="mb-2 btn signin rounded-0 me-2">Client</a>
+                                            <!-- Partner Login/Register -->
+                                            <a href="{{ route('partner.login') }}" class="mb-2 btn signin rounded-0">Partner</a>
+
+                                            @endauth
+                                        </div>
                                         <div class="text-muted">
                                             First time here?
                                             <a href="{{ route('register') }}" class="main-color">
@@ -39,14 +50,12 @@
 
                                                 Sign Up</a>
                                         </div>
-                                        <a href="{{ route('principal.login') }}"class="mt-2 mb-2 btn signin rounded-0">Principal Login </a>
-                                        <a href="{{ route('principal.register') }}"class="mt-2 mb-2 btn signin rounded-0">Principal Register</a>
 
                                         <!-- Partner Login/Register -->
                                         <a href="{{ route('partner.login') }}" class="mt-2 mb-2 btn signin rounded-0">Partner Log In</a>
 
                                         @endauth
-                           
+
                                         <hr class="text-muted" />
                                         <ul class="p-0 account text-muted text-start">
                                             <li>
@@ -68,7 +77,7 @@
                                                 <a href="{{ route('client.requests') }}" class="">My Requests</a>
                                             </li>
                                         </ul>
-                                        <hr class="text-muted" />
+                                        <!-- <hr class="text-muted" />
                                         <ul class="p-0 account text-muted text-start" style="font-size: 7px">
                                             <li>
                                                 Sign in to your manufacturer account
@@ -78,7 +87,7 @@
                                                 Sign in to your distributor account
                                                 <a target="_blank" class="main-color">Distributor account</a>
                                             </li>
-                                        </ul>
+                                        </ul> -->
                                     </div>
                                 </div>
                                 <!-- RFQ Link -->
