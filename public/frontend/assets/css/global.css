@@ -369,7 +369,7 @@
   right: -60px;
   transform: translate(0, 10px);
   background-color: var(--white);
-  padding: 1.5rem;
+  padding: 0.8rem;
   box-shadow: var(--custom-shadow);
   width: auto;
 }
