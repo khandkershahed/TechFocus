@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Rfq;
-
+use App\Models\Rfq;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request; 
 use App\Http\Controllers\Controller;
@@ -9,7 +9,7 @@ use App\Http\Requests\RfqProductRequest;
 use App\Models\Admin\Brand;
 use App\Models\Admin\Category;
 use App\Models\Admin\Product;
-use App\Models\Rfq\Rfq;
+
 use App\Models\Rfq\RfqProduct;
 
 class RfqProductController extends Controller

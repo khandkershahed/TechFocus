@@ -142,4 +142,14 @@ class Catalog extends Model
     {
         return $this->hasMany(CatalogAttachment::class);
     }
+    public function products()
+{
+    return $this->belongsToMany(\App\Models\Admin\Product::class, 'catalog_product', 'catalog_id', 'product_id');
+}
+
+public function industries()
+{
+    return $this->belongsToMany(Industry::class, 'catalog_industry', 'catalog_id', 'industry_id');
+}
+
 }

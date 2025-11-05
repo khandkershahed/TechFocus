@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Rfq;
 
-use App\Models\Rfq;
+
 use App\Models\User;
+use App\Models\Admin;
 use App\Helpers\Helper;
+use App\Models\Rfq;
 use App\Models\Admin\Brand;
 use Illuminate\Http\Request;
 use App\Models\Admin\Product;
@@ -12,6 +14,7 @@ use App\Models\Rfq\RfqProduct;
 use App\Notifications\RfqCreate;
 use App\Mail\RFQConfirmationMail;
 use App\Mail\RfqNotificationMail;
+use App\Models\Rfq\Rfq as RfqRfq;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -19,7 +22,6 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\RFQNotificationAdminMail;
 use Illuminate\Support\Facades\Schema;
 use App\Mail\RFQNotificationClientMail;
-use App\Models\Admin;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Notification;
@@ -40,7 +42,7 @@ class RfqController extends Controller
         // Fallback emails
         return $admin ?: [
            ' site2.ngenit@gmail.com',
-             'techfcousltd@gmail.com',
+            //  'techfocusltd@gmail.com',
              'dev2.ngenit@gmail.com',
              'dev1.ngenit@gmail.com',
              'dev3.ngenit@gmail.com',
@@ -302,7 +304,7 @@ class RfqController extends Controller
                 $this->processRfqProducts($rfq->id, $request->products);
 
             } catch (\Illuminate\Database\QueryException $dbException) {
-                Log::error('❌ Database Error Creating RFQ:', [
+                Log::error(' Database Error Creating RFQ:', [
                     'message' => $dbException->getMessage(),
                     'error_code' => $dbException->getCode()
                 ]);
@@ -314,8 +316,12 @@ class RfqController extends Controller
         // -------------------------------
 
 
-            // Send Emails
-        $this->sendRfqEmails($rfq);
+            //Send Emails
+             $this->sendRfqEmails($rfq);
+            // After creating RFQ and saving products
+            $this->sendRfqConfirmationEmail($rfq);
+
+
 
         // try {
         //     $mailSent = $this->sendRfqEmails($rfq);
@@ -701,4 +707,34 @@ public function testEmail()
             ], 500);
         }
     }
+
+
+
+    /**
+ * Send RFQ confirmation email to the client
+ */
+/**
+ * Send RFQ confirmation email to the submitting user
+ */
+private function sendRfqConfirmationEmail(Rfq $rfq): bool
+{
+    try {
+        // Validate email before sending
+        if (empty($rfq->email) || !filter_var($rfq->email, FILTER_VALIDATE_EMAIL)) {
+            Log::warning("RFQ confirmation email not sent: Invalid or missing email for RFQ ID {$rfq->id}");
+            return false;
+        }
+
+        // Send the email
+        Mail::to($rfq->email)->send(new RFQConfirmationMail($rfq));
+
+        Log::info("RFQ confirmation email sent to: {$rfq->email}");
+        return true;
+    } catch (\Exception $e) {
+        Log::error("Failed to send RFQ confirmation email to: {$rfq->email}, Error: " . $e->getMessage());
+        return false;
+    }
+}
+
+
 }

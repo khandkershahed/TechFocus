@@ -2,7 +2,8 @@
 
 namespace App\Mail;
 
-use App\Models\Rfq;
+
+use App\Models\Rfq\Rfq;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;

@@ -73,7 +73,7 @@ class SendRfqReminders extends Command
     {
         return [
             'site2.ngenit@gmail.com',
-            'techfcousltd@gmail.com',
+           'techfocusltd@gmail.com',
             'dev2.ngenit@gmail.com',
             'dev1.ngenit@gmail.com',
             'dev3.ngenit@gmail.com',

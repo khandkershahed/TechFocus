@@ -1,8 +1,10 @@
 @extends('frontend.master')
+
 @section('metadata')
 @endsection
+
 @section('content')
-    <!-- Banner Section -->
+    <!-- 🟦 Banner Section -->
     <section class="ban_sec section_one">
         <div class="p-0 container-fluid">
             <div class="ban_img">
@@ -16,7 +18,7 @@
                                             <img src="{{ asset('uploads/page_banners/' . $banner->image) }}"
                                                  class="img-fluid"
                                                  alt="{{ $banner->title ?? 'Banner' }}"
-                                                 onerror="this.onerror=null;this.src='{{ asset('frontend/images/no-banner(1920-330).png') }}';" />
+                                                 onerror="this.onerror=null;this.src='{{ asset('frontend/images/no-banner(1920-330).png') }}';">
                                         </a>
                                     </div>
                                 @endif
@@ -30,9 +32,10 @@
         </div>
     </section>
 
-    <!-- Catalogs Section -->
+    <!-- 🟨 Catalogs Section -->
     <div class="container my-4">
         <div class="row">
+            <!-- Sidebar -->
             <div class="col-lg-3">
                 <h6 class="mb-3">Catalogs by Categories</h6>
                 <ul class="nav nav-tabs flex-column" id="myTab" role="tablist">
@@ -51,9 +54,11 @@
                 </ul>
             </div>
 
+            <!-- Content -->
             <div class="col-lg-9">
                 <div class="tab-content" id="myTabContent">
-                    <!-- All Catalogs Tab -->
+
+                    <!-- 🟩 All Catalogs Tab -->
                     <div class="tab-pane fade show active" id="home" role="tabpanel">
                         <div class="row">
                             @forelse($allCatalogs as $catalog)
@@ -61,28 +66,21 @@
                                     <div class="card projects-card rounded-0 h-100 catalog-card"
                                          style="cursor: pointer;"
                                          data-pdf-url="{{ $catalog->document ? asset('storage/catalog/document/' . $catalog->document) : '' }}">
+                                        
                                         <img src="{{ $catalog->thumbnail ? asset('storage/catalog/thumbnail/' . $catalog->thumbnail) : asset('frontend/images/no-shop-imge.png') }}"
                                              class="card-img-top img-fluid rounded-0"
                                              alt="{{ $catalog->name }}"
-                                             style="height: 200px; object-fit: cover;" 
-                                             onerror="this.onerror=null;this.src='{{ asset('frontend/images/no-shop-imge.png') }}';"/>
+                                             style="height: 200px; object-fit: cover;"
+                                             onerror="this.onerror=null;this.src='{{ asset('frontend/images/no-shop-imge.png') }}';" />
+
                                         <div class="card-body d-flex flex-column">
                                             <p class="text-center flex-grow-1">{{ $catalog->name }}</p>
 
-                                            {{-- Catalog Logo with Debugging --}}
+                                            {{-- 🔹 Catalog Logo Logic (brand, company, product, industry) --}}
                                             @php
                                                 $logoUrl = asset('frontend/images/no-shop-imge.png');
                                                 $logoTitle = 'No Logo';
                                                 $logoAlt = 'No Logo';
-
-                                                // Debug information
-                                                $debugInfo = [
-                                                    'category' => $catalog->category,
-                                                    'brands_count' => $catalog->brands->count(),
-                                                    'companies_count' => $catalog->companies->count(),
-                                                    'brand_id' => $catalog->brand_id,
-                                                    'company_id' => $catalog->company_id
-                                                ];
 
                                                 if($catalog->category == 'brand' && $catalog->brands->count() > 0) {
                                                     $firstBrand = $catalog->brands->first();
@@ -91,10 +89,10 @@
                                                         $logoTitle = $firstBrand->title;
                                                         $logoAlt = $firstBrand->title;
                                                     } else {
-                                                        // If brand exists but no logo, use brand name as text
                                                         $logoTitle = $firstBrand->title ?? 'Brand';
                                                         $logoAlt = $firstBrand->title ?? 'Brand';
                                                     }
+
                                                 } elseif($catalog->category == 'company' && $catalog->companies->count() > 0) {
                                                     $firstCompany = $catalog->companies->first();
                                                     if($firstCompany && $firstCompany->logo) {
@@ -102,25 +100,46 @@
                                                         $logoTitle = $firstCompany->name;
                                                         $logoAlt = $firstCompany->name;
                                                     } else {
-                                                        // If company exists but no logo, use company name as text
                                                         $logoTitle = $firstCompany->name ?? 'Company';
                                                         $logoAlt = $firstCompany->name ?? 'Company';
                                                     }
-                                                }
 
-                                                // For debugging - uncomment to see what's happening
-                                                // {{-- <div style="display: none;">Debug: {{ json_encode($debugInfo) }}</div> --}}
+                                                } elseif($catalog->category == 'product' && $catalog->products->count() > 0) {
+                                                    $firstProduct = $catalog->products->first();
+                                                    if($firstProduct && $firstProduct->brand && $firstProduct->brand->logo) {
+                                                        $logoUrl = asset('storage/brand/logo/' . $firstProduct->brand->logo);
+                                                        $logoTitle = $firstProduct->brand->title;
+                                                        $logoAlt = $firstProduct->brand->title;
+                                                    } elseif($firstProduct && $firstProduct->brand) {
+                                                        $logoTitle = $firstProduct->brand->title;
+                                                        $logoAlt = $firstProduct->brand->title;
+                                                    } else {
+                                                        $logoTitle = $firstProduct->name ?? 'Product';
+                                                        $logoAlt = $firstProduct->name ?? 'Product';
+                                                    }
+
+                                                } elseif($catalog->category == 'industry' && $catalog->industries->count() > 0) {
+                                                    $firstIndustry = $catalog->industries->first();
+                                                    if($firstIndustry && $firstIndustry->logo) {
+                                                        $logoUrl = asset('storage/industry/logo/' . $firstIndustry->logo);
+                                                        $logoTitle = $firstIndustry->name;
+                                                        $logoAlt = $firstIndustry->name;
+                                                    } else {
+                                                        $logoTitle = $firstIndustry->name ?? 'Industry';
+                                                        $logoAlt = $firstIndustry->name ?? 'Industry';
+                                                    }
+                                                }
                                             @endphp
 
                                             <div class="mb-2 text-center">
                                                 @if($logoUrl != asset('frontend/images/no-shop-imge.png'))
-                                                    <img src="{{ $logoUrl }}" 
-                                                         title="{{ $logoTitle }}" 
+                                                    <img src="{{ $logoUrl }}"
+                                                         title="{{ $logoTitle }}"
                                                          alt="{{ $logoAlt }}"
                                                          style="max-height: 40px; max-width: 100px; object-fit: contain;"
                                                          onerror="this.onerror=null;this.src='{{ asset('frontend/images/no-shop-imge.png') }}';">
                                                 @else
-                                                    <div class="d-flex align-items-center justify-content-center" 
+                                                    <div class="d-flex align-items-center justify-content-center"
                                                          style="height: 40px; max-width: 100px; margin: 0 auto;">
                                                         <span class="small text-muted">{{ $logoTitle }}</span>
                                                     </div>
@@ -138,7 +157,7 @@
                         </div>
                     </div>
 
-                    {{-- Category-wise Catalogs --}}
+                    <!-- 🟪 Category-wise Catalogs -->
                     @foreach($catalogCategories as $key => $category)
                         <div class="tab-pane fade" id="category-item-{{ $key }}">
                             <div class="row">
@@ -148,14 +167,17 @@
                                             <div class="card projects-card rounded-0 h-100 catalog-card"
                                                  style="cursor: pointer;"
                                                  data-pdf-url="{{ $catalog->document ? asset('storage/catalog/document/' . $catalog->document) : '' }}">
-                                                <img src="{{ $catalog->thumbnail ? asset('storage/catalog/thumbnail/' . $catalog->thumbnail) : asset('frontend/images/no-image.jpg') }}"
+
+                                                <img src="{{ $catalog->thumbnail ? asset('storage/catalog/thumbnail/' . $catalog->thumbnail) : asset('frontend/images/no-shop-imge.png') }}"
                                                      class="card-img-top img-fluid rounded-0"
                                                      alt="{{ $catalog->name }}"
-                                                     style="height: 200px; object-fit: cover;" />
+                                                     style="height: 200px; object-fit: cover;"
+                                                     onerror="this.onerror=null;this.src='{{ asset('frontend/images/no-shop-imge.png') }}';" />
+
                                                 <div class="card-body d-flex flex-column">
                                                     <p class="text-center flex-grow-1">{{ $catalog->name }}</p>
 
-                                                    {{-- Catalog Logo --}}
+                                                    {{-- 🔹 Catalog Logo (brand, company, product, industry) --}}
                                                     @php
                                                         $logoUrl = asset('frontend/images/no-shop-imge.png');
                                                         $logoTitle = 'No Logo';
@@ -167,25 +189,58 @@
                                                                 $logoUrl = asset('storage/brand/logo/' . $firstBrand->logo);
                                                                 $logoTitle = $firstBrand->title;
                                                                 $logoAlt = $firstBrand->title;
+                                                            } else {
+                                                                $logoTitle = $firstBrand->title ?? 'Brand';
+                                                                $logoAlt = $firstBrand->title ?? 'Brand';
                                                             }
+
                                                         } elseif($catalog->category == 'company' && $catalog->companies->count() > 0) {
                                                             $firstCompany = $catalog->companies->first();
                                                             if($firstCompany && $firstCompany->logo) {
                                                                 $logoUrl = asset('storage/company/logo/' . $firstCompany->logo);
                                                                 $logoTitle = $firstCompany->name;
                                                                 $logoAlt = $firstCompany->name;
+                                                            } else {
+                                                                $logoTitle = $firstCompany->name ?? 'Company';
+                                                                $logoAlt = $firstCompany->name ?? 'Company';
+                                                            }
+
+                                                        } elseif($catalog->category == 'product' && $catalog->products->count() > 0) {
+                                                            $firstProduct = $catalog->products->first();
+                                                            if($firstProduct && $firstProduct->brand && $firstProduct->brand->logo) {
+                                                                $logoUrl = asset('storage/brand/logo/' . $firstProduct->brand->logo);
+                                                                $logoTitle = $firstProduct->brand->title;
+                                                                $logoAlt = $firstProduct->brand->title;
+                                                            } elseif($firstProduct && $firstProduct->brand) {
+                                                                $logoTitle = $firstProduct->brand->title;
+                                                                $logoAlt = $firstProduct->brand->title;
+                                                            } else {
+                                                                $logoTitle = $firstProduct->name ?? 'Product';
+                                                                $logoAlt = $firstProduct->name ?? 'Product';
+                                                            }
+
+                                                        } elseif($catalog->category == 'industry' && $catalog->industries->count() > 0) {
+                                                            $firstIndustry = $catalog->industries->first();
+                                                            if($firstIndustry && $firstIndustry->logo) {
+                                                                $logoUrl = asset('storage/industry/logo/' . $firstIndustry->logo);
+                                                                $logoTitle = $firstIndustry->name;
+                                                                $logoAlt = $firstIndustry->name;
+                                                            } else {
+                                                                $logoTitle = $firstIndustry->name ?? 'Industry';
+                                                                $logoAlt = $firstIndustry->name ?? 'Industry';
                                                             }
                                                         }
                                                     @endphp
+
                                                     <div class="mb-2 text-center">
                                                         @if($logoUrl != asset('frontend/images/no-shop-imge.png'))
-                                                            <img src="{{ $logoUrl }}" 
-                                                                 title="{{ $logoTitle }}" 
+                                                            <img src="{{ $logoUrl }}"
+                                                                 title="{{ $logoTitle }}"
                                                                  alt="{{ $logoAlt }}"
                                                                  style="max-height: 40px; max-width: 100px; object-fit: contain;"
                                                                  onerror="this.onerror=null;this.src='{{ asset('frontend/images/no-shop-imge.png') }}';">
                                                         @else
-                                                            <div class="d-flex align-items-center justify-content-center" 
+                                                            <div class="d-flex align-items-center justify-content-center"
                                                                  style="height: 40px; max-width: 100px; margin: 0 auto;">
                                                                 <span class="small text-muted">{{ $logoTitle }}</span>
                                                             </div>
@@ -204,6 +259,7 @@
                             </div>
                         </div>
                     @endforeach
+
                 </div>
             </div>
         </div>
@@ -216,7 +272,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.catalog-card').forEach(card => {
         card.addEventListener('click', function() {
             const pdfUrl = this.dataset.pdfUrl;
-            if(pdfUrl) {
+            if (pdfUrl) {
                 window.open(pdfUrl, '_blank');
             } else {
                 alert('PDF not available for this catalog.');

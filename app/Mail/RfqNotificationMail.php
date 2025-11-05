@@ -2,10 +2,11 @@
 
 namespace App\Mail;
 
+
 use App\Models\Rfq;
-use App\Models\Rfq\RfqProduct;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
+use App\Models\Rfq\RfqProduct;
 use Illuminate\Queue\SerializesModels;
 
 class RfqNotificationMail extends Mailable

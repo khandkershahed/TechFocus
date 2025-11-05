@@ -19,6 +19,7 @@ require __DIR__ . '/auth.php';
 require __DIR__ . '/admin.php';
 require __DIR__ . '/client.php';
 
+
 // Route::get('/', [\App\Http\Controllers\SiteController::class, 'index'])
 //     ->name('index');
 // Route::middleware(['auth', 'verified'])->group(function () {

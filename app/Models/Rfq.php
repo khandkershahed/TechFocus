@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Rfq\RfqProduct;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Rfq extends Model
 {
@@ -139,4 +140,12 @@ class Rfq extends Model
     {
         return $this->belongsTo(\App\Models\Admin\SolutionDetail::class, 'solution_id');
     }
+
+    // App/Models/Rfq/Rfq.php
+
+public function rfqProducts()
+{
+    return $this->hasMany(RfqProduct::class, 'rfq_id');
+}
+
 }
