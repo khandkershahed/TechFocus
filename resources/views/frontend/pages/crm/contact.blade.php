@@ -30,7 +30,7 @@
                      class="img-fluid w-100" alt="No Banner">
             @endif
 
-            <div class="ban_overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center text-center">
+            <!-- <div class="ban_overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center text-center">
                 <div class="text-white">
                     <h1 class="fw-bold display-5">Contact Us</h1>
                     <ul class="breadcrumb justify-content-center bg-transparent p-0 mt-3">
@@ -38,7 +38,7 @@
                         <li class="breadcrumb-item active text-white" aria-current="page">Contact</li>
                     </ul>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 </section>
