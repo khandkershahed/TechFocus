@@ -266,10 +266,4 @@ Route::delete('/partner/delete/{id}', [UserListController::class, 'deletePartner
 
 Route::get('solution-test', [SiteController::class, 'solutionTest'])->name('solution.test');
 
-Route::get('/category/{slug}', [SiteController::class, 'show'])
-    ->name('category.show');
-// Category page
-Route::get('/category/{slug}', [SiteController::class, 'category'])->name('category');
 
-// Category with brand filter
-Route::get('/category/{slug}/brand/{brandSlug}', [SiteController::class, 'category'])->name('category.brand');

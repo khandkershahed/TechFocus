@@ -62,7 +62,7 @@
             </div>
         </div>
         <!-- Section Container -->
-        <div class="row mt-3 mx-3">
+        {{-- <div class="row mt-3 mx-3">
             <div class="col-lg-2 col-sm-12">
                 <div class="bg-white p-2 mb-2 mt-3 category-border-top">
                     <div class="checkbox-wrapper-15">
@@ -76,7 +76,28 @@
                             <span>What's New</span>
                         </label>
                     </div>
+                </div> --}}
+<div class="row mt-3 mx-3">
+    <div class="col-lg-2 col-sm-12">
+        <form method="GET" action="{{ route('filtering.products', $category->slug) }}">
+            <div class="bg-white p-2 mb-2 mt-3 category-border-top">
+                <div class="checkbox-wrapper-15">
+                    <input class="inp-cbx" id="cbx-1" type="checkbox" name="whats_new" value="1" style="display: none" onchange="this.form.submit()" />
+                    <label class="cbx" for="cbx-1">
+                        <span>
+                            <svg width="12px" height="9px" viewBox="0 0 12 9">
+                                <polyline points="1 5 4 8 11 1"></polyline>
+                            </svg>
+                        </span>
+                        <span>What's New</span>
+                    </label>
                 </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
                 {{-- <!-- Main Category Start-->
                 <!-- Manufacturers -->
                 <div class="bg-white p-2 mb-2 mt-3 category-border-top">
@@ -148,24 +169,26 @@
                     <div class="mt-3 scroll-menu-container" style="height: 150px; overflow: auto">
                         <ul class="m-0 p-0">
                             @foreach ($brands as $brand)
-                                <li class="p-2">
-                                    <a href="{{ route('category.show', ['slug' => $category->slug, 'brand_id' => $brand->id]) }}"
-                                       class="d-block text-decoration-none">
-                                        <div class="checkbox-wrapper-15">
-                                            <input class="inp-cbx" id="cbx-{{ $brand->id }}" type="checkbox"
-                                                style="display: none" 
-                                                @if(request('brand_id') == $brand->id) checked @endif />
-                                            <label class="cbx" for="cbx-{{ $brand->id }}">
-                                                <span>
-                                                    <svg width="12px" height="9px" viewBox="0 0 12 9">
-                                                        <polyline points="1 5 4 8 11 1"></polyline>
-                                                    </svg>
-                                                </span>
-                                                <span class="font-six">{{ $brand->title }}</span>
-                                            </label>
-                                        </div>
-                                    </a>
-                                </li>
+                            <li class="p-2">
+                                        <form method="GET" action="{{ route('filtering.products', $category->slug) }}">
+                                            <input type="hidden" name="brand_id" value="{{ $brand->id }}">
+                                            <div class="checkbox-wrapper-15">
+                                                <input class="inp-cbx" id="cbx-{{ $brand->id }}" type="checkbox" 
+                                                    style="display: none" 
+                                                    onchange="this.form.submit()"
+                                                    @if(request('brand_id') == $brand->id) checked @endif />
+                                                <label class="cbx" for="cbx-{{ $brand->id }}">
+                                                    <span>
+                                                        <svg width="12px" height="9px" viewBox="0 0 12 9">
+                                                            <polyline points="1 5 4 8 11 1"></polyline>
+                                                        </svg>
+                                                    </span>
+                                                    <span class="font-six">{{ $brand->title }}</span>
+                                                </label>
+                                            </div>
+                                        </form>
+                                    </li>
+
                             @endforeach
                         </ul>
                     </div>
