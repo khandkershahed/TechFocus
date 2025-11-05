@@ -238,33 +238,54 @@ class SiteController extends Controller
 //         'subcategories' => $category->children, 
 //     ]);
 // }
-public function category($slug)
-{
-    $category = Category::with('children')->where('slug', $slug)->first();
+// public function category($slug)
+// {
+//     $category = Category::with('children')->where('slug', $slug)->first();
 
-    if (!$category) {
-        Session::flash('error', 'Category not found.');
-        return redirect()->back();
+//     if (!$category) {
+//         Session::flash('error', 'Category not found.');
+//         return redirect()->back();
+//     }
+
+//     // Get all category IDs recursively
+//     $categoryIds = $this->getAllCategoryIds($category)->toArray();
+
+//     // Fetch random 8 products from this category + subcategories
+//     $products = Product::where(function($query) use ($categoryIds) {
+//         foreach ($categoryIds as $id) {
+//             $query->orWhereJsonContains('category_id', [$id])
+//                   ->orWhereRaw('JSON_UNQUOTE(category_id) LIKE ?', ['%"' . $id . '"%']);
+//         }
+//     })->inRandomOrder()->take(8)->get();
+
+//     // Load banners
+//     $banners = PageBanner::where('page_name', 'category')
+//                 ->where('status', 'active')
+//                 ->get();
+
+//     return view('frontend.pages.category.category', compact('category', 'banners', 'products'));
+// }
+public function category($slug, $brandSlug = null)
+{
+    $category = Category::where('slug', $slug)->firstOrFail();
+
+    $productsQuery = Product::where('category_id', $category->id)->with('brand');
+
+    // Filter by brand if brandSlug is provided
+    $brand = null;
+    if ($brandSlug) {
+        $brand = Brand::where('slug', $brandSlug)->first();
+        if ($brand) {
+            $productsQuery->where('brand_id', $brand->id);
+        }
     }
 
-    // Get all category IDs recursively
-    $categoryIds = $this->getAllCategoryIds($category)->toArray();
+    $products = $productsQuery->paginate(12);
+    $brands = Brand::all();
 
-    // Fetch random 8 products from this category + subcategories
-    $products = Product::where(function($query) use ($categoryIds) {
-        foreach ($categoryIds as $id) {
-            $query->orWhereJsonContains('category_id', [$id])
-                  ->orWhereRaw('JSON_UNQUOTE(category_id) LIKE ?', ['%"' . $id . '"%']);
-        }
-    })->inRandomOrder()->take(8)->get();
-
-    // Load banners
-    $banners = PageBanner::where('page_name', 'category')
-                ->where('status', 'active')
-                ->get();
-
-    return view('frontend.pages.category.category', compact('category', 'banners', 'products'));
+    return view('frontend.pages.shop.filterProducts', compact('category', 'products', 'brands', 'brand'));
 }
+
 
 /**
  * Recursively get all category IDs (current + all descendants)
@@ -498,22 +519,39 @@ public function brandList()
             'news_trends'
         ));
     }
-   public function show($slug)
-    {
-        $product = Product::with('brand')->where('slug', $slug)->first();
+//    public function show($slug)
+//     {
+//         $product = Product::with('brand')->where('slug', $slug)->first();
 
-        if (!$product) {
-            abort(404, 'Product not found');
+//         if (!$product) {
+//             abort(404, 'Product not found');
+//         }
+
+//         $categories = Category::with('children')->where('is_parent', 1)->get();
+//         $solutions = SolutionDetail::latest()->limit(4)->get();
+//         $news_trends = NewsTrend::where('type', 'trends')->limit(4)->get();
+
+//         return view('frontend.pages.product.show', compact('product', 'categories', 'solutions', 'news_trends'));
+//     }
+
+
+    public function show(Request $request, $slug)
+    {
+        $category = Category::with('children')->where('slug', $slug)->firstOrFail();
+        $brands = Brand::all(); // All brands for sidebar filter
+
+        // Base query for products in this category
+        $productsQuery = Product::where('category_id', $category->id);
+
+        // Apply brand filter if passed in query string
+        if ($request->brand_id) {
+            $productsQuery->where('brand_id', $request->brand_id);
         }
 
-        $categories = Category::with('children')->where('is_parent', 1)->get();
-        $solutions = SolutionDetail::latest()->limit(4)->get();
-        $news_trends = NewsTrend::where('type', 'trends')->limit(4)->get();
+        $products = $productsQuery->paginate(12);
 
-        return view('frontend.pages.product.show', compact('product', 'categories', 'solutions', 'news_trends'));
+        return view('frontend.pages.product.show', compact('category', 'products', 'brands'));
     }
-
-
 
     //addign search option brand 
     public function searchBrands(Request $request)
@@ -600,6 +638,7 @@ public function brandList()
     {
         return view('frontend.pages.test.industryTestDetails');
     }
+    
 }
 
 

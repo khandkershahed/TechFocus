@@ -77,7 +77,7 @@
                         </label>
                     </div>
                 </div>
-                <!-- Main Category Start-->
+                {{-- <!-- Main Category Start-->
                 <!-- Manufacturers -->
                 <div class="bg-white p-2 mb-2 mt-3 category-border-top">
                     <div class="accordion accordion-flush" id="accordionFlushExample">
@@ -124,7 +124,57 @@
                             </div>
                         </div>
                     </div>
+                </div> --}}
+                <!-- Main Category Start-->
+<!-- Manufacturers -->
+<div class="bg-white p-2 mb-2 mt-3 category-border-top">
+    <div class="accordion accordion-flush" id="accordionFlushExample">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="flush-headingOne">
+                <button class="accordion-button collapsed p-1 border-0" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#flush-collapseManufacturers"
+                    aria-expanded="false" aria-controls="flush-collapseManufacturers">
+                    Manufacturers
+                </button>
+            </h2>
+            <div id="flush-collapseManufacturers" class="accordion-collapse collapse border-0"
+                aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                <div class="accordion-body p-0 m-0">
+                    <div class="pt-3">
+                        <input id="autocomplete_company" type="text"
+                            class="form-control shadow-sm rounded-0 p-0 m-0" placeholder="Search" />
+                    </div>
+                    <!-- Brand Menu -->
+                    <div class="mt-3 scroll-menu-container" style="height: 150px; overflow: auto">
+                        <ul class="m-0 p-0">
+                            @foreach ($brands as $brand)
+                                <li class="p-2">
+                                    <a href="{{ route('category.show', ['slug' => $category->slug, 'brand_id' => $brand->id]) }}"
+                                       class="d-block text-decoration-none">
+                                        <div class="checkbox-wrapper-15">
+                                            <input class="inp-cbx" id="cbx-{{ $brand->id }}" type="checkbox"
+                                                style="display: none" 
+                                                @if(request('brand_id') == $brand->id) checked @endif />
+                                            <label class="cbx" for="cbx-{{ $brand->id }}">
+                                                <span>
+                                                    <svg width="12px" height="9px" viewBox="0 0 12 9">
+                                                        <polyline points="1 5 4 8 11 1"></polyline>
+                                                    </svg>
+                                                </span>
+                                                <span class="font-six">{{ $brand->title }}</span>
+                                            </label>
+                                        </div>
+                                    </a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
                 {{-- <!-- TECHNOLOGIES -->
                 <div class="bg-white p-2 mb-2 mt-3 category-border-top">
                     <div class="accordion accordion-flush" id="accordionFlushExample">
