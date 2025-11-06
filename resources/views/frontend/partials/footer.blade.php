@@ -87,13 +87,13 @@
         </div>
         <div class="pt-5 mt-5 text-center row">
             <div class="col-12">
-                <ul class="flex-wrap gap-3 p-0 m-0 text-white d-inline-flex justify-content-center list-unstyled footer-links">
+                <ul class="flex-wrap gap-5 p-0 m-0 text-white d-inline-flex justify-content-center list-unstyled footer-links">
                     <li><a href="{{ route('terms') }}">Terms & Conditions</a></li>
                     <li><a href="#">Privacy Policy</a></li>
                     <li><a href="#">Manage Cookies</a></li>
                 </ul>
             </div>
-            <div class="mt-3 mb-5 col-12">
+            <div class="mt-5 mb-3 col-12">
                 <a href="{{ route('homepage') }}" class="text-white text-decoration-none">
                     <p class="mb-0 small">© 2025 All rights reserved {{ $site->site_name ?? 'Techfocus LTD' }}</p>
                 </a>
