@@ -20,6 +20,7 @@ use App\Repositories\AddressRepository;
 use App\Repositories\BankingRepository;
 use App\Repositories\CompanyRepository;
 use App\Repositories\ContactRepository;
+use App\Repositories\ProductRepository;
 use Illuminate\Support\ServiceProvider;
 use App\Repositories\CategoryRepository;
 use App\Repositories\HrPolicyRepository;
@@ -45,6 +46,7 @@ use App\Repositories\Interfaces\AddressRepositoryInterface;
 use App\Repositories\Interfaces\BankingRepositoryInterface;
 use App\Repositories\Interfaces\CompanyRepositoryInterface;
 use App\Repositories\Interfaces\ContactRepositoryInterface;
+use App\Repositories\Interfaces\ProductRepositoryInterface;
 use App\Repositories\Interfaces\CategoryRepositoryInterface;
 use App\Repositories\Interfaces\HrPolicyRepositoryInterface;
 use App\Repositories\Interfaces\IndustryRepositoryInterface;
@@ -96,6 +98,7 @@ class AppServiceProvider extends ServiceProvider
             SeoRepositoryInterface::class => SeoRepository::class,
             FaqRepositoryInterface::class => FaqRepository::class,
             BankingRepositoryInterface::class => BankingRepository::class, 
+            ProductRepositoryInterface::class=>ProductRepository::class,
         ];
 
         foreach ($bindings as $interface => $implementation) {

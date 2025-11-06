@@ -41,11 +41,11 @@
                         <i class="fa-solid fa-gauge-high mr-3"></i>
                         <span>Dashboard</span>
                     </a>
-                    <a href="{{ route('principal.brands.index') }}" 
+                    {{-- <a href="{{ route('principal.brands.index') }}" 
                        class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition duration-200 {{ in_array(Route::current()->getName(), ['principal.brands.index', 'principal.brands.create', 'principal.brands.edit']) ? 'bg-blue-50 text-blue-600 border-r-2 border-blue-600' : '' }}">
                         <i class="fa-solid fa-store mr-3"></i>
                         <span>My Brands</span>
-                    </a>
+                    </a> --}}
                 </div>
             </nav>
         </div>

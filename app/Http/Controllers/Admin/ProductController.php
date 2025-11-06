@@ -23,10 +23,17 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\Admin\ProductRequest;
 use Illuminate\Support\Facades\Notification;
-
+use App\Repositories\Interfaces\ProductRepositoryInterface;
 
 class ProductController extends Controller
 {
+    private $productRepository;
+
+    public function __construct(ProductRepositoryInterface $productRepository)
+    {
+        $this->productRepository = $productRepository;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -38,12 +45,14 @@ class ProductController extends Controller
             ->get(['id', 'slug', 'thumbnail', 'price', 'name', 'stock', 'action_status', 'price_status', 'added_by']);
         return view('admin.pages.product.completed_products', $data);
     }
+    
     public function savedProducts()
     {
         $data['saved_products'] = Product::with('productSas')->where('product_status', 'sourcing')->where('action_status', 'save')->latest('id', 'desc')
             ->get(['id', 'slug', 'thumbnail', 'price', 'discount', 'name', 'stock', 'source_one_price', 'source_two_price', 'action_status', 'price_status', 'added_by']);
         return view('admin.pages.product.saved_products', $data);
     }
+    
     public function sourcedProducts()
     {
         $data['products'] = Product::with('productSas')->where('product_status', 'sourcing')->where('action_status', '!=', 'save')->select('id', 'name', 'slug', 'thumbnail', 'price_status', 'action_status', 'added_by')->get();
@@ -57,7 +66,6 @@ class ProductController extends Controller
      */
     public function create()
     {
-
         $data = [
             'products'   => DB::table('products')->select('id', 'name')->get(),
             'brands'     => DB::table('brands')->select('id', 'title')->orderBy('id', 'desc')->get(),
@@ -94,11 +102,9 @@ class ProductController extends Controller
         );
 
         if ($validator->fails()) {
-            // foreach ($validator->messages()->all() as $message) {
-            //     return redirect()->back()->withInput()->with('error', $message);
-            // }
             return redirect()->back()->withErrors($validator)->withInput();
         }
+        
         DB::beginTransaction();
 
         try {
@@ -128,10 +134,10 @@ class ProductController extends Controller
                 'deal'                      => $request->deal,
                 'refurbished'               => $request->refurbished,
                 'product_type'              => $request->product_type,
-                'category_id'               => $request->has('category_id') ? $request->category_id : null,  // Ensure this is encoded
-                'color_id'                  => $request->has('color_id') ? $request->color_id : null,  // Ensure this is encoded
-                'parent_id'                 => $request->has('parent_id') ? $request->parent_id : null,  // Ensure this is encoded
-                'child_id'                  => $request->has('child_id') ? $request->child_id : null,  // Ensure this is encoded
+                'category_id'               => $request->has('category_id') ? $request->category_id : null,
+                'color_id'                  => $request->has('color_id') ? $request->color_id : null,
+                'parent_id'                 => $request->has('parent_id') ? $request->parent_id : null,
+                'child_id'                  => $request->has('child_id') ? $request->child_id : null,
                 'brand_id'                  => $request->brand_id,
                 'source_one_name'           => $request->source_one_name,
                 'source_one_link'           => $request->source_one_link,
@@ -169,7 +175,6 @@ class ProductController extends Controller
                 'product_status'            => 'sourcing',
                 'created_at'                => Carbon::now(),
             ];
-
 
             $product = Product::create($productData);
 
@@ -211,13 +216,9 @@ class ProductController extends Controller
             return redirect()->back();
         } catch (\Exception $e) {
             DB::rollback();
-            // \Log::error('Error occurred while creating product: ' . $e->getMessage());
             return redirect()->back()->withInput()->with('error', $e->getMessage());
         }
     }
-
-
-
 
     /**
      * Display the specified resource.
@@ -275,7 +276,6 @@ class ProductController extends Controller
             $save_url = $product->thumbnail;
         }
 
-
         $product->update([
             'name'                      => $request->name,
             'sku_code'                  => $request->sku_code,
@@ -297,10 +297,10 @@ class ProductController extends Controller
             'deal'                      => $request->deal,
             'refurbished'               => $request->refurbished,
             'product_type'              => $request->product_type,
-            'category_id'               => $request->input('category_id'), // Convert to JSON
-            'color_id'                  => $request->input('color_id'), // Convert to JSON
-            'parent_id'                 => $request->input('parent_id'), // Convert to JSON
-            'child_id'                  => $request->input('child_id'), // Convert to JSON
+            'category_id'               => $request->input('category_id'),
+            'color_id'                  => $request->input('color_id'),
+            'parent_id'                 => $request->input('parent_id'),
+            'child_id'                  => $request->input('child_id'),
             'brand_id'                  => $request->brand_id,
             'source_one_name'           => $request->source_one_name,
             'source_one_link'           => $request->source_one_link,
@@ -336,7 +336,6 @@ class ProductController extends Controller
             'updated_at'                => Carbon::now(),
         ]);
 
-
         // Multiple Image Upload From it
         $images = $request->file('multi_img');
         if (!empty($images)) {
@@ -361,14 +360,13 @@ class ProductController extends Controller
             $industrys = $request->industry_id;
             foreach ($industrys as $industry) {
                 IndustryProduct::insert([
-
                     'product_id' => $id,
                     'industry_id' => $industry,
                     'created_at' => Carbon::now(),
-
                 ]);
             }
         }
+        
         if (!empty($request->solution_id)) {
             $solution_destroys = SolutionProduct::where('product_id', $id)->get();
 
@@ -378,14 +376,13 @@ class ProductController extends Controller
             $solutions = $request->solution_id;
             foreach ($solutions as $solution) {
                 SolutionProduct::insert([
-
                     'product_id' => $id,
                     'solution_id' => $solution,
                     'created_at' => Carbon::now(),
-
                 ]);
             }
         }
+        
         Session::flash('success', 'Data has been updated successfully!');
         return redirect()->back();
     }
@@ -414,74 +411,81 @@ class ProductController extends Controller
             $img->delete();
         }
     }
-public function deleteImage(Request $request)
-{
-    $image = ProductImage::find($request->id);
+    
+    public function deleteImage(Request $request)
+    {
+        $image = ProductImage::find($request->id);
 
-    if ($image) {
-        // Remove physical file if it exists
-        if (file_exists(public_path($image->photo))) {
-            unlink(public_path($image->photo));
+        if ($image) {
+            // Remove physical file if it exists
+            if (file_exists(public_path($image->photo))) {
+                unlink(public_path($image->photo));
+            }
+
+            // Remove database record
+            $image->delete();
+
+            return response()->json(['success' => true]);
         }
 
-        // Remove database record
-        $image->delete();
-
-        return response()->json(['success' => true]);
+        return response()->json(['success' => false]);
     }
 
-    return response()->json(['success' => false]);
-}
+    /**
+     * Display pending products for approval.
+     */
+    public function pending()
+    {
+        return view('admin.pages.product.pending', [
+            'pendingProducts' => Product::where('submission_status', 'pending')->with('principal')->latest()->get(),
+        ]);
+    }
 
-
-/**
- * Display pending products for approval.
- */
-public function pending()
-{
-    return view('admin.pages.product.pending', [
-        'pendingProducts' => $this->productRepository->pendingProducts(),
-    ]);
-}
-
-/**
- * Approve a product.
- */
-public function approve($id)
-{
-    try {
-        $this->productRepository->approveProduct($id);
-        
-        // Also set product status to active when approved
-        $product = Product::find($id);
-        if ($product) {
-            $product->update(['status' => 'active']);
+    /**
+     * Approve a product.
+     */
+    public function approve($id)
+    {
+        try {
+            $product = Product::findOrFail($id);
+            $product->update([
+                'submission_status' => 'approved',
+                'approved_at' => now(),
+                'rejection_reason' => null,
+                'product_status' => 'product' // Set to active product status when approved
+            ]);
+            
+            return redirect()->route('admin.products.pending')
+                ->with('success', 'Product approved successfully!');
+        } catch (\Exception $e) {
+            return redirect()->route('admin.products.pending')
+                ->with('error', 'Error approving product: ' . $e->getMessage());
         }
-        
-        return redirect()->route('admin.products.pending')
-            ->with('success', 'Product approved successfully!');
-    } catch (\Exception $e) {
-        return redirect()->route('admin.products.pending')
-            ->with('error', 'Error approving product: ' . $e->getMessage());
     }
-}
 
-/**
- * Reject a product.
- */
-public function reject(Request $request, $id)
-{
-    $request->validate([
-        'rejection_reason' => 'required|string|max:500'
-    ]);
+    /**
+     * Reject a product.
+     */
+    public function reject(Request $request, $id)
+    {
+        $request->validate([
+            'rejection_reason' => 'required|string|max:500'
+        ]);
 
-    try {
-        $this->productRepository->rejectProduct($id, $request->rejection_reason);
-        return redirect()->route('admin.products.pending')
-            ->with('success', 'Product rejected successfully!');
-    } catch (\Exception $e) {
-        return redirect()->route('admin.products.pending')
-            ->with('error', 'Error rejecting product: ' . $e->getMessage());
+        try {
+            $product = Product::findOrFail($id);
+            $product->update([
+                'submission_status' => 'rejected',
+                'rejection_reason' => $request->rejection_reason,
+                'approved_at' => null,
+                'product_status' => 'sourcing' // Keep as sourcing when rejected
+            ]);
+            
+            return redirect()->route('admin.products.pending')
+                ->with('success', 'Product rejected successfully!');
+        } catch (\Exception $e) {
+            return redirect()->route('admin.products.pending')
+                ->with('error', 'Error rejecting product: ' . $e->getMessage());
+        }
     }
-}
 }

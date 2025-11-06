@@ -501,3 +501,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:admin'])->group(functi
     Route::post('/brands/{id}/reject', [BrandController::class, 'reject'])->name('brands.reject');
     Route::resource('brands', BrandController::class);
 });
+// Admin Product Routes
+Route::prefix('admin')->name('admin.')->middleware(['auth:admin'])->group(function () {
+    // ... other routes
+    
+    // Product Routes
+    Route::get('/products/pending', [ProductController::class, 'pending'])->name('products.pending');
+    Route::post('/products/{id}/approve', [ProductController::class, 'approve'])->name('products.approve');
+    Route::post('/products/{id}/reject', [ProductController::class, 'reject'])->name('products.reject');
+    Route::resource('products', ProductController::class);
+});
