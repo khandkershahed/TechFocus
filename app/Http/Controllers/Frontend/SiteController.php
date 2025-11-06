@@ -54,7 +54,46 @@ class SiteController extends Controller
     //     }
 
 
-    public function homePage()
+    // public function homePage()
+    // {
+    //     $banners = PageBanner::where('page_name', 'home')->get();
+
+    //     // Get dynamic homepage data
+    //     $homePage = HomePage::with(['country'])->first();
+
+    //     // Get featured products for section two if homepage data exists
+    //     $featuredProducts = collect();
+    //     if ($homePage && $homePage->section_two_products) {
+    //         $featuredProducts = Product::whereIn('id', $homePage->section_two_products)->get();
+    //     }
+
+    //     // Get news trends for section four if homepage data exists
+    //     $sectionFourNews = collect();
+    //     if ($homePage && $homePage->section_four_contents) {
+    //         $sectionFourNews = NewsTrend::whereIn('id', $homePage->section_four_contents)->get();
+    //     }
+
+    //     $data = [
+    //         'banners'        => $banners,
+    //         'categories'    => Category::with('children.children.children.children.children.children.children.children.children.children')
+    //             ->where('is_parent', '1')
+    //             ->get(['id', 'parent_id', 'name', 'slug']),
+    //         'products'      => Product::with('brand')
+    //             ->where('status', 'active')
+    //             ->inRandomOrder()
+    //             ->limit(5)
+    //             ->get(),
+    //         'news_trends'   => NewsTrend::where('type', 'trends')->limit(4)->get(),
+    //         'solutions'     => SolutionDetail::latest()->limit(4)->get(),
+    //         // Add dynamic homepage data
+    //         'homePage' => $homePage,
+    //         'featuredProducts' => $featuredProducts,
+    //         'sectionFourNews' => $sectionFourNews,
+    //     ];
+
+    //     return view('frontend.pages.home.index', $data);
+    // }
+     public function homePage()
     {
         $banners = PageBanner::where('page_name', 'home')->get();
 
@@ -79,7 +118,8 @@ class SiteController extends Controller
                 ->where('is_parent', '1')
                 ->get(['id', 'parent_id', 'name', 'slug']),
             'products'      => Product::with('brand')
-                ->where('status', 'active')
+                ->where('product_status', 'product') // Changed from 'status' to 'product_status'
+                ->where('submission_status', 'approved') // Only show approved products
                 ->inRandomOrder()
                 ->limit(5)
                 ->get(),
