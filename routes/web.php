@@ -118,3 +118,4 @@ Route::prefix('principal')->name('principal.')->middleware(['auth:principal', 'v
     Route::patch('principals/{principal}/status', [PrincipalController::class, 'updateStatus'])->name('principals.update-status');
     Route::get('principals-stats', [PrincipalController::class, 'getStats'])->name('principals.stats');
 });
+
