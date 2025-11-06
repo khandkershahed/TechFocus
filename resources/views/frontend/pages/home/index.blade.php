@@ -276,7 +276,7 @@
                                 @endif
                                 
                                 @if($homePage->section_one_button && $homePage->section_one_link)
-                                <a href="{{ $homePage->section_one_link }}" class="btn common-btn-3 rounded-0 w-25">
+                                <a href="{{ $homePage->section_one_link }}" class="mt-4 btn common-btn-3 rounded-0 w-25">
                                     {{ $homePage->section_one_button }}
                                 </a>
                                 @endif

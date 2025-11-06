@@ -24,6 +24,9 @@
                     <li class="pt-2">
                         <a href="{{route('about')}}">About Us</a>
                     </li>
+                    <li class="pt-2">
+                        <a href="{{route('contact')}}">Contact Us</a>
+                    </li>
                     <!-- <li class="pt-2">
                         <a href="{{route('service')}}"> Our Service</a>
                     </li> -->

@@ -4,41 +4,73 @@
 @endsection
 
 @section('content')
-    <h2 class="text-center text-2xl font-bold mb-4">Principal Register</h2>
 
-    <form method="POST" action="{{ route('principal.register.submit') }}">
-        @csrf
+<section class="d-flex align-items-center justify-content-center" 
+         style="min-height: 100vh; background: linear-gradient(135deg, #e3f2fd, #bbdefb);">
 
-        <div class="mb-3">
-            <label>Principal Name</label>
-            <input type="text" name="name" value="{{ old('name') }}" required class="w-full border p-2">
+    <div class="p-4 border-0 shadow-lg card rounded-4" style="max-width: 450px; width: 100%; background: #fff;">
+
+        <!-- Title -->
+        <h3 class="mb-2 text-center fw-bold">Principal Register</h3>
+        <p class="mb-4 text-center text-muted">
+            Create your account to get started
+        </p>
+
+        <!-- Register Form -->
+        <form method="POST" action="{{ route('principal.register.submit') }}">
+            @csrf
+
+            <!-- Name -->
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Principal Name</label>
+                <input type="text" name="name" class="form-control form-control-lg" 
+                       value="{{ old('name') }}" required>
+            </div>
+
+            <!-- Email -->
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Email</label>
+                <input type="email" name="email" class="form-control form-control-lg"
+                       value="{{ old('email') }}" required>
+            </div>
+
+            <!-- Password -->
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Password</label>
+                <input type="password" name="password" class="form-control form-control-lg" required>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Confirm Password</label>
+                <input type="password" name="password_confirmation" class="form-control form-control-lg" required>
+            </div>
+
+            <!-- Submit -->
+            <button type="submit" class="btn btn-primary w-100 btn-lg rounded-3">
+                Register
+            </button>
+        </form>
+
+        <!-- Links -->
+        <div class="mt-4 text-center">
+            <p class="text-muted">
+                Already have an account?
+                <a href="{{ route('principal.login') }}" 
+                   class="fw-semibold text-primary text-decoration-underline">
+                    Login here
+                </a>
+            </p>
         </div>
 
-        <div class="mb-3">
-            <label>Email</label>
-            <input type="email" name="email" value="{{ old('email') }}" required class="w-full border p-2">
-        </div>
+    </div>
 
-        <div class="mb-3">
-            <label>Password</label>
-            <input type="password" name="password" required class="w-full border p-2">
-        </div>
+</section>
 
-        <div class="mb-3">
-            <label>Confirm Password</label>
-            <input type="password" name="password_confirmation" required class="w-full border p-2">
-        </div>
-
-        <button type="submit" class="btn btn-primary w-full">Register</button>
-    </form>
-
-    <p class="mt-4 text-center">
-        Already have an account? 
-        <a href="{{ route('principal.login') }}" class="text-blue-500 underline">Login here</a>
-    </p>
 @endsection
 
-{{-- ADD SWEETALERT FOR VALIDATION ERRORS IN REGISTER FORM --}}
+
+{{-- SWEETALERT FOR VALIDATION ERRORS --}}
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
@@ -48,11 +80,11 @@ document.addEventListener('DOMContentLoaded', function() {
             icon: 'error',
             title: 'Registration Failed',
             html: `
-                <div class="text-left">
+                <div class="text-start">
                     <p>Please fix the following errors:</p>
-                    <ul class="list-disc list-inside mt-2">
+                    <ul class="mt-2">
                         @foreach($errors->all() as $error)
-                            <li class="text-sm">{{ $error }}</li>
+                            <li>{{ $error }}</li>
                         @endforeach
                     </ul>
                 </div>
