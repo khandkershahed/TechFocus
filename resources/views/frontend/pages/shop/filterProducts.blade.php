@@ -55,7 +55,7 @@
             <!-- Sidebar Filters -->
             <div class="col-lg-3 col-sm-12">
 
-                <!-- What's New -->
+                {{-- <!-- What's New -->
                 <div class="p-3 mt-3 mb-2 bg-white category-border-top rounded-3">
                     <div class="checkbox-wrapper-21">
                         <label class="control control--checkbox">
@@ -64,7 +64,7 @@
                             <div class="control__indicator"></div>
                         </label>
                     </div>
-                </div>
+                </div> --}}
 
                 <!-- Brands -->
                 <div class="p-3 my-3 bg-white category-border-top rounded-3">
