@@ -110,11 +110,52 @@
                 </div>
 
             </div>
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="d-flex justify-content-center">
-                        {{ $products->links() }}
+
+            <!-- Products Grid -->
+            <div class="col-lg-9 col-sm-12">
+                <div id="productContainer">
+                    <div class="row gx-3">
+                        @forelse ($products as $product)
+                            <div class="mb-3 col-lg-3 col-sm-12">
+                                <div class="overflow-hidden border-0 shadow-sm card rounded-4 card-hover h-100">
+                                    <div class="position-relative">
+                                        <img src="{{ $product->thumbnail }}" alt="{{ $product->name }}" class="w-100" style="height: 100%; object-fit: cover;">
+                                        <a href="{{ route('brand.overview', optional($product->brand)->slug) }}"
+                                           class="top-0 p-1 m-2 bg-white rounded shadow-sm position-absolute end-0">
+                                           <img src="{{ asset('storage/brand/logo/' . optional($product->brand)->logo) }}"
+                                                alt="{{ optional($product->brand)->title }}"
+                                                class="img-fluid" style="width: 60px; object-fit: contain;"
+                                                onerror="this.onerror=null;this.src='https://www.techfocusltd.com/storage/brand/logo/apc-logo_AndEzWuc.png';">
+                                        </a>
+                                    </div>
+                                    <div class="card-body d-flex flex-column justify-content-between">
+                                        <a href="{{ route('product.details', ['id' => optional($product->brand)->slug, 'slug' => $product->slug]) }}"
+                                           class="text-decoration-none text-dark">
+                                           <h6 class="mb-2 fw-bold text-truncate">{{ Str::words($product->name, 7) }}</h6>
+                                        </a>
+                                        <p class="mb-3 text-muted small">{!! Str::words($product->short_desc, 8) !!}</p>
+                                        <div class="mt-auto">
+                                            <a href="{{ route('product.details', ['id' => optional($product->brand)->slug, 'slug' => $product->slug]) }}"
+                                               class="btn btn-sm btn-outline-primary w-100 rounded-pill">
+                                               <i class="fa-solid fa-circle-info me-1"></i> View Details
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="text-center py-5 text-muted">No products found.</div>
+                        @endforelse
                     </div>
+
+                    <!-- Pagination -->
+                    @if (!$products->isEmpty())
+                        <div class="col-12 mt-3">
+                            <div class="d-flex justify-content-center">
+                                {{ $products->links() }}
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -141,7 +182,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const filterForm = document.getElementById('filterForm');
     const productContainer = document.getElementById('productContainer');
 
-    // Listen to all checkboxes (Whats New + Brands)
     filterForm.querySelectorAll('input[type="checkbox"]').forEach(input => {
         input.addEventListener('change', applyFilters);
     });
@@ -149,25 +189,19 @@ document.addEventListener('DOMContentLoaded', function () {
     function applyFilters() {
         const formData = new FormData(filterForm);
 
-        // Collect multiple brand IDs
+        // Multiple brand IDs
         const brandIds = [];
-        filterForm.querySelectorAll('input[name="brand_id[]"]:checked').forEach(cb => {
-            brandIds.push(cb.value);
-        });
+        filterForm.querySelectorAll('input[name="brand_id[]"]:checked').forEach(cb => brandIds.push(cb.value));
 
-        // Build params
         const params = new URLSearchParams(formData);
-        params.delete('brand_id'); // remove old single brand
+        params.delete('brand_id');
         brandIds.forEach(id => params.append('brand_id[]', id));
 
-        // Fetch filtered products via AJAX
         fetch(filterForm.action + '?' + params.toString(), {
             headers: { 'X-Requested-With': 'XMLHttpRequest' }
         })
         .then(response => response.text())
-        .then(data => {
-            productContainer.innerHTML = data;
-        })
+        .then(data => productContainer.innerHTML = data)
         .catch(error => console.error('Filter error:', error));
     }
 });
