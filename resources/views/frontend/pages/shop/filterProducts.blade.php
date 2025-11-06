@@ -3,7 +3,7 @@
 @endsection
 @section('content')
 <!--Banner -->
-<div class="swiper bannerSwiper product-banner">
+<div class="shadow-none swiper bannerSwiper product-banner">
     <div class="swiper-wrapper">
         <div class="swiper-slide">
             <a href="">
@@ -27,7 +27,7 @@
     <div class="swiper-pagination"></div>
 </div>
 
-<div class="container my-3">
+<div class="container my-3 mt-4">
     <div class="mx-4 mt-2 bg-white row align-items-center rounded-3">
         <div class="col-lg-12 d-flex align-items-center justify-content-between">
             <div class="info-area d-flex align-items-center">
@@ -94,7 +94,6 @@
                                     <ul class="p-0 m-0" id="brandList">
                                         @foreach ($brands as $brand)
                                         <li class="p-2 brand-item">
-
                                             <div class="checkbox-wrapper-21">
                                                 <label class="control control--checkbox">
                                                     {{ $brand->title }}
@@ -104,7 +103,6 @@
                                                     <div class="control__indicator"></div>
                                                 </label>
                                             </div>
-
                                         </li>
                                         @endforeach
                                     </ul>
@@ -151,7 +149,7 @@
                                 src="{{ $product->thumbnail }}"
                                 alt="{{ $product->name }}"
                                 class="w-100"
-                                style="height: 100%; object-fit: cover;">
+                                style="height: 250px; object-fit: contain;">
                             <!-- Brand Logo (Overlay Top Right) -->
                             <a href="{{ route('brand.overview', optional($product->brand)->slug) }}"
                                 class="top-0 p-1 m-2 bg-white rounded shadow-sm position-absolute end-0">
