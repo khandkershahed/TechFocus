@@ -225,16 +225,9 @@ Route::prefix('administrator')->name('admin.')->group(static function () {
             ],
             ['except' => ['store', 'update', 'show'],]
         );
-        // Content
 
-
-
-
-
-
-
-        Route::resource('contact', ContactController::class)->except(['create', 'show', 'edit'])
-            ->middleware(['throttle:10,1', 'checkBan'], 'only', ['store']);
+        // Route::resource('contact', ContactController::class)->except(['create', 'show', 'edit'])
+        //     ->middleware(['throttle:10,1', 'checkBan'], 'only', ['store']);
 
         Route::get('country-state-city', [CountryStateCityController::class, 'index'])->name('country.state.city.index');
 
@@ -510,4 +503,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:admin'])->group(functi
     Route::post('/products/{id}/approve', [ProductController::class, 'approve'])->name('products.approve');
     Route::post('/products/{id}/reject', [ProductController::class, 'reject'])->name('products.reject');
     Route::resource('products', ProductController::class);
+});
+
+Route::prefix('administrator')->name('admin.')->middleware(['auth:admin', 'verified'])->group(function () {
+    Route::get('pages/contact', [ContactController::class, 'index'])->name('pages.contact.index');
+    Route::get('pages/contact/show/{id}', [ContactController::class, 'show'])->name('pages.contact.show');
+    Route::put('pages/contact/{id}', [ContactController::class, 'update'])->name('pages.contact.update');
+    Route::delete('pages/contact/{id}', [ContactController::class, 'destroy'])->name('pages.contact.destroy');
 });

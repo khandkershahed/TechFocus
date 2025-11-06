@@ -213,8 +213,8 @@
                                                     <div class="col-lg-3 mb-3">
                                                         <div class="fv-row mb-3">
                                                             <label class="form-label required">Category Name</label>
-                                                            <select class="form-control select" name="category_id[]"
-                                                                id="field2" multiple multiselect-search="true"
+                                                            <select class="form-control select" name="category_id"  data-control="select2"
+                                                                id="category_id" multiple multiselect-search="true"
                                                                 multiselect-select-all="true">
                                                                 @if (count($categories) > 0)
                                                                     @foreach ($categories->whereNull('parent_id') as $category)
@@ -236,8 +236,8 @@
                                                     <div class="col-lg-3 mb-3">
                                                         <div class="fv-row mb-3">
                                                             <label class="form-label">Industry Name</label>
-                                                            <select class="form-control select" name="industry_id[]"
-                                                                id="field2" multiple multiselect-search="true"
+                                                            <select class="form-control select" name="industry_id" data-control="select2"
+                                                                id="industry_id" multiple multiselect-search="true" 
                                                                 multiselect-select-all="true" multiselect-max-items="1">
                                                                 @if (count($industries) > 0)
                                                                     @foreach ($industries as $industry)
@@ -255,8 +255,8 @@
                                                     <div class="col-lg-3 mb-3">
                                                         <div class="fv-row mb-3">
                                                             <label class="form-label">Solution Name</label>
-                                                            <select class="form-control select" name="solution_id[]"
-                                                                id="field2" multiple multiselect-search="true"
+                                                            <select class="form-control select" name="solution_id" data-control="select2"
+                                                                id="solution_id" multiple multiselect-search="true"
                                                                 multiselect-select-all="true" multiselect-max-items="1">
                                                                 @if (count($solutions) > 0)
                                                                     @foreach ($solutions as $solution)
@@ -365,8 +365,8 @@
                                                     <div class="col-lg-3 mb-3">
                                                         <div class="fv-row mb-3">
                                                             <label class="form-label required">Product Colors</label>
-                                                            <select class="form-control select" name="color_id[]"
-                                                                id="field2" multiple multiselect-search="true"
+                                                            <select class="form-control select" name="color_id" data-control="select2"
+                                                                id="color_id" multiple multiselect-search="true"
                                                                 multiselect-select-all="true" multiselect-max-items="2">
                                                                 @if (count($colors) > 0)
                                                                     @foreach ($colors as $color)
@@ -383,8 +383,8 @@
                                                     <div class="col-lg-6 mb-3">
                                                         <div class="fv-row mb-3">
                                                             <label class="form-label">Parent Products</label>
-                                                            <select class="form-control select" name="parent_id[]"
-                                                                id="field2" multiple multiselect-search="true"
+                                                            <select class="form-control select" name="parent_id" data-control="select2"
+                                                                id="parent_id" multiple multiselect-search="true"
                                                                 multiselect-select-all="true" multiselect-max-items="2">
                                                                 @if (count($products) > 0)
                                                                     @foreach ($products as $parent_product)
@@ -400,8 +400,8 @@
                                                     <div class="col-lg-6 mb-3">
                                                         <div class="fv-row mb-3">
                                                             <label class="form-label">Child Products</label>
-                                                            <select class="form-control select" name="child_id[]"
-                                                                id="field2" multiple multiselect-search="true"
+                                                            <select class="form-control select" name="child_id" data-control="select2"
+                                                                id="child_id" multiple multiselect-search="true"
                                                                 multiselect-select-all="true" multiselect-max-items="2">
                                                                 @if (count($products) > 0)
                                                                     @foreach ($products as $child_product)

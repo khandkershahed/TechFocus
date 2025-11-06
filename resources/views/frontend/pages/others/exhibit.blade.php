@@ -55,7 +55,7 @@
                             width="80px">
                         <h3 class="titles text-center">YOU ARE A PRINCIPAL</h3>
                         {{-- <p class="mt-5 text-center">SHOWCASE YOUR PRODUCTS <br> & receive international leads</p> --}}
-                        <a href="{{ route('principal.login') }}"
+                        <a href="{{ route('principal.register') }}"
                             class="btn-mcl-inverted btn rounded-0">SIGN UP!</a>
                     </div>
                 </div>
@@ -63,10 +63,10 @@
                     <div class="card exhibition-card p-5 rounded-0">
                         <img src="https://img.directindustry.com/media/ps/images/di/carrefour/icon-distributeur.svg"
                             width="80px">
-                        <h3 class="titles text-center">YOU ARE A PARTNER</h3>
+                        <h3 class="titles text-center">YOU ARE A PARTNER OR CLIENT</h3>
                         {{-- <p class="mt-5 text-center">DISPLAY YOUR PRODUCT CATALOG <br> & receive leads for the products
                             you sell</p> --}}
-                        <a href="{{ route('partner.login') }}"
+                        <a href="{{ route('register') }}"
                             class="btn-mcl-inverted btn rounded-0">SIGN UP!</a>
                     </div>
                 </div>

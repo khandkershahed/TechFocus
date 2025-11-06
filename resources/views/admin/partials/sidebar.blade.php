@@ -79,6 +79,14 @@
                                                         </a>
                                                     
                                                 </li>
+                                 <li class="nav-item">
+                                            <a href="{{ route('admin.pages.contact.index') }}" 
+                                            class="nav-link {{ request()->routeIs('admin.pages.contact.*') ? 'active' : '' }}">
+                                                <i class="fa-solid fa-address-book me-2"></i>
+                                                <span>Contact List</span>
+                                            </a>
+                                        </li>
+
                                <!-- In your admin sidebar -->
                                         <div class="menu-item">
                                             <a class="menu-link {{ Route::current()->getName() == 'admin.brands.pending' ? 'active' : '' }}"
@@ -156,7 +164,7 @@
                             </a>
                         </div>
 
-
+                        
                     </div>
                 </div> --}}
                 @php

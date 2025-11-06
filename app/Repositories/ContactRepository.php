@@ -31,4 +31,5 @@ class ContactRepository implements ContactRepositoryInterface
     {
         return Contact::destroy($id);
     }
+    
 }

@@ -93,7 +93,7 @@
             <div class="col-lg-7">
                 <div class="p-4 bg-white shadow-sm rounded-4">
                     <h3 class="fw-bold mb-4" style="color: var(--main-color)">Send Us a Message</h3>
-                    <form action="{{ route('contact.add') }}" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
+                    <form action="{{ route('contact.store') }}" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
                         @csrf
                         <div class="row g-3">
                             <div class="col-md-4">

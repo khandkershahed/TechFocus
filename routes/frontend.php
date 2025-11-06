@@ -267,3 +267,13 @@ Route::delete('/partner/delete/{id}', [UserListController::class, 'deletePartner
 Route::get('solution-test', [SiteController::class, 'solutionTest'])->name('solution.test');
 
 
+// Public contact route (for frontend users)
+Route::post('/contact', [App\Http\Controllers\ContactController::class, 'store'])->name('contact.store');
+
+// Admin contact routes (separate - requires admin auth)
+Route::prefix('administrator')->name('admin.')->middleware(['auth:admin', 'verified'])->group(function () {
+    Route::get('pages/contact', [ContactController::class, 'index'])->name('pages.contact.index');
+    Route::get('pages/contact/show/{id}', [ContactController::class, 'show'])->name('pages.contact.show');
+    Route::put('pages/contact/{id}', [ContactController::class, 'update'])->name('pages.contact.update');
+    Route::delete('pages/contact/{id}', [ContactController::class, 'destroy'])->name('pages.contact.destroy');
+});

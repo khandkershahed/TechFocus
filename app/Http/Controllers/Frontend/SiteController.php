@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Frontend;
 
 use Log;
+use App\Models\Contact;
 use App\Models\PageBanner;
 use App\Models\Admin\Brand;
 use App\Models\Admin\Banner;
@@ -16,10 +17,13 @@ use App\Models\Admin\Industry;
 use App\Models\Admin\AboutPage;
 use App\Models\Admin\NewsTrend;
 use App\Models\Admin\TechGlossy;
+use App\Mail\ContactThankYouMail;
 use App\Models\Admin\ClientStory;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\SolutionDetail;
 use App\Models\Admin\SubSubCategory;
+use Illuminate\Support\Facades\Mail;
+use App\Http\Requests\ContactRequest;
 use App\Models\Admin\DynamicCategory;
 use Illuminate\Support\Facades\Session;
 use App\Repositories\Interfaces\FaqRepositoryInterface;
@@ -239,11 +243,11 @@ class SiteController extends Controller
      * Contact Page
      */
     public function contact()
-    {
+ {
         $banners = PageBanner::where('page_name', 'contact')->get();
         return view('frontend.pages.crm.contact', compact('banners'));
-    }
-
+        
+     }
 
 
     /**
