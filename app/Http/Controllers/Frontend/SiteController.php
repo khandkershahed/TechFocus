@@ -324,41 +324,51 @@ public function filterProducts(Request $request, $slug)
 
     $categoryId = (string) $category->id;
 
-    // Base query: products in this category (JSON stored category_id)
+    // Base query: products under this category (JSON-based field)
     $productsQuery = Product::whereJsonContains('category_id', [$categoryId])
         ->orWhereRaw('JSON_UNQUOTE(category_id) LIKE ?', ['%"' . $categoryId . '"%']);
 
-    // Filter by brand if provided
+    // ✅ Filter by multiple brands (handle brand_id[])
     if ($request->filled('brand_id')) {
-        $productsQuery->where('brand_id', $request->brand_id);
+        $brandIds = (array) $request->brand_id; // make sure it's an array
+        $productsQuery->whereIn('brand_id', $brandIds);
     }
 
-    // Search filter
+    // ✅ Apply search filter if any
     if ($request->filled('search')) {
         $search = $request->search;
-
-        $productsQuery->where(function($q) use ($search) {
-            // Replace 'name' and 'short_desc' with your actual column names
+        $productsQuery->where(function ($q) use ($search) {
             $q->where('name', 'like', "%{$search}%")
               ->orWhere('short_desc', 'like', "%{$search}%");
         });
     }
 
-    // Sort by newest products if "What's New" is checked
+    // ✅ Sort by newest when "What's New" is checked
     if ($request->filled('whats_new') && $request->whats_new == '1') {
         $productsQuery->orderBy('created_at', 'desc');
     }
 
-    // Paginate results and preserve filters in pagination links
+    // ✅ Default sorting if no filter applied
+    if (!$request->filled('whats_new')) {
+        $productsQuery->orderBy('id', 'desc');
+    }
+
+    // ✅ Paginate + keep filter state
     $products = $productsQuery->paginate(16)->appends($request->all());
 
-    // Pass data to the view
+    // ✅ If AJAX, return only the partial view (for dynamic reload)
+    if ($request->ajax()) {
+        return view('frontend.pages.shop.partials.products', compact('products'))->render();
+    }
+
+    // ✅ Otherwise return full filter page
     return view('frontend.pages.shop.filterProducts', [
         'category' => $category,
         'products' => $products,
         'brands'   => Brand::latest()->get(),
     ]);
 }
+
 
 
 
