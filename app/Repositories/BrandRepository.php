@@ -7,10 +7,10 @@ use App\Repositories\Interfaces\BrandRepositoryInterface;
 
 class BrandRepository implements BrandRepositoryInterface
 {
-    public function allBrand()
-    {
-        return Brand::latest('id')->get();
-    }
+    // public function allBrand()
+    // {
+    //     return Brand::latest('id')->get();
+    // }
 
     public function storeBrand(array $data)
     {
@@ -31,4 +31,50 @@ class BrandRepository implements BrandRepositoryInterface
     {
         return Brand::destroy($id);
     }
+    public function allBrand()
+    {
+        return Brand::with('principal')->latest('id')->get();
+    }
+
+    public function allApprovedBrands()
+    {
+        return Brand::approved()->latest()->get();
+    }
+
+  public function pendingBrands()
+{
+    return Brand::pending()
+                ->whereNotNull('principal_id') // Only brands with principals
+                ->with('principal')
+                ->latest()
+                ->get();
+}
+
+    public function getPrincipalBrands($principalId)
+    {
+        return Brand::where('principal_id', $principalId)->latest()->get();
+    }
+
+    public function approveBrand($id)
+    {
+        $brand = Brand::findOrFail($id);
+        $brand->update([
+            'status' => 'approved',
+            'approved_at' => now(),
+            'rejection_reason' => null
+        ]);
+        return $brand;
+    }
+
+    public function rejectBrand($id, $reason = null)
+    {
+        $brand = Brand::findOrFail($id);
+        $brand->update([
+            'status' => 'rejected',
+            'rejection_reason' => $reason,
+            'approved_at' => null
+        ]);
+        return $brand;
+    }
+    
 }

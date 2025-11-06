@@ -2,8 +2,12 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\PrincipalController;
+use App\Http\Controllers\Principal\BrandController;
+use App\Http\Controllers\Principal\ProductController;
+use App\Http\Controllers\Principal\DashboardController;
 use App\Http\Controllers\Principal\Auth\LoginController;
 use App\Http\Controllers\Principal\Auth\RegisterController;
+
 use App\Http\Controllers\Principal\Auth\PrincipalAuthController;
 use App\Http\Controllers\Principal\PrincipalDashboardController;
 use App\Http\Controllers\Principal\Auth\EmailVerificationController;
@@ -117,5 +121,24 @@ Route::prefix('principal')->name('principal.')->middleware(['auth:principal', 'v
     Route::get('principals/{principal}', [PrincipalController::class, 'show'])->name('principals.show');
     Route::patch('principals/{principal}/status', [PrincipalController::class, 'updateStatus'])->name('principals.update-status');
     Route::get('principals-stats', [PrincipalController::class, 'getStats'])->name('principals.stats');
+      Route::resource('brands', BrandController::class)->except(['show']);
 });
 
+// Principal Routes
+Route::prefix('principal')->name('principal.')->group(function () {
+    Route::middleware(['auth:principal'])->group(function () {
+        // ... existing routes
+        Route::resource('products', ProductController::class)->except(['show']);
+    });
+});
+
+// Admin Routes
+Route::prefix('admin')->name('admin.')->middleware(['auth:admin'])->group(function () {
+    // ... existing routes
+    
+    // Product Routes
+    Route::get('/products/pending', [ProductController::class, 'pending'])->name('products.pending');
+    Route::post('/products/{id}/approve', [ProductController::class, 'approve'])->name('products.approve');
+    Route::post('/products/{id}/reject', [ProductController::class, 'reject'])->name('products.reject');
+    Route::resource('products', ProductController::class);
+});
