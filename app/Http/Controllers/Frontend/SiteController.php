@@ -246,7 +246,7 @@ class SiteController extends Controller
  {
         $banners = PageBanner::where('page_name', 'contact')->get();
         return view('frontend.pages.crm.contact', compact('banners'));
-        
+
      }
 
 
@@ -548,60 +548,107 @@ public function brandList()
         }
     }
 
+    // public function ProductSearch(Request $request)
+    // {
+    //     $searchTerm = $request->input('q');
+
+    //     // Get products with brand and solutions
+    //     $products = Product::with(['brand', 'solutions'])
+    //         ->where('name', 'LIKE', '%' . $searchTerm . '%')
+    //         ->where('status', 'active')
+    //         ->paginate(12);
+
+    //     // Collect dynamic categories
+
+    //     $allCategoryIds = [];
+    //     foreach ($products as $product) {
+    //         if (is_array($product->category_id)) {
+    //             $allCategoryIds = array_merge($allCategoryIds, $product->category_id);
+    //         } elseif (is_string($product->category_id)) {
+    //             $decoded = json_decode($product->category_id, true);
+    //             if (is_array($decoded)) {
+    //                 $allCategoryIds = array_merge($allCategoryIds, $decoded);
+    //             }
+    //         }
+    //     }
+    //     $categories = Category::whereIn('id', array_unique($allCategoryIds))
+    //         ->get(['id', 'name', 'slug']);
+
+    //     // Collect dynamic solutions
+
+    //     $solutions = collect();
+    //     foreach ($products as $product) {
+    //         $solutions = $solutions->merge($product->solutions);
+    //     }
+    //     $solutions = $solutions->unique('id');
+
+    //     // Collect dynamic news & trends by product IDs
+
+    //     $productIds = $products->pluck('id')->toArray();
+    //     $news_trends = NewsTrend::where('type', 'trends')
+    //         ->whereIn('product_id', $productIds) 
+    //         ->get();
+
+
+
+
+    //         // Return to search view
+
+    //     return view('frontend.pages.search.index', compact(
+    //         'products',
+    //         'searchTerm',
+    //         'categories',
+    //         'solutions',
+    //         'news_trends'
+    //     ));
+    // }
     public function ProductSearch(Request $request)
-    {
-        $searchTerm = $request->input('q');
+{
+    $searchTerm = $request->input('q');
 
-        // Get products with brand and solutions
-        $products = Product::with(['brand', 'solutions'])
-            ->where('name', 'LIKE', '%' . $searchTerm . '%')
-            ->where('status', 'active')
-            ->paginate(12);
+    // Get products with brand and solutions - REMOVE STATUS FILTER
+    $products = Product::with(['brand', 'solutions'])
+        ->where('name', 'LIKE', '%' . $searchTerm . '%')
+        // ->where('status', 'active') // Remove this line
+        ->paginate(12);
 
-        // Collect dynamic categories
-
-        $allCategoryIds = [];
-        foreach ($products as $product) {
-            if (is_array($product->category_id)) {
-                $allCategoryIds = array_merge($allCategoryIds, $product->category_id);
-            } elseif (is_string($product->category_id)) {
-                $decoded = json_decode($product->category_id, true);
-                if (is_array($decoded)) {
-                    $allCategoryIds = array_merge($allCategoryIds, $decoded);
-                }
+    // Rest of your code remains the same...
+    $allCategoryIds = [];
+    foreach ($products as $product) {
+        if (is_array($product->category_id)) {
+            $allCategoryIds = array_merge($allCategoryIds, $product->category_id);
+        } elseif (is_string($product->category_id)) {
+            $decoded = json_decode($product->category_id, true);
+            if (is_array($decoded)) {
+                $allCategoryIds = array_merge($allCategoryIds, $decoded);
             }
         }
-        $categories = Category::whereIn('id', array_unique($allCategoryIds))
-            ->get(['id', 'name', 'slug']);
-
-        // Collect dynamic solutions
-
-        $solutions = collect();
-        foreach ($products as $product) {
-            $solutions = $solutions->merge($product->solutions);
-        }
-        $solutions = $solutions->unique('id');
-
-        // Collect dynamic news & trends by product IDs
-
-        $productIds = $products->pluck('id')->toArray();
-        $news_trends = NewsTrend::where('type', 'trends')
-            ->whereIn('product_id', $productIds) 
-            ->get();
-
-
-
-
-            // Return to search view
-
-        return view('frontend.pages.search.index', compact(
-            'products',
-            'searchTerm',
-            'categories',
-            'solutions',
-            'news_trends'
-        ));
     }
+    
+    $categories = Category::whereIn('id', array_unique($allCategoryIds))
+        ->get(['id', 'name', 'slug']);
+
+    // Collect dynamic solutions
+    $solutions = collect();
+    foreach ($products as $product) {
+        $solutions = $solutions->merge($product->solutions);
+    }
+    $solutions = $solutions->unique('id');
+
+    // Collect dynamic news & trends by product IDs
+    $productIds = $products->pluck('id')->toArray();
+    $news_trends = NewsTrend::where('type', 'trends')
+        ->whereIn('product_id', $productIds) 
+        ->get();
+
+    return view('frontend.pages.search.index', compact(
+        'products',
+        'searchTerm',
+        'categories',
+        'solutions',
+        'news_trends'
+    ));
+}
    public function show($slug)
     {
         $product = Product::with('brand')->where('slug', $slug)->first();
