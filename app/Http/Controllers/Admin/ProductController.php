@@ -432,4 +432,56 @@ public function deleteImage(Request $request)
 
     return response()->json(['success' => false]);
 }
+
+
+/**
+ * Display pending products for approval.
+ */
+public function pending()
+{
+    return view('admin.pages.product.pending', [
+        'pendingProducts' => $this->productRepository->pendingProducts(),
+    ]);
+}
+
+/**
+ * Approve a product.
+ */
+public function approve($id)
+{
+    try {
+        $this->productRepository->approveProduct($id);
+        
+        // Also set product status to active when approved
+        $product = Product::find($id);
+        if ($product) {
+            $product->update(['status' => 'active']);
+        }
+        
+        return redirect()->route('admin.products.pending')
+            ->with('success', 'Product approved successfully!');
+    } catch (\Exception $e) {
+        return redirect()->route('admin.products.pending')
+            ->with('error', 'Error approving product: ' . $e->getMessage());
+    }
+}
+
+/**
+ * Reject a product.
+ */
+public function reject(Request $request, $id)
+{
+    $request->validate([
+        'rejection_reason' => 'required|string|max:500'
+    ]);
+
+    try {
+        $this->productRepository->rejectProduct($id, $request->rejection_reason);
+        return redirect()->route('admin.products.pending')
+            ->with('success', 'Product rejected successfully!');
+    } catch (\Exception $e) {
+        return redirect()->route('admin.products.pending')
+            ->with('error', 'Error rejecting product: ' . $e->getMessage());
+    }
+}
 }

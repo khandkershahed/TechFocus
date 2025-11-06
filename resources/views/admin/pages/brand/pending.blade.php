@@ -1,0 +1,316 @@
+@extends('admin.master')
+
+@section('title', 'Pending Principal Brands - Admin Panel')
+
+@section('content')
+<!--begin::Container-->
+<div class="container-fluid">
+    <!--begin::Header-->
+    <div class="d-flex flex-column flex-sm-row align-items-center justify-content-between mb-8">
+        <div class="flex-grow-1">
+            <h1 class="fw-bolder text-dark mb-2">Pending Principal Brands</h1>
+            <p class="text-muted fw-semibold fs-6">Manage brand submissions from principals - Approve or reject principal submissions</p>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <a href="{{ route('admin.brand.index') }}" class="btn btn-light-primary">
+                <i class="fa-solid fa-arrow-left me-2"></i>Back to All Brands
+            </a>
+        </div>
+    </div>
+    <!--end::Header-->
+
+    <!--begin::Card-->
+    <div class="card">
+        <!--begin::Card header-->
+        <div class="card-header border-0 pt-6">
+            <!--begin::Card title-->
+            <div class="card-title">
+                <h2>Principal Brands Waiting for Approval</h2>
+            </div>
+            <!--end::Card title-->
+        </div>
+        <!--end::Card header-->
+
+        <!--begin::Card body-->
+        <div class="card-body pt-0">
+            @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fa-solid fa-check-circle me-2"></i>
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
+            @if(session('error'))
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fa-solid fa-exclamation-circle me-2"></i>
+                    {{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
+            @if($pendingBrands->count() > 0)
+                <!--begin::Table-->
+                <div class="table-responsive">
+                    <table class="table table-hover table-row-bordered table-row-gray-300 align-middle gs-0 gy-4">
+                        <!--begin::Table head-->
+                        <thead>
+                            <tr class="fw-bold text-muted bg-light">
+                                <th class="min-w-150px">Brand</th>
+                                <th class="min-w-150px">Submitted By Principal</th>
+                                <th class="min-w-120px">Category</th>
+                                <th class="min-w-120px">Website</th>
+                                <th class="min-w-100px">Submitted Date</th>
+                                <th class="min-w-150px text-end">Review Actions</th>
+                            </tr>
+                        </thead>
+                        <!--end::Table head-->
+
+                        <!--begin::Table body-->
+                        <tbody>
+                            @foreach($pendingBrands as $brand)
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        @if($brand->logo)
+                                            <div class="symbol symbol-50px me-3">
+                                                <img src="{{ asset('storage/brand/logo/' . $brand->logo) }}" 
+                                                     alt="{{ $brand->title }}" 
+                                                     class="rounded-circle">
+                                            </div>
+                                        @else
+                                            <div class="symbol symbol-50px me-3 bg-light-primary rounded-circle">
+                                                <span class="symbol-label text-primary fw-bold fs-6">
+                                                    {{ substr($brand->title, 0, 1) }}
+                                                </span>
+                                            </div>
+                                        @endif
+                                        <div class="d-flex flex-column">
+                                            <span class="fw-bold text-dark mb-1">{{ $brand->title }}</span>
+                                            <span class="text-muted fs-7">{{ $brand->description ? Str::limit($brand->description, 50) : 'No description' }}</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    @if($brand->principal)
+                                        <div class="d-flex flex-column">
+                                            <span class="fw-semibold text-dark">{{ $brand->principal->name }}</span>
+                                            <span class="text-muted fs-7">{{ $brand->principal->email }}</span>
+                                            <span class="text-muted fs-7">{{ $brand->principal->company_name ?? 'No company' }}</span>
+                                        </div>
+                                    @else
+                                        <span class="text-muted">Principal not found</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    <span class="badge badge-light-info fs-7">{{ $brand->category ?? 'N/A' }}</span>
+                                </td>
+                                <td>
+                                    @if($brand->website_url)
+                                        <a href="{{ $brand->website_url }}" target="_blank" class="text-primary text-hover-primary d-block fs-7">
+                                            {{ Str::limit($brand->website_url, 30) }}
+                                        </a>
+                                    @else
+                                        <span class="text-muted">No website</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    <span class="text-muted fs-7">{{ $brand->created_at->format('M d, Y') }}</span>
+                                    <br>
+                                    <span class="text-muted fs-8">{{ $brand->created_at->format('h:i A') }}</span>
+                                </td>
+                                {{-- <td class="text-end">
+                                    <div class="d-flex justify-content-end gap-2">
+                                        <!-- View Details Button -->
+                                        <button type="button" class="btn btn-sm btn-icon btn-light-primary" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#brandModal{{ $brand->id }}"
+                                                title="View Brand Details">
+                                            <i class="fa-solid fa-eye"></i>
+                                        </button>
+
+                                        <!-- Approve Button -->
+                                        <form action="{{ route('admin.brands.approve', $brand->id) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            <button type="submit" class="btn btn-sm btn-success" 
+                                                    onclick="return confirm('Approve this brand submitted by {{ $brand->principal->name ?? \'principal\' }}?')"
+                                                    title="Approve Brand">
+                                                <i class="fa-solid fa-check me-1"></i>Approve
+                                            </button>
+                                        </form>
+
+                                        <!-- Reject Button -->
+                                        <button type="button" class="btn btn-sm btn-danger" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#rejectModal{{ $brand->id }}"
+                                                title="Reject Brand">
+                                            <i class="fa-solid fa-times me-1"></i>Reject
+                                        </button>
+                                    </div> --}}
+                                    <td class="text-end">
+    <div class="d-flex justify-content-end gap-2">
+        <!-- View Details Button -->
+        <button type="button" class="btn btn-sm btn-icon btn-light-primary"
+                data-bs-toggle="modal"
+                data-bs-target="#brandModal{{ $brand->id }}"
+                title="View Brand Details">
+            <i class="fa-solid fa-eye"></i>
+        </button>
+
+        <!-- Approve Button -->
+        <form action="{{ route('admin.brands.approve', $brand->id) }}" method="POST" class="d-inline">
+            @csrf
+            <button type="submit" class="btn btn-sm btn-success"
+                    onclick="return confirm('Approve this brand submitted by {{ $brand->principal->name ?? 'principal' }}?')"
+                    title="Approve Brand">
+                <i class="fa-solid fa-check me-1"></i>Approve
+            </button>
+        </form>
+
+        <!-- Reject Button -->
+        <button type="button" class="btn btn-sm btn-danger"
+                data-bs-toggle="modal"
+                data-bs-target="#rejectModal{{ $brand->id }}"
+                title="Reject Brand">
+            <i class="fa-solid fa-times me-1"></i>Reject
+        </button>
+    </div>
+                                    <!-- Brand Details Modal -->
+                                    <div class="modal fade" id="brandModal{{ $brand->id }}" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Brand Details - {{ $brand->title }}</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="row">
+                                                        <div class="col-md-4 text-center">
+                                                            @if($brand->logo)
+                                                                <img src="{{ asset('storage/brand/logo/' . $brand->logo) }}" 
+                                                                     alt="{{ $brand->title }}" 
+                                                                     class="img-fluid rounded mb-3" style="max-height: 150px;">
+                                                            @endif
+                                                            @if($brand->image)
+                                                                <img src="{{ asset('storage/brand/image/' . $brand->image) }}" 
+                                                                     alt="{{ $brand->title }}" 
+                                                                     class="img-fluid rounded" style="max-height: 150px;">
+                                                            @endif
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <h4>{{ $brand->title }}</h4>
+                                                            <p class="text-muted">{{ $brand->description ?? 'No description provided' }}</p>
+                                                            <div class="row mt-3">
+                                                                <div class="col-6">
+                                                                    <strong>Category:</strong>
+                                                                    <br>
+                                                                    <span class="badge badge-light-info">{{ $brand->category ?? 'N/A' }}</span>
+                                                                </div>
+                                                                <div class="col-6">
+                                                                    <strong>Website:</strong>
+                                                                    <br>
+                                                                    @if($brand->website_url)
+                                                                        <a href="{{ $brand->website_url }}" target="_blank" class="text-primary">
+                                                                            Visit Website
+                                                                        </a>
+                                                                    @else
+                                                                        <span class="text-muted">No website</span>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
+                                                            @if($brand->principal)
+                                                                <div class="mt-3 p-3 bg-light rounded">
+                                                                    <h6>Submitted by Principal:</h6>
+                                                                    <p class="mb-1"><strong>Name:</strong> {{ $brand->principal->name }}</p>
+                                                                    <p class="mb-1"><strong>Email:</strong> {{ $brand->principal->email }}</p>
+                                                                    <p class="mb-1"><strong>Company:</strong> {{ $brand->principal->company_name ?? 'N/A' }}</p>
+                                                                    <p class="mb-0"><strong>Phone:</strong> {{ $brand->principal->phone ?? 'N/A' }}</p>
+                                                                </div>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Reject Reason Modal -->
+                                    <div class="modal fade" id="rejectModal{{ $brand->id }}" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <form action="{{ route('admin.brands.reject', $brand->id) }}" method="POST">
+                                                    @csrf
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Reject Brand Submission</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p>You are about to reject <strong>{{ $brand->title }}</strong> submitted by <strong>{{ $brand->principal->name ?? 'principal' }}</strong>.</p>
+                                                        <p class="text-warning"><strong>Note:</strong> The principal will be notified of this rejection.</p>
+                                                        <div class="form-group mt-3">
+                                                            <label for="rejection_reason" class="form-label">Reason for Rejection *</label>
+                                                            <textarea name="rejection_reason" 
+                                                                      class="form-control" 
+                                                                      rows="4" 
+                                                                      placeholder="Please provide a clear reason for rejection so the principal can make necessary changes..."
+                                                                      required></textarea>
+                                                            <div class="form-text">This reason will be visible to the principal.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                        <button type="submit" class="btn btn-danger">Reject Brand</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                        <!--end::Table body-->
+                    </table>
+                </div>
+                <!--end::Table-->
+            @else
+                <!--begin::Empty state-->
+                <div class="text-center py-10">
+                    <div class="mb-7">
+                        <i class="fa-solid fa-clipboard-check text-primary" style="font-size: 4rem;"></i>
+                    </div>
+                    <h3 class="text-dark mb-4">No Pending Principal Brands</h3>
+                    <p class="text-muted fs-6 mb-6">All principal brand submissions have been reviewed. Check back later for new submissions.</p>
+                    <a href="{{ route('admin.brand.index') }}" class="btn btn-primary">
+                        <i class="fa-solid fa-list me-2"></i>View All Brands
+                    </a>
+                </div>
+                <!--end::Empty state-->
+            @endif
+        </div>
+        <!--end::Card body-->
+    </div>
+    <!--end::Card-->
+</div>
+<!--end::Container-->
+@endsection
+
+@push('scripts')
+<script>
+    // Auto-focus on rejection reason textarea when modal opens
+    document.addEventListener('DOMContentLoaded', function() {
+        const rejectModals = document.querySelectorAll('[id^="rejectModal"]');
+        rejectModals.forEach(modal => {
+            modal.addEventListener('shown.bs.modal', function () {
+                const textarea = this.querySelector('textarea[name="rejection_reason"]');
+                if (textarea) {
+                    textarea.focus();
+                }
+            });
+        });
+    });
+</script>
+@endpush

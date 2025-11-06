@@ -1,16 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Principal;
 
 use App\Models\Admin\Brand;
 use Illuminate\Support\Str;
-use App\Models\Admin\NewsTrend;
 use App\Http\Requests\BrandRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
 use App\Repositories\Interfaces\BrandRepositoryInterface;
-use Illuminate\Http\Request;
 
 class BrandController extends Controller
 {
@@ -23,34 +21,30 @@ class BrandController extends Controller
 
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        return view('admin.pages.brand.index', [
-            'brands' =>  $this->brandRepository->allBrand(),
+        $principalId = Auth::guard('principal')->id();
+        
+        return view('principal.brands.index', [
+            'brands' => $this->brandRepository->getPrincipalBrands($principalId),
         ]);
     }
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function create()
     {
-        //
+        return view('principal.brands.create');
     }
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
      */
     public function store(BrandRequest $request)
     {
+        $principalId = Auth::guard('principal')->id();
 
         $mainFile = $request->file('image');
         $logoFile = $request->file('logo');
@@ -63,6 +57,7 @@ class BrandController extends Controller
         } else {
             $globalFunImage = ['status' => 0];
         }
+        
         if (!empty($logoFile)) {
             $globalFunLogo = customUpload($logoFile, $filePath_logo);
         } else {
@@ -70,51 +65,51 @@ class BrandController extends Controller
         }
 
         $data = [
+            'principal_id' => $principalId,
             'country_id'   => $request->country_id,
-            'title'         => $request->title,
+            'title'        => $request->title,
             'description'  => $request->description,
             'image'        => $globalFunImage['status'] == 1 ? $globalFunImage['file_name'] : null,
             'logo'         => $globalFunLogo['status'] == 1 ? $globalFunLogo['file_name'] : null,
             'website_url'  => $request->website_url,
             'category'     => $request->category,
+            'status'       => 'pending', // Set status as pending for admin approval
         ];
+
         $this->brandRepository->storeBrand($data);
-        return redirect()->back()->with('success', 'Data has been saved successfully!');
-    }
 
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
+        return redirect()->route('principal.brands.index')
+            ->with('success', 'Brand submitted successfully! Waiting for admin approval.');
     }
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
-        //
+        $principalId = Auth::guard('principal')->id();
+        $brand = $this->brandRepository->findBrand($id);
+
+        // Check if brand belongs to this principal
+        if ($brand->principal_id !== $principalId) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        return view('principal.brands.edit', compact('brand'));
     }
 
     /**
      * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function update(BrandRequest $request, $id)
     {
-        $brand =  $this->brandRepository->findBrand($id);
+        $principalId = Auth::guard('principal')->id();
+        $brand = $this->brandRepository->findBrand($id);
+
+        // Check if brand belongs to this principal
+        if ($brand->principal_id !== $principalId) {
+            abort(403, 'Unauthorized action.');
+        }
 
         $mainFile = $request->file('image');
         $logoFile = $request->file('logo');
@@ -151,29 +146,33 @@ class BrandController extends Controller
 
         $data = [
             'country_id'   => $request->country_id,
-            'title'         => $request->title,
+            'title'        => $request->title,
             'description'  => $request->description,
             'image'        => $globalFunImage['status'] == 1 ? $globalFunImage['file_name'] : $brand->image,
             'logo'         => $globalFunLogo['status'] == 1 ? $globalFunLogo['file_name'] : $brand->logo,
             'website_url'  => $request->website_url,
             'category'     => $request->category,
+            'status'       => 'pending', // Reset to pending when updated
         ];
 
         $this->brandRepository->updateBrand($data, $id);
 
-        // session()->flash('success', 'Data has been saved successfully!');
-        return redirect()->route('admin.brand.index')->with('message', 'Data updated Successfully');
+        return redirect()->route('principal.brands.index')
+            ->with('success', 'Brand updated successfully! Waiting for admin approval.');
     }
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        $brand =  $this->brandRepository->findBrand($id);
+        $principalId = Auth::guard('principal')->id();
+        $brand = $this->brandRepository->findBrand($id);
+
+        // Check if brand belongs to this principal
+        if ($brand->principal_id !== $principalId) {
+            abort(403, 'Unauthorized action.');
+        }
 
         $paths = [
             storage_path("app/public/brand/image/{$brand->image}"),
@@ -185,84 +184,10 @@ class BrandController extends Controller
                 File::delete($path);
             }
         }
+        
         $this->brandRepository->destroyBrand($id);
+
+        return redirect()->route('principal.brands.index')
+            ->with('success', 'Brand deleted successfully.');
     }
-
-
-    // public function overview($slug)
-    // {
-    //     $brand = Brand::where('slug', $slug)
-    //         ->with('brandPage.rowFour', 'brandPage.rowFive', 'brandPage.rowSeven', 'brandPage.rowEight')
-    //         ->firstOrFail();
-
-    //     return view('frontend.pages.brandPage.overview', compact('brand'));
-    // }
-    //  public function products($slug)
-    // {
-    //     $brand = Brand::where('slug', $slug)->with('brandPage')->firstOrFail();
-    //     return view('frontend.pages.brandPage.products', compact('brand'));
-    // }
-    public function brandOverview($slug)
-{
-    $brand = Brand::with('brandPage')->where('slug', $slug)->firstOrFail();
-    return view('frontend.pages.brandPage.overview', compact('brand'));
-}
-
-public function contentDetails($id)
-{
-    // Load the news trend by ID (or slug)
-    $newsTrend = NewsTrend::with('brand.brandPage')->findOrFail($id);
-
-    // Get the related brand for the page header
-    $brand = $newsTrend->brand;
-
-    // Pass both to the view
-    return view('frontend.pages.brandPage.content_details', compact('newsTrend', 'brand'));
-}
-/**
- * Display pending brands for approval.
- */
-/**
- * Display pending brands from principals for approval.
- */
-public function pending()
-{
-    return view('admin.pages.brand.pending', [
-        'pendingBrands' => $this->brandRepository->pendingBrands(),
-    ]);
-}
-/**
- * Approve a brand.
- */
-public function approve($id)
-{
-    try {
-        $this->brandRepository->approveBrand($id);
-        return redirect()->route('admin.brands.pending')
-            ->with('success', 'Brand approved successfully!');
-    } catch (\Exception $e) {
-        return redirect()->route('admin.brands.pending')
-            ->with('error', 'Error approving brand: ' . $e->getMessage());
-    }
-}
-
-/**
- * Reject a brand.
- */
-public function reject(Request $request, $id)
-{
-    $request->validate([
-        'rejection_reason' => 'required|string|max:500'
-    ]);
-
-    try {
-        $this->brandRepository->rejectBrand($id, $request->rejection_reason);
-        return redirect()->route('admin.brands.pending')
-            ->with('success', 'Brand rejected successfully!');
-    } catch (\Exception $e) {
-        return redirect()->route('admin.brands.pending')
-            ->with('error', 'Error rejecting brand: ' . $e->getMessage());
-    }
-}
-
 }

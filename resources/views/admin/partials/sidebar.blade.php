@@ -66,6 +66,20 @@
                                         </a>
                                     </li>
 
+                               <!-- In your admin sidebar -->
+                                        <div class="menu-item">
+                                            <a class="menu-link {{ Route::current()->getName() == 'admin.brands.pending' ? 'active' : '' }}"
+                                            href="{{ route('admin.brands.pending') }}">
+                                                <span class="menu-bullet">
+                                                    <span class="bullet bullet-dot"></span>
+                                                </span>
+                                                <span class="menu-title">Principal Brands Pending</span>
+                                                {{-- @if(($pendingBrandsCount ?? 0) > 0)
+                                                    <span class="badge badge-danger badge-pill">{{ $pendingBrandsCount ?? 0 }}</span>
+                                                @endif --}}
+                                            </a>
+                                        </div>
+
                 {{-- <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ Route::current()->getName() == 'admin.dashboard' ? 'here show' : '' }}">
                     <span class="menu-link">
                         <span class="menu-icon">
