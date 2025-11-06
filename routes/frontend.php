@@ -266,6 +266,72 @@ Route::delete('/partner/delete/{id}', [UserListController::class, 'deletePartner
 
 Route::get('solution-test', [SiteController::class, 'solutionTest'])->name('solution.test');
 
+// ==========================
+// PRINCIPAL GUEST ROUTES
+// (Only for NOT logged-in principals)
+// ==========================
+Route::prefix('principal')
+    ->name('principal.')
+    ->middleware('guest:principal')
+    ->group(function () {
+
+        // Login
+        Route::get('/login', [PrincipalAuthController::class, 'showLoginForm'])
+            ->name('login');
+        Route::post('/login', [PrincipalAuthController::class, 'login'])
+            ->name('login.submit');
+
+        // Register
+        Route::get('/register', [PrincipalAuthController::class, 'showRegisterForm'])
+            ->name('register');
+        Route::post('/register', [PrincipalAuthController::class, 'register'])
+            ->name('register.submit');
+
+        // Forgot Password
+        Route::get('/forgot-password', [PrincipalAuthController::class, 'showForgotPasswordForm'])
+            ->name('password.request');
+        Route::post('/forgot-password', [PrincipalAuthController::class, 'sendResetLink'])
+            ->name('password.email');
+    });
+
+// ==========================
+// PUBLIC EMAIL VERIFICATION ROUTE
+// (Principal does NOT need to be logged in)
+// ==========================
+Route::get('/principal/verify-email/{id}/{hash}', [EmailVerificationController::class, 'verify'])
+    ->name('principal.verification.verify')
+    ->middleware('signed'); // no auth middleware here
+
+// ==========================
+// AUTHENTICATED PRINCIPAL ROUTES
+// (Only logged-in principals)
+// ==========================
+Route::prefix('principal')
+    ->name('principal.')
+    ->middleware('auth:principal')
+    ->group(function () {
+
+        // Dashboard
+        Route::get('/dashboard', [PrincipalDashboardController::class, 'index'])
+            ->name('dashboard');
+
+        // Logout
+        Route::post('/logout', [PrincipalAuthController::class, 'logout'])
+            ->name('logout');
+
+        // Verification notice (for principals logged in but not yet verified)
+        Route::get('/verify-email', [EmailVerificationController::class, 'notice'])
+            ->name('verification.notice');
+
+        // Resend email verification
+        Route::post('/email/verification-notification', [EmailVerificationController::class, 'send'])
+            ->middleware('throttle:6,1')
+            ->name('verification.send');
+    });
+
+
+    Route::get('solution-test', [SiteController::class, 'solutionTest'])->name('solution.test');
+
 
 // Public contact route (for frontend users)
 Route::post('/contact', [App\Http\Controllers\ContactController::class, 'store'])->name('contact.store');
@@ -277,3 +343,13 @@ Route::prefix('administrator')->name('admin.')->middleware(['auth:admin', 'verif
     Route::put('pages/contact/{id}', [ContactController::class, 'update'])->name('pages.contact.update');
     Route::delete('pages/contact/{id}', [ContactController::class, 'destroy'])->name('pages.contact.destroy');
 });
+
+    // Frontend cookie management route
+Route::get('/manage-cookies', function () {
+    return view('frontend.pages.manage-cookies');
+})->name('manage.cookies');
+
+// Privacy Policy Route
+Route::get('/privacy-policy', function () {
+    return view('frontend.pages.privacy-policy');
+})->name('privacy.policy');
