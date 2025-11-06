@@ -4,8 +4,8 @@
 @endsection
 
 @section('content')
-<!-- Banner -->
-<div class="swiper bannerSwiper product-banner">
+<!--Banner -->
+<div class="shadow-none swiper bannerSwiper product-banner">
     <div class="swiper-wrapper">
         <div class="swiper-slide">
             <a href="">
@@ -26,8 +26,7 @@
     <div class="swiper-pagination"></div>
 </div>
 
-<div class="container my-3">
-    <!-- Category Header -->
+<div class="container my-3 mt-4">
     <div class="mx-4 mt-2 bg-white row align-items-center rounded-3">
         <div class="col-lg-12 d-flex align-items-center justify-content-between">
             <div class="info-area d-flex align-items-center">
@@ -55,7 +54,7 @@
             <!-- Sidebar Filters -->
             <div class="col-lg-3 col-sm-12">
 
-                {{-- <!-- What's New -->
+                <!-- What's New -->
                 <div class="p-3 mt-3 mb-2 bg-white category-border-top rounded-3">
                     <div class="checkbox-wrapper-21">
                         <label class="control control--checkbox">
@@ -64,7 +63,7 @@
                             <div class="control__indicator"></div>
                         </label>
                     </div>
-                </div> --}}
+                </div>
 
                 <!-- Brands -->
                 <div class="p-3 my-3 bg-white category-border-top rounded-3">
@@ -111,11 +110,11 @@
                 </div>
 
             </div>
-
-            <!-- Product List -->
-            <div class="col-lg-9 col-sm-12">
-                <div id="productContainer">
-                    @include('frontend.pages.shop.partials.products', ['products' => $products])
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="d-flex justify-content-center">
+                        {{ $products->links() }}
+                    </div>
                 </div>
             </div>
         </div>
