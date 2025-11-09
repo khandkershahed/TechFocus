@@ -33,134 +33,83 @@
     .container-xxl {
         max-width: 1450px;
     }
-    
-    .showcase {
-        position: relative;
-        display: inline-block;
-        margin-top: -100px;
-        margin-left: -50px;
-    }
-    
-    .showcase .overlay {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: rgba(255, 255, 255, 0.9);
-        padding: 20px;
-        border-radius: 10px;
-        text-align: center;
-    }
 </style>
-
-@if(!empty($aboutPage))
-<!-- Section One: Banner -->
 <section class="ban_sec section_one">
     <div class="p-0 container-fluid">
         <div class="ban_img">
-            <img src="{{ asset('img/About-Us-Page-Image_Tech-Focus.png') }}" alt="banner" class="img-fluid w-100">
+            <img src="{{ asset('img/About-Us-Page-Image_Tech-Focus.png') }}" alt="banner">
+            {{-- <div class="ban_text">
+                    <ul class="mt-5 d-flex align-items-center ps-0">
+                        <li class="text-white"><a href="#" class="">Home</a></li>
+                        <li class="text-white"><span class="me-2 ms-2">/</span></li>
+                        <li class="main-color"><a href="#">About Us</a></li>
+                    </ul>
+                </div> --}}
         </div>
     </div>
 </section>
 
-<!-- Section Two: About Content -->
-<section class="section_two py-5">
+<section class="section_two">
     <div class="container custom-spacer">
-        <div class="row align-items-center">
+        <div class="row">
             <div class="col-lg-6">
                 <div>
-                    @if($aboutPage->section_two_badge)
                     <h6 class="main-color">{{ $aboutPage->section_two_badge }}</h6>
-                    @endif
-                    
                     <div class="mt-lg-2">
-                        <h1 class="fw-bold">
-                            {{ $aboutPage->section_two_title_1 ?? '' }}
-                            <span class="main-color">{{ $aboutPage->section_two_title_span ?? '' }}</span>
+                        <h1 class=" fw-bold">{{ $aboutPage->section_two_title_1 }}
+                            {{ $aboutPage->section_two_title_span }}
                         </h1>
-                        
-                        @if($aboutPage->section_two_subtitle)
-                        <h3 class="text-dark">{{ $aboutPage->section_two_subtitle }}</h3>
-                        @endif
-                        
-                        @if($aboutPage->section_two_description)
-                        <p class="text-muted fs-5">{{ $aboutPage->section_two_description }}</p>
-                        @endif
+                        <h3 class="">{{ $aboutPage->section_two_subtitle }} </h3>
+                        <p class="">{{ $aboutPage->section_two_description }} </p>
                     </div>
-                    
-                    @if($aboutPage->section_two_button_name && $aboutPage->section_two_button_link)
-                    <div class="mt-4">
-                        <a href="{{ $aboutPage->section_two_button_link }}" 
-                           class="btn common-btn-3 rounded-0 px-4 py-2">
-                            {{ $aboutPage->section_two_button_name }}
-                        </a>
+                    {{-- <div class="my-lg-5">
+                            <p class="mb-0 main-color">Contacting Industris —</p>
+                            <p>addresses and information on how best to contact us.</p>
+                        </div> --}}
+                    <div class="mt-lg-5">
+                        <a href="{{ $aboutPage->section_two_button_link }}"
+                            class="btn common-btn-3 rounded-0 w-25">{{ $aboutPage->section_two_button_name }} </a>
                     </div>
-                    @endif
                 </div>
             </div>
-            
-            <div class="col-lg-6 position-relative">
+            <div class="col-lg-6">
                 <div class="d-flex justify-content-center">
-                    @if($aboutPage->section_two_main_image)
-                    <img class="img-fluid rounded shadow" 
-                         src="{{ Storage::exists('public/about-us/' . $aboutPage->section_two_main_image) ? asset('storage/about-us/' . $aboutPage->section_two_main_image) : 'https://img.freepik.com/free-photo/about-as-service-contact-information-concept_53876-138509.jpg?semt=ais_hybrid&w=740' }}"
-                         alt="Main Image"
-                         style="max-width: 100%; height: auto;"
-                         onerror="this.onerror=null;this.src='https://img.freepik.com/free-photo/about-as-service-contact-information-concept_53876-138509.jpg?semt=ais_hybrid&w=740';">
-                    @else
-                    <img class="img-fluid rounded shadow" 
-                         src="https://img.freepik.com/free-photo/about-as-service-contact-information-concept_53876-138509.jpg?semt=ais_hybrid&w=740"
-                         alt="Default About Image"
-                         style="max-width: 100%; height: auto;">
-                    @endif
+                    <img class="img-fluid" width="470" height="541"
+                        src="{{ !empty($aboutPage->section_two_main_image) && file_exists(public_path('app/public/about-us/' . $aboutPage->section_two_main_image)) ? asset('app/public/about-us/' . $aboutPage->section_two_main_image) : 'https://img.freepik.com/free-photo/about-as-service-contact-information-concept_53876-138509.jpg?semt=ais_hybrid&w=740' }}"
+                        alt="Main Image"
+                        onerror="this.onerror=null;this.src='https://img.freepik.com/free-photo/about-as-service-contact-information-concept_53876-138509.jpg?semt=ais_hybrid&w=740';" />
                 </div>
-                
-                @if($aboutPage->section_two_secondary_image)
                 <div class="showcase">
-                    <img class="img-fluid rounded shadow" 
-                         src="{{ Storage::exists('public/about-us/' . $aboutPage->section_two_secondary_image) ? asset('storage/about-us/' . $aboutPage->section_two_secondary_image) : 'https://img.freepik.com/free-photo/about-as-service-contact-information-concept_53876-138509.jpg?semt=ais_hybrid&w=740' }}"
-                         alt="Secondary Image"
-                         style="width: 250px; height: auto;"
-                         onerror="this.onerror=null;this.src='https://img.freepik.com/free-photo/about-as-service-contact-information-concept_53876-138509.jpg?semt=ais_hybrid&w=740';">
-                    
-                    @if($aboutPage->section_two_secondary_image_count)
+                    <img src="{{ !empty($aboutPage->section_two_secondary_image) && file_exists(public_path('app/public/about-us/' . $aboutPage->section_two_secondary_image)) ? asset('app/public/about-us/' . $aboutPage->section_two_secondary_image) : 'https://img.freepik.com/free-photo/about-as-service-contact-information-concept_53876-138509.jpg?semt=ais_hybrid&w=740' }}"
+                        alt="Secondary Image"
+                        onerror="this.onerror=null;this.src='https://img.freepik.com/free-photo/about-as-service-contact-information-concept_53876-138509.jpg?semt=ais_hybrid&w=740';" />
                     <div class="overlay">
-                        <h2 class="mb-1 main-color">{{ $aboutPage->section_two_secondary_image_count }}</h2>
-                        @if($aboutPage->section_two_secondary_image_title)
-                        <p class="mb-0 fw-bold">{{ $aboutPage->section_two_secondary_image_title }}</p>
-                        @endif
+                        <h2 class="mb-1">{{ $aboutPage->section_two_secondary_image_count }}</h2>
+                        <!-- <p>{{ $aboutPage->section_two_secondary_image_title }}</p> -->
+
                     </div>
-                    @endif
                 </div>
-                @endif
             </div>
+
         </div>
     </div>
 </section>
 
-<!-- Section Three: Tabs -->
-@if($aboutPage->section_three_tab_one_title || $aboutPage->section_three_tab_two_title || $aboutPage->section_three_tab_three_title || $aboutPage->section_three_tab_four_title)
-<section class="section_three py-5 bg-light">
+<section class="section_three">
     <div class="container">
         <ul class="nav nav-tabs row" id="myTab" role="tablist">
-            @if($aboutPage->section_three_tab_one_title)
             <li class="p-3 px-0 nav-item col-lg-3" role="presentation">
                 <button class="p-4 shadow-sm nav-link nav-links active" id="home-tab" data-bs-toggle="tab"
                     style="height: 200px" data-bs-target="#home" type="button" role="tab" aria-controls="home"
                     aria-selected="true">
-                    <div class="text-start">
+                    <div class=" text-start">
                         <div>
                             <h6>{{ $aboutPage->section_three_tab_one_title }}</h6>
-                            @if($aboutPage->section_three_tab_one_short_description)
-                            <p class="small text-muted mt-2">{{ $aboutPage->section_three_tab_one_short_description }}</p>
-                            @endif
+                            <p>{{ $aboutPage->section_three_tab_one_short_description }}</p>
                         </div>
                     </div>
                 </button>
             </li>
-            @endif
-            
-            @if($aboutPage->section_three_tab_two_title)
             <li class="p-3 nav-item col-lg-3" role="presentation">
                 <button class="p-4 shadow-sm nav-link nav-links" id="profile-tab" data-bs-toggle="tab"
                     style="height: 200px" data-bs-target="#profile" type="button" role="tab"
@@ -168,16 +117,11 @@
                     <div class="text-start">
                         <div>
                             <h6>{{ $aboutPage->section_three_tab_two_title }}</h6>
-                            @if($aboutPage->section_three_tab_two_short_description)
-                            <p class="small text-muted mt-2">{{ $aboutPage->section_three_tab_two_short_description }}</p>
-                            @endif
+                            <p>{{ $aboutPage->section_three_tab_two_short_description }}</p>
                         </div>
                     </div>
                 </button>
             </li>
-            @endif
-            
-            @if($aboutPage->section_three_tab_three_title)
             <li class="p-3 ps-0 nav-item col-lg-3" role="presentation">
                 <button class="p-4 shadow-sm nav-link nav-links" id="contact-tab" data-bs-toggle="tab"
                     style="height: 200px" data-bs-target="#contact" type="button" role="tab"
@@ -185,16 +129,11 @@
                     <div class="text-start">
                         <div>
                             <h6>{{ $aboutPage->section_three_tab_three_title }}</h6>
-                            @if($aboutPage->section_three_tab_three_short_description)
-                            <p class="small text-muted mt-2">{{ $aboutPage->section_three_tab_three_short_description }}</p>
-                            @endif
+                            <p>{{ $aboutPage->section_three_tab_three_short_description }}</p>
                         </div>
                     </div>
                 </button>
             </li>
-            @endif
-            
-            @if($aboutPage->section_three_tab_four_title)
             <li class="p-3 ps-0 nav-item col-lg-3 pe-0" role="presentation">
                 <button class="p-4 shadow-sm nav-link nav-links" id="contact-tabs" data-bs-toggle="tab"
                     style="height: 200px" data-bs-target="#contacts" type="button" role="tab"
@@ -202,457 +141,424 @@
                     <div class="text-start">
                         <div>
                             <h6>{{ $aboutPage->section_three_tab_four_title }}</h6>
-                            @if($aboutPage->section_three_tab_four_short_description)
-                            <p class="small text-muted mt-2">{{ $aboutPage->section_three_tab_four_short_description }}</p>
-                            @endif
+                            <p>{{ $aboutPage->section_three_tab_four_short_description }}</p>
                         </div>
                     </div>
                 </button>
             </li>
-            @endif
         </ul>
-        
         <div class="tab-content" id="myTabContent">
-            <!-- Tab One Content -->
-            @if($aboutPage->section_three_tab_one_title)
             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                 <div class="p-5 bg-white row align-items-center">
                     <div class="col-lg-7">
-                        <h2 class="mb-4">{{ $aboutPage->section_three_tab_one_title }}</h2>
-                        @if($aboutPage->section_three_tab_one_detailed_description)
-                        <p class="text-muted fs-5">{{ $aboutPage->section_three_tab_one_detailed_description }}</p>
-                        @endif
-                        
-                        @if($aboutPage->section_three_tab_one_button_name)
+                        <h2>{{ $aboutPage->section_three_tab_one_title }}</h2>
+                        <p>{{ $aboutPage->section_three_tab_one_detailed_description }}</p>
+                        <!-- Optional Button -->
+                        @if ($aboutPage->section_three_tab_one_button_name)
                         <div class="pt-4">
-                            <a href="{{ $aboutPage->section_three_tab_one_button_link ?? route('contact') }}" class="text-btn main-color fw-bold">
+                            <a href="{{ route('contact') }}" class="text-btn main-color">
                                 {{ $aboutPage->section_three_tab_one_button_name }}
-                                <i class="fa-solid fa-chevron-right ms-2"></i>
+                                <i class="fa-solid fa-chevron-right"></i>
                             </a>
                         </div>
+
                         @endif
                     </div>
-                    
-                    <!-- Right Column Content -->
+                    <!-- Optional Quote Section -->
+                    @if ($aboutPage->section_three_tab_one_quote)
                     <div class="col-lg-5">
-                        @if($aboutPage->section_three_tab_one_quote)
-                        <div style="border-top: 2px solid var(--primary-color); border-bottom: 2px solid var(--primary-color)">
+                        <div style="border-top: 1px solid black; border-bottom: 1px solid black">
                             <div class="p-5">
-                                <h4 class="fst-italic text-dark">"{{ $aboutPage->section_three_tab_one_quote }}"</h4>
-                                @if($aboutPage->section_three_tab_one_quote_author)
-                                <p class="mt-3"><span class="fw-bold text-muted">— {{ $aboutPage->section_three_tab_one_quote_author }}</span></p>
-                                @endif
+                                <h4>{{ $aboutPage->section_three_tab_one_quote }}</h4>
+                                <p><span
+                                        class="fw-bold">{{ $aboutPage->section_three_tab_one_quote_author }}</span>
+                                </p>
                             </div>
                         </div>
-                        @elseif($aboutPage->section_three_tab_one_list_title)
+                    </div>
+                    @else
+                    <!-- Optional List Section -->
+                    @if ($aboutPage->section_three_tab_one_list_title)
+                    <div class="col-lg-5">
                         <div class="ms-5">
-                            <h4 class="mb-4">{{ $aboutPage->section_three_tab_one_list_title }}</h4>
-                            <ul class="ps-0 ms-0 list-unstyled">
-                                @foreach([1,2,3,4] as $i)
-                                    @php $listItem = "section_three_tab_one_list_$i"; @endphp
-                                    @if($aboutPage->$listItem)
-                                    <li class="pt-3 d-flex align-items-start">
-                                        <i class="fa-regular fa-circle-check main-color me-3 mt-1"></i>
-                                        <span>{{ $aboutPage->$listItem }}</span>
-                                    </li>
-                                    @endif
-                                @endforeach
+                            <h4>{{ $aboutPage->section_three_tab_one_list_title }}</h4>
+                            <ul class="ps-2 ms-0">
+                                @if ($aboutPage->section_three_tab_one_list_1)
+                                <li class="pt-3">{{ $aboutPage->section_three_tab_one_list_1 }}</li>
+                                @endif
+                                @if ($aboutPage->section_three_tab_one_list_2)
+                                <li class="pt-3">{{ $aboutPage->section_three_tab_one_list_2 }}</li>
+                                @endif
+                                @if ($aboutPage->section_three_tab_one_list_3)
+                                <li class="pt-3">{{ $aboutPage->section_three_tab_one_list_3 }}</li>
+                                @endif
+                                @if ($aboutPage->section_three_tab_one_list_4)
+                                <li class="pt-3">{{ $aboutPage->section_three_tab_one_list_4 }}</li>
+                                @endif
                             </ul>
                         </div>
-                        @endif
                     </div>
+                    @endif
+                    @endif
                 </div>
             </div>
-            @endif
-            
-            <!-- Tab Two Content -->
-            @if($aboutPage->section_three_tab_two_title)
             <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                 <div class="p-5 bg-white row align-items-center">
                     <div class="col-lg-7">
-                        <h2 class="mb-4">{{ $aboutPage->section_three_tab_two_title }}</h2>
-                        @if($aboutPage->section_three_tab_two_detailed_description)
-                        <p class="text-muted fs-5">{{ $aboutPage->section_three_tab_two_detailed_description }}</p>
-                        @endif
-                        
-                        @if($aboutPage->section_three_tab_two_button_name)
+                        <h2>{{ $aboutPage->section_three_tab_two_title }}</h2>
+                        <p>{{ $aboutPage->section_three_tab_two_detailed_description }}</p>
+                        <!-- Optional Button -->
+                        @if ($aboutPage->section_three_tab_two_button_name)
                         <div class="pt-4">
-                            <a href="{{ $aboutPage->section_three_tab_two_button_link ?? '#' }}" class="text-btn main-color fw-bold">
-                                {{ $aboutPage->section_three_tab_two_button_name }}
-                                <i class="fa-solid fa-chevron-right ms-2"></i>
-                            </a>
+                            <a href="{{ $aboutPage->section_three_tab_two_button_link }}"
+                                class="text-btn main-color">{{ $aboutPage->section_three_tab_two_button_name }} <i
+                                    class="fa-solid fa-chevron-right"></i></a>
                         </div>
                         @endif
                     </div>
-                    
+                    <!-- Optional Quote Section -->
+                    @if ($aboutPage->section_three_tab_two_quote)
                     <div class="col-lg-5">
-                        @if($aboutPage->section_three_tab_two_quote)
-                        <div style="border-top: 2px solid var(--primary-color); border-bottom: 2px solid var(--primary-color)">
+                        <div style="border-top: 1px solid black; border-bottom: 1px solid black">
                             <div class="p-5">
-                                <h4 class="fst-italic text-dark">"{{ $aboutPage->section_three_tab_two_quote }}"</h4>
-                                @if($aboutPage->section_three_tab_two_quote_author)
-                                <p class="mt-3"><span class="fw-bold text-muted">— {{ $aboutPage->section_three_tab_two_quote_author }}</span></p>
-                                @endif
+                                <h4>{{ $aboutPage->section_three_tab_two_quote }}</h4>
+                                <p><span
+                                        class="fw-bold">{{ $aboutPage->section_three_tab_two_quote_author }}</span>
+                                </p>
                             </div>
                         </div>
-                        @elseif($aboutPage->section_three_tab_two_list_title)
+                    </div>
+                    @else
+                    <!-- Optional List Section -->
+                    @if ($aboutPage->section_three_tab_two_list_title)
+                    <div class="col-lg-5">
                         <div class="ms-5">
-                            <h4 class="mb-4">{{ $aboutPage->section_three_tab_two_list_title }}</h4>
-                            <ul class="ps-0 ms-0 list-unstyled">
-                                @foreach([1,2,3,4] as $i)
-                                    @php $listItem = "section_three_tab_two_list_$i"; @endphp
-                                    @if($aboutPage->$listItem)
-                                    <li class="pt-3 d-flex align-items-start">
-                                        <i class="fa-regular fa-circle-check main-color me-3 mt-1"></i>
-                                        <span>{{ $aboutPage->$listItem }}</span>
-                                    </li>
-                                    @endif
-                                @endforeach
+                            <h4>{{ $aboutPage->section_three_tab_two_list_title }}</h4>
+                            <ul class="ps-2 ms-0">
+                                @if ($aboutPage->section_three_tab_two_list_1)
+                                <li class="pt-3">{{ $aboutPage->section_three_tab_two_list_1 }}</li>
+                                @endif
+                                @if ($aboutPage->section_three_tab_two_list_2)
+                                <li class="pt-3">{{ $aboutPage->section_three_tab_two_list_2 }}</li>
+                                @endif
+                                @if ($aboutPage->section_three_tab_two_list_3)
+                                <li class="pt-3">{{ $aboutPage->section_three_tab_two_list_3 }}</li>
+                                @endif
+                                @if ($aboutPage->section_three_tab_two_list_4)
+                                <li class="pt-3">{{ $aboutPage->section_three_tab_two_list_4 }}</li>
+                                @endif
                             </ul>
                         </div>
-                        @endif
                     </div>
+                    @endif
+                    @endif
                 </div>
             </div>
-            @endif
-            
-            <!-- Tab Three Content -->
-            @if($aboutPage->section_three_tab_three_title)
             <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
                 <div class="p-5 bg-white row align-items-center">
                     <div class="col-lg-7">
-                        <h2 class="mb-4">{{ $aboutPage->section_three_tab_three_title }}</h2>
-                        @if($aboutPage->section_three_tab_three_detailed_description)
-                        <p class="text-muted fs-5">{{ $aboutPage->section_three_tab_three_detailed_description }}</p>
-                        @endif
-                        
-                        @if($aboutPage->section_three_tab_three_button_name)
+                        <h2>{{ $aboutPage->section_three_tab_three_title }}</h2>
+                        <p>{{ $aboutPage->section_three_tab_three_detailed_description }}</p>
+                        <!-- Optional Button -->
+                        @if ($aboutPage->section_three_tab_three_button_name)
                         <div class="pt-4">
-                            <a href="{{ $aboutPage->section_three_tab_three_button_link ?? '#' }}" class="text-btn main-color fw-bold">
-                                {{ $aboutPage->section_three_tab_three_button_name }}
-                                <i class="fa-solid fa-chevron-right ms-2"></i>
-                            </a>
+                            <a href="{{ $aboutPage->section_three_tab_three_button_link }}"
+                                class="text-btn main-color">{{ $aboutPage->section_three_tab_three_button_name }}
+                                <i class="fa-solid fa-chevron-right"></i></a>
                         </div>
                         @endif
                     </div>
-                    
+                    <!-- Optional Quote Section -->
+                    @if ($aboutPage->section_three_tab_three_quote)
                     <div class="col-lg-5">
-                        @if($aboutPage->section_three_tab_three_quote)
-                        <div style="border-top: 2px solid var(--primary-color); border-bottom: 2px solid var(--primary-color)">
+                        <div style="border-top: 1px solid black; border-bottom: 1px solid black">
                             <div class="p-5">
-                                <h4 class="fst-italic text-dark">"{{ $aboutPage->section_three_tab_three_quote }}"</h4>
-                                @if($aboutPage->section_three_tab_three_quote_author)
-                                <p class="mt-3"><span class="fw-bold text-muted">— {{ $aboutPage->section_three_tab_three_quote_author }}</span></p>
-                                @endif
+                                <h4>{{ $aboutPage->section_three_tab_three_quote }}</h4>
+                                <p><span
+                                        class="fw-bold">{{ $aboutPage->section_three_tab_three_quote_author }}</span>
+                                </p>
                             </div>
                         </div>
-                        @elseif($aboutPage->section_three_tab_three_list_title)
+                    </div>
+                    @else
+                    <!-- Optional List Section -->
+                    @if ($aboutPage->section_three_tab_three_list_title)
+                    <div class="col-lg-5">
                         <div class="ms-5">
-                            <h4 class="mb-4">{{ $aboutPage->section_three_tab_three_list_title }}</h4>
-                            <ul class="ps-0 ms-0 list-unstyled">
-                                @foreach([1,2,3,4] as $i)
-                                    @php $listItem = "section_three_tab_three_list_$i"; @endphp
-                                    @if($aboutPage->$listItem)
-                                    <li class="pt-3 d-flex align-items-start">
-                                        <i class="fa-regular fa-circle-check main-color me-3 mt-1"></i>
-                                        <span>{{ $aboutPage->$listItem }}</span>
-                                    </li>
-                                    @endif
-                                @endforeach
+                            <h4>{{ $aboutPage->section_three_tab_three_list_title }}</h4>
+                            <ul class="ps-2 ms-0">
+                                @if ($aboutPage->section_three_tab_three_list_1)
+                                <li class="pt-3">{{ $aboutPage->section_three_tab_three_list_1 }}</li>
+                                @endif
+                                @if ($aboutPage->section_three_tab_three_list_2)
+                                <li class="pt-3">{{ $aboutPage->section_three_tab_three_list_2 }}</li>
+                                @endif
+                                @if ($aboutPage->section_three_tab_three_list_3)
+                                <li class="pt-3">{{ $aboutPage->section_three_tab_three_list_3 }}</li>
+                                @endif
+                                @if ($aboutPage->section_three_tab_three_list_4)
+                                <li class="pt-3">{{ $aboutPage->section_three_tab_three_list_4 }}</li>
+                                @endif
                             </ul>
                         </div>
-                        @endif
                     </div>
+                    @endif
+                    @endif
                 </div>
             </div>
-            @endif
-            
-            <!-- Tab Four Content -->
-            @if($aboutPage->section_three_tab_four_title)
             <div class="tab-pane fade" id="contacts" role="tabpanel" aria-labelledby="contact-tabs">
                 <div class="p-5 bg-white row align-items-center">
                     <div class="col-lg-7">
-                        <h2 class="mb-4">{{ $aboutPage->section_three_tab_four_title }}</h2>
-                        @if($aboutPage->section_three_tab_four_detailed_description)
-                        <p class="text-muted fs-5">{{ $aboutPage->section_three_tab_four_detailed_description }}</p>
-                        @endif
-                        
-                        @if($aboutPage->section_three_tab_four_button_name)
+                        <h2>{{ $aboutPage->section_three_tab_four_title }}</h2>
+                        <p>{{ $aboutPage->section_three_tab_four_detailed_description }}</p>
+                        <!-- Optional Button -->
+                        @if ($aboutPage->section_three_tab_four_button_name)
                         <div class="pt-4">
-                            <a href="{{ $aboutPage->section_three_tab_four_button_link ?? '#' }}" class="text-btn main-color fw-bold">
-                                {{ $aboutPage->section_three_tab_four_button_name }}
-                                <i class="fa-solid fa-chevron-right ms-2"></i>
-                            </a>
+                            <a href="{{ $aboutPage->section_three_tab_four_button_link }}"
+                                class="text-btn main-color">{{ $aboutPage->section_three_tab_four_button_name }}
+                                <i class="fa-solid fa-chevron-right"></i></a>
                         </div>
                         @endif
                     </div>
-                    
+                    <!-- Optional Quote Section -->
+                    @if ($aboutPage->section_three_tab_four_quote)
                     <div class="col-lg-5">
-                        @if($aboutPage->section_three_tab_four_quote)
-                        <div style="border-top: 2px solid var(--primary-color); border-bottom: 2px solid var(--primary-color)">
+                        <div style="border-top: 1px solid black; border-bottom: 1px solid black">
                             <div class="p-5">
-                                <h4 class="fst-italic text-dark">"{{ $aboutPage->section_three_tab_four_quote }}"</h4>
-                                @if($aboutPage->section_three_tab_four_quote_author)
-                                <p class="mt-3"><span class="fw-bold text-muted">— {{ $aboutPage->section_three_tab_four_quote_author }}</span></p>
-                                @endif
+                                <h4>{{ $aboutPage->section_three_tab_four_quote }}</h4>
+                                <p><span
+                                        class="fw-bold">{{ $aboutPage->section_three_tab_four_quote_author }}</span>
+                                </p>
                             </div>
                         </div>
-                        @elseif($aboutPage->section_three_tab_four_list_title)
+                    </div>
+                    @else
+                    <!-- Optional List Section -->
+                    @if ($aboutPage->section_three_tab_four_list_title)
+                    <div class="col-lg-5">
                         <div class="ms-5">
-                            <h4 class="mb-4">{{ $aboutPage->section_three_tab_four_list_title }}</h4>
-                            <ul class="ps-0 ms-0 list-unstyled">
-                                @foreach([1,2,3,4] as $i)
-                                    @php $listItem = "section_three_tab_four_list_$i"; @endphp
-                                    @if($aboutPage->$listItem)
-                                    <li class="pt-3 d-flex align-items-start">
-                                        <i class="fa-regular fa-circle-check main-color me-3 mt-1"></i>
-                                        <span>{{ $aboutPage->$listItem }}</span>
-                                    </li>
-                                    @endif
-                                @endforeach
+                            <h4>{{ $aboutPage->section_three_tab_four_list_title }}</h4>
+                            <ul class="ps-2 ms-0">
+                                @if ($aboutPage->section_three_tab_four_list_1)
+                                <li class="pt-3">{{ $aboutPage->section_three_tab_four_list_1 }}</li>
+                                @endif
+                                @if ($aboutPage->section_three_tab_four_list_2)
+                                <li class="pt-3">{{ $aboutPage->section_three_tab_four_list_2 }}</li>
+                                @endif
+                                @if ($aboutPage->section_three_tab_four_list_3)
+                                <li class="pt-3">{{ $aboutPage->section_three_tab_four_list_3 }}</li>
+                                @endif
+                                @if ($aboutPage->section_three_tab_four_list_4)
+                                <li class="pt-3">{{ $aboutPage->section_three_tab_four_list_4 }}</li>
+                                @endif
                             </ul>
                         </div>
-                        @endif
                     </div>
+                    @endif
+                    @endif
                 </div>
             </div>
-            @endif
         </div>
     </div>
 </section>
-@endif
 
+{{-- <section class="mt-5 container-faded section_four">
+    <div class="p-0 ">
+        <div class="">
+            <img class="img-fluid w-100"
+                src="{{ !empty($aboutPage->section_four_banner_middle_image) && file_exists(public_path('app/public/about-us/' . $aboutPage->section_four_banner_middle_image)) ? asset('app/public/about-us/' . $aboutPage->section_four_banner_middle_image) : asset('img/about-us-banner.jpg') }}"
+                alt="banner">
+            <div class="ban_text-action">
+            </div>
+        </div>
+    </div>
+</section> --}}
 <!-- Section Four: Banner Middle -->
 @if($aboutPage->section_four_banner_middle_image)
-<section class="my-5 section_four">
-    <div class="container-fluid p-0">
-        <div class="banner-middle">
+<section class="mt-5 container-faded section_four">
+    <div class="p-0">
+        <div class="">
             <img class="img-fluid w-100"
-                src="{{ Storage::exists('public/about-us/' . $aboutPage->section_four_banner_middle_image) ? asset('storage/about-us/' . $aboutPage->section_four_banner_middle_image) : asset('img/TechFocus About us page  (1920x350).webp') }}"
-                alt="Middle Banner"
-                style="max-height: 400px; object-fit: cover;"
-                onerror="this.onerror=null;this.src='{{ asset('img/TechFocus About us page  (1920x350).webp') }}';">
+                src="{{ $aboutPage->section_four_banner_middle_image ? asset('storage/about-us/' . $aboutPage->section_four_banner_middle_image) : asset('img/TechFocus About us page  (1920x350).webp') }}"
+                alt="banner">
         </div>
     </div>
 </section>
 @endif
 
-<!-- Section Five: CEO & Features -->
-@if($aboutPage->section_five_col_one_title || $aboutPage->section_five_col_two_title)
-<section class="section_five py-5">
+
+<section class="section_five">
     <div class="container custom-spacer">
-        <div class="row align-items-start">
-            <!-- Column 1: CEO Info -->
-            @if($aboutPage->section_five_col_one_title)
-            <div class="col-lg-6 pe-lg-5" style="border-right: 2px solid var(--secondary-color)">
-                <div class="pe-4">
-                    <h1 class="mb-4">{{ $aboutPage->section_five_col_one_title }}</h1>
-                    @if($aboutPage->section_five_col_one_description)
-                    <p class="pb-4 text-muted fs-5">{{ $aboutPage->section_five_col_one_description }}</p>
-                    @endif
-                    
-                    @if($aboutPage->section_five_ceo_sign)
-                    <div class="d-flex justify-content-start align-items-start mb-4">
-                        <img class="img-fluid" 
-                             src="{{ Storage::exists('public/about-us/' . $aboutPage->section_five_ceo_sign) ? asset('storage/about-us/' . $aboutPage->section_five_ceo_sign) : asset('img/ceo.png') }}"
-                             alt="CEO Signature"
-                             style="max-width: 200px; height: auto;"
-                             onerror="this.onerror=null;this.src='{{ asset('img/ceo.png') }}';">
+        <div class="row align-items-center">
+            <!-- Column 1 -->
+            <div class="col-lg-6" style="border-right: 1px solid var(--secondary-color)">
+                <div class="me-4">
+                    <h1>{{ $aboutPage->section_five_col_one_title }}</h1>
+                    <p class="pb-5">{{ $aboutPage->section_five_col_one_description }}</p>
+                    <div class="d-flex justify-content-start align-items-start">
+                        @if ($aboutPage->section_five_ceo_sign)
+                        <img class="img-fluid" width="200px" src="{{ $aboutPage->section_five_ceo_sign }}"
+                            alt="CEO Signature"
+                            onerror="this.onerror=null;this.src='{{ asset('img/ceo.png') }}';">
+                        @endif
+
                     </div>
-                    @endif
-                    
-                    @if($aboutPage->section_five_ceo_name)
-                    <div class="d-flex align-items-center">
-                        <div class="pe-4" style="border-right: 2px solid var(--dark)">
+                    <div class="d-flex">
+                        <div class="p-2 pe-3" style="border-right: 1px solid black">
                             <h6 class="mb-0 fw-bold">{{ $aboutPage->section_five_ceo_name }}</h6>
-                            <p class="mb-0 text-muted">{{ $aboutPage->section_five_ceo_designation }}</p>
+                            <p class="mb-0">{{ $aboutPage->section_five_ceo_designation }}</p>
                         </div>
-                        <div class="d-flex align-items-center ms-4">
-                            @if($aboutPage->section_five_ceo_facebook_account_link)
-                            <a href="{{ $aboutPage->section_five_ceo_facebook_account_link }}" class="text-decoration-none me-3">
-                                <i class="fa-brands fa-square-facebook fs-4 main-color"></i>
-                            </a>
+                        <div class="d-flex align-items-center">
+                            @if ($aboutPage->section_five_ceo_facebook_account_link)
+                            <a href="{{ $aboutPage->section_five_ceo_facebook_account_link }}"><i
+                                    class="p-2 fa-brands fa-square-facebook"></i></a>
                             @endif
-                            @if($aboutPage->section_five_ceo_twitter_account_link)
-                            <a href="{{ $aboutPage->section_five_ceo_twitter_account_link }}" class="text-decoration-none me-3">
-                                <i class="fa-brands fa-twitter fs-4 main-color"></i>
-                            </a>
+                            @if ($aboutPage->section_five_ceo_twitter_account_link)
+                            <a href="{{ $aboutPage->section_five_ceo_twitter_account_link }}"><i
+                                    class="p-2 fa-brands fa-twitter"></i></a>
                             @endif
-                            @if($aboutPage->section_five_ceo_whatsapp_account_link)
-                            <a href="{{ $aboutPage->section_five_ceo_whatsapp_account_link }}" class="text-decoration-none">
-                                <i class="fa-brands fa-whatsapp fs-4 main-color"></i>
-                            </a>
+                            @if ($aboutPage->section_five_ceo_whatsapp_account_link)
+                            <a href="{{ $aboutPage->section_five_ceo_whatsapp_account_link }}"><i
+                                    class="p-2 fa-brands fa-whatsapp"></i></a>
                             @endif
                         </div>
                     </div>
-                    @endif
                 </div>
             </div>
-            @endif
-            
-            <!-- Column 2: Features -->
-            @if($aboutPage->section_five_col_two_title)
-            <div class="col-lg-6 ps-lg-5">
-                <div class="ps-4">
-                    <h3 class="mb-4">{{ $aboutPage->section_five_col_two_title }}</h3>
-                    @if($aboutPage->section_five_col_two_content)
-                    <p class="text-muted fs-5 mb-4">{{ $aboutPage->section_five_col_two_content }}</p>
-                    @endif
-                    
-                    <ul class="ms-0 ps-0 list-unstyled">
-                        @foreach([1,2,3,4] as $i)
-                            @php $listItem = "section_five_col_two_list_$i"; @endphp
-                            @if($aboutPage->$listItem)
-                            <li class="pt-3 pb-2">
-                                <div class="d-flex align-items-start">
-                                    <i class="fa-regular fa-circle-check main-color me-3 mt-1 fs-5"></i>
-                                    <span class="fs-5">{{ $aboutPage->$listItem }}</span>
-                                </div>
-                            </li>
-                            @endif
-                        @endforeach
+
+            <!-- Column 2 -->
+            <div class="col-lg-6">
+                <div class="ms-4">
+                    <h3>{{ $aboutPage->section_five_col_two_title }}</h3>
+                    <p>{{ $aboutPage->section_five_col_two_content }}</p>
+                    <ul class="ms-0 ps-0">
+                        @if ($aboutPage->section_five_col_two_list_1)
+                        <li class="pt-3"><a href=""><i
+                                    class="fa-regular fa-circle-check pe-2 main-color"></i>{{ $aboutPage->section_five_col_two_list_1 }}</a>
+                        </li>
+                        @endif
+                        @if ($aboutPage->section_five_col_two_list_2)
+                        <li class="pt-3"><a href=""><i
+                                    class="fa-regular fa-circle-check pe-2 main-color"></i>{{ $aboutPage->section_five_col_two_list_2 }}</a>
+                        </li>
+                        @endif
+                        @if ($aboutPage->section_five_col_two_list_3)
+                        <li class="pt-3"><a href=""><i
+                                    class="fa-regular fa-circle-check pe-2 main-color"></i>{{ $aboutPage->section_five_col_two_list_3 }}</a>
+                        </li>
+                        @endif
+                        @if ($aboutPage->section_five_col_two_list_4)
+                        <li class="pt-3"><a href=""><i
+                                    class="fa-regular fa-circle-check pe-2 main-color"></i>{{ $aboutPage->section_five_col_two_list_4 }}</a>
+                        </li>
+                        @endif
                     </ul>
                 </div>
             </div>
-            @endif
         </div>
     </div>
 </section>
-@endif
 
-<!-- Section Six: Stats Cards -->
-@if($aboutPage->section_six_card_one_title || $aboutPage->section_six_card_two_title || $aboutPage->section_six_card_three_title || $aboutPage->section_six_card_four_title)
-<section class="section_six py-5 bg-light">
-    <div class="container px-4 custom-spacer">
-        <div class="row gx-4">
-            @foreach([1,2,3,4] as $cardNum)
-                @php 
-                    $cardTitle = "section_six_card_{$cardNum}_title";
-                    $cardCount = "section_six_card_{$cardNum}_count";
-                    $cardIcon = "section_six_card_{$cardNum}_icon";
-                    $cardDesc = "section_six_card_{$cardNum}_short_description";
-                @endphp
-                
-                @if($aboutPage->$cardTitle)
-                <div class="col-lg-3 col-md-6 mb-4 {{ $cardNum == 4 ? 'pe-0' : '' }}">
-                    <div class="px-4 py-5 text-center bg-white shadow-sm rounded h-100 d-flex flex-column justify-content-center"
-                        style="border-bottom: 3px solid var(--primary-color); min-height: 300px;">
-                        <div style="width: 80px; height: 80px;" class="mx-auto text-center bg-light rounded-circle d-flex justify-content-center align-items-center mb-4">
-                            @if($aboutPage->$cardIcon)
-                            <i class="{{ $aboutPage->$cardIcon }} main-color fs-2"></i>
-                            @else
-                            <i class="fa-solid fa-chart-line main-color fs-2"></i>
-                            @endif
-                        </div>
-                        <h3 class="mb-3">
-                            {{ $aboutPage->$cardTitle }} 
-                            @if($aboutPage->$cardCount)
-                            <span class="main-color d-block">{{ $aboutPage->$cardCount }}</span>
-                            @endif
-                        </h3>
-                        @if($aboutPage->$cardDesc)
-                        <p class="text-muted">{{ $aboutPage->$cardDesc }}</p>
+<section class="section_six">
+    <div class="container px-4 mt-5 custom-spacer">
+        <div class="row gx-5">
+            <!-- Card 1 -->
+            <div class="col-lg-3 ps-0">
+                <div class="px-4 py-5 text-center bg-white shadow-sm"
+                    style="border-bottom: 1px solid var(--primary-color); height: 400px;">
+                    <div style="width: 80px; height: 80px;" class="mx-auto text-center bg-light rounded-circle d-flex justify-content-center align-items-center">
+                        @if ($aboutPage->section_six_card_one_icon)
+                        <i class="{{ $aboutPage->section_six_card_one_icon }}  main-color fs-3"></i>
                         @endif
                     </div>
+                    <h3>{{ $aboutPage->section_six_card_one_title }} {{ $aboutPage->section_six_card_one_count }}</h3>
+                    <p>{{ $aboutPage->section_six_card_one_short_description }}</p>
                 </div>
-                @endif
-            @endforeach
+            </div>
+            <!-- Card 2 -->
+            <div class="col-lg-3 ps-0">
+                <div class="px-4 py-5 text-center bg-white shadow-sm"
+                    style="border-bottom: 1px solid var(--primary-color); height: 400px;">
+                    <div style="width: 80px; height: 80px;" class="mx-auto text-center bg-light rounded-circle d-flex justify-content-center align-items-center">
+                        @if ($aboutPage->section_six_card_two_icon)
+                        <i class="{{ $aboutPage->section_six_card_two_icon }} main-color fs-3"></i>
+                        @endif
+                    </div>
+                    <h3>{{ $aboutPage->section_six_card_two_title }} {{ $aboutPage->section_six_card_two_count }}</h3>
+                    <p>{{ $aboutPage->section_six_card_two_short_description }}</p>
+                </div>
+            </div>
+            <!-- Card 3 -->
+            <div class="col-lg-3 ps-0">
+                <div class="px-4 py-5 text-center bg-white shadow-sm"
+                    style="border-bottom: 1px solid var(--primary-color); height: 400px;">
+                    <div style="width: 80px; height: 80px;" class="mx-auto text-center bg-light rounded-circle d-flex justify-content-center align-items-center">
+                        @if ($aboutPage->section_six_card_three_icon)
+                        <i class="{{ $aboutPage->section_six_card_three_icon }} main-color fs-3"></i>
+                        @endif
+                    </div>
+                    <h3>{{ $aboutPage->section_six_card_three_title }} {{ $aboutPage->section_six_card_three_count }}
+                    </h3>
+                    <p>{{ $aboutPage->section_six_card_three_short_description }}</p>
+                </div>
+            </div>
+            <!-- Card 4 -->
+            <div class="col-lg-3 ps-0 pe-0">
+                <div class="px-4 py-5 text-center bg-white shadow-sm"
+                    style="border-bottom: 1px solid var(--primary-color); height: 400px;">
+                    <div style="width: 80px; height: 80px;" class="mx-auto text-center bg-light rounded-circle d-flex justify-content-center align-items-center">
+                        <div style="width: 80px; height: 80px;" class="mx-auto text-center bg-light rounded-circle d-flex justify-content-center align-items-center">
+                            @if ($aboutPage->section_six_card_four_icon)
+                            <i class="{{ $aboutPage->section_six_card_four_icon }} main-color fs-3"></i>
+                            @endif
+                        </div>
+                    </div>
+                    <h3>{{ $aboutPage->section_six_card_four_title }} {{ $aboutPage->section_six_card_four_count }}
+                    </h3>
+                    <p>{{ $aboutPage->section_six_card_four_short_description }}</p>
+                </div>
+            </div>
         </div>
     </div>
 </section>
-@endif
-
-<!-- Section Seven: Brands Slider -->
-@if($brands && count($brands) > 0)
-<section class="bg-white section_seven py-4">
+<section class="bg-white section_seven">
     <div class="container p-0 py-3 mb-0 custom-spacer">
         <div class="customer-logos slider">
             @foreach ($brands as $brand)
-            <div class="slide px-3">
-                <img class="img-fluid brand-logo" 
-                     src="{{ Storage::exists('public/brand/logo/' . $brand->logo) ? asset('storage/brand/logo/' . $brand->logo) : asset('backend/images/no-image-available.png') }}" 
-                     alt="{{ $brand->title ?? 'Brand Logo' }}"
-                     style="max-width: 150px; height: auto; filter: grayscale(100%); transition: filter 0.3s ease;"
-                     onmouseover="this.style.filter='grayscale(0%)'"
-                     onmouseout="this.style.filter='grayscale(100%)'">
+            <div class="slide">
+                <img style="width: 150px !important;" class="img-fluid" src="{{ !empty($brand->logo) && file_exists(public_path('storage/brand/logo/' . $brand->logo)) ? asset('storage/brand/logo/' . $brand->logo) : asset('backend/images/no-image-available.png') }}" alt="">
             </div>
             @endforeach
         </div>
     </div>
 </section>
-@endif
-
-@else
-<!-- Fallback when no about page data -->
-<section class="section_one py-5">
-    <div class="container">
-        <div class="row">
-            <div class="col-12 text-center py-5">
-                <h2 class="mb-4">About Us</h2>
-                <p class="text-muted fs-5">The about page is currently under construction. Please check back later.</p>
-                <a href="{{ route('home') }}" class="btn common-btn-3 rounded-0 mt-3">Return to Home</a>
-            </div>
-        </div>
-    </div>
-</section>
-@endif
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 @endsection
 
 @push('scripts')
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
-
 <script>
     $(document).ready(function() {
-        // Initialize slick slider if brands exist
-        @if($brands && count($brands) > 0)
         $('.customer-logos').slick({
-            slidesToShow: 6,
+            slidesToShow: 5,
             slidesToScroll: 1,
             autoplay: true,
-            autoplaySpeed: 2000,
+            autoplaySpeed: 1500,
             arrows: false,
             dots: false,
-            pauseOnHover: true,
+            pauseOnHover: false,
             responsive: [{
-                breakpoint: 1200,
-                settings: {
-                    slidesToShow: 5
+                    breakpoint: 768,
+                    settings: {
+                        slidesToShow: 4
+                    }
+                },
+                {
+                    breakpoint: 520,
+                    settings: {
+                        slidesToShow: 3
+                    }
                 }
-            },
-            {
-                breakpoint: 992,
-                settings: {
-                    slidesToShow: 4
-                }
-            },
-            {
-                breakpoint: 768,
-                settings: {
-                    slidesToShow: 3
-                }
-            },
-            {
-                breakpoint: 576,
-                settings: {
-                    slidesToShow: 2
-                }
-            }]
-        });
-        @endif
-        
-        // Smooth scrolling for anchor links
-        $('a[href^="#"]').on('click', function(event) {
-            var target = $(this.getAttribute('href'));
-            if (target.length) {
-                event.preventDefault();
-                $('html, body').stop().animate({
-                    scrollTop: target.offset().top - 100
-                }, 1000);
-            }
+            ]
         });
     });
 </script>

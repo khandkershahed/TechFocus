@@ -1811,7 +1811,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="tab-pane fade" id="section-seven" role="tabpanel">
+                                    {{-- <div class="tab-pane fade" id="section-seven" role="tabpanel">
                                         <div class="w-100">
                                             <div class="pb-10 pb-lg-10">
                                                 <h2
@@ -1887,7 +1887,79 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> --}}
+                                    <div class="tab-pane fade" id="section-seven" role="tabpanel">
+    <div class="w-100">
+        <div class="pb-10 pb-lg-10">
+            <h2 class="fw-bolder d-flex justify-content-center align-items-center text-dark">
+                Section Seven
+            </h2>
+        </div>
+        <div class="fv-row">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="fv-row mb-3">
+                        <label class="form-label">Brand Name</label>
+                        <select
+                            class="form-select form-select-solid form-select-sm @error('brand_id') is-invalid @enderror"
+                            name="brand_id[]" id="brand_id" multiple data-control="select2"
+                            multiselect-search="true" multiselect-select-all="true"
+                            multiselect-max-items="2">
+                            
+                            @php
+                                $selectedBrands = isset($aboutPage->brand_id) ? json_decode($aboutPage->brand_id, true) : [];
+                            @endphp
+                            @foreach ($brands as $brand)
+                                <option value="{{ $brand->id }}"
+                                    @if (in_array($brand->id, $selectedBrands)) selected @endif>
+                                    {{ $brand->title }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('brand_id')
+                            <div class="invalid-feedback d-block">{{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label for="validationCustom04" class="form-label">Status</label>
+                    <select
+                        class="form-select form-select-solid form-select-sm @error('status') is-invalid @enderror"
+                        name="status" data-control="select2"
+                        data-placeholder="Select an option" data-allow-clear="true">
+                        <option></option>
+                        <option @selected(isset($aboutPage->status) && $aboutPage->status == 'active') value="active">Active
+                        </option>
+                        <option @selected(isset($aboutPage->status) && $aboutPage->status == 'inactive') value="inactive">In
+                            Active</option>
+                    </select>
+                    @error('status')
+                        <div class="invalid-feedback d-block">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
+            <div class="row mt-2 justify-content-end">
+                <div class="d-flex align-items-center justify-content-between">
+                    <a class="btn btn-lg btn-info rounded-0 tab-trigger-previous"
+                        data-bs-target="#section-six" aria-selected="false"
+                        role="tab" tabindex="-1">
+                        Previous
+                        <span class="svg-icon svg-icon-4 ms-1 me-0">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </span>
+                    </a>
+                    <button class="btn btn-lg btn-info rounded-0" type="submit">
+                        Submit
+                        <span class="svg-icon svg-icon-4 ms-1 me-0">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
                                 </div>
                             </form>
                         </div>
