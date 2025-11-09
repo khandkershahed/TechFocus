@@ -366,7 +366,7 @@
     <div class="p-0 ">
         <div class="">
             <img class="img-fluid w-100"
-                src="{{ !empty($aboutPage->section_four_banner_middle_image) && file_exists(public_path('app/public/about-us/' . $aboutPage->section_four_banner_middle_image)) ? asset('app/public/about-us/' . $aboutPage->section_four_banner_middle_image) : asset('img/about-us-banner.jpg') }}"
+                src="{{ !empty($aboutPage->section_four_banner_middle_image) && file_exists(public_path('app/public/about-us/' . $aboutPage->section_four_banner_middle_image)) ? asset('app/public/about-us/' . $aboutPage->section_four_banner_middle_image) : asset('img/TechFocus About us page  (1920x350).webp') }}"
                 alt="banner">
             <div class="ban_text-action">
             </div>
@@ -392,8 +392,7 @@
                     </div>
                     <div class="d-flex">
                         <div class="p-2 pe-3" style="border-right: 1px solid black">
-                            <h6 class="mb-0 fw-bold">{{ $aboutPage->section_five_ceo_name }}</h6>
-                            <p class="mb-0">{{ $aboutPage->section_five_ceo_designation }}</p>
+                            <h6 class="mb-0 fw-bold">{{ $aboutPage->section_five_ceo_name }} ({{ $aboutPage->section_five_ceo_designation }})</h6>
                         </div>
                         <div class="d-flex align-items-center">
                             @if ($aboutPage->section_five_ceo_facebook_account_link)

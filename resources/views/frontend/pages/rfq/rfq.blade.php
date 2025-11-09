@@ -20,7 +20,7 @@
                                             <img src="{{ asset('uploads/page_banners/' . $banner->image) }}"
                                                  class="img-fluid"
                                                  alt="{{ $banner->title ?? 'Banner' }}"
-                                                 onerror="this.onerror=null;this.src='{{ asset('/img/TechFocus-RFQ-Page-Banner-(1920x525).webp') }}';" />
+                                                 onerror="this.onerror=null;this.src='{{ asset('/img/TechFocus-RFQ-Page-Banner-(1920x260).png') }}';" />
                                         </a>
                                     </div>
                                 @endif
