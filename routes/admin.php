@@ -517,3 +517,22 @@ Route::delete('/admin/pages/contact/bulk-delete', [ContactController::class, 'bu
 Route::delete('/admin/pages/contact/delete-all', [ContactController::class, 'deleteAll'])
     ->name('admin.pages.contact.deleteAll');
 
+
+//catagory section 
+    // Category Index (listing)
+    Route::get('categories', [CategoryController::class, 'index'])->name('category.index');
+
+    // Store new category
+    Route::post('categories', [CategoryController::class, 'store'])->name('category.store');
+
+    // Edit category (load modal or page)
+    Route::get('categories/{id}/edit', [CategoryController::class, 'edit'])->name('category.edit');
+
+    // Update category
+    Route::put('categories/{id}', [CategoryController::class, 'update'])->name('category.update');
+
+    // Delete category
+    Route::delete('categories/{id}', [CategoryController::class, 'destroy'])->name('category.destroy');
+
+    // Optional: For AJAX status toggle or bulk actions
+    Route::post('categories/bulk-delete', [CategoryController::class, 'bulkDelete'])->name('category.bulkDelete');

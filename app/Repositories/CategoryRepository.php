@@ -31,4 +31,9 @@ class CategoryRepository implements CategoryRepositoryInterface
     {
         return Category::destroy($id);
     }
+    public function paginateCategories(int $perPage)
+{
+    return Category::with('parent')->orderBy('id', 'desc')->paginate($perPage);
+}
+
 }

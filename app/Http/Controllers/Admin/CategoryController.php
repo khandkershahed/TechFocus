@@ -2,210 +2,145 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Illuminate\Support\Str;
-use App\Models\Admin\Category;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\File;
-
 use App\Http\Requests\CategoryRequest;
+use App\Models\Admin\Category;
 use App\Repositories\Interfaces\CategoryRepositoryInterface;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
-    private $categoryRepository;
+    protected CategoryRepositoryInterface $categoryRepository;
 
     public function __construct(CategoryRepositoryInterface $categoryRepository)
     {
         $this->categoryRepository = $categoryRepository;
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    /** INDEX */
     public function index()
     {
-         $data = [
-            'categories' => $this->categoryRepository->allCategory(),
-       ];
-        return view('admin.pages.category.index', $data);
-     }
+        $categories = Category::with('parent')
+            ->orderBy('name', 'ASC')
+            ->paginate(10);
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        // ✅ FIXED: Parent category list must be separate
+        $parentCategories = Category::whereNull('parent_id')
+            ->orderBy('name')
+            ->get();
+
+        // ✅ FIXED: Full tree for recursive dropdown
+        $treeCategories = Category::with('children')
+            ->whereNull('parent_id')
+            ->orderBy('name')
+            ->get();
+
+        return view('admin.pages.category.index', compact('categories', 'parentCategories', 'treeCategories'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    /** STORE */
     public function store(CategoryRequest $request)
     {
-                $mainFile = $request->file('image');
-                $logoFile = $request->file('logo');
+        $data = $this->prepareData($request);
+        $this->categoryRepository->storeCategory($data);
 
-                $imageFilePath = storage_path('app/public/category/image/');
-                $logoFilePath  = storage_path('app/public/category/logo/');
-
-                // Handle main image upload
-                if (!empty($mainFile)) {
-                    $globalFunImage = customUpload($mainFile, $imageFilePath);
-                } else {
-                    $globalFunImage = [
-                        'status' => 1,
-                        'file_name' => 'backend/images/no-image-available.png'
-                    ];
-                }
-
-                // Handle logo upload
-                if (!empty($logoFile)) {
-                    $globalFunLogo = customUpload($logoFile, $logoFilePath);
-                } else {
-                    $globalFunLogo = [
-                        'status' => 1,
-                        'file_name' => 'backend/images/no-image-available.png'
-                    ];
-                }
-
-                $data = [
-                    'country_id'  => $request->country_id,
-                    'parent_id'   => $request->parent_id,
-                    'name'        => $request->name,
-                    'slug'        => Str::slug($request->name),
-                    'is_parent'   => $request->is_parent ?? '0',
-                    'image'       => $globalFunImage['file_name'],
-                    'logo'        => $globalFunLogo['file_name'],
-                    'description' => $request->description,
-                ];
-
-                $this->categoryRepository->storeCategory($data);
-
-               
-
-                return redirect()->back()->with('success', 'Category Added Successfully');
-
-
+        return back()->with('success', 'Category Added Successfully');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
+    /** EDIT (Loaded via Ajax) */
+    // public function edit($id)
+    // {
+    //     $category = Category::with('parent')->findOrFail($id);
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
+    //     // ✅ Only parent items except itself
+    //     $parentCategories = Category::whereNull('parent_id')
+    //         ->where('id', '!=', $id)
+    //         ->get();
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    //     return view('admin.pages.category.partial.edit_form', compact('category', 'parentCategories'));
+    // }
+public function edit($id)
+{
+    $category = Category::with('children')->findOrFail($id);
+
+    $parentCategories = Category::whereNull('parent_id')
+        ->where('id', '!=', $id)
+        ->with('children')
+        ->get();
+
+    return view('admin.pages.category.partial.edit_form', compact('category', 'parentCategories'));
+}
+
+
+    /** UPDATE */
     public function update(CategoryRequest $request, $id)
     {
-            $mainFile = $request->file('image');
-            $logoFile = $request->file('logo');
+        $category = $this->categoryRepository->findCategory($id);
 
-            $imageFilePath = storage_path('app/public/category/image/');
-            $logoFilePath  = storage_path('app/public/category/logo/');
+        if (!$category) {
+            return back()->with('error', 'Category not found.');
+        }
 
-            // Handle main image
-            if (!empty($mainFile)) {
-                $globalFunImage = customUpload($mainFile, $imageFilePath);
-            } else {
-                // Set default image filename
-                $globalFunImage = [
-                    'status' => 1,
-                     'file_name' => 'backend/images/no-image-available.png' // default image
-                ];
-            }
+        $data = $this->prepareData($request, $category);
+        $this->categoryRepository->updateCategory($data, $id);
 
-            // Handle logo
-            if (!empty($logoFile)) {
-                $globalFunLogo = customUpload($logoFile, $logoFilePath);
-            } else {
-                // Set default logo filename
-                $globalFunLogo = [
-                    'status' => 1,
-                     'file_name' => 'backend/images/no-image-available.png' //  default logo
-                ];
-            }
+        return back()->with('success', 'Category Updated Successfully');
+    }
 
-            // Save to DB (example)
-            $category = Category::create([
-                'name' => $request->name,
-                'parent_id' => $request->parent_id ?? null,
-                'description' => $request->description ?? null,
-                'image' => $globalFunImage['file_name'],
-                'logo' => $globalFunLogo['file_name'],
-                'is_parent' => $request->is_parent ?? 0,
-            ]);
+    /** DELETE */
+    public function destroy($id)
+    {
+        $category = $this->categoryRepository->findCategory($id);
 
-        $data = [
+        if (!$category) {
+            return response()->json(['error' => 'Category not found'], 404);
+        }
+
+        $this->deleteFiles([
+            storage_path("app/public/category/image/{$category->image}"),
+            storage_path("app/public/category/logo/{$category->logo}")
+        ]);
+
+        $this->categoryRepository->destroyCategory($id);
+
+        return response()->json(['success' => 'Category deleted successfully']);
+    }
+
+    /** PREPARE DATA */
+    private function prepareData($request, $category = null): array
+    {
+        $imagePath = storage_path('app/public/category/image/');
+        $logoPath  = storage_path('app/public/category/logo/');
+
+        return [
             'country_id'  => $request->country_id,
             'parent_id'   => $request->parent_id,
             'name'        => $request->name,
             'slug'        => Str::slug($request->name),
-            'is_parent'   => $request->is_parent ?? '0',
-            'image'        => $globalFunImage['status'] == 1 ? $globalFunImage['file_name'] : $category->image,
-            'logo'         => $globalFunLogo['status'] == 1 ? $globalFunLogo['file_name'] : $category->logo,
+            'is_parent'   => $request->boolean('is_parent'),
+            'image'       => $this->handleFileUpload($request, 'image', $imagePath, $category?->image),
+            'logo'        => $this->handleFileUpload($request, 'logo', $logoPath, $category?->logo),
             'description' => $request->description,
         ];
-
-        $this->categoryRepository->updateCategory($data, $id);
-
-        return redirect()->back()->with('success', 'Category has been updated successfully');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    /** UPLOAD HANDLER */
+    private function handleFileUpload($request, string $field, string $path, ?string $oldFile = null): string
     {
-        $category =  $this->categoryRepository->findCategory($id);
-
-        $paths = [
-            storage_path("app/public/category/image/{$category->image}"),
-            storage_path("app/public/category/image/{$category->image}"),
-
-            storage_path("app/public/category/logo/{$category->logo}"),
-            storage_path("app/public/category/logo/{$category->logo}"),
-        ];
-
-        foreach ($paths as $path) {
-            if (File::exists($path)) {
-                File::delete($path);
-            }
+        if ($request->hasFile($field)) {
+            $upload = customUpload($request->file($field), $path);
+            return $upload['file_name'] ?? $oldFile ?? 'backend/images/no-image-available.png';
         }
-        $this->categoryRepository->destroyCategory($id);
+
+        return $oldFile ?? 'backend/images/no-image-available.png';
     }
 
-
+    /** FILE DELETE */
+    private function deleteFiles(array $paths): void
+    {
+        foreach ($paths as $path) {
+            if (File::exists($path)) File::delete($path);
+        }
+    }
 }

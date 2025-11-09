@@ -98,46 +98,53 @@ class SiteController extends Controller
 
     //     return view('frontend.pages.home.index', $data);
     // }
-     public function homePage()
-    {
-        $banners = PageBanner::where('page_name', 'home')->get();
+public function homePage()
+{
+    $banners = PageBanner::where('page_name', 'home')->get();
 
-        // Get dynamic homepage data
-        $homePage = HomePage::with(['country'])->first();
+    // Get dynamic homepage data
+    $homePage = HomePage::with(['country'])->first();
 
-        // Get featured products for section two if homepage data exists
-        $featuredProducts = collect();
-        if ($homePage && $homePage->section_two_products) {
-            $featuredProducts = Product::whereIn('id', $homePage->section_two_products)->get();
-        }
-
-        // Get news trends for section four if homepage data exists
-        $sectionFourNews = collect();
-        if ($homePage && $homePage->section_four_contents) {
-            $sectionFourNews = NewsTrend::whereIn('id', $homePage->section_four_contents)->get();
-        }
-
-        $data = [
-            'banners'        => $banners,
-            'categories'    => Category::with('children.children.children.children.children.children.children.children.children.children')
-                ->where('is_parent', '1')
-                ->get(['id', 'parent_id', 'name', 'slug']),
-            'products'      => Product::with('brand')
-                ->where('product_status', 'product') // Changed from 'status' to 'product_status'
-                ->where('submission_status', 'approved') // Only show approved products
-                ->inRandomOrder()
-                ->limit(5)
-                ->get(),
-            'news_trends'   => NewsTrend::where('type', 'trends')->limit(4)->get(),
-            'solutions'     => SolutionDetail::latest()->limit(4)->get(),
-            // Add dynamic homepage data
-            'homePage' => $homePage,
-            'featuredProducts' => $featuredProducts,
-            'sectionFourNews' => $sectionFourNews,
-        ];
-
-        return view('frontend.pages.home.index', $data);
+    // Get featured products for section two if homepage data exists
+    $featuredProducts = collect();
+    if ($homePage && $homePage->section_two_products) {
+        $featuredProducts = Product::whereIn('id', $homePage->section_two_products)->get();
     }
+
+    // Get news trends for section four if homepage data exists
+    $sectionFourNews = collect();
+    if ($homePage && $homePage->section_four_contents) {
+        $sectionFourNews = NewsTrend::whereIn('id', $homePage->section_four_contents)->get();
+    }
+
+    // Get top-level categories and limit subcategories
+    $categories = Category::with(['children' => function($query) {
+        $query->limit(4)->with(['children' => function($q) {
+            $q->limit(4);
+            // Repeat for deeper children if needed, but ideally limit depth for performance
+        }]);
+    }])
+    ->where('is_parent', '1')
+    ->get(['id', 'parent_id', 'name', 'slug']);
+
+    $data = [
+        'banners'           => $banners,
+        'categories'        => $categories,
+        'products'          => Product::with('brand')
+                                    ->where('product_status', 'product')
+                                    ->where('submission_status', 'approved')
+                                    ->inRandomOrder()
+                                    ->limit(5)
+                                    ->get(),
+        'news_trends'       => NewsTrend::where('type', 'trends')->limit(4)->get(),
+        'solutions'         => SolutionDetail::latest()->limit(4)->get(),
+        'homePage'          => $homePage,
+        'featuredProducts'  => $featuredProducts,
+        'sectionFourNews'   => $sectionFourNews,
+    ];
+
+    return view('frontend.pages.home.index', $data);
+}
 
     public function allCatalog()
     {

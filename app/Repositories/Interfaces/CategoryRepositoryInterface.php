@@ -9,5 +9,7 @@ interface CategoryRepositoryInterface
     public function findCategory(int $id);
     public function updateCategory(array $data, int $id);
     public function destroyCategory(int $id);
+    public function paginateCategories(int $perPage);
+
 }
  
