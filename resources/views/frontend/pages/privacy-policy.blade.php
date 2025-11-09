@@ -33,7 +33,7 @@
   </div>
 </div>
 
-{{-- <div class="p-0 my-5 container-fluid">
+ <div class="p-0 my-5 container-fluid">
   <h1 class="mt-3 text-center fw-bold">Ter<span style="color: var(--primary-color); font-size: 40px; font-weight: bold;">ms & Con</span>ditions</h1>
   <p class="text-center">Explore the intricate landscape of our 'Terms & Conditions' as we delineate the rules.</p>
 
@@ -145,4 +145,4 @@
     transform: translateY(-2px);
   }
 </style>
-@endsection --}}
+@endsection 

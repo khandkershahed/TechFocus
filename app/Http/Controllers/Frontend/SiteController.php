@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use Log;
 use App\Models\Contact;
 use App\Models\PageBanner;
+use App\Models\TermsAndPolicy;
 use App\Models\Admin\Brand;
 use App\Models\Admin\Banner;
 use Illuminate\Http\Request;
@@ -751,6 +752,12 @@ public function brandList()
     {
         return view('frontend.pages.test.industryTestDetails');
     }
+
+    public function privacyPolicy()
+{
+    return view('frontend.pages.privacy-policy');
+}
+
 }
 
 
