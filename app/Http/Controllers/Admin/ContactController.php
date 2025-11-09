@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use Log;
 use App\Mail\ReplyMessage;
+use Illuminate\Http\Request;
+use App\Models\Admin\Contact;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\ContactRequest;
+use App\Mail\NewContactNotificationMail;
 use App\Http\Requests\ReplyContactRequest;
 use App\Repositories\Interfaces\ContactRepositoryInterface;
-use App\Mail\NewContactNotificationMail;
 
 class ContactController extends Controller
 {
@@ -112,4 +114,25 @@ public function update(ReplyContactRequest $request, $id)
             return redirect()->route('admin.pages.contact.index')->with('error', 'Failed to delete contact. Please try again.');
         }
     }
+
+
+
+    public function bulkDelete(Request $request)
+{
+    $ids = $request->input('ids');
+
+    if ($ids) {
+        Contact::whereIn('id', $ids)->delete();
+        return back()->with('success', 'Selected contacts deleted successfully.');
+    }
+
+    return back()->with('error', 'No contacts selected.');
+}
+
+public function deleteAll()
+{
+    Contact::truncate(); // deletes all records
+    return back()->with('success', 'All contacts deleted successfully.');
+}
+
 }
