@@ -1827,7 +1827,7 @@
                                                             <select
                                                                 class="form-select form-select-solid  form-select-sm
                                                         @error('brand_id') is-invalid @enderror"
-                                                                name="brand_id[]" id="field2" multiple
+                                                                name="brand_id" id="brand_id" multiple data-control="select2"
                                                                 multiselect-search="true" multiselect-select-all="true"
                                                                 multiselect-max-items="2"
                                                                 onchange="console.log(this.selectedOptions)">
