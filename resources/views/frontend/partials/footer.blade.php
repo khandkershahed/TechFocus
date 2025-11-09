@@ -89,7 +89,7 @@
             <div class="col-12">
                 <ul class="flex-wrap gap-5 p-0 m-0 text-white d-inline-flex justify-content-center list-unstyled footer-links">
                     <li><a href="{{ route('terms') }}">Terms & Conditions</a></li>
-                    <li><a href="{{ route('terms') }}">Privacy Policy</a></li>
+                    <li><a href="{{ route('privacy.policy') }}">Privacy Policy</a></li>
                     <li><a href="{{ route('manage.cookies') }}">Manage Cookies</a></li>
                 </ul>
             </div>

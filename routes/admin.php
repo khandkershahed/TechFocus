@@ -511,3 +511,9 @@ Route::prefix('administrator')->name('admin.')->middleware(['auth:admin', 'verif
     Route::put('pages/contact/{id}', [ContactController::class, 'update'])->name('pages.contact.update');
     Route::delete('pages/contact/{id}', [ContactController::class, 'destroy'])->name('pages.contact.destroy');
 });
+Route::delete('/admin/pages/contact/bulk-delete', [ContactController::class, 'bulkDelete'])
+    ->name('admin.pages.contact.bulkDelete');
+
+Route::delete('/admin/pages/contact/delete-all', [ContactController::class, 'deleteAll'])
+    ->name('admin.pages.contact.deleteAll');
+

@@ -40,10 +40,17 @@
   <div class="container">
     <div class="row">
       <div class="col-lg-12">
-
-        @if($termsAndPolicies && count($termsAndPolicies) > 0)
-        @foreach($termsAndPolicies as $policy)
-        <div class="mb-4 ">
+{{-- 
+        @if($termsAndPolicies && count($termsAndPolicies) > 0) --}}
+        @if(!empty($termsAndPolicies) && count($termsAndPolicies) > 0)
+    @foreach($termsAndPolicies as $policy)
+   
+{{-- 
+        @foreach($termsAndPolicies as $policy) --}}
+        {{-- @else
+    <p class="text-center text-muted">No policies available at the moment.</p>
+@endif
+        <div class="mb-4 "> --}}
           <div>
             <h3 class="mb-0 fw-bold" style="color: var(--primary-color);">
               {{ $policy->name }}
