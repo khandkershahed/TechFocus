@@ -7,3 +7,4 @@
         @include('admin.pages.category.partial.add_parent', ['category' => $child, 'level' => $level + 1])
     @endforeach
 @endif
+
