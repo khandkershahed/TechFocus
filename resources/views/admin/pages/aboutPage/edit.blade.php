@@ -1088,7 +1088,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="tab-pane fade" id="section-four" role="tabpanel">
+                                    {{-- <div class="tab-pane fade" id="section-four" role="tabpanel">
                                         <div class="w-100">
                                             <div class="pb-10 pb-lg-10">
                                                 <h2
@@ -1137,7 +1137,64 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> --}}
+                                    <div class="tab-pane fade" id="section-four" role="tabpanel">
+    <div class="w-100">
+        <div class="pb-10 pb-lg-10">
+            <h2 class="fw-bolder d-flex justify-content-center align-items-center text-dark">
+                Section Four
+            </h2>
+        </div>
+        <div class="fv-row">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="fv-row mb-3">
+                        <label class="form-label">Section Four Banner Middle Image</label>
+                        
+                        <!-- Current Image Preview -->
+                        @if($aboutPage->section_four_banner_middle_image)
+                            <div class="mb-3">
+                                <p class="text-muted">Current Image:</p>
+                                <img src="{{ asset('storage/about-us/' . $aboutPage->section_four_banner_middle_image) }}" 
+                                     alt="Current Banner Image" 
+                                     style="max-width: 200px; height: auto;">
+                            </div>
+                        @endif
+                        
+                        <input type="file"
+                            class="form-control form-control-solid form-control-sm @error('section_four_banner_middle_image') is-invalid @enderror"
+                            name="section_four_banner_middle_image"
+                            accept="image/*"
+                            id="validationCustom01">
+                        @error('section_four_banner_middle_image')
+                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-5 justify-content-end">
+                <div class="d-flex align-items-center justify-content-between">
+                    <a class="btn btn-lg btn-info rounded-0 tab-trigger-previous"
+                        data-bs-target="#section-three" aria-selected="false"
+                        role="tab" tabindex="-1">
+                        Previous
+                        <span class="svg-icon svg-icon-4 ms-1 me-0">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </span>
+                    </a>
+                    <a class="btn btn-lg btn-info rounded-0 tab-trigger-next"
+                        data-bs-toggle="tab" data-bs-target="#section-five"
+                        aria-selected="false" role="tab" tabindex="-1">
+                        Continue
+                        <span class="svg-icon svg-icon-4 ms-1 me-0">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
                                     <div class="tab-pane fade" id="section-five" role="tabpanel">
                                         <div class="w-100">
                                             <div class="pb-10 pb-lg-10">

@@ -76,17 +76,20 @@ class AboutPageController extends Controller
         }
 
         AboutPage::create([
+            // Section Two
             'section_two_badge'       => $request->section_two_badge,
             'section_two_title_1'     => $request->section_two_title_1,
             'section_two_title_span'  => $request->section_two_title_span,
             'section_two_subtitle'    => $request->section_two_subtitle,
             'section_two_description' => $request->section_two_description,
-            'section_two_main_image'                             => $globalFunSectionTwoMainImage['status']          == 1 ? $globalFunSectionTwoMainImage['file_name']         : null,
-            'section_two_secondary_image'                             => $globalFunSectionTwoSecondaryImage['status']     == 1 ? $globalFunSectionTwoSecondaryImage['file_name']    : null,
-            'section_two_secondary_image_count'            => $request->section_two_secondary_image_count,
-            'section_two_secondary_image_title'            => $request->section_two_secondary_image_title,
-            'section_two_button_name'                      => $request->section_two_button_name,
-            'section_two_button_link'                      => $request->section_two_button_link,
+            'section_two_main_image'  => $globalFunSectionTwoMainImage['status'] == 1 ? $globalFunSectionTwoMainImage['file_name'] : null,
+            'section_two_secondary_image' => $globalFunSectionTwoSecondaryImage['status'] == 1 ? $globalFunSectionTwoSecondaryImage['file_name'] : null,
+            'section_two_secondary_image_count' => $request->section_two_secondary_image_count,
+            'section_two_secondary_image_title' => $request->section_two_secondary_image_title,
+            'section_two_button_name' => $request->section_two_button_name,
+            'section_two_button_link' => $request->section_two_button_link,
+
+            // Section Three - Tab One
             'section_three_tab_one_title'                  => $request->section_three_tab_one_title,
             'section_three_tab_one_short_description'      => $request->section_three_tab_one_short_description,
             'section_three_tab_one_detailed_description'   => $request->section_three_tab_one_detailed_description,
@@ -99,6 +102,8 @@ class AboutPageController extends Controller
             'section_three_tab_one_quote_author'           => $request->section_three_tab_one_quote_author,
             'section_three_tab_one_button_name'            => $request->section_three_tab_one_button_name,
             'section_three_tab_one_button_link'            => $request->section_three_tab_one_button_link,
+
+            // Section Three - Tab Two
             'section_three_tab_two_title'                  => $request->section_three_tab_two_title,
             'section_three_tab_two_short_description'      => $request->section_three_tab_two_short_description,
             'section_three_tab_two_detailed_description'   => $request->section_three_tab_two_detailed_description,
@@ -111,6 +116,8 @@ class AboutPageController extends Controller
             'section_three_tab_two_quote_author'           => $request->section_three_tab_two_quote_author,
             'section_three_tab_two_button_name'            => $request->section_three_tab_two_button_name,
             'section_three_tab_two_button_link'            => $request->section_three_tab_two_button_link,
+
+            // Section Three - Tab Three
             'section_three_tab_three_title'                => $request->section_three_tab_three_title,
             'section_three_tab_three_short_description'    => $request->section_three_tab_three_short_description,
             'section_three_tab_three_detailed_description' => $request->section_three_tab_three_detailed_description,
@@ -123,6 +130,8 @@ class AboutPageController extends Controller
             'section_three_tab_three_quote_author'         => $request->section_three_tab_three_quote_author,
             'section_three_tab_three_button_name'          => $request->section_three_tab_three_button_name,
             'section_three_tab_three_button_link'          => $request->section_three_tab_three_button_link,
+
+            // Section Three - Tab Four
             'section_three_tab_four_title'                 => $request->section_three_tab_four_title,
             'section_three_tab_four_short_description'     => $request->section_three_tab_four_short_description,
             'section_three_tab_four_detailed_description'  => $request->section_three_tab_four_detailed_description,
@@ -135,21 +144,27 @@ class AboutPageController extends Controller
             'section_three_tab_four_quote_author'          => $request->section_three_tab_four_quote_author,
             'section_three_tab_four_button_name'           => $request->section_three_tab_four_button_name,
             'section_three_tab_four_button_link'           => $request->section_three_tab_four_button_link,
-            'section_four_banner_middle_image'                           => $globalFunSectionFourBannerMiddleImage['status'] == 1 ? $globalFunSectionFourBannerMiddleImage['file_name'] : null,
-            'section_five_col_one_description'                   => $request->section_five_col_one_description,
-            'section_five_col_one_title'             => $request->section_five_col_one_title,
-            'section_five_ceo_sign'                                   => $globalFunSectionFiveCeoSign['status']           == 1 ? $globalFunSectionFiveCeoSign['file_name']          : null,
-            'section_five_ceo_name'                    => $request->section_five_ceo_name,
-            'section_five_ceo_designation'             => $request->section_five_ceo_designation,
-            'section_five_ceo_facebook_account_link'   => $request->section_five_ceo_facebook_account_link,
-            'section_five_ceo_twitter_account_link'    => $request->section_five_ceo_twitter_account_link,
-            'section_five_ceo_whatsapp_account_link'   => $request->section_five_ceo_whatsapp_account_link,
-            'section_five_col_two_content'             => $request->section_five_col_two_content,
-            'section_five_col_two_title'               => $request->section_five_col_two_title,
-            'section_five_col_two_list_1'              => $request->section_five_col_two_list_1,
-            'section_five_col_two_list_2'              => $request->section_five_col_two_list_2,
-            'section_five_col_two_list_3'              => $request->section_five_col_two_list_3,
-            'section_five_col_two_list_4'              => $request->section_five_col_two_list_4,
+
+            // Section Four
+            'section_four_banner_middle_image' => $globalFunSectionFourBannerMiddleImage['status'] == 1 ? $globalFunSectionFourBannerMiddleImage['file_name'] : null,
+
+            // Section Five
+            'section_five_col_one_title'         => $request->section_five_col_one_title,
+            'section_five_col_one_description'   => $request->section_five_col_one_description,
+            'section_five_ceo_sign'              => $globalFunSectionFiveCeoSign['status'] == 1 ? $globalFunSectionFiveCeoSign['file_name'] : null,
+            'section_five_ceo_name'              => $request->section_five_ceo_name,
+            'section_five_ceo_designation'       => $request->section_five_ceo_designation,
+            'section_five_ceo_facebook_account_link' => $request->section_five_ceo_facebook_account_link,
+            'section_five_ceo_twitter_account_link'  => $request->section_five_ceo_twitter_account_link,
+            'section_five_ceo_whatsapp_account_link' => $request->section_five_ceo_whatsapp_account_link,
+            'section_five_col_two_title'         => $request->section_five_col_two_title,
+            'section_five_col_two_content'       => $request->section_five_col_two_content,
+            'section_five_col_two_list_1'        => $request->section_five_col_two_list_1,
+            'section_five_col_two_list_2'        => $request->section_five_col_two_list_2,
+            'section_five_col_two_list_3'        => $request->section_five_col_two_list_3,
+            'section_five_col_two_list_4'        => $request->section_five_col_two_list_4,
+
+            // Section Six
             'section_six_card_one_title'               => $request->section_six_card_one_title,
             'section_six_card_one_count'               => $request->section_six_card_one_count,
             'section_six_card_one_icon'                => $request->section_six_card_one_icon,
@@ -160,14 +175,16 @@ class AboutPageController extends Controller
             'section_six_card_two_short_description'   => $request->section_six_card_two_short_description,
             'section_six_card_three_title'             => $request->section_six_card_three_title,
             'section_six_card_three_count'             => $request->section_six_card_three_count,
-            'section_six_card_three_short_description' => $request->section_six_card_three_short_description,
             'section_six_card_three_icon'              => $request->section_six_card_three_icon,
+            'section_six_card_three_short_description' => $request->section_six_card_three_short_description,
             'section_six_card_four_title'              => $request->section_six_card_four_title,
             'section_six_card_four_count'              => $request->section_six_card_four_count,
-            'section_six_card_four_short_description'  => $request->section_six_card_four_short_description,
             'section_six_card_four_icon'               => $request->section_six_card_four_icon,
-            'brand_id'                                 => json_encode($request->brand_id),
-            'status'                                   => $request->status,
+            'section_six_card_four_short_description'  => $request->section_six_card_four_short_description,
+
+            // Section Seven
+            'brand_id' => json_encode($request->brand_id),
+            'status'   => $request->status,
         ]);
 
         return redirect()->back()->with('success', 'Data has been saved successfully!')->withInput();
@@ -273,17 +290,20 @@ class AboutPageController extends Controller
         }
 
         $aboutPage->update([
+            // Section Two
             'section_two_badge'       => $request->section_two_badge,
             'section_two_title_1'     => $request->section_two_title_1,
             'section_two_title_span'  => $request->section_two_title_span,
             'section_two_subtitle'    => $request->section_two_subtitle,
             'section_two_description' => $request->section_two_description,
-            'section_two_main_image'                             => $globalFunSectionTwoMainImage['status']          == 1 ? $globalFunSectionTwoMainImage['file_name']         : $aboutPage->section_two_main_image,
-            'section_two_secondary_image'                             => $globalFunSectionTwoSecondaryImage['status']     == 1 ? $globalFunSectionTwoSecondaryImage['file_name']    : $aboutPage->section_two_secondary_image,
-            'section_two_secondary_image_count'            => $request->section_two_secondary_image_count,
-            'section_two_secondary_image_title'            => $request->section_two_secondary_image_title,
-            'section_two_button_name'                      => $request->section_two_button_name,
-            'section_two_button_link'                      => $request->section_two_button_link,
+            'section_two_main_image'  => $globalFunSectionTwoMainImage['status'] == 1 ? $globalFunSectionTwoMainImage['file_name'] : $aboutPage->section_two_main_image,
+            'section_two_secondary_image' => $globalFunSectionTwoSecondaryImage['status'] == 1 ? $globalFunSectionTwoSecondaryImage['file_name'] : $aboutPage->section_two_secondary_image,
+            'section_two_secondary_image_count' => $request->section_two_secondary_image_count,
+            'section_two_secondary_image_title' => $request->section_two_secondary_image_title,
+            'section_two_button_name' => $request->section_two_button_name,
+            'section_two_button_link' => $request->section_two_button_link,
+
+            // Section Three - Tab One
             'section_three_tab_one_title'                  => $request->section_three_tab_one_title,
             'section_three_tab_one_short_description'      => $request->section_three_tab_one_short_description,
             'section_three_tab_one_detailed_description'   => $request->section_three_tab_one_detailed_description,
@@ -296,6 +316,8 @@ class AboutPageController extends Controller
             'section_three_tab_one_quote_author'           => $request->section_three_tab_one_quote_author,
             'section_three_tab_one_button_name'            => $request->section_three_tab_one_button_name,
             'section_three_tab_one_button_link'            => $request->section_three_tab_one_button_link,
+
+            // Section Three - Tab Two
             'section_three_tab_two_title'                  => $request->section_three_tab_two_title,
             'section_three_tab_two_short_description'      => $request->section_three_tab_two_short_description,
             'section_three_tab_two_detailed_description'   => $request->section_three_tab_two_detailed_description,
@@ -308,6 +330,8 @@ class AboutPageController extends Controller
             'section_three_tab_two_quote_author'           => $request->section_three_tab_two_quote_author,
             'section_three_tab_two_button_name'            => $request->section_three_tab_two_button_name,
             'section_three_tab_two_button_link'            => $request->section_three_tab_two_button_link,
+
+            // Section Three - Tab Three
             'section_three_tab_three_title'                => $request->section_three_tab_three_title,
             'section_three_tab_three_short_description'    => $request->section_three_tab_three_short_description,
             'section_three_tab_three_detailed_description' => $request->section_three_tab_three_detailed_description,
@@ -320,6 +344,8 @@ class AboutPageController extends Controller
             'section_three_tab_three_quote_author'         => $request->section_three_tab_three_quote_author,
             'section_three_tab_three_button_name'          => $request->section_three_tab_three_button_name,
             'section_three_tab_three_button_link'          => $request->section_three_tab_three_button_link,
+
+            // Section Three - Tab Four
             'section_three_tab_four_title'                 => $request->section_three_tab_four_title,
             'section_three_tab_four_short_description'     => $request->section_three_tab_four_short_description,
             'section_three_tab_four_detailed_description'  => $request->section_three_tab_four_detailed_description,
@@ -332,21 +358,27 @@ class AboutPageController extends Controller
             'section_three_tab_four_quote_author'          => $request->section_three_tab_four_quote_author,
             'section_three_tab_four_button_name'           => $request->section_three_tab_four_button_name,
             'section_three_tab_four_button_link'           => $request->section_three_tab_four_button_link,
-            'section_four_banner_middle_image'             => $globalFunSectionFourBannerMiddleImage['status'] == 1 ? $globalFunSectionFourBannerMiddleImage['file_name'] : $aboutPage->section_four_banner_middle_image,
-            // 'section_four_col_one_title'                   => $request->section_four_col_one_title,
-            // 'section_four_col_one_description'             => $request->section_four_col_one_description,
-            'section_five_ceo_sign'                    => $globalFunSectionFiveCeoSign['status']           == 1 ? $globalFunSectionFiveCeoSign['file_name']          : $aboutPage->section_five_ceo_sign,
-            'section_five_ceo_name'                    => $request->section_five_ceo_name,
-            'section_five_ceo_designation'             => $request->section_five_ceo_designation,
-            'section_five_ceo_facebook_account_link'   => $request->section_five_ceo_facebook_account_link,
-            'section_five_ceo_twitter_account_link'    => $request->section_five_ceo_twitter_account_link,
-            'section_five_ceo_whatsapp_account_link'   => $request->section_five_ceo_whatsapp_account_link,
-            'section_five_col_two_content'             => $request->section_five_col_two_content,
-            'section_five_col_two_title'               => $request->section_five_col_two_title,
-            'section_five_col_two_list_1'              => $request->section_five_col_two_list_1,
-            'section_five_col_two_list_2'              => $request->section_five_col_two_list_2,
-            'section_five_col_two_list_3'              => $request->section_five_col_two_list_3,
-            'section_five_col_two_list_4'              => $request->section_five_col_two_list_4,
+
+            // Section Four
+            'section_four_banner_middle_image' => $globalFunSectionFourBannerMiddleImage['status'] == 1 ? $globalFunSectionFourBannerMiddleImage['file_name'] : $aboutPage->section_four_banner_middle_image,
+
+            // Section Five
+            'section_five_col_one_title'         => $request->section_five_col_one_title,
+            'section_five_col_one_description'   => $request->section_five_col_one_description,
+            'section_five_ceo_sign'              => $globalFunSectionFiveCeoSign['status'] == 1 ? $globalFunSectionFiveCeoSign['file_name'] : $aboutPage->section_five_ceo_sign,
+            'section_five_ceo_name'              => $request->section_five_ceo_name,
+            'section_five_ceo_designation'       => $request->section_five_ceo_designation,
+            'section_five_ceo_facebook_account_link' => $request->section_five_ceo_facebook_account_link,
+            'section_five_ceo_twitter_account_link'  => $request->section_five_ceo_twitter_account_link,
+            'section_five_ceo_whatsapp_account_link' => $request->section_five_ceo_whatsapp_account_link,
+            'section_five_col_two_title'         => $request->section_five_col_two_title,
+            'section_five_col_two_content'       => $request->section_five_col_two_content,
+            'section_five_col_two_list_1'        => $request->section_five_col_two_list_1,
+            'section_five_col_two_list_2'        => $request->section_five_col_two_list_2,
+            'section_five_col_two_list_3'        => $request->section_five_col_two_list_3,
+            'section_five_col_two_list_4'        => $request->section_five_col_two_list_4,
+
+            // Section Six
             'section_six_card_one_title'               => $request->section_six_card_one_title,
             'section_six_card_one_count'               => $request->section_six_card_one_count,
             'section_six_card_one_icon'                => $request->section_six_card_one_icon,
@@ -357,14 +389,16 @@ class AboutPageController extends Controller
             'section_six_card_two_short_description'   => $request->section_six_card_two_short_description,
             'section_six_card_three_title'             => $request->section_six_card_three_title,
             'section_six_card_three_count'             => $request->section_six_card_three_count,
-            'section_six_card_three_short_description' => $request->section_six_card_three_short_description,
             'section_six_card_three_icon'              => $request->section_six_card_three_icon,
+            'section_six_card_three_short_description' => $request->section_six_card_three_short_description,
             'section_six_card_four_title'              => $request->section_six_card_four_title,
             'section_six_card_four_count'              => $request->section_six_card_four_count,
-            'section_six_card_four_short_description'  => $request->section_six_card_four_short_description,
             'section_six_card_four_icon'               => $request->section_six_card_four_icon,
-            'brand_id'                                 => json_encode($request->brand_id),
-            'status'                                   => $request->status,
+            'section_six_card_four_short_description'  => $request->section_six_card_four_short_description,
+
+            // Section Seven
+            'brand_id' => json_encode($request->brand_id),
+            'status'   => $request->status,
         ]);
 
         return redirect()->back()->with('success', 'Data has been saved successfully!');
@@ -378,8 +412,6 @@ class AboutPageController extends Controller
      */
     public function destroy($id)
     {
-
-
         $aboutPage = AboutPage::find($id);
 
         $paths = [
