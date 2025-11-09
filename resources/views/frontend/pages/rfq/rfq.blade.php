@@ -15,11 +15,11 @@
                         <div class="swiper-wrapper">
                             @foreach($banners as $banner)
                                 @if($banner->image)
-                                    <div class="swiper-slide" style="height: 100%;">
+                                    <div class="swiper-slide" style="height: 260px !important;">
                                         <a href="{{ $banner->banner_link ?? '#' }}">
                                             <img src="{{ asset('uploads/page_banners/' . $banner->image) }}"
                                                  class="img-fluid"
-                                                 alt="{{ $banner->title ?? 'Banner' }}" style="height: 100%;"
+                                                 alt="{{ $banner->title ?? 'Banner' }}" style="height: 260px !important;"
                                                  onerror="this.onerror=null;this.src='{{ asset('/img/TechFocus-RFQ-Page-Banner-(1920x260).png') }}';" />
                                         </a>
                                     </div>
