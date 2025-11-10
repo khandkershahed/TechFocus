@@ -6,8 +6,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.repeater/1.2.1/jquery.repeater.min.js"></script>
 <!-- ✅ SweetAlert2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-   <script>
- $(document).ready(function() {
+
+<script>
+$(document).ready(function() {
     let currentStep = 1;
     const totalSteps = 4;
 
@@ -228,7 +229,6 @@
                 showConfirmButton: false,
                 timer: 1500
             });
-
         })
         .catch(error => {
             console.error('Submission error:', error);
@@ -237,7 +237,7 @@
             Swal.fire({
                 icon: 'error',
                 title: 'Submission Failed',
-                text: 'There was an error submitting your RFQ. Please try again.',
+                text: errorMessage,
                 confirmButtonText: 'OK'
             });
             
@@ -331,6 +331,4 @@ $(document).ready(function() {
     
     updateSerials();
 });
-</script> 
-
-
+</script>

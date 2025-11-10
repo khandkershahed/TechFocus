@@ -1280,7 +1280,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
- $(document).ready(function() {
+$(document).ready(function() {
     let currentStep = 1;
     const totalSteps = 4;
 
@@ -1509,7 +1509,7 @@
             Swal.fire({
                 icon: 'error',
                 title: 'Submission Failed',
-                text: 'There was an error submitting your RFQ. Please try again.',
+                text: errorMessage,
                 confirmButtonText: 'OK'
             });
             
@@ -1603,6 +1603,5 @@ $(document).ready(function() {
     
     updateSerials();
 });
-</script> 
-
+</script>
 @endsection
