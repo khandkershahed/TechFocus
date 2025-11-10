@@ -171,7 +171,7 @@ $(document).ready(function() {
         }
     });
 
-    // Optimized form submission
+    // FIXED: Form submission handler
     $stepperForm.on('submit', function(e) {
         e.preventDefault();
 
@@ -190,6 +190,12 @@ $(document).ready(function() {
         const form = $(this);
         const formData = new FormData(this);
         const submitBtn = form.find('button[type="submit"]');
+
+        // Debug: Log form data
+        console.log('Submitting RFQ form...');
+        for (let pair of formData.entries()) {
+            console.log(pair[0] + ': ' + pair[1]);
+        }
 
         // Disable submit button
         submitBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Submitting...');
@@ -214,30 +220,43 @@ $(document).ready(function() {
             }
         })
         .then(response => {
+            console.log('Response status:', response.status);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             return response.json();
         })
         .then(data => {
+            console.log('Response data:', data);
             Swal.close();
             
-            Swal.fire({
-                icon: 'success',
-                title: 'Success!',
-                text: 'Your RFQ has been submitted successfully!',
-                showConfirmButton: false,
-                timer: 1500
-            });
+            if (data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: data.message || 'Your RFQ has been submitted successfully!',
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(() => {
+                    if (data.redirect_url) {
+                        window.location.href = data.redirect_url;
+                    } else if (data.rfq_code) {
+                        window.location.href = '/rfq/' + data.rfq_code;
+                    }
+                });
+            } else {
+                throw new Error(data.message || 'Submission failed');
+            }
         })
         .catch(error => {
             console.error('Submission error:', error);
             Swal.close();
             
+            // FIXED: Use error.message instead of undefined errorMessage variable
             Swal.fire({
                 icon: 'error',
                 title: 'Submission Failed',
-                text: errorMessage,
+                text: error.message || 'An error occurred while submitting your RFQ. Please try again.',
                 confirmButtonText: 'OK'
             });
             
@@ -290,28 +309,26 @@ $(document).ready(function() {
     // Initial setup
     toggleStep1Checkboxes();
     updateProgress();
-});
 
-// Quantity increment/decrement functions
-function increment(button) {
-    const input = button.closest('.counting-btn').previousElementSibling;
-    input.value = Math.max(1, (parseInt(input.value) || 1) + 1);
-}
+    // Quantity increment/decrement functions
+    function increment(button) {
+        const input = button.closest('.counting-btn').previousElementSibling;
+        input.value = Math.max(1, (parseInt(input.value) || 1) + 1);
+    }
 
-function decrement(button) {
-    const input = button.closest('.counting-btn').previousElementSibling;
-    input.value = Math.max(1, (parseInt(input.value) || 2) - 1);
-}
+    function decrement(button) {
+        const input = button.closest('.counting-btn').previousElementSibling;
+        input.value = Math.max(1, (parseInt(input.value) || 2) - 1);
+    }
 
-// Serial number update for repeater
-function updateSerials() {
-    $('[data-repeater-list] [data-repeater-item]').each(function(i) {
-        $(this).find('.sl-input').val(i + 1);
-    });
-}
+    // Serial number update for repeater
+    function updateSerials() {
+        $('[data-repeater-list] [data-repeater-item]').each(function(i) {
+            $(this).find('.sl-input').val(i + 1);
+        });
+    }
 
-// Initialize repeater with better performance
-$(document).ready(function() {
+    // Initialize repeater with better performance
     $('.repeater').repeater({
         show: function() {
             $(this).slideDown('fast', updateSerials);
