@@ -610,4 +610,40 @@ public function addToCart(Request $request)
             return 0;
         }
     }
+
+
+    /**
+ * Destroy cart & RFQ after RFQ submission
+ */
+public function destroyAfterRfq()
+{
+    try {
+        // Clear entire cart
+        Session::forget('cart');
+
+        // Clear RFQ session
+        Session::forget('rfq_items');
+
+        // Optional: clear other related RFQ/session keys
+        // Session::forget('rfq_customer_info');
+        // Session::forget('rfq_notes');
+
+        return response()->json([
+            'success' => true,
+            'message' => 'RFQ successfully submitted. Cart & RFQ session destroyed.',
+            'cart_count' => 0,
+            'rfq_count' => 0
+        ]);
+
+    } catch (\Exception $e) {
+
+        Log::error('RFQ destroy error:', ['error' => $e->getMessage()]);
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to clear session: ' . $e->getMessage()
+        ], 500);
+    }
+}
+
 }
