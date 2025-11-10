@@ -85,7 +85,7 @@
                             <span class="small">
                                 New here?
                                 <a href="{{ route('register') }}" class="fw-semibold" style="color: var(--primary-color);">
-                                    Sign up as Client
+                                    Sign up
                                 </a>
                             </span>
                         </div>

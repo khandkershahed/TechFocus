@@ -106,13 +106,13 @@
                         </div>
 
                         {{-- Submit --}}
-                        {{-- <div class="d-grid">
+                        <div class="d-grid">
                             <button type="submit"
                                 class="text-white shadow-sm btn btn-lg rounded-2"
                                 style="background-color: var(--primary-color); transition: 0.3s;">
                                 Login as {{ ucfirst($userType) }}
                             </button>
-                        </div> --}}
+                        </div>
                     </form>
                 </div>
             </div>
