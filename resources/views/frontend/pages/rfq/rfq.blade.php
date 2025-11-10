@@ -1502,7 +1502,7 @@
                 Swal.fire({
                     icon: 'error',
                     title: 'Submission Failed',
-                    text: 'Something went wrong. Please try again later.',
+                   html: `<pre style="text-align:left;white-space:pre-wrap;max-height:400px;overflow:auto;">${errorMessage}</pre>`,
                     confirmButtonText: 'OK'
                 });
                 submitBtn.prop('disabled', false).html('Submit');
