@@ -536,3 +536,13 @@ Route::delete('/admin/pages/contact/delete-all', [ContactController::class, 'del
 
     // Optional: For AJAX status toggle or bulk actions
     Route::post('categories/bulk-delete', [CategoryController::class, 'bulkDelete'])->name('category.bulkDelete');
+
+    Route::prefix('admin/principals')->name('admin.principals.')->group(function () {
+    Route::patch('{principal}/update-status', [PrincipalController::class, 'updateStatus'])->name('update-status');
+
+    Route::post('{principal}/contacts', [PrincipalContactController::class, 'store'])->name('contacts.store');
+    Route::patch('contacts/{contact}', [PrincipalContactController::class, 'update'])->name('contacts.update');
+    Route::delete('contacts/{contact}', [PrincipalContactController::class, 'destroy'])->name('contacts.destroy');
+
+    Route::post('{principal}/addresses', [PrincipalAddressController::class, 'store'])->name('addresses.store');
+});
