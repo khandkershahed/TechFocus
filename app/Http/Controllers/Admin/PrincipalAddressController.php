@@ -4,56 +4,57 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Principal;
-use App\Models\PrincipalContact;
+use App\Models\PrincipalAddress;
 use Illuminate\Http\Request;
 
-class PrincipalContactController extends Controller
+class PrincipalAddressController extends Controller
 {
     /**
-     * Store a newly created contact for a principal.
+     * Store a new address for a principal.
      */
     public function store(Request $request, Principal $principal)
     {
         $request->validate([
-            'contact_name' => 'required|string|max:255',
-            'job_title' => 'nullable|string|max:255',
-            'email' => 'nullable|email|max:255',
-            'phone_e164' => 'nullable|string|max:50',
-            'whatsapp_e164' => 'nullable|string|max:50',
-            'wechat_id' => 'nullable|string|max:100',
-            'preferred_channel' => 'nullable|string|max:50',
-            'is_primary' => 'nullable|boolean',
+            'type' => 'required|in:HQ,Billing,Shipping,Other',
+            'line1' => 'required|string|max:255',
+            'line2' => 'nullable|string|max:255',
+            'city' => 'nullable|string|max:255',
+            'state' => 'nullable|string|max:255',
+            'postal' => 'nullable|string|max:50',
+            'country_iso' => 'nullable|string|size:2',
         ]);
 
-        $principal->contacts()->create($request->all());
+        $principal->addresses()->create($request->all());
 
-        return back()->with('success', 'Contact added successfully!');
+        return back()->with('success', 'Address added successfully!');
     }
 
     /**
-     * Update an existing contact.
+     * Update an existing address.
      */
-    public function update(Request $request, PrincipalContact $contact)
+    public function update(Request $request, PrincipalAddress $address)
     {
         $request->validate([
-            'contact_name' => 'required|string|max:255',
-            'email' => 'nullable|email|max:255',
-            'phone_e164' => 'nullable|string|max:50',
-            'preferred_channel' => 'nullable|string|max:50',
+            'type' => 'required|in:HQ,Billing,Shipping,Other',
+            'line1' => 'required|string|max:255',
+            'city' => 'nullable|string|max:255',
+            'state' => 'nullable|string|max:255',
+            'postal' => 'nullable|string|max:50',
+            'country_iso' => 'nullable|string|size:2',
         ]);
 
-        $contact->update($request->all());
+        $address->update($request->all());
 
-        return back()->with('success', 'Contact updated successfully!');
+        return back()->with('success', 'Address updated successfully!');
     }
 
     /**
-     * Remove a contact.
+     * Delete an address.
      */
-    public function destroy(PrincipalContact $contact)
+    public function destroy(PrincipalAddress $address)
     {
-        $contact->delete();
+        $address->delete();
 
-        return back()->with('success', 'Contact deleted successfully!');
+        return back()->with('success', 'Address deleted successfully!');
     }
 }

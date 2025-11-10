@@ -62,6 +62,8 @@ use App\Http\Controllers\Sales\SalesYearTargetController;
 use App\Http\Controllers\Admin\Auth\NewPasswordController;
 use App\Http\Controllers\Admin\CountryStateCityController;
 use App\Http\Controllers\Admin\EmployeeCategoryController;
+use App\Http\Controllers\Admin\PrincipalAddressController;
+use App\Http\Controllers\Admin\PrincipalContactController;
 use App\Http\Controllers\Admin\ProductAttributeController;
 use App\Http\Controllers\Admin\EmployeeDepartmentController;
 use App\Http\Controllers\Accounts\AccountsDocumentController;
