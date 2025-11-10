@@ -8,130 +8,275 @@
 <section class="d-flex align-items-center justify-content-center" 
          style="min-height: 100vh; background: linear-gradient(135deg, #e3f2fd, #bbdefb);">
 
-    <div class="p-4 border-0 shadow-lg card rounded-4" style="max-width: 450px; width: 100%; background: #fff;">
+    <div class="p-4 border-0 shadow-lg card rounded-4" style="max-width: 600px; width: 100%; background: #fff;">
 
         <!-- Title -->
         <h3 class="mb-2 text-center fw-bold">Principal Register</h3>
         <p class="mb-4 text-center text-muted">
-            Create your account to get started
+            Our multi-step form makes registration easy
         </p>
 
-       <form method="POST" action="{{ route('principal.register.submit') }}">
-    @csrf
-
-    <!-- Principal Basics -->
-    <div class="mb-3">
-        <label class="form-label fw-semibold">Legal Name <span class="text-danger">*</span></label>
-        <input type="text" name="legal_name" class="form-control" value="{{ old('legal_name') }}" required>
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label fw-semibold">Trading Name</label>
-        <input type="text" name="trading_name" class="form-control" value="{{ old('trading_name') }}">
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label fw-semibold">Entity Type</label>
-        <select name="entity_type" class="form-select">
-            <option value="">Select Entity Type</option>
-            <option value="Manufacturer">Manufacturer</option>
-            <option value="Distributor">Distributor</option>
-            <option value="Supplier">Supplier</option>
-            <option value="Other">Other</option>
-        </select>
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label fw-semibold">Website URL</label>
-        <input type="url" name="website_url" class="form-control" value="{{ old('website_url') }}">
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label fw-semibold">HQ City</label>
-        <input type="text" name="hq_city" class="form-control" value="{{ old('hq_city') }}">
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label fw-semibold">Country</label>
-        <select name="country_iso" class="form-select">
-            <option value="">Select Country</option>
-            @foreach($countries as $country)
-                <option value="{{ $country->iso }}">{{ $country->name }}</option>
-            @endforeach
-        </select>
-    </div>
-
-    <!-- Email & Password -->
-    <div class="mb-3">
-        <label class="form-label fw-semibold">Email</label>
-        <input type="email" name="email" class="form-control" value="{{ old('email') }}" required>
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label fw-semibold">Password</label>
-        <input type="password" name="password" class="form-control" required>
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label fw-semibold">Confirm Password</label>
-        <input type="password" name="password_confirmation" class="form-control" required>
-    </div>
-
-    <hr>
-
-    <!-- Contacts (multiple) -->
-    <h5>Contacts</h5>
-    <div id="contacts-wrapper">
-        <div class="contact-row mb-3">
-            <input type="text" name="contacts[0][contact_name]" placeholder="Contact Name" class="form-control mb-1" required>
-            <input type="text" name="contacts[0][job_title]" placeholder="Job Title" class="form-control mb-1">
-            <input type="email" name="contacts[0][email]" placeholder="Email" class="form-control mb-1">
-            <input type="text" name="contacts[0][phone_e164]" placeholder="Phone (E.164)" class="form-control mb-1">
-            <input type="text" name="contacts[0][whatsapp_e164]" placeholder="WhatsApp (E.164)" class="form-control mb-1">
-            <input type="text" name="contacts[0][wechat_id]" placeholder="WeChat ID" class="form-control mb-1">
-            <select name="contacts[0][preferred_channel]" class="form-select mb-1">
-                <option value="">Preferred Channel</option>
-                <option value="Email">Email</option>
-                <option value="WhatsApp">WhatsApp</option>
-                <option value="WeChat">WeChat</option>
-                <option value="Phone">Phone</option>
-            </select>
-            <label>
-                <input type="checkbox" name="contacts[0][is_primary]" value="1"> Primary
-            </label>
+        <!-- Progress Steps -->
+        <div class="mb-4">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="step active" data-step="1">
+                    <div class="step-circle">1</div>
+                    <small class="step-label">Company</small>
+                </div>
+                <div class="step-connector active"></div>
+                <div class="step" data-step="2">
+                    <div class="step-circle">2</div>
+                    <small class="step-label">Account</small>
+                </div>
+                <div class="step-connector"></div>
+                <div class="step" data-step="3">
+                    <div class="step-circle">3</div>
+                    <small class="step-label">Contact</small>
+                </div>
+                <div class="step-connector"></div>
+                <div class="step" data-step="4">
+                    <div class="step-circle">4</div>
+                    <small class="step-label">Address</small>
+                </div>
+            </div>
         </div>
-    </div>
-    <button type="button" id="add-contact" class="btn btn-sm btn-secondary mb-3">Add Another Contact</button>
 
-    <hr>
+        <form method="POST" action="{{ route('principal.register.submit') }}" id="multiStepForm">
+            @csrf
+            
+            <!-- Step 1: Company Information -->
+            <div class="step-content" id="step-1">
+                <h6 class="mb-3 fw-semibold text-primary border-bottom pb-2">COMPANY INFORMATION</h6>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Legal Name <span class="text-danger">*</span></label>
+                        <input type="text" name="legal_name" class="form-control" value="{{ old('legal_name') }}" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Trading Name</label>
+                        <input type="text" name="trading_name" class="form-control" value="{{ old('trading_name') }}">
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Entity Type</label>
+                        <select name="entity_type" class="form-select">
+                            <option value="">Select Entity Type</option>
+                            <option value="Manufacturer">Manufacturer</option>
+                            <option value="Distributor">Distributor</option>
+                            <option value="Supplier">Supplier</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Website URL</label>
+                        <input type="url" name="website_url" class="form-control" value="{{ old('website_url') }}">
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">HQ City</label>
+                        <input type="text" name="hq_city" class="form-control" value="{{ old('hq_city') }}">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Country</label>
+                        <select name="country_iso" class="form-select">
+                            <option value="">Select Country</option>
+                            @foreach($countries as $country)
+                                <option value="{{ $country->iso }}">{{ $country->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="d-flex justify-content-between mt-4">
+                    <div></div> <!-- Empty div for spacing -->
+                    <button type="button" class="btn btn-primary next-step" data-next="2">Next →</button>
+                </div>
+            </div>
 
-    <!-- Addresses (multiple) -->
-    <h5>Addresses</h5>
-    <div id="addresses-wrapper">
-        <div class="address-row mb-3">
-            <select name="addresses[0][type]" class="form-select mb-1">
-                <option value="HQ">HQ</option>
-                <option value="Billing">Billing</option>
-                <option value="Shipping">Shipping</option>
-                <option value="Other">Other</option>
-            </select>
-            <input type="text" name="addresses[0][line1]" placeholder="Address Line 1" class="form-control mb-1" required>
-            <input type="text" name="addresses[0][line2]" placeholder="Address Line 2" class="form-control mb-1">
-            <input type="text" name="addresses[0][city]" placeholder="City" class="form-control mb-1">
-            <input type="text" name="addresses[0][state]" placeholder="State" class="form-control mb-1">
-            <input type="text" name="addresses[0][postal]" placeholder="Postal Code" class="form-control mb-1">
-            <select name="addresses[0][country_iso]" class="form-select mb-1">
-                @foreach($countries as $country)
-                    <option value="{{ $country->iso }}">{{ $country->name }}</option>
-                @endforeach
-            </select>
-        </div>
-    </div>
-    <button type="button" id="add-address" class="btn btn-sm btn-secondary mb-3">Add Another Address</button>
+            <!-- Step 2: Account Information -->
+            <div class="step-content d-none" id="step-2">
+                <h6 class="mb-3 fw-semibold text-primary border-bottom pb-2">ACCOUNT INFORMATION</h6>
+                
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Email <span class="text-danger">*</span></label>
+                    <input type="email" name="email" class="form-control" value="{{ old('email') }}" required>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Password <span class="text-danger">*</span></label>
+                        <input type="password" name="password" class="form-control" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Confirm Password <span class="text-danger">*</span></label>
+                        <input type="password" name="password_confirmation" class="form-control" required>
+                    </div>
+                </div>
+                
+                <div class="d-flex justify-content-between mt-4">
+                    <button type="button" class="btn btn-outline-secondary prev-step" data-prev="1">← Previous</button>
+                    <button type="button" class="btn btn-primary next-step" data-next="3">Next →</button>
+                </div>
+            </div>
 
-    <!-- Submit -->
-    <button type="submit" class="btn btn-primary w-100 btn-lg">Register</button>
-</form>
+            <!-- Step 3: Contact Information -->
+            <div class="step-content d-none" id="step-3">
+                <h6 class="mb-3 fw-semibold text-primary border-bottom pb-2">PRIMARY CONTACT</h6>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Contact Name <span class="text-danger">*</span></label>
+                        <input type="text" name="contacts[0][contact_name]" class="form-control" value="{{ old('contacts.0.contact_name') }}" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Job Title</label>
+                        <input type="text" name="contacts[0][job_title]" class="form-control" value="{{ old('contacts.0.job_title') }}">
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Contact Email</label>
+                        <input type="email" name="contacts[0][email]" class="form-control" value="{{ old('contacts.0.email') }}">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Phone (E.164)</label>
+                        <input type="text" name="contacts[0][phone_e164]" class="form-control" value="{{ old('contacts.0.phone_e164') }}">
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">WhatsApp (E.164)</label>
+                        <input type="text" name="contacts[0][whatsapp_e164]" class="form-control" value="{{ old('contacts.0.whatsapp_e164') }}">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">WeChat ID</label>
+                        <input type="text" name="contacts[0][wechat_id]" class="form-control" value="{{ old('contacts.0.wechat_id') }}">
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Preferred Channel</label>
+                        <select name="contacts[0][preferred_channel]" class="form-select">
+                            <option value="">Preferred Channel</option>
+                            <option value="Email">Email</option>
+                            <option value="WhatsApp">WhatsApp</option>
+                            <option value="WeChat">WeChat</option>
+                            <option value="Phone">Phone</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 d-flex align-items-end">
+                        <div class="form-check mt-2">
+                            <input type="checkbox" class="form-check-input" name="contacts[0][is_primary]" value="1" checked>
+                            <label class="form-check-label">Primary Contact</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <button type="button" id="add-contact" class="btn btn-sm btn-outline-secondary">
+                        + Add Another Contact
+                    </button>
+                </div>
+                
+                <div id="additional-contacts" class="mb-3">
+                    <!-- Additional contacts will be added here -->
+                </div>
+                
+                <div class="d-flex justify-content-between mt-4">
+                    <button type="button" class="btn btn-outline-secondary prev-step" data-prev="2">← Previous</button>
+                    <button type="button" class="btn btn-primary next-step" data-next="4">Next →</button>
+                </div>
+            </div>
+
+            <!-- Step 4: Address & Final Details -->
+            <div class="step-content d-none" id="step-4">
+                <h6 class="mb-3 fw-semibold text-primary border-bottom pb-2">PRIMARY ADDRESS</h6>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Address Type</label>
+                        <select name="addresses[0][type]" class="form-select">
+                            <option value="HQ">HQ</option>
+                            <option value="Billing">Billing</option>
+                            <option value="Shipping">Shipping</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Country</label>
+                        <select name="addresses[0][country_iso]" class="form-select">
+                            @foreach($countries as $country)
+                                <option value="{{ $country->iso }}">{{ $country->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Address Line 1 <span class="text-danger">*</span></label>
+                    <input type="text" name="addresses[0][line1]" class="form-control" value="{{ old('addresses.0.line1') }}" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Address Line 2</label>
+                    <input type="text" name="addresses[0][line2]" class="form-control" value="{{ old('addresses.0.line2') }}">
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">City</label>
+                        <input type="text" name="addresses[0][city]" class="form-control" value="{{ old('addresses.0.city') }}">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">State</label>
+                        <input type="text" name="addresses[0][state]" class="form-control" value="{{ old('addresses.0.state') }}">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Postal Code</label>
+                        <input type="text" name="addresses[0][postal]" class="form-control" value="{{ old('addresses.0.postal') }}">
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <button type="button" id="add-address" class="btn btn-sm btn-outline-secondary">
+                        + Add Another Address
+                    </button>
+                </div>
+                
+                <div id="additional-addresses" class="mb-3">
+                    <!-- Additional addresses will be added here -->
+                </div>
+
+                <hr class="my-4">
+                
+                <!-- OPTIONAL MESSAGE -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Message (Optional)</label>
+                    <textarea name="message" class="form-control" rows="3" placeholder="Hello, I would like more detailed information about...">{{ old('message') }}</textarea>
+                </div>
+                
+                <!-- NEWSLETTER SUBSCRIPTION -->
+                <div class="mb-4 form-check">
+                    <input type="checkbox" class="form-check-input" id="newsletter" name="newsletter" value="1">
+                    <label class="form-check-label" for="newsletter">
+                        I would like to receive exclusive offers, information, and news from DirectIndustry.
+                    </label>
+                </div>
+                
+                <div class="d-flex justify-content-between mt-4">
+                    <button type="button" class="btn btn-outline-secondary prev-step" data-prev="3">← Previous</button>
+                    <button type="submit" class="btn btn-success">Complete Registration</button>
+                </div>
+            </div>
+        </form>
 
         <!-- Links -->
         <div class="mt-4 text-center">
@@ -149,37 +294,237 @@
 </section>
 @endsection
 
+@push('styles')
+<style>
+.step {
+    text-align: center;
+    flex: 1;
+}
 
-{{-- JS to clone contact/address rows --}}
+.step-circle {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: #e9ecef;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 5px;
+    font-weight: bold;
+    border: 2px solid #e9ecef;
+}
+
+.step.active .step-circle {
+    background: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.step-connector {
+    flex: 1;
+    height: 2px;
+    background: #e9ecef;
+    margin: 0 10px;
+    position: relative;
+    top: -18px;
+}
+
+.step-connector.active {
+    background: #007bff;
+}
+
+.step-label {
+    font-size: 0.75rem;
+    color: #6c757d;
+}
+
+.step.active .step-label {
+    color: #007bff;
+    font-weight: 500;
+}
+
+.step-content {
+    min-height: 400px;
+}
+</style>
+@endpush
+
 @push('scripts')
 <script>
 let contactIndex = 1;
 let addressIndex = 1;
+let currentStep = 1;
 
-document.getElementById('add-contact').addEventListener('click', function() {
-    let wrapper = document.getElementById('contacts-wrapper');
-    let newRow = wrapper.querySelector('.contact-row').cloneNode(true);
-    newRow.querySelectorAll('input, select').forEach(input => {
-        let name = input.getAttribute('name');
-        input.setAttribute('name', name.replace(/\d+/, contactIndex));
-        if(input.type !== 'checkbox') input.value = '';
-        if(input.type === 'checkbox') input.checked = false;
+// Step Navigation
+document.querySelectorAll('.next-step').forEach(button => {
+    button.addEventListener('click', function() {
+        const nextStep = this.getAttribute('data-next');
+        goToStep(nextStep);
     });
-    wrapper.appendChild(newRow);
-    contactIndex++;
 });
 
-document.getElementById('add-address').addEventListener('click', function() {
-    let wrapper = document.getElementById('addresses-wrapper');
-    let newRow = wrapper.querySelector('.address-row').cloneNode(true);
-    newRow.querySelectorAll('input, select').forEach(input => {
-        let name = input.getAttribute('name');
-        input.setAttribute('name', name.replace(/\d+/, addressIndex));
-        if(input.tagName === 'INPUT') input.value = '';
-        if(input.tagName === 'SELECT') input.selectedIndex = 0;
+document.querySelectorAll('.prev-step').forEach(button => {
+    button.addEventListener('click', function() {
+        const prevStep = this.getAttribute('data-prev');
+        goToStep(prevStep);
     });
-    wrapper.appendChild(newRow);
+});
+
+function goToStep(step) {
+    // Hide all steps
+    document.querySelectorAll('.step-content').forEach(content => {
+        content.classList.add('d-none');
+    });
+    
+    // Show target step
+    document.getElementById(`step-${step}`).classList.remove('d-none');
+    
+    // Update progress indicators
+    document.querySelectorAll('.step').forEach(stepEl => {
+        stepEl.classList.remove('active');
+        if(parseInt(stepEl.getAttribute('data-step')) <= step) {
+            stepEl.classList.add('active');
+        }
+    });
+    
+    document.querySelectorAll('.step-connector').forEach((connector, index) => {
+        connector.classList.remove('active');
+        if(index < step - 1) {
+            connector.classList.add('active');
+        }
+    });
+    
+    currentStep = parseInt(step);
+}
+
+// Contact Management
+document.getElementById('add-contact').addEventListener('click', function() {
+    const wrapper = document.getElementById('additional-contacts');
+    const newContactHTML = `
+        <div class="contact-section border-top pt-3 mt-3">
+            <h6 class="fw-semibold text-secondary">Additional Contact</h6>
+            <div class="row mb-2">
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Contact Name</label>
+                    <input type="text" name="contacts[${contactIndex}][contact_name]" class="form-control">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Job Title</label>
+                    <input type="text" name="contacts[${contactIndex}][job_title]" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Contact Email</label>
+                    <input type="email" name="contacts[${contactIndex}][email]" class="form-control">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Phone (E.164)</label>
+                    <input type="text" name="contacts[${contactIndex}][phone_e164]" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">WhatsApp (E.164)</label>
+                    <input type="text" name="contacts[${contactIndex}][whatsapp_e164]" class="form-control">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">WeChat ID</label>
+                    <input type="text" name="contacts[${contactIndex}][wechat_id]" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Preferred Channel</label>
+                    <select name="contacts[${contactIndex}][preferred_channel]" class="form-select">
+                        <option value="">Preferred Channel</option>
+                        <option value="Email">Email</option>
+                        <option value="WhatsApp">WhatsApp</option>
+                        <option value="WeChat">WeChat</option>
+                        <option value="Phone">Phone</option>
+                    </select>
+                </div>
+                <div class="col-md-6 d-flex align-items-end">
+                    <div class="form-check mt-2">
+                        <input type="checkbox" class="form-check-input" name="contacts[${contactIndex}][is_primary]" value="1">
+                        <label class="form-check-label">Primary Contact</label>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="btn btn-sm btn-outline-danger remove-contact">Remove Contact</button>
+        </div>
+    `;
+    
+    wrapper.insertAdjacentHTML('beforeend', newContactHTML);
+    contactIndex++;
+    
+    // Add event listener to the new remove button
+    const removeButtons = wrapper.querySelectorAll('.remove-contact');
+    removeButtons[removeButtons.length - 1].addEventListener('click', function() {
+        this.closest('.contact-section').remove();
+    });
+});
+
+// Address Management
+document.getElementById('add-address').addEventListener('click', function() {
+    const wrapper = document.getElementById('additional-addresses');
+    const newAddressHTML = `
+        <div class="address-section border-top pt-3 mt-3">
+            <h6 class="fw-semibold text-secondary">Additional Address</h6>
+            <div class="row mb-2">
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Address Type</label>
+                    <select name="addresses[${addressIndex}][type]" class="form-select">
+                        <option value="HQ">HQ</option>
+                        <option value="Billing">Billing</option>
+                        <option value="Shipping">Shipping</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Country</label>
+                    <select name="addresses[${addressIndex}][country_iso]" class="form-select">
+                        @foreach($countries as $country)
+                            <option value="{{ $country->iso }}">{{ $country->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="mb-2">
+                <label class="form-label fw-semibold">Address Line 1</label>
+                <input type="text" name="addresses[${addressIndex}][line1]" class="form-control">
+            </div>
+            <div class="mb-2">
+                <label class="form-label fw-semibold">Address Line 2</label>
+                <input type="text" name="addresses[${addressIndex}][line2]" class="form-control">
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">City</label>
+                    <input type="text" name="addresses[${addressIndex}][city]" class="form-control">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">State</label>
+                    <input type="text" name="addresses[${addressIndex}][state]" class="form-control">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">Postal Code</label>
+                    <input type="text" name="addresses[${addressIndex}][postal]" class="form-control">
+                </div>
+            </div>
+            <button type="button" class="btn btn-sm btn-outline-danger remove-address">Remove Address</button>
+        </div>
+    `;
+    
+    wrapper.insertAdjacentHTML('beforeend', newAddressHTML);
     addressIndex++;
+    
+    // Add event listener to the new remove button
+    const removeButtons = wrapper.querySelectorAll('.remove-address');
+    removeButtons[removeButtons.length - 1].addEventListener('click', function() {
+        this.closest('.address-section').remove();
+    });
 });
 </script>
 @endpush
