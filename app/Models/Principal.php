@@ -63,6 +63,16 @@ class Principal extends Authenticatable implements MustVerifyEmail
         'country_id',
         'created_by',
         'updated_by',
+         'legal_name',
+        'trading_name',
+        'entity_type',
+        'website_url',
+        'country_iso',
+        'hq_city',
+        'relationship_status',
+        'notes',
+        'created_by',
+        'archived_at',
     ];
 
     /**
@@ -106,4 +116,15 @@ public function updateLastSeen()
     {
         return $this->belongsTo(Country::class, 'country_id');
     }
+
+public function contacts()
+{
+    return $this->hasMany(\App\Models\PrincipalContact::class, 'principal_id');
+}
+
+public function addresses()
+{
+    return $this->hasMany(\App\Models\PrincipalAddress::class, 'principal_id');
+}
+
 }

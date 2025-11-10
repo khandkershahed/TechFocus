@@ -353,3 +353,14 @@ Route::get('/manage-cookies', function () {
 Route::get('/privacy-policy', function () {
     return view('frontend.pages.privacy-policy');
 })->name('privacy.policy');
+
+
+
+Route::post('/destroy-after-rfq', function () {
+    // Destroy the session items related to RFQ
+    session()->forget('cart'); // or session()->forget('rfq_products')
+    session()->forget('rfq');  // optional
+    return response()->json(['success' => true]);
+})->name('destroy.after.rfq');
+
+
