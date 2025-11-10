@@ -332,9 +332,10 @@
                                     </div>
 
                                     <div class="d-flex justify-content-between align-items-center">
-                                        <button type="button" data-repeater-create class="mt-4 mb-3 rfq-add-btns">
-                                            <i class="fas fa-plus"></i> Add Items
-                                        </button>
+                                     <button type="button" data-repeater-create class="mt-4 mb-3 rfq-add-btns">
+    <i class="fas fa-plus"></i> Add Items
+</button>
+
                                         <div>
                                             <!-- Button to trigger modal -->
                                             <button type="button" class="bg-transparent border-0 modal-text-btn" data-bs-toggle="modal" data-bs-target="#rfqModal">
@@ -1526,5 +1527,69 @@ $(document).ready(function() {
     updateProgress();
 });
 </script>
+<script>
+$(document).ready(function () {
 
+    // ✅ Initialize Repeater
+    $('.repeater').repeater({
+        initEmpty: false,
+
+        defaultValues: {
+            'text-input': '',
+        },
+
+        show: function () {
+            $(this).slideDown();
+            updateSerialNumbers();
+            toggleDeleteButtons();
+        },
+
+        hide: function (deleteElement) {
+            $(this).slideUp(deleteElement);
+            setTimeout(function () {
+                updateSerialNumbers();
+                toggleDeleteButtons();
+            }, 300);
+        }
+    });
+
+    // ✅ Re-index serial numbers
+    function updateSerialNumbers() {
+        $(".serial-no").each(function (i) {
+            $(this).val(i + 1);
+        });
+    }
+
+    // ✅ Enable/disable delete buttons based on item count
+    function toggleDeleteButtons() {
+        const count = $(".repeater [data-repeater-item]").length;
+
+        if (count <= 1) {
+            $("[data-repeater-delete]").prop("disabled", true).addClass("disabled");
+        } else {
+            $("[data-repeater-delete]").prop("disabled", false).removeClass("disabled");
+        }
+    }
+
+    // ✅ Block delete when only one item exists
+    $(document).on("click", "[data-repeater-delete]", function (e) {
+        const count = $(".repeater [data-repeater-item]").length;
+
+        if (count <= 1) {
+            e.preventDefault();
+            Swal.fire({
+                icon: 'warning',
+                title: 'You cannot delete this item',
+                text: 'At least one product item is required.',
+            });
+            return false;
+        }
+    });
+
+    // ✅ First time load
+    updateSerialNumbers();
+    toggleDeleteButtons();
+
+});
+</script>
 @endsection
