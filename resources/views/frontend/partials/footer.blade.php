@@ -28,7 +28,7 @@
                         <a href="{{route('contact')}}">Contact Us</a>
                     </li>
                     <!-- <li class="pt-2">
-                        <a href="{{route('service')}}"> Our Service</a>
+                        {{-- <a href="{{route('service')}}"> Our Service</a> --}}
                     </li> -->
                     <!-- <li class="pt-2">
                         <a href="{{route('subscription')}}"> Subscriptions</a>

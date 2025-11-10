@@ -34,7 +34,7 @@ Route::get('contact', [SiteController::class, 'contact'])->name('contact');
 Route::post('contact-store', [ContactController::class, 'store'])->name('contact.add');
 Route::get('terms', [SiteController::class, 'terms'])->name('terms');
 Route::get('about-us', [SiteController::class, 'about'])->name('about');
-Route::get('services', [SiteController::class, 'service'])->name('service');
+// Route::get('services', [SiteController::class, 'service'])->name('service');
 Route::get('subscription', [SiteController::class, 'subscription'])->name('subscription');
 Route::get('brand/list', [SiteController::class, 'brandList'])->name('brand.list');
 Route::get('/brands/search', [App\Http\Controllers\Frontend\SiteController::class, 'brandSearch'])

@@ -468,13 +468,17 @@ public function filterProducts(Request $request, $slug)
     {
         return view('frontend.pages.others.subscription');
     }
+
+
 public function brandList()
 {
-    $banners = Banner::all(); // fetch banners
+    // Fetch only banners for the brand list page
+    $banners = PageBanner::where('page_name', 'brandlist')->get();
+
     $paginationSettings = ['*'];
 
     $data = [
-        'banners' => $banners, // <-- pass banners here
+        'banners' => $banners,
         'top_brands' => Brand::byCategory('Top')->latest('id')->paginate(18, $paginationSettings, 'top_brands'),
         'featured_brands' => Brand::byCategory('Featured')->latest('id')->paginate(18, $paginationSettings, 'featured_brands'),
         'others' => Brand::with('brandPage')->select('id', 'slug', 'title')->get(),
@@ -483,11 +487,10 @@ public function brandList()
     return view('frontend.pages.brand.brand_list', $data);
 }
 
-
-    public function service()
-    {
-        return view('frontend.pages.service.service');
-    }
+    // public function service()
+    // {
+    //     return view('frontend.pages.service.service');
+    // }
 
     public function sourcingGuide()
     {
