@@ -119,8 +119,8 @@ public function homePage()
 
     // Get top-level categories and limit subcategories
     $categories = Category::with(['children' => function($query) {
-        $query->limit(4)->with(['children' => function($q) {
-            $q->limit(4);
+        $query->limit(100)->with(['children' => function($q) {
+            $q->limit(100);
             // Repeat for deeper children if needed, but ideally limit depth for performance
         }]);
     }])

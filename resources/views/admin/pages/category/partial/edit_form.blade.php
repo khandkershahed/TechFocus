@@ -15,18 +15,6 @@
       </div>
 
       <div class="col-md-6">
-        <label class="form-label fw-semibold">Country</label>
-        <select name="country_id" class="form-select" required>
-          <option value="">Select Country</option>
-          @foreach($countries ?? [] as $country)
-            <option value="{{ $country->id }}" {{ $category->country_id == $country->id ? 'selected' : '' }}>
-              {{ $country->name }}
-            </option>
-          @endforeach
-        </select>
-      </div>
-
-      <div class="col-md-6">
         <div class="form-check mt-4">
           <input class="form-check-input" type="checkbox" name="is_parent" id="edit_is_parent_checkbox"
                  value="1" {{ $category->is_parent ? 'checked' : '' }}>

@@ -18,16 +18,6 @@
             </div>
 
             <div class="col-md-6">
-              <label class="form-label fw-semibold">Country</label>
-              <select name="country_id" id ="country_id" class="form-select" required data-control="select2">
-                <option value="">Select Country</option>
-                @foreach($countries ?? [] as $country)
-                  <option value="{{ $country->id }}">{{ $country->name }}</option>
-                @endforeach
-              </select>
-            </div>
-
-            <div class="col-md-6">
               <div class="form-check mt-4">
                 <input class="form-check-input" type="checkbox" name="is_parent" id="flexRadioLg" value="1">
                 <label class="form-check-label" for="flexRadioLg">Is Parent Category?</label>

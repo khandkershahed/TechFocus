@@ -41,10 +41,9 @@ public function index(Request $request)
         ->orderBy('name')
         ->get();
 
-    // ✅ Fetch countries
-    $countries = Country::orderBy('name', 'ASC')->get();
+    
 
-    return view('admin.pages.category.index', compact('categories', 'parentCategories', 'treeCategories', 'countries', 'search'));
+    return view('admin.pages.category.index', compact('categories', 'parentCategories', 'treeCategories','search'));
 }
 
     /** STORE */
@@ -77,23 +76,60 @@ public function edit($id)
         ->where('id', '!=', $id)
         ->get();
 
-    $countries = Country::orderBy('name')->get();
 
-    return view('admin.pages.category.edit', compact('category', 'parentCategories', 'countries'));
+    return view('admin.pages.category.edit', compact('category', 'parentCategories'));
 }
 
-public function update(CategoryRequest $request, $id)
+public function update(Request $request, $id)
 {
     $category = $this->categoryRepository->findCategory($id);
 
     if (!$category) {
-        return redirect()->back()->with('error', 'Category not found.');
+        return redirect()->route('admin.category.index')
+                         ->with('error', 'Category not found.');
     }
 
-    $data = $this->prepareData($request, $category);
+    $data = [
+        'name'        => $request->name,
+        'slug'        => Str::slug($request->name),
+        'is_parent'   => $request->has('is_parent') ? 1 : 0,
+        'parent_id'   => $request->has('is_parent') ? null : $request->parent_id,
+        'description' => $request->description,
+        'country_id'  => $request->country_id,
+    ];
+
+    // Image upload
+    if ($request->hasFile('image')) {
+        $imagePath = $request->file('image')->store('category/image', 'public');
+        $data['image'] = $imagePath;
+
+        // delete old image
+        if ($category->image && \Storage::disk('public')->exists($category->image)) {
+            \Storage::disk('public')->delete($category->image);
+        }
+    } else {
+        // retain old image
+        $data['image'] = $category->image;
+    }
+
+    // Logo upload
+    if ($request->hasFile('logo')) {
+        $logoPath = $request->file('logo')->store('category/logo', 'public');
+        $data['logo'] = $logoPath;
+
+        // delete old logo
+        if ($category->logo && \Storage::disk('public')->exists($category->logo)) {
+            \Storage::disk('public')->delete($category->logo);
+        }
+    } else {
+        $data['logo'] = $category->logo;
+    }
+
     $this->categoryRepository->updateCategory($data, $id);
 
-    return redirect()->route('admin.category.index')->with('success', 'Category updated successfully.');
+    // ✅ Redirect to category index page after update
+    return redirect()->route('admin.category.index')
+                     ->with('success', 'Category updated successfully.');
 }
 
     /** DELETE */
@@ -125,7 +161,6 @@ public function destroy($id)
     $logoPath  = storage_path('app/public/category/logo/');
 
     return [
-        'country_id'  => $request->country_id,
         'parent_id'   => $request->parent_id,
         'name'        => $request->name,
         'slug'        => Str::slug($request->name),
