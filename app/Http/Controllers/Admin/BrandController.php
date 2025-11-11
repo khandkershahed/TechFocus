@@ -26,13 +26,26 @@ class BrandController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        return view('admin.pages.brand.index', [
-            'brands' =>  $this->brandRepository->allBrand(),
-        ]);
-    }
+    // public function index()
+    // {
+    //     return view('admin.pages.brand.index', [
+    //         'brands' =>  $this->brandRepository->allBrand(),
+    //     ]);
+    // }
+// In Admin\BrandController
+public function index()
+{
+    return view('admin.pages.brand.index', [
+        'brands' => $this->brandRepository->allApprovedBrands(), // Only approved brands
+    ]);
+}
 
+public function pending()
+{
+    return view('admin.pages.brand.pending', [
+        'pendingBrands' => $this->brandRepository->pendingBrands(),
+    ]);
+}
     /**
      * Show the form for creating a new resource.
      *
@@ -225,12 +238,12 @@ public function contentDetails($id)
 /**
  * Display pending brands from principals for approval.
  */
-public function pending()
-{
-    return view('admin.pages.brand.pending', [
-        'pendingBrands' => $this->brandRepository->pendingBrands(),
-    ]);
-}
+// public function pending()
+// {
+//     return view('admin.pages.brand.pending', [
+//         'pendingBrands' => $this->brandRepository->pendingBrands(),
+//     ]);
+// }
 /**
  * Approve a brand.
  */

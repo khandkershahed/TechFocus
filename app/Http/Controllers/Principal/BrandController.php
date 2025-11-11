@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Principal;
 
 use App\Models\Admin\Brand;
-use App\Models\Country;
 use App\Models\Admin\Category;
+use App\Models\Country;
 use Illuminate\Support\Str;
 use App\Http\Requests\BrandRequest;
 use App\Http\Controllers\Controller;
@@ -38,11 +38,15 @@ class BrandController extends Controller
      */
     public function create()
     {
-        // Get active countries and ALL categories (both parent and child)
-        $countries = Country::where('status', 'active')->get();
-        $categories = Category::with('children')->orderBy('name', 'ASC')->get();
+        // Get categories with their children for nested dropdown
+        $categories = Category::whereNull('parent_id')
+            ->with('children')
+            ->get();
 
-        return view('principal.brands.create', compact('countries', 'categories'));
+        // Get countries for dropdown
+        $countries = Country::all();
+
+        return view('principal.brands.create', compact('categories', 'countries'));
     }
 
     /**
@@ -70,6 +74,13 @@ class BrandController extends Controller
             $globalFunLogo = ['status' => 0];
         }
 
+        // Get category name from the category ID
+        $categoryName = null;
+        if ($request->category) {
+            $category = Category::find($request->category);
+            $categoryName = $category ? $category->name : null;
+        }
+
         $data = [
             'principal_id' => $principalId,
             'country_id'   => $request->country_id,
@@ -78,8 +89,11 @@ class BrandController extends Controller
             'image'        => $globalFunImage['status'] == 1 ? $globalFunImage['file_name'] : null,
             'logo'         => $globalFunLogo['status'] == 1 ? $globalFunLogo['file_name'] : null,
             'website_url'  => $request->website_url,
-            'category'     => $request->category,
-            'status'       => 'pending', // Set status as pending for admin approval
+            'category'     => $categoryName, // Use 'category' column instead of 'category_id'
+            'status'       => 'pending',
+            'slug'         => Str::slug($request->title),
+            'created_by'   => $principalId,
+            'updated_by'   => $principalId,
         ];
 
         $this->brandRepository->storeBrand($data);
@@ -101,11 +115,15 @@ class BrandController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        // Get active countries and ALL categories for the edit form
-        $countries = Country::where('status', 'active')->get();
-        $categories = Category::with('children')->orderBy('name', 'ASC')->get();
+        // Get categories with their children for nested dropdown
+        $categories = Category::whereNull('parent_id')
+            ->with('children')
+            ->get();
 
-        return view('principal.brands.edit', compact('brand', 'countries', 'categories'));
+        // Get countries for dropdown
+        $countries = Country::all();
+
+        return view('principal.brands.edit', compact('brand', 'categories', 'countries'));
     }
 
     /**
@@ -154,6 +172,13 @@ class BrandController extends Controller
             $globalFunLogo = ['status' => 0];
         }
 
+        // Get category name from the category ID
+        $categoryName = $brand->category; // Keep existing category if not changed
+        if ($request->category && $request->category != $brand->category) {
+            $category = Category::find($request->category);
+            $categoryName = $category ? $category->name : $brand->category;
+        }
+
         $data = [
             'country_id'   => $request->country_id,
             'title'        => $request->title,
@@ -161,8 +186,10 @@ class BrandController extends Controller
             'image'        => $globalFunImage['status'] == 1 ? $globalFunImage['file_name'] : $brand->image,
             'logo'         => $globalFunLogo['status'] == 1 ? $globalFunLogo['file_name'] : $brand->logo,
             'website_url'  => $request->website_url,
-            'category'     => $request->category,
+            'category'     => $categoryName, // Use 'category' column instead of 'category_id'
             'status'       => 'pending', // Reset to pending when updated
+            'slug'         => Str::slug($request->title),
+            'updated_by'   => $principalId,
         ];
 
         $this->brandRepository->updateBrand($data, $id);

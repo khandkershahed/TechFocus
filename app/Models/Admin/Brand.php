@@ -2,185 +2,102 @@
 
 namespace App\Models\Admin;
 
-use App\Traits\HasSlug;
-use Wildside\Userstamps\Userstamps;
+use App\Models\Country;
+use App\Models\Principal;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Brand extends Model
 {
-    use HasFactory, HasSlug, Userstamps;
+    use HasFactory;
 
-    /**
-     * The attributes that aren't mass assignable.
-     *
-     * @var array
-     */
-    protected $guarded = [];
+    protected $fillable = [
+        'principal_id',
+        'country_id',
+        'title',
+        'slug',
+        'description',
+        'image',
+        'logo',
+        'website_url',
+        'category',
+        'status',
+        'rejection_reason',
+        'approved_at',
+        'created_by',
+        'updated_by'
+    ];
 
-    protected $slugSourceColumn = 'title';
-
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array
-     */
     protected $casts = [
         'approved_at' => 'datetime',
     ];
 
-    /**
-     * Scope a query to filter by category.
-     */
-    public function scopeByCategory($query, $category)
+    // Relationships
+    public function principal()
     {
-        return $query->where('category', $category);
+        return $this->belongsTo(Principal::class);
     }
 
-    /**
-     * Scope a query to only include approved brands.
-     */
+    public function country()
+    {
+        return $this->belongsTo(Country::class);
+    }
+
+    // Scopes
     public function scopeApproved($query)
     {
         return $query->where('status', 'approved');
     }
 
-    /**
-     * Scope a query to only include pending brands.
-     */
     public function scopePending($query)
     {
         return $query->where('status', 'pending');
     }
 
-    /**
-     * Scope a query to only include rejected brands.
-     */
     public function scopeRejected($query)
     {
         return $query->where('status', 'rejected');
     }
 
-    /**
-     * Get the brand products with optional product type filter.
-     */
-    public function brandProducts($productType = null)
+    public function scopeByPrincipal($query, $principalId)
     {
-        $query = $this->hasMany(Product::class, 'brand_id')
-            ->where('product_status', 'product');
-
-        if ($productType) {
-            $query->where('product_type', $productType);
-        }
-
-        return $query;
+        return $query->where('principal_id', $principalId);
     }
 
-    /**
-     * Get all products for the brand.
-     */
-    public function products()
+    // Accessors
+    public function getStatusBadgeAttribute()
     {
-        return $this->hasMany(Product::class, 'brand_id');
+        $badges = [
+            'approved' => 'success',
+            'pending' => 'warning',
+            'rejected' => 'danger'
+        ];
+
+        return '<span class="badge bg-' . ($badges[$this->status] ?? 'secondary') . '">' . ucfirst($this->status) . '</span>';
     }
 
-    /**
-     * Get products by brand slug.
-     */
-    public static function getProductByBrand($slug)
-    {
-        return Brand::with('brandProducts')->where('slug', $slug)->firstOrFail();
-    }
-
-    /**
-     * Get the brand page associated with the brand.
-     */
-    public function brandPage()
-    {
-        return $this->hasOne(BrandPage::class);
-    }
-
-    /**
-     * Get the principal that owns the brand.
-     */
-    public function principal()
-    {
-        return $this->belongsTo(\App\Models\Principal::class);
-    }
-
-    /**
-     * Check if the brand is approved.
-     */
-    public function isApproved()
+    public function getIsApprovedAttribute()
     {
         return $this->status === 'approved';
     }
 
-    /**
-     * Check if the brand is pending.
-     */
-    public function isPending()
+    public function getIsPendingAttribute()
     {
         return $this->status === 'pending';
     }
 
-    /**
-     * Check if the brand is rejected.
-     */
-    public function isRejected()
+    public function getIsRejectedAttribute()
     {
         return $this->status === 'rejected';
     }
 
-    /**
-     * Get the status badge class for UI.
-     */
-    public function getStatusBadgeAttribute()
-    {
-        return match($this->status) {
-            'approved' => 'bg-green-100 text-green-800',
-            'pending' => 'bg-yellow-100 text-yellow-800',
-            'rejected' => 'bg-red-100 text-red-800',
-            default => 'bg-gray-100 text-gray-800'
-        };
-    }
+    public function scopeByCategory($query, $category)
+{
+    return $query->where('category', $category);
+}
+public function brandPage()
+{
+    return $this->hasOne(\App\Models\Admin\BrandPage::class, 'brand_id');
+}
 
-    /**
-     * Get the status text for display.
-     */
-    public function getStatusTextAttribute()
-    {
-        return ucfirst($this->status);
-    }
-
-    /**
-     * Approve the brand.
-     */
-    public function approve()
-    {
-        $this->update([
-            'status' => 'approved',
-            'approved_at' => now(),
-            'rejection_reason' => null
-        ]);
-    }
-
-    /**
-     * Reject the brand.
-     */
-    public function reject($reason = null)
-    {
-        $this->update([
-            'status' => 'rejected',
-            'rejection_reason' => $reason,
-            'approved_at' => null
-        ]);
-    }
-
-    // Usage examples:
-    // $topProducts = Brand::byCategory('Top')->approved()->get();
-    // $featuredProducts = Brand::byCategory('Featured')->approved()->get();
-    // $softwareProducts = $brand->brandProducts('software')->get();
-    // $hardwareProducts = $brand->brandProducts('hardware')->get();
-    // $pendingBrands = Brand::pending()->with('principal')->get();
 }

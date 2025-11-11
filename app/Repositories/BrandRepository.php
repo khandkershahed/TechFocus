@@ -7,10 +7,52 @@ use App\Repositories\Interfaces\BrandRepositoryInterface;
 
 class BrandRepository implements BrandRepositoryInterface
 {
-    // public function allBrand()
-    // {
-    //     return Brand::latest('id')->get();
-    // }
+    /**
+     * Get all approved brands (admin created + approved principal brands)
+     * Only brands with principal_id need approval
+     */
+    public function allApprovedBrands()
+    {
+        return Brand::where(function($query) {
+            $query->whereNull('principal_id') // Admin created brands - auto approved
+                  ->orWhere('status', 'approved'); // Principal brands that are approved
+        })
+        ->with(['principal', 'country'])
+        ->latest('id')
+        ->get();
+    }
+
+    /**
+     * Get pending brands from principals only
+     * Only brands with principal_id need approval
+     */
+    public function pendingBrands()
+    {
+        return Brand::where('status', 'pending')
+                    ->whereNotNull('principal_id') // Only brands from principals need approval
+                    ->with(['principal', 'country'])
+                    ->latest()
+                    ->get();
+    }
+
+    /**
+     * Get all brands (for admin management - includes all statuses)
+     */
+    public function allBrand()
+    {
+        return Brand::with(['principal', 'country'])->latest('id')->get();
+    }
+
+    /**
+     * Get brands by specific principal
+     */
+    public function getPrincipalBrands($principalId)
+    {
+        return Brand::where('principal_id', $principalId)
+                    ->with('country')
+                    ->latest()
+                    ->get();
+    }
 
     public function storeBrand(array $data)
     {
@@ -30,29 +72,6 @@ class BrandRepository implements BrandRepositoryInterface
     public function destroyBrand(int $id)
     {
         return Brand::destroy($id);
-    }
-    public function allBrand()
-    {
-        return Brand::with('principal')->latest('id')->get();
-    }
-
-    public function allApprovedBrands()
-    {
-        return Brand::approved()->latest()->get();
-    }
-
-  public function pendingBrands()
-{
-    return Brand::pending()
-                ->whereNotNull('principal_id') // Only brands with principals
-                ->with('principal')
-                ->latest()
-                ->get();
-}
-
-    public function getPrincipalBrands($principalId)
-    {
-        return Brand::where('principal_id', $principalId)->latest()->get();
     }
 
     public function approveBrand($id)
@@ -76,5 +95,4 @@ class BrandRepository implements BrandRepositoryInterface
         ]);
         return $brand;
     }
-    
 }
