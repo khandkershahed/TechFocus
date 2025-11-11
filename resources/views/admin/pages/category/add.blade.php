@@ -14,7 +14,7 @@
 
             <div class="col-md-6">
               <label class="form-label fw-semibold">Category Name</label>
-              <input type="text" name="name" class="form-control" required>
+              <input type="text" name="name" class="form-control" required> 
             </div>
 
             <div class="col-md-6">
@@ -26,7 +26,7 @@
 
             <div class="col-md-6 hide_parent_input">
               <label class="form-label fw-semibold">Parent Category</label>
-              <select name="parent_id" class="form-select">
+              <select name="parent_id" class="form-select" data-control="select2" data-allow-clear="true">
                 <option value="">Select Parent</option>
                 @foreach($parentCategories as $parent)
                   <option value="{{ $parent->id }}">{{ $parent->name }}</option>

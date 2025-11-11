@@ -32,11 +32,9 @@ public function index(Request $request)
 
     $categories = $query->orderBy('name', 'ASC')->paginate(10);
 
-    $parentCategories = Category::whereNull('parent_id')
-        ->orderBy('name')
-        ->get();
+    $parentCategories = Category::orderBy('name')->get(["id","name"]);
 
-    $treeCategories = Category::with('children')
+    $treeCategories = Category::with('children','children','children')
         ->whereNull('parent_id')
         ->orderBy('name')
         ->get();
@@ -72,9 +70,8 @@ public function edit($id)
     $category = $this->categoryRepository->findCategory($id);
 
     // Only parent categories except current one
-    $parentCategories = Category::whereNull('parent_id')
-        ->where('id', '!=', $id)
-        ->get();
+    $parentCategories = Category::where('id', '!=', $id)
+        ->get(["id","name"]);
 
 
     return view('admin.pages.category.edit', compact('category', 'parentCategories'));
