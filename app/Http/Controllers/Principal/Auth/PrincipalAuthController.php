@@ -7,6 +7,7 @@ use App\Models\Principal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+  use App\Models\Country;
 
 class PrincipalAuthController extends Controller
 {
@@ -29,10 +30,10 @@ class PrincipalAuthController extends Controller
         return back()->withErrors(['email' => 'Invalid login credentials']);
     }
 
-    public function showRegisterForm()
-    {
-        return view('principal.auth.register');
-    }
+    // public function showRegisterForm()
+    // {
+    //     return view('principal.auth.register');
+    // }
 
     public function register(Request $request)
     {
@@ -59,4 +60,12 @@ class PrincipalAuthController extends Controller
 
         return redirect()->route('principal.login');
     }
+
+
+public function showRegisterForm()
+{
+    $countries = Country::orderBy('name')->get();
+
+    return view('principal.auth.register', compact('countries'));
+}
 }

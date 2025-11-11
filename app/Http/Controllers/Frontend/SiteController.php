@@ -30,7 +30,7 @@ use Illuminate\Support\Facades\Session;
 use App\Repositories\Interfaces\FaqRepositoryInterface;
 use App\Repositories\Interfaces\TermsAndPolicyRepositoryInterface;
 use App\Repositories\Interfaces\DynamicCategoryRepositoryInterface;
-
+use App\Models\Country;
 
 class SiteController extends Controller
 {
@@ -767,7 +767,12 @@ public function brandList()
 {
     return view('frontend.pages.privacy-policy');
 }
+public function showRegisterForm()
+{
+    $countries = Country::orderBy('name')->get();
 
+    return view('principal.auth.register', compact('countries'));
+}
 }
 
 

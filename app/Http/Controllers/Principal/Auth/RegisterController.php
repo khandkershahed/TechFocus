@@ -7,6 +7,7 @@ use App\Models\Principal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
+use App\Models\Country;
 
 class RegisterController extends Controller
 {
