@@ -213,6 +213,15 @@
                                                             <button type="submit" class="dropdown-item text-warning">Suspend</button>
                                                         </form>
                                                     </li>
+
+                                                    <li>
+                                                        <form action="{{ route('admin.principals.destroy', $principal->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this principal?');">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="dropdown-item text-danger">Delete</button>
+                                                        </form>
+                                                    </li>
+
                                                 </ul>
                                             </div>
                                         </div>

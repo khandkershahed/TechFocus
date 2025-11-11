@@ -51,12 +51,54 @@
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
                         required>
                     <option value="">Select Category</option>
-                    <option value="Top" {{ old('category') == 'Top' ? 'selected' : '' }}>Top</option>
-                    <option value="Featured" {{ old('category') == 'Featured' ? 'selected' : '' }}>Featured</option>
-                    <option value="Standard" {{ old('category') == 'Standard' ? 'selected' : '' }}>Standard</option>
-                    <option value="Premium" {{ old('category') == 'Premium' ? 'selected' : '' }}>Premium</option>
+                    @foreach($categories as $category)
+                        <!-- Parent Category -->
+                        <option value="{{ $category->id }}" {{ old('category') == $category->id ? 'selected' : '' }}
+                            class="font-semibold text-gray-800 bg-gray-100">
+                            {{ $category->name }}
+                        </option>
+                        
+                        <!-- Child Categories -->
+                        @if($category->children->count() > 0)
+                            @foreach($category->children as $child)
+                                <option value="{{ $child->id }}" {{ old('category') == $child->id ? 'selected' : '' }}
+                                    class="pl-6 text-gray-600">
+                                    └─ {{ $child->name }}
+                                </option>
+                                
+                                <!-- Grandchild Categories -->
+                                @if($child->children->count() > 0)
+                                    @foreach($child->children as $grandchild)
+                                        <option value="{{ $grandchild->id }}" {{ old('category') == $grandchild->id ? 'selected' : '' }}
+                                            class="pl-10 text-gray-500">
+                                            &nbsp;&nbsp;└─ {{ $grandchild->name }}
+                                        </option>
+                                    @endforeach
+                                @endif
+                            @endforeach
+                        @endif
+                    @endforeach
                 </select>
                 @error('category')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <!-- Country -->
+            <div class="mb-6">
+                <label for="country_id" class="block text-sm font-medium text-gray-700 mb-2">Country *</label>
+                <select name="country_id" 
+                        id="country_id"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
+                        required>
+                    <option value="">Select Country</option>
+                    @foreach($countries as $country)
+                        <option value="{{ $country->id }}" {{ old('country_id') == $country->id ? 'selected' : '' }}>
+                            {{ $country->name }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('country_id')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                 @enderror
             </div>
@@ -71,20 +113,6 @@
                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
                        placeholder="https://example.com">
                 @error('website_url')
-                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <!-- Country ID -->
-            <div class="mb-6">
-                <label for="country_id" class="block text-sm font-medium text-gray-700 mb-2">Country</label>
-                <input type="number" 
-                       name="country_id" 
-                       id="country_id"
-                       value="{{ old('country_id') }}"
-                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
-                       placeholder="Enter country ID">
-                @error('country_id')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                 @enderror
             </div>

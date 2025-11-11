@@ -87,4 +87,23 @@ class PrincipalController extends Controller
 
     return back()->with('success', 'Principal status updated successfully.');
 }
+
+
+/**
+ * Remove the specified principal.
+ */
+public function destroy(Principal $principal)
+{
+    // Optional: prevent deletion of certain principals (like super admin)
+    if ($principal->id === 1) {
+        return back()->with('error', 'Cannot delete this principal.');
+    }
+
+    // Delete the principal
+    $principal->delete();
+
+    return redirect()->route('admin.principals.index')
+        ->with('success', 'Principal deleted successfully.');
+}
+
 }

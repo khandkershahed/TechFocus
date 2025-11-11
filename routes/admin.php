@@ -552,3 +552,5 @@ Route::delete('/admin/pages/contact/delete-all', [ContactController::class, 'del
 
     Route::post('{principal}/addresses', [PrincipalAddressController::class, 'store'])->name('addresses.store');
 });
+Route::delete('/admin/principals/{principal}', [PrincipalController::class, 'destroy'])
+    ->name('admin.principals.destroy');

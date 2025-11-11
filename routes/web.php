@@ -24,10 +24,7 @@ use App\Http\Controllers\Principal\Auth\EmailVerificationController;
 */
 
 
-require __DIR__ . '/frontend.php';
-require __DIR__ . '/auth.php';
-require __DIR__ . '/admin.php';
-require __DIR__ . '/client.php';
+
 
 
 // Route::get('/', [\App\Http\Controllers\SiteController::class, 'index'])
@@ -127,7 +124,14 @@ Route::prefix('principal')->name('principal.')->middleware(['auth:principal', 'v
 // Principal Routes
 Route::prefix('principal')->name('principal.')->group(function () {
     Route::middleware(['auth:principal'])->group(function () {
-        // ... existing routes
+            // Products routes
+    Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+    Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
+    Route::post('/products', [ProductController::class, 'store'])->name('products.store');
+    Route::get('/products/{id}/edit', [ProductController::class, 'edit'])->name('products.edit');
+    Route::put('/products/{id}', [ProductController::class, 'update'])->name('products.update');
+    Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
+
         Route::resource('products', ProductController::class)->except(['show']);
     });
 });
@@ -142,3 +146,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:admin'])->group(functi
     Route::post('/products/{id}/reject', [ProductController::class, 'reject'])->name('products.reject');
     Route::resource('products', ProductController::class);
 });
+require __DIR__ . '/frontend.php';
+require __DIR__ . '/auth.php';
+require __DIR__ . '/admin.php';
+require __DIR__ . '/client.php';

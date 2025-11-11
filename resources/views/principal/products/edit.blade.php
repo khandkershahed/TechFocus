@@ -210,23 +210,60 @@
 
 @push('scripts')
 <script>
-function previewImage(input, previewId) {
-    const preview = document.getElementById(previewId);
-    const previewImg = document.getElementById(previewId + 'Img');
-    
-    if (input.files && input.files[0]) {
-        const reader = new FileReader();
-        
-        reader.onload = function(e) {
-            previewImg.src = e.target.result;
-            preview.classList.remove('hidden');
+document.querySelector("form").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    let form = this;
+    let action = form.action;
+    let formData = new FormData(form);
+
+    fetch(action, {
+        method: "POST",
+        headers: {
+            "X-CSRF-TOKEN": "{{ csrf_token() }}",
+            "X-Requested-With": "XMLHttpRequest"
+        },
+        body: formData
+    })
+    .then(res => {
+        // Laravel responds with JSON even if response is not parsed correctly
+        return res.text();
+    })
+    .then(text => {
+        let data = {};
+
+        try {
+            data = JSON.parse(text); // ✅ Prevent JSON showing in browser
+        } catch (e) {
+            console.log("Non-JSON response:", text);
+            return;
         }
-        
-        reader.readAsDataURL(input.files[0]);
-    } else {
-        preview.classList.add('hidden');
-    }
-}
+
+        if (data.success) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Updated!',
+                text: data.message,
+                timer: 1200,
+                showConfirmButton: false
+            });
+
+            setTimeout(() => {
+                window.location.href = data.redirect_url;
+            }, 1200);
+
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: data.error || 'Something went wrong'
+            });
+        }
+    })
+    .catch(error => console.error(error));
+});
+
 </script>
 @endpush
+
 @endsection

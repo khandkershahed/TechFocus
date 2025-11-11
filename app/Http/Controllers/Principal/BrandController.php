@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Principal;
 
 use App\Models\Admin\Brand;
+use App\Models\Country;
+use App\Models\Admin\Category;
 use Illuminate\Support\Str;
 use App\Http\Requests\BrandRequest;
 use App\Http\Controllers\Controller;
@@ -36,7 +38,11 @@ class BrandController extends Controller
      */
     public function create()
     {
-        return view('principal.brands.create');
+        // Get active countries and ALL categories (both parent and child)
+        $countries = Country::where('status', 'active')->get();
+        $categories = Category::with('children')->orderBy('name', 'ASC')->get();
+
+        return view('principal.brands.create', compact('countries', 'categories'));
     }
 
     /**
@@ -95,7 +101,11 @@ class BrandController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        return view('principal.brands.edit', compact('brand'));
+        // Get active countries and ALL categories for the edit form
+        $countries = Country::where('status', 'active')->get();
+        $categories = Category::with('children')->orderBy('name', 'ASC')->get();
+
+        return view('principal.brands.edit', compact('brand', 'countries', 'categories'));
     }
 
     /**
