@@ -464,5 +464,4 @@ document.getElementById('add-address').addEventListener('click', function() {
 });
 </script>
 @endpush
-
 @endsection
