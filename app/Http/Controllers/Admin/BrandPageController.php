@@ -532,3 +532,4 @@ class BrandPageController extends Controller
         $brandPage->delete($id);
     }
 }
+

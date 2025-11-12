@@ -92,6 +92,9 @@ class ProductRequest extends FormRequest
             'source_two_country'        => 'nullable|string|max:255',
 
             'rejection_note'            => 'nullable|string',
+            'brand_id' => 'required|exists:brands,id',
+            'category_id' => 'required|exists:categories,id',
+
         ];
     }
 

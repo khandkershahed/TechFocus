@@ -57,8 +57,10 @@
                             <tr class="fw-bold text-muted bg-light">
                                 <th class="min-w-150px">Product</th>
                                 <th class="min-w-150px">Submitted By Principal</th>
-                                <th class="min-w-120px">Price</th>
-                                <th class="min-w-120px">Type</th>
+                                <th class="min-w-120px">Brand</th>
+                                <th class="min-w-120px">Category</th>
+                                <th class="min-w-100px">Price</th>
+                                <th class="min-w-100px">Type</th>
                                 <th class="min-w-100px">Submitted Date</th>
                                 <th class="min-w-150px text-end">Review Actions</th>
                             </tr>
@@ -102,6 +104,29 @@
                                     @endif
                                 </td>
                                 <td>
+                                    @if($product->brand)
+                                        <div class="d-flex flex-column">
+                                            <span class="fw-semibold text-dark">{{ $product->brand->title }}</span>
+                                            @if($product->brand->logo)
+                                                <div class="mt-1">
+                                                    <img src="{{ asset('storage/' . $product->brand->logo) }}" 
+                                                         alt="{{ $product->brand->title }}" 
+                                                         class="rounded" style="max-height: 30px; max-width: 80px;">
+                                                </div>
+                                            @endif
+                                        </div>
+                                    @else
+                                        <span class="text-muted">No brand</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if($product->category)
+                                        <span class="badge badge-light-info fs-7">{{ $product->category->name }}</span>
+                                    @else
+                                        <span class="text-muted">No category</span>
+                                    @endif
+                                </td>
+                                <td>
                                     @if($product->price)
                                         <span class="fw-bold text-dark">${{ number_format($product->price, 2) }}</span>
                                     @else
@@ -109,7 +134,7 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <span class="badge badge-light-info fs-7">{{ $product->product_type ?? 'N/A' }}</span>
+                                    <span class="badge badge-light-primary fs-7">{{ $product->product_type ?? 'N/A' }}</span>
                                 </td>
                                 <td>
                                     <span class="text-muted fs-7">{{ $product->created_at->format('M d, Y') }}</span>
@@ -165,6 +190,37 @@
                                                         <div class="col-md-8">
                                                             <h4>{{ $product->name }}</h4>
                                                             <p class="text-muted">{{ $product->short_desc ?? 'No short description' }}</p>
+                                                            
+                                                            <!-- Brand and Category Information -->
+                                                            <div class="row mt-3">
+                                                                <div class="col-6">
+                                                                    <strong>Brand:</strong>
+                                                                    <br>
+                                                                    @if($product->brand)
+                                                                        <div class="d-flex align-items-center mt-1">
+                                                                            @if($product->brand->logo)
+                                                                                <img src="{{ asset('storage/' . $product->brand->logo) }}" 
+                                                                                     alt="{{ $product->brand->title }}" 
+                                                                                     class="rounded me-2" style="max-height: 30px; max-width: 80px;">
+                                                                            @endif
+                                                                            <span class="fw-semibold">{{ $product->brand->title }}</span>
+                                                                        </div>
+                                                                    @else
+                                                                        <span class="text-muted">No brand</span>
+                                                                    @endif
+                                                                </div>
+                                                                <div class="col-6">
+                                                                    <strong>Category:</strong>
+                                                                    <br>
+                                                                    @if($product->category)
+                                                                        <span class="badge badge-light-info mt-1">{{ $product->category->name }}</span>
+                                                                    @else
+                                                                        <span class="text-muted">No category</span>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- Product Type and Price Status -->
                                                             <div class="row mt-3">
                                                                 <div class="col-6">
                                                                     <strong>Product Type:</strong>
@@ -177,6 +233,8 @@
                                                                     <span class="badge badge-light-primary">{{ $product->price_status ?? 'N/A' }}</span>
                                                                 </div>
                                                             </div>
+
+                                                            <!-- Price Information -->
                                                             @if($product->price)
                                                             <div class="row mt-2">
                                                                 <div class="col-12">
@@ -186,12 +244,36 @@
                                                                 </div>
                                                             </div>
                                                             @endif
+
+                                                            <!-- Product Codes -->
+                                                            @if($product->sku_code || $product->product_code)
+                                                            <div class="row mt-2">
+                                                                @if($product->sku_code)
+                                                                <div class="col-6">
+                                                                    <strong>SKU Code:</strong>
+                                                                    <br>
+                                                                    <span class="text-muted">{{ $product->sku_code }}</span>
+                                                                </div>
+                                                                @endif
+                                                                @if($product->product_code)
+                                                                <div class="col-6">
+                                                                    <strong>Product Code:</strong>
+                                                                    <br>
+                                                                    <span class="text-muted">{{ $product->product_code }}</span>
+                                                                </div>
+                                                                @endif
+                                                            </div>
+                                                            @endif
+
+                                                            <!-- Overview -->
                                                             @if($product->overview)
                                                             <div class="mt-3">
                                                                 <strong>Overview:</strong>
                                                                 <p class="text-muted mt-1">{{ $product->overview }}</p>
                                                             </div>
                                                             @endif
+
+                                                            <!-- Principal Information -->
                                                             @if($product->principal)
                                                                 <div class="mt-3 p-3 bg-light rounded">
                                                                     <h6>Submitted by Principal:</h6>

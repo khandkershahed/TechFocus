@@ -10,9 +10,21 @@
         <p class="text-gray-600 mt-2">Update product information</p>
     </div>
 
+    <!-- Debug Info -->
+    @if($errors->any())
+    <div class="mb-4 bg-red-50 border border-red-200 rounded-lg p-4">
+        <h3 class="font-medium text-red-800">Validation Errors:</h3>
+        <ul class="text-red-700 text-sm mt-1">
+            @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
+
     <!-- Form -->
     <div class="bg-white rounded-lg shadow-lg p-6">
-        <form action="{{ route('principal.products.update', $product->id) }}" method="POST" enctype="multipart/form-data">
+        <form id="editProductForm" action="{{ route('principal.products.update', $product->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
@@ -30,9 +42,6 @@
                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
                            placeholder="Enter product name"
                            required>
-                    @error('name')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
                 </div>
 
                 <!-- Product Code -->
@@ -45,9 +54,6 @@
                                value="{{ old('sku_code', $product->sku_code) }}"
                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
                                placeholder="Enter SKU code">
-                        @error('sku_code')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
                     </div>
                     <div>
                         <label for="product_code" class="block text-sm font-medium text-gray-700 mb-2">Product Code</label>
@@ -57,9 +63,6 @@
                                value="{{ old('product_code', $product->product_code) }}"
                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
                                placeholder="Enter product code">
-                        @error('product_code')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
                     </div>
                 </div>
 
@@ -71,9 +74,6 @@
                               rows="3"
                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
                               placeholder="Enter short description">{{ old('short_desc', $product->short_desc) }}</textarea>
-                    @error('short_desc')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
                 </div>
 
                 <!-- Overview -->
@@ -84,9 +84,6 @@
                               rows="4"
                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
                               placeholder="Enter product overview">{{ old('overview', $product->overview) }}</textarea>
-                    @error('overview')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
                 </div>
             </div>
 
@@ -104,9 +101,6 @@
                                value="{{ old('price', $product->price) }}"
                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
                                placeholder="0.00">
-                        @error('price')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
                     </div>
                     <div>
                         <label for="product_type" class="block text-sm font-medium text-gray-700 mb-2">Product Type *</label>
@@ -120,9 +114,6 @@
                             <option value="service" {{ old('product_type', $product->product_type) == 'service' ? 'selected' : '' }}>Service</option>
                             <option value="other" {{ old('product_type', $product->product_type) == 'other' ? 'selected' : '' }}>Other</option>
                         </select>
-                        @error('product_type')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
                     </div>
                     <div>
                         <label for="price_status" class="block text-sm font-medium text-gray-700 mb-2">Price Status *</label>
@@ -136,10 +127,39 @@
                             <option value="offer_price" {{ old('price_status', $product->price_status) == 'offer_price' ? 'selected' : '' }}>Offer Price</option>
                             <option value="starting_price" {{ old('price_status', $product->price_status) == 'starting_price' ? 'selected' : '' }}>Starting Price</option>
                         </select>
-                        @error('price_status')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
                     </div>
+                </div>
+
+                <!-- Brand -->
+                <div class="mb-6">
+                    <label for="brand_id" class="block text-sm font-medium text-gray-700 mb-2">Brand *</label>
+                    <select name="brand_id" 
+                            id="brand_id"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
+                            required>
+                        <option value="">Select Brand</option>
+                        @foreach ($brands as $brand)
+                            <option value="{{ $brand->id }}" {{ old('brand_id', $product->brand_id) == $brand->id ? 'selected' : '' }}>
+                                {{ $brand->title }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Category -->
+                <div class="mb-6">
+                    <label for="category_id" class="block text-sm font-medium text-gray-700 mb-2">Category *</label>
+                    <select name="category_id" 
+                            id="category_id"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
+                            required>
+                        <option value="">Select Category</option>
+                        @foreach ($categories as $category)
+                            <option value="{{ $category->id }}" {{ old('category_id', $product->category_id) == $category->id ? 'selected' : '' }}>
+                                {{ $category->name }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
 
@@ -167,16 +187,7 @@
                            name="thumbnail" 
                            id="thumbnail"
                            accept="image/*"
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
-                           onchange="previewImage(this, 'thumbnailPreview')"
-                           {{ $product->thumbnail ? '' : 'required' }}>
-                    @error('thumbnail')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                    <div id="thumbnailPreview" class="mt-2 hidden">
-                        <p class="text-sm text-gray-600 mb-2">New Thumbnail Preview:</p>
-                        <img id="thumbnailPreviewImg" class="h-32 w-32 object-cover rounded-lg border">
-                    </div>
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
                 </div>
             </div>
 
@@ -193,77 +204,53 @@
             </div>
         </form>
     </div>
-
-    <!-- Status Info -->
-    <div class="mt-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-        <div class="flex items-start">
-            <i class="fa-solid fa-exclamation-triangle text-yellow-500 mt-1 mr-3"></i>
-            <div>
-                <h3 class="font-medium text-yellow-800">Note: Status Reset</h3>
-                <p class="text-yellow-700 text-sm mt-1">
-                    Updating this product will reset its status to "Pending" and require admin approval again.
-                </p>
-            </div>
-        </div>
-    </div>
 </div>
 
+<!-- Replace the entire scripts section with this: -->
 @push('scripts')
 <script>
-document.querySelector("form").addEventListener("submit", function(e) {
-    e.preventDefault();
-
-    let form = this;
-    let action = form.action;
-    let formData = new FormData(form);
-
-    fetch(action, {
-        method: "POST",
-        headers: {
-            "X-CSRF-TOKEN": "{{ csrf_token() }}",
-            "X-Requested-With": "XMLHttpRequest"
-        },
-        body: formData
-    })
-    .then(res => {
-        // Laravel responds with JSON even if response is not parsed correctly
-        return res.text();
-    })
-    .then(text => {
-        let data = {};
-
-        try {
-            data = JSON.parse(text); // ✅ Prevent JSON showing in browser
-        } catch (e) {
-            console.log("Non-JSON response:", text);
-            return;
+// Simple form validation
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('editProductForm');
+    
+    form.addEventListener('submit', function(e) {
+        const requiredFields = form.querySelectorAll('[required]');
+        let isValid = true;
+        
+        requiredFields.forEach(field => {
+            if (!field.value.trim()) {
+                isValid = false;
+                field.classList.add('border-red-500');
+            } else {
+                field.classList.remove('border-red-500');
+            }
+        });
+        
+        if (!isValid) {
+            e.preventDefault();
+            alert('Please fill in all required fields.');
         }
-
-        if (data.success) {
-            Swal.fire({
-                icon: 'success',
-                title: 'Updated!',
-                text: data.message,
-                timer: 1200,
-                showConfirmButton: false
-            });
-
-            setTimeout(() => {
-                window.location.href = data.redirect_url;
-            }, 1200);
-
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: data.error || 'Something went wrong'
-            });
-        }
-    })
-    .catch(error => console.error(error));
+    });
 });
 
+// Image preview function
+function previewImage(input, previewId) {
+    const preview = document.getElementById(previewId);
+    const previewImg = document.getElementById(previewId + 'Img');
+    
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+            previewImg.src = e.target.result;
+            preview.classList.remove('hidden');
+        }
+        
+        reader.readAsDataURL(input.files[0]);
+    } else {
+        preview.classList.add('hidden');
+    }
+}
 </script>
 @endpush
-
 @endsection

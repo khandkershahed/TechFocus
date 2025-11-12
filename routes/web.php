@@ -131,6 +131,7 @@ Route::prefix('principal')->name('principal.')->group(function () {
     Route::get('/products/{id}/edit', [ProductController::class, 'edit'])->name('products.edit');
     Route::put('/products/{id}', [ProductController::class, 'update'])->name('products.update');
     Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
+    Route::get('/principal/products/{product}/details', [ProductController::class, 'showDetails'])->name('products.details');
 
         Route::resource('products', ProductController::class)->except(['show']);
     });
@@ -145,7 +146,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:admin'])->group(functi
     Route::post('/products/{id}/approve', [ProductController::class, 'approve'])->name('products.approve');
     Route::post('/products/{id}/reject', [ProductController::class, 'reject'])->name('products.reject');
     Route::resource('products', ProductController::class);
+    
 });
+
 
 require __DIR__ . '/frontend.php';
 require __DIR__ . '/auth.php';
