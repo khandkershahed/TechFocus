@@ -100,4 +100,17 @@ public function brandPage()
     return $this->hasOne(\App\Models\Admin\BrandPage::class, 'brand_id');
 }
 
+
+
+ public function brandProducts()
+    {
+        return $this->hasMany(Product::class, 'brand_id', 'id');
+    }
+
+    // If you already have 'products', maybe 'brandProducts' is redundant
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'brand_id', 'id');
+    }
+
 }

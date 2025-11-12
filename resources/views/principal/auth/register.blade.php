@@ -12,9 +12,7 @@
 
         <!-- Title -->
         <h3 class="mb-2 text-center fw-bold">Principal Register</h3>
-        <p class="mb-4 text-center text-muted">
-            Our multi-step form makes registration easy
-        </p>
+        <p class="mb-4 text-center text-muted">Our multi-step form makes registration easy</p>
 
         <!-- Progress Steps -->
         <div class="mb-4">
@@ -43,7 +41,17 @@
 
         <form method="POST" action="{{ route('principal.register.submit') }}" id="multiStepForm">
             @csrf
-            
+
+            @if($errors->any())
+                <div class="alert alert-danger">
+                    <ul class="mb-0">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <!-- Step 1: Company Information -->
             <div class="step-content" id="step-1">
                 <h6 class="mb-3 fw-semibold text-primary border-bottom pb-2">COMPANY INFORMATION</h6>
@@ -64,10 +72,9 @@
                         <label class="form-label fw-semibold">Entity Type</label>
                         <select name="entity_type" class="form-select">
                             <option value="">Select Entity Type</option>
-                            <option value="Manufacturer">Manufacturer</option>
-                            <option value="Distributor">Distributor</option>
-                            <option value="Supplier">Supplier</option>
-                            <option value="Other">Other</option>
+                            @foreach(['Manufacturer','Distributor','Supplier','Other'] as $type)
+                                <option value="{{ $type }}" @if(old('entity_type')==$type) selected @endif>{{ $type }}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="col-md-6">
@@ -83,30 +90,35 @@
                     </div>
                     <div class="col-md-6">
                         <label class="form-label fw-semibold">Country</label>
-                        <select name="country_iso" class="form-select">
-                            <option value="">Select Country</option>
+                       <select name="addresses[0][country_iso]" required>
                             @foreach($countries as $country)
                                 <option value="{{ $country->iso }}">{{ $country->name }}</option>
                             @endforeach
                         </select>
+
                     </div>
                 </div>
                 
                 <div class="d-flex justify-content-between mt-4">
-                    <div></div> <!-- Empty div for spacing -->
+                    <div></div>
                     <button type="button" class="btn btn-primary next-step" data-next="2">Next →</button>
                 </div>
             </div>
 
             <!-- Step 2: Account Information -->
-            {{-- <div class="step-content d-none" id="step-2">
+            <div class="step-content d-none" id="step-2">
                 <h6 class="mb-3 fw-semibold text-primary border-bottom pb-2">ACCOUNT INFORMATION</h6>
-                
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Account Name <span class="text-danger">*</span></label>
+                    <input type="text" name="name" class="form-control" value="{{ old('name') }}" required>
+                </div>
+
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Email <span class="text-danger">*</span></label>
                     <input type="email" name="email" class="form-control" value="{{ old('email') }}" required>
                 </div>
-                
+
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label class="form-label fw-semibold">Password <span class="text-danger">*</span></label>
@@ -117,46 +129,17 @@
                         <input type="password" name="password_confirmation" class="form-control" required>
                     </div>
                 </div>
-                
+
                 <div class="d-flex justify-content-between mt-4">
                     <button type="button" class="btn btn-outline-secondary prev-step" data-prev="1">← Previous</button>
                     <button type="button" class="btn btn-primary next-step" data-next="3">Next →</button>
                 </div>
-            </div> --}}
-            <div class="step-content d-none" id="step-2">
-                    <h6 class="mb-3 fw-semibold text-primary border-bottom pb-2">ACCOUNT INFORMATION</h6>
-
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Account Name <span class="text-danger">*</span></label>
-                        <input type="text" name="name" class="form-control" value="{{ old('name') }}" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Email <span class="text-danger">*</span></label>
-                        <input type="email" name="email" class="form-control" value="{{ old('email') }}" required>
-                    </div>
-
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold">Password <span class="text-danger">*</span></label>
-                            <input type="password" name="password" class="form-control" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold">Confirm Password <span class="text-danger">*</span></label>
-                            <input type="password" name="password_confirmation" class="form-control" required>
-                        </div>
-                    </div>
-
-                    <div class="d-flex justify-content-between mt-4">
-                        <button type="button" class="btn btn-outline-secondary prev-step" data-prev="1">← Previous</button>
-                        <button type="button" class="btn btn-primary next-step" data-next="3">Next →</button>
-                    </div>
-                </div>
+            </div>
 
             <!-- Step 3: Contact Information -->
             <div class="step-content d-none" id="step-3">
                 <h6 class="mb-3 fw-semibold text-primary border-bottom pb-2">PRIMARY CONTACT</h6>
-                
+
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label class="form-label fw-semibold">Contact Name <span class="text-danger">*</span></label>
@@ -167,7 +150,7 @@
                         <input type="text" name="contacts[0][job_title]" class="form-control" value="{{ old('contacts.0.job_title') }}">
                     </div>
                 </div>
-                
+
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label class="form-label fw-semibold">Contact Email</label>
@@ -178,7 +161,7 @@
                         <input type="text" name="contacts[0][phone_e164]" class="form-control" value="{{ old('contacts.0.phone_e164') }}">
                     </div>
                 </div>
-                
+
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label class="form-label fw-semibold">WhatsApp (E.164)</label>
@@ -189,36 +172,30 @@
                         <input type="text" name="contacts[0][wechat_id]" class="form-control" value="{{ old('contacts.0.wechat_id') }}">
                     </div>
                 </div>
-                
+
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label class="form-label fw-semibold">Preferred Channel</label>
                         <select name="contacts[0][preferred_channel]" class="form-select">
                             <option value="">Preferred Channel</option>
-                            <option value="Email">Email</option>
-                            <option value="WhatsApp">WhatsApp</option>
-                            <option value="WeChat">WeChat</option>
-                            <option value="Phone">Phone</option>
+                            @foreach(['Email','WhatsApp','WeChat','Phone'] as $channel)
+                                <option value="{{ $channel }}" @if(old('contacts.0.preferred_channel')==$channel) selected @endif>{{ $channel }}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="col-md-6 d-flex align-items-end">
                         <div class="form-check mt-2">
-                            <input type="checkbox" class="form-check-input" name="contacts[0][is_primary]" value="1" checked>
+                            <input type="checkbox" class="form-check-input" name="contacts[0][is_primary]" value="1" {{ old('contacts.0.is_primary',1) ? 'checked':'' }}>
                             <label class="form-check-label">Primary Contact</label>
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="mb-3">
-                    <button type="button" id="add-contact" class="btn btn-sm btn-outline-secondary">
-                        + Add Another Contact
-                    </button>
+                    <button type="button" id="add-contact" class="btn btn-sm btn-outline-secondary">+ Add Another Contact</button>
                 </div>
-                
-                <div id="additional-contacts" class="mb-3">
-                    <!-- Additional contacts will be added here -->
-                </div>
-                
+                <div id="additional-contacts" class="mb-3"></div>
+
                 <div class="d-flex justify-content-between mt-4">
                     <button type="button" class="btn btn-outline-secondary prev-step" data-prev="2">← Previous</button>
                     <button type="button" class="btn btn-primary next-step" data-next="4">Next →</button>
@@ -228,37 +205,37 @@
             <!-- Step 4: Address & Final Details -->
             <div class="step-content d-none" id="step-4">
                 <h6 class="mb-3 fw-semibold text-primary border-bottom pb-2">PRIMARY ADDRESS</h6>
-                
+
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label class="form-label fw-semibold">Address Type</label>
                         <select name="addresses[0][type]" class="form-select">
-                            <option value="HQ">HQ</option>
-                            <option value="Billing">Billing</option>
-                            <option value="Shipping">Shipping</option>
-                            <option value="Other">Other</option>
+                            @foreach(['HQ','Billing','Shipping','Other'] as $type)
+                                <option value="{{ $type }}" @if(old('addresses.0.type')==$type) selected @endif>{{ $type }}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label fw-semibold">Country</label>
-                        <select name="addresses[0][country_iso]" class="form-select">
-                            @foreach($countries as $country)
-                                <option value="{{ $country->iso }}">{{ $country->name }}</option>
-                            @endforeach
-                        </select>
+                       <select name="addresses[0][country_iso]" required>
+    @foreach($countries as $country)
+        <option value="{{ $country->iso }}">{{ $country->name }}</option>
+    @endforeach
+</select>
+
                     </div>
                 </div>
-                
+
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Address Line 1 <span class="text-danger">*</span></label>
                     <input type="text" name="addresses[0][line1]" class="form-control" value="{{ old('addresses.0.line1') }}" required>
                 </div>
-                
+
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Address Line 2</label>
                     <input type="text" name="addresses[0][line2]" class="form-control" value="{{ old('addresses.0.line2') }}">
                 </div>
-                
+
                 <div class="row mb-3">
                     <div class="col-md-4">
                         <label class="form-label fw-semibold">City</label>
@@ -273,33 +250,26 @@
                         <input type="text" name="addresses[0][postal]" class="form-control" value="{{ old('addresses.0.postal') }}">
                     </div>
                 </div>
-                
+
                 <div class="mb-3">
-                    <button type="button" id="add-address" class="btn btn-sm btn-outline-secondary">
-                        + Add Another Address
-                    </button>
+                    <button type="button" id="add-address" class="btn btn-sm btn-outline-secondary">+ Add Another Address</button>
                 </div>
-                
-                <div id="additional-addresses" class="mb-3">
-                    <!-- Additional addresses will be added here -->
-                </div>
+                <div id="additional-addresses" class="mb-3"></div>
 
                 <hr class="my-4">
-                
-                <!-- OPTIONAL MESSAGE -->
+
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Message (Optional)</label>
-                    <textarea name="message" class="form-control" rows="3" placeholder="Hello, I would like more detailed information about...">{{ old('message') }}</textarea>
+                    <textarea name="message" class="form-control" rows="3">{{ old('message') }}</textarea>
                 </div>
-                
-                <!-- NEWSLETTER SUBSCRIPTION -->
+
                 <div class="mb-4 form-check">
-                    <input type="checkbox" class="form-check-input" id="newsletter" name="newsletter" value="1">
+                    <input type="checkbox" class="form-check-input" id="newsletter" name="newsletter" value="1" {{ old('newsletter') ? 'checked' : '' }}>
                     <label class="form-check-label" for="newsletter">
                         I would like to receive exclusive offers, information, and news from DirectIndustry.
                     </label>
                 </div>
-                
+
                 <div class="d-flex justify-content-between mt-4">
                     <button type="button" class="btn btn-outline-secondary prev-step" data-prev="3">← Previous</button>
                     <button type="submit" class="btn btn-success">Complete Registration</button>
@@ -311,73 +281,11 @@
         <div class="mt-4 text-center">
             <p class="text-muted">
                 Already have an account?
-                <a href="{{ route('principal.login') }}" 
-                   class="fw-semibold text-primary text-decoration-underline">
-                    Login here
-                </a>
+                <a href="{{ route('principal.login') }}" class="fw-semibold text-primary text-decoration-underline">Login here</a>
             </p>
         </div>
-
     </div>
-
 </section>
-@endsection
-
-@push('styles')
-<style>
-.step {
-    text-align: center;
-    flex: 1;
-}
-
-.step-circle {
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    background: #e9ecef;
-    color: #6c757d;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 5px;
-    font-weight: bold;
-    border: 2px solid #e9ecef;
-}
-
-.step.active .step-circle {
-    background: #007bff;
-    color: white;
-    border-color: #007bff;
-}
-
-.step-connector {
-    flex: 1;
-    height: 2px;
-    background: #e9ecef;
-    margin: 0 10px;
-    position: relative;
-    top: -18px;
-}
-
-.step-connector.active {
-    background: #007bff;
-}
-
-.step-label {
-    font-size: 0.75rem;
-    color: #6c757d;
-}
-
-.step.active .step-label {
-    color: #007bff;
-    font-weight: 500;
-}
-
-.step-content {
-    min-height: 400px;
-}
-</style>
-@endpush
 
 @push('scripts')
 <script>
@@ -488,7 +396,6 @@ document.getElementById('add-contact').addEventListener('click', function() {
     wrapper.insertAdjacentHTML('beforeend', newContactHTML);
     contactIndex++;
     
-    // Add event listener to the new remove button
     const removeButtons = wrapper.querySelectorAll('.remove-contact');
     removeButtons[removeButtons.length - 1].addEventListener('click', function() {
         this.closest('.contact-section').remove();
@@ -513,11 +420,12 @@ document.getElementById('add-address').addEventListener('click', function() {
                 </div>
                 <div class="col-md-6">
                     <label class="form-label fw-semibold">Country</label>
-                    <select name="addresses[${addressIndex}][country_iso]" class="form-select">
-                        @foreach($countries as $country)
-                            <option value="{{ $country->iso }}">{{ $country->name }}</option>
-                        @endforeach
-                    </select>
+                  <select name="addresses[0][country_iso]" required>
+    @foreach($countries as $country)
+        <option value="{{ $country->iso }}">{{ $country->name }}</option>
+    @endforeach
+</select>
+
                 </div>
             </div>
             <div class="mb-2">
@@ -549,7 +457,6 @@ document.getElementById('add-address').addEventListener('click', function() {
     wrapper.insertAdjacentHTML('beforeend', newAddressHTML);
     addressIndex++;
     
-    // Add event listener to the new remove button
     const removeButtons = wrapper.querySelectorAll('.remove-address');
     removeButtons[removeButtons.length - 1].addEventListener('click', function() {
         this.closest('.address-section').remove();
@@ -557,3 +464,5 @@ document.getElementById('add-address').addEventListener('click', function() {
 });
 </script>
 @endpush
+
+@endsection
