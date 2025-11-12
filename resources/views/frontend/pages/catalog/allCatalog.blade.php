@@ -144,7 +144,7 @@
                                                         <span class="small text-muted">{{ $logoTitle }}</span>
                                                     </div>
                                                 @endif
-                                                <p class="mt-2 mb-0 small">{{ $catalog->page_number ?? 0 }} Pages</p>
+                                                {{-- <p class="mt-2 mb-0 small">{{ $catalog->page_number ?? 0 }} Pages</p> --}}
                                             </div>
                                         </div>
                                     </div>
