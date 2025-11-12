@@ -767,12 +767,7 @@ public function brandList()
 {
     return view('frontend.pages.privacy-policy');
 }
-public function showRegisterForm()
-{
-    $countries = Country::orderBy('name')->get();
 
-    return view('principal.auth.register', compact('countries'));
-}
 }
 
 

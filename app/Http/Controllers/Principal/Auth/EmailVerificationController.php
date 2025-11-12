@@ -18,7 +18,8 @@ class EmailVerificationController extends Controller
         $principal = Auth::guard('principal')->user();
 
         if ($principal && $principal->hasVerifiedEmail()) {
-            return redirect()->route('principal.dashboard');
+            return redirect()->route('principal.login')
+                ->with('message', 'Email already verified. Waiting for admin approval.');
         }
 
         return view('principal.auth.verify-email');
@@ -29,36 +30,35 @@ class EmailVerificationController extends Controller
      */
     public function verify(Request $request, $id, $hash)
     {
-        // Find the principal
         $principal = Principal::find($id);
-        
+
         if (!$principal) {
-            return redirect()->route('principal.login')->with('error', 'Invalid verification link.');
+            return redirect()->route('principal.login')
+                ->with('error', 'Invalid verification link.');
         }
 
-        // Check if already verified
         if ($principal->hasVerifiedEmail()) {
-            Auth::guard('principal')->login($principal);
-            return redirect()->route('principal.dashboard')->with('success', 'Email already verified!');
+            return redirect()->route('principal.login')
+                ->with('message', 'Email already verified. Waiting for admin approval.');
         }
 
-        // Verify the hash and signature
         if (!hash_equals(sha1($principal->getEmailForVerification()), $hash)) {
-            return redirect()->route('principal.login')->with('error', 'Invalid verification link.');
+            return redirect()->route('principal.login')
+                ->with('error', 'Invalid verification link.');
         }
 
         if (!$request->hasValidSignature()) {
-            return redirect()->route('principal.verification.notice')->with('error', 'Verification link has expired.');
+            return redirect()->route('principal.login')
+                ->with('error', 'Verification link has expired.');
         }
 
-        // Mark as verified
+        // Mark email as verified
         $principal->markEmailAsVerified();
         event(new Verified($principal));
 
-        // Login the principal
-        Auth::guard('principal')->login($principal);
-
-        return redirect()->route('principal.dashboard')->with('success', 'Email verified successfully!');
+        // Redirect to login with waiting message
+        return redirect()->route('principal.login')
+            ->with('message', 'Email verified successfully. Please wait for admin approval.');
     }
 
     /**
@@ -67,7 +67,7 @@ class EmailVerificationController extends Controller
     public function send(Request $request)
     {
         $principal = Auth::guard('principal')->user();
-        
+
         if (!$principal) {
             $email = $request->session()->get('principal_email');
             if ($email) {
@@ -80,7 +80,8 @@ class EmailVerificationController extends Controller
         }
 
         if ($principal->hasVerifiedEmail()) {
-            return redirect()->route('principal.dashboard');
+            return redirect()->route('principal.login')
+                ->with('message', 'Email already verified. Waiting for admin approval.');
         }
 
         $principal->sendEmailVerificationNotification();

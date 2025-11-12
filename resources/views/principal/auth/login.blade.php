@@ -66,13 +66,18 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     @if(session('swal'))
+        let swalData = @json(session('swal'));
         Swal.fire({
-            icon: '{{ session('swal')['icon'] }}',
-            title: '{{ session('swal')['title'] }}',
-            text: '{{ session('swal')['text'] }}',
-            timer: {{ session('swal')['timer'] ?? 4000 }},
-            showConfirmButton: {{ isset(session('swal')['timer']) ? 'false' : 'true' }},
-            timerProgressBar: true,
+            icon: swalData.icon || 'info',
+            title: swalData.title || '',
+            text: swalData.text || '',
+            @if(isset($swal['timer']) || isset($swal['autoClose']) && $swal['autoClose'] === true)
+                timer: swalData.timer || 4000,
+                showConfirmButton: false,
+                timerProgressBar: true,
+            @else
+                showConfirmButton: true,
+            @endif
         });
     @endif
 });

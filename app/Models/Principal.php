@@ -127,5 +127,20 @@ public function addresses()
     return $this->hasMany(\App\Models\PrincipalAddress::class, 'principal_id');
 }
 
+    /**
+     * Check if principal is approved and active
+     */
+    public function isApproved()
+    {
+        return $this->status === 'active';
+    }
+
+    /**
+     * Check if principal can login
+     */
+    public function canLogin()
+    {
+        return $this->isApproved() && $this->hasVerifiedEmail();
+    }
 
 }

@@ -71,6 +71,7 @@ class Kernel extends HttpKernel
         'auth.principal' => \App\Http\Middleware\Authenticate::class, // if not exists
     'check.principal.status' => \App\Http\Middleware\CheckPrincipalStatus::class,
     'verified.principal' => \App\Http\Middleware\EnsurePrincipalEmailIsVerified::class,
+    'check.principal.status' => \App\Http\Middleware\CheckPrincipalStatus::class,
     
     ];
 }

@@ -99,7 +99,7 @@
             </div>
 
             <!-- Step 2: Account Information -->
-            <div class="step-content d-none" id="step-2">
+            {{-- <div class="step-content d-none" id="step-2">
                 <h6 class="mb-3 fw-semibold text-primary border-bottom pb-2">ACCOUNT INFORMATION</h6>
                 
                 <div class="mb-3">
@@ -122,7 +122,36 @@
                     <button type="button" class="btn btn-outline-secondary prev-step" data-prev="1">← Previous</button>
                     <button type="button" class="btn btn-primary next-step" data-next="3">Next →</button>
                 </div>
-            </div>
+            </div> --}}
+            <div class="step-content d-none" id="step-2">
+                    <h6 class="mb-3 fw-semibold text-primary border-bottom pb-2">ACCOUNT INFORMATION</h6>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Account Name <span class="text-danger">*</span></label>
+                        <input type="text" name="name" class="form-control" value="{{ old('name') }}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Email <span class="text-danger">*</span></label>
+                        <input type="email" name="email" class="form-control" value="{{ old('email') }}" required>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Password <span class="text-danger">*</span></label>
+                            <input type="password" name="password" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Confirm Password <span class="text-danger">*</span></label>
+                            <input type="password" name="password_confirmation" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <button type="button" class="btn btn-outline-secondary prev-step" data-prev="1">← Previous</button>
+                        <button type="button" class="btn btn-primary next-step" data-next="3">Next →</button>
+                    </div>
+                </div>
 
             <!-- Step 3: Contact Information -->
             <div class="step-content d-none" id="step-3">

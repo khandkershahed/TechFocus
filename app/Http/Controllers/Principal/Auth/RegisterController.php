@@ -7,15 +7,14 @@ use App\Models\Principal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
-use App\Models\Country;
 
 class RegisterController extends Controller
 {
     // Show registration form
     public function show()
     {
-        $countries = \App\Models\Country::all(); // for country dropdown
-        return view('principal.auth.register', compact('countries'));
+      
+        return view('principal.auth.register');
     }
 
     // Handle registration
@@ -50,7 +49,7 @@ class RegisterController extends Controller
             'country_iso' => $request->country_iso,
             'relationship_status' => 'Prospect',
             'notes' => null,
-              'email' => $request->email,  
+            'email' => $request->email,  
             'password' => Hash::make($request->password),
         ]);
 

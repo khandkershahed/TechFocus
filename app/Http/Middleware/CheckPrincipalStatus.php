@@ -19,34 +19,21 @@ class CheckPrincipalStatus
             return redirect()->route('principal.login');
         }
 
-        // Check if principal status is active
+        // Check if email verified
+        if (!$principal->hasVerifiedEmail()) {
+            return redirect()->route('principal.verification.notice');
+        }
+
+        // Check if admin approved the account
         if ($principal->status !== 'active') {
             Auth::guard('principal')->logout();
-            
             $request->session()->invalidate();
             $request->session()->regenerateToken();
 
-            $message = $this->getStatusMessage($principal->status);
-            return redirect()->route('principal.login')->with('error', $message);
+            return redirect()->route('principal.login')
+                ->with('error', 'Email verified. Waiting for admin approval.');
         }
 
         return $next($request);
-    }
-
-    /**
-     * Get appropriate message based on status
-     */
-    private function getStatusMessage($status)
-    {
-        switch ($status) {
-            case 'inactive':
-                return 'Your account is inactive. Please contact support.';
-            case 'suspended':
-                return 'Your account has been suspended. Please contact administrator.';
-            case 'disabled':
-                return 'Your account has been disabled.';
-            default:
-                return 'Your account is not active. Please contact support.';
-        }
     }
 }
