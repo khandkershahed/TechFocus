@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -9,10 +8,12 @@ class PrincipalLink extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['principal_id', 'label', 'url'];
+    protected $fillable = ['label', 'url', 'type'];
 
-    public function principal()
-    {
-        return $this->belongsTo(Principal::class);
-    }
+    // Cast 'type' as array for JSON storage
+    protected $casts = [
+        'type' => 'array',
+         'url' => 'array',
+    'label' => 'array',
+    ];
 }

@@ -24,7 +24,7 @@
 <!-- Principal Links -->
 <a href="{{ route('principal.links.create') }}" 
    class="inline-block bg-blue-600 text-white font-semibold px-4 py-2 rounded hover:bg-blue-700 transition duration-200 mb-4">
-   Share a Link
+   Add a Link
 </a>
 
 <div class="bg-white rounded-lg shadow p-6 mb-8">
