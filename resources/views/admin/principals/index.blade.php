@@ -102,13 +102,64 @@
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h4 class="card-title">Principals List</h4>
                         
-                        <div class="d-flex gap-2">
+                        {{-- <div class="d-flex gap-2">
                             <input type="text" id="searchPrincipals" class="form-control" placeholder="Search principals..." style="width: 250px;">
                             <button class="btn btn-primary" onclick="refreshTable()">
                                 <i class="fas fa-sync-alt"></i>
                             </button>
                         </div>
-                    </div>
+                    </div> --}}
+                    {{-- <form method="GET" action="{{ route('admin.principals.index') }}" class="d-flex gap-2 mb-3">
+                                <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="Search principals...">
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </form> --}}
+                            <form method="GET" action="{{ route('admin.principals.index') }}" class="mb-3 row g-2 align-items-center">
+    <div class="col-auto">
+        <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="Search principals...">
+    </div>
+
+    <div class="col-auto">
+                    <select name="entity_type" class="form-select">
+                    <option value="">Entity Type</option>
+                    @php
+                        $entityTypes = ['Manufacturer', 'Distributor', 'Supplier', 'Other'];
+                    @endphp
+                    @foreach($entityTypes as $type)
+                        <option value="{{ $type }}" {{ request('entity_type') == $type ? 'selected' : '' }}>
+                            {{ $type }}
+                        </option>
+                    @endforeach
+                </select>
+
+    </div>
+
+    <div class="col-auto">
+        <select name="country" class="form-select">
+            <option value="">Country</option>
+            @foreach(\App\Models\Country::all() as $country)
+                <option value="{{ $country->id }}" {{ request('country') == $country->id ? 'selected' : '' }}>
+                    {{ $country->name }}
+                </option>
+            @endforeach
+        </select>
+    </div>
+
+    <div class="col-auto">
+        <select name="sort" class="form-select">
+            <option value="recently_updated" {{ request('sort') == 'recently_updated' ? 'selected' : '' }}>Recently Updated</option>
+            <option value="name" {{ request('sort') == 'name' ? 'selected' : '' }}>Name</option>
+            <option value="country" {{ request('sort') == 'country' ? 'selected' : '' }}>Country</option>
+            <option value="last_activity" {{ request('sort') == 'last_activity' ? 'selected' : '' }}>Last Activity</option>
+        </select>
+    </div>
+
+    <div class="col-auto">
+        <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i> Search</button>
+    </div>
+</form>
+
 
                     <div class="table-responsive">
                         <table class="table table-hover table-centered mb-0">

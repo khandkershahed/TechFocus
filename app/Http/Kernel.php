@@ -73,5 +73,7 @@ class Kernel extends HttpKernel
     'verified.principal' => \App\Http\Middleware\EnsurePrincipalEmailIsVerified::class,
     'check.principal.status' => \App\Http\Middleware\CheckPrincipalStatus::class,
     
+    
+    
     ];
 }

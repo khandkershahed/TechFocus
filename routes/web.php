@@ -8,10 +8,11 @@ use App\Http\Controllers\Principal\DashboardController;
 use App\Http\Controllers\Principal\Auth\LoginController;
 use App\Http\Controllers\Principal\Auth\RegisterController;
 
+use App\Http\Controllers\Principal\PrincipalLinkController;
+use App\Http\Controllers\Principal\PrincipalProfileController;
 use App\Http\Controllers\Principal\Auth\PrincipalAuthController;
 use App\Http\Controllers\Principal\PrincipalDashboardController;
 use App\Http\Controllers\Principal\Auth\EmailVerificationController;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -149,7 +150,29 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:admin'])->group(functi
     
 });
 
+Route::middleware(['auth:principal'])->group(function () {
+    Route::get('/profile/edit', [PrincipalProfileController::class, 'edit'])->name('principal.profile.edit');
+    Route::post('/profile/update', [PrincipalProfileController::class, 'update'])->name('principal.profile.update');
 
+});
+
+Route::prefix('principal')->middleware('auth:principal')->group(function() {
+    Route::get('/links/create', [PrincipalLinkController::class, 'create'])->name('principal.links.create');
+    Route::post('/links', [PrincipalLinkController::class, 'store'])->name('principal.links.store');
+});
+
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+    
+    Route::prefix('principals/{principal}')->group(function () {
+        // Addresses
+        Route::post('/addresses', [PrincipalProfileController::class, 'store'])->name('principals.addresses.store');
+        Route::patch('/addresses/{address}', [PrincipalProfileController::class, 'update'])->name('principals.addresses.update');
+        Route::delete('/addresses/{address}', [PrincipalProfileController::class, 'destroy'])->name('principals.addresses.destroy');
+    });
+
+
+
+});
 require __DIR__ . '/frontend.php';
 require __DIR__ . '/auth.php';
 require __DIR__ . '/admin.php';

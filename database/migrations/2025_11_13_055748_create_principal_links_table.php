@@ -13,14 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('roles', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            // $table->string('slug')->unique();
-            $table->unsignedBigInteger('created_by')->nullable();
-            $table->unsignedBigInteger('updated_by')->nullable();
-            $table->timestamps();
-        });
+                Schema::create('principal_links', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('principal_id')->constrained()->onDelete('cascade');
+                $table->string('label');
+                $table->string('url');
+                $table->timestamps();
+            });
+
     }
 
     /**
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('roles');
+        Schema::dropIfExists('principal_links');
     }
 };

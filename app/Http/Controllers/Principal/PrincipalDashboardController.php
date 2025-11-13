@@ -13,6 +13,10 @@ class PrincipalDashboardController extends Controller
     public function index()
     {
         $principalId = Auth::guard('principal')->id();
+        $principal = auth('principal')->user();
+
+    //    $principal->load(['contacts', 'addresses']); // eager load related tables
+    $principal->load(['contacts', 'addresses', 'links']); // load links too
         
         $brands = Brand::where('principal_id', $principalId)->latest()->get();
         $products = Product::where('principal_id', $principalId)->latest()->get();
@@ -31,6 +35,8 @@ class PrincipalDashboardController extends Controller
             'rejected_products' => $products->where('submission_status', 'rejected')->count(),
         ];
 
-        return view('principal.dashboard', compact('stats', 'brands', 'products'));
+        // return view('principal.dashboard', compact('stats', 'brands', 'products'));
+        return view('principal.dashboard', compact('stats', 'brands', 'products', 'principal'));
+
     }
 }

@@ -151,86 +151,11 @@
                                     </form>
                                 </td>
                             </tr>
-
-                            <!-- Edit Modal -->
-                            <div class="modal fade" id="editContactModal{{ $contact->id }}" tabindex="-1">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <form action="{{ route('admin.principals.contacts.update', $contact->id) }}" method="POST">
-                                            @csrf
-                                            @method('PATCH')
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">Edit Contact</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <div class="mb-3">
-                                                    <label>Name</label>
-                                                    <input type="text" name="contact_name" class="form-control" value="{{ $contact->contact_name }}" required>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label>Email</label>
-                                                    <input type="email" name="email" class="form-control" value="{{ $contact->email }}">
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label>Phone</label>
-                                                    <input type="text" name="phone_e164" class="form-control" value="{{ $contact->phone_e164 }}">
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label>Preferred Channel</label>
-                                                    <input type="text" name="preferred_channel" class="form-control" value="{{ $contact->preferred_channel }}">
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-primary">Save Changes</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
                         @empty
                             <tr><td colspan="8" class="text-center">No contacts found.</td></tr>
                         @endforelse
                     </tbody>
                 </table>
-            </div>
-        </div>
-    </div>
-
-    <!-- Add Contact Modal -->
-    <div class="modal fade" id="addContactModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <form action="{{ route('admin.principals.contacts.store', $principal->id) }}" method="POST">
-                    @csrf
-                    <div class="modal-header">
-                        <h5 class="modal-title">Add Contact</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label>Name</label>
-                            <input type="text" name="contact_name" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label>Email</label>
-                            <input type="email" name="email" class="form-control">
-                        </div>
-                        <div class="mb-3">
-                            <label>Phone</label>
-                            <input type="text" name="phone_e164" class="form-control">
-                        </div>
-                        <div class="mb-3">
-                            <label>Preferred Channel</label>
-                            <input type="text" name="preferred_channel" class="form-control">
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-success">Add Contact</button>
-                    </div>
-                </form>
             </div>
         </div>
     </div>
@@ -256,6 +181,7 @@
                             <th>State</th>
                             <th>Postal</th>
                             <th>Country</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -267,10 +193,18 @@
                                 <td>{{ $address->city ?? '—' }}</td>
                                 <td>{{ $address->state ?? '—' }}</td>
                                 <td>{{ $address->postal ?? '—' }}</td>
-                                <td>{{ $address->country_iso ?? '—' }}</td>
+                                <td>{{ $address->country_name ?? '—' }}</td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editAddressModal{{ $address->id }}">Edit</button>
+                                    <form action="{{ route('admin.principals.addresses.destroy', ['principal' => $principal->id, 'address' => $address->id]) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="btn btn-sm btn-danger" onclick="return confirm('Delete this address?')">Delete</button>
+                                    </form>
+                                </td>
                             </tr>
                         @empty
-                            <tr><td colspan="7" class="text-center">No addresses found.</td></tr>
+                            <tr><td colspan="8" class="text-center">No addresses found.</td></tr>
                         @endforelse
                     </tbody>
                 </table>
@@ -278,54 +212,80 @@
         </div>
     </div>
 
-    <!-- Add Address Modal -->
-    <div class="modal fade" id="addAddressModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <form action="{{ route('admin.principals.addresses.store', $principal->id) }}" method="POST">
-                    @csrf
-                    <div class="modal-header">
-                        <h5 class="modal-title">Add Address</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label>Type</label>
-                            <select name="type" class="form-select" required>
-                                <option value="HQ">HQ</option>
-                                <option value="Billing">Billing</option>
-                                <option value="Shipping">Shipping</option>
-                                <option value="Other">Other</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label>Address Line 1</label>
-                            <input type="text" name="line1" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label>City</label>
-                            <input type="text" name="city" class="form-control">
-                        </div>
-                        <div class="mb-3">
-                            <label>State</label>
-                            <input type="text" name="state" class="form-control">
-                        </div>
-                        <div class="mb-3">
-                            <label>Postal Code</label>
-                            <input type="text" name="postal" class="form-control">
-                        </div>
-                        <div class="mb-3">
-                            <label>Country ISO</label>
-                            <input type="text" name="country_iso" class="form-control" maxlength="2" placeholder="e.g., US">
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-success">Add Address</button>
-                    </div>
-                </form>
-            </div>
+<!-- Brands Section -->
+<div class="card mt-4">
+    <div class="card-body">
+        <h4 class="card-title mb-3">Brands</h4>
+        <div class="table-responsive">
+            <table class="table table-bordered align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th>Created At</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($principal->brands as $index => $brand)
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ $brand->name }}</td>
+                            <td>
+                                <span class="badge bg-{{ $brand->status == 'approved' ? 'success' : ($brand->status == 'pending' ? 'warning' : 'secondary') }}">
+                                    {{ ucfirst($brand->status) }}
+                                </span>
+                            </td>
+                            <td>{{ $brand->created_at->format('M d, Y') }}</td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="4" class="text-center">No brands found.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
+
+<!-- Products Section -->
+<div class="card mt-4">
+    <div class="card-body">
+        <h4 class="card-title mb-3">Products</h4>
+        <div class="table-responsive">
+            <table class="table table-bordered align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Brand</th>
+                        <th>Status</th>
+                        <th>Created At</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($principal->products as $index => $product)
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ $product->name }}</td>
+                            <td>{{ $product->brand->name ?? '—' }}</td>
+                            <td>
+                                <span class="badge bg-{{ $product->status == 'approved' ? 'success' : ($product->status == 'pending' ? 'warning' : 'secondary') }}">
+                                    {{ ucfirst($product->status) }}
+                                </span>
+                            </td>
+                            <td>{{ $product->created_at->format('M d, Y') }}</td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="text-center">No products found.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
 @endsection

@@ -3,15 +3,18 @@
 namespace App\Models;
 
 use App\Traits\HasSlug;
-use Illuminate\Notifications\Notifiable;
+use App\Models\Admin\Brand;
+use App\Models\Admin\Product;
 use Laravel\Sanctum\HasApiTokens;
 use Wildside\Userstamps\Userstamps;
+use Illuminate\Notifications\Notifiable;
+use App\Notifications\PrincipalVerifyEmail;
+use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Auth\Notifications\VerifyEmail;
-use Illuminate\Notifications\Messages\MailMessage;
-use App\Notifications\PrincipalVerifyEmail;
+
 class Principal extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable, HasSlug, Userstamps;
@@ -143,4 +146,32 @@ public function addresses()
         return $this->isApproved() && $this->hasVerifiedEmail();
     }
 
+  
+
+    // public function brands()
+    // {
+    //     // Adjust 'principal_id' if your Brand model has a different foreign key
+    //     return $this->hasMany(Brand::class, 'principal_id');
+    // }
+
+    // public function products()
+    // {
+    //     // Adjust 'principal_id' if your Product model has a different foreign key
+    //     return $this->hasMany(Product::class, 'principal_id');
+    // }
+    // Principal.php
+public function brands()
+{
+    return $this->hasMany(Brand::class);
+}
+
+public function products()
+{
+    return $this->hasMany(Product::class);
+}
+
+  public function links()
+    {
+        return $this->hasMany(PrincipalLink::class);
+    }
 }

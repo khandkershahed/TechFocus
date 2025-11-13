@@ -87,6 +87,14 @@
                                             </a>
                                         </li>
 
+                                        <li class="nav-item">
+                                                <a href="{{ route('admin.role.index') }}" class="nav-link">
+                                                    <i class="fas fa-user-shield"></i> <!-- optional icon -->
+                                                    <span>Roles</span>
+                                                </a>
+                                            </li>
+
+
                                <!-- In your admin sidebar -->
                                         <div class="menu-item">
                                             <a class="menu-link {{ Route::current()->getName() == 'admin.brands.pending' ? 'active' : '' }}"

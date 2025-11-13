@@ -1,7 +1,18 @@
 @extends('admin.master')
+
+@section('title', 'Roles List')
+
 @section('content')
-    <!-- roles/index.blade.php -->
-    <table>
+    <h1>Roles</h1>
+
+    @if(session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+
+    <!-- Create Role Link -->
+    <a href="{{ route('admin.role.create') }}" class="btn btn-primary mb-3">Create New Role</a>
+
+    <table class="table table-bordered">
         <thead>
             <tr>
                 <th>ID</th>
@@ -10,21 +21,39 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($roles as $role)
+            @forelse ($roles as $role)
                 <tr>
                     <td>{{ $role->id }}</td>
                     <td>{{ $role->name }}</td>
-                    <td>
-                        <a href="{{ route('admin.role.edit', $role->id) }}">Edit</a>
-                        <a href="{{ route('admin.role-permissions.show', $role->id) }}">Permissions</a>
-                        <form action="{{ route('admin.role.destroy', $role->id) }}" method="POST">
+                    <td class="d-flex gap-2">
+                        <!-- Edit Role -->
+                        <a href="{{ route('admin.role.edit', $role->id) }}" class="btn btn-sm btn-warning">Edit</a>
+
+                        <!-- View Permissions -->
+                        <a href="{{ route('admin.role-permissions.show', $role->id) }}" class="btn btn-sm btn-info">Permissions</a>
+
+                        <!-- Delete Role via Anchor Link with JS Confirm -->
+                        <a href="{{ route('admin.role.destroy', $role->id) }}"
+                           class="btn btn-sm btn-danger"
+                           onclick="event.preventDefault(); 
+                                    if(confirm('Are you sure you want to delete this role?')) {
+                                        document.getElementById('delete-role-{{ $role->id }}').submit();
+                                    }">
+                            Delete
+                        </a>
+
+                        <!-- Hidden form for delete -->
+                        <form id="delete-role-{{ $role->id }}" action="{{ route('admin.role.destroy', $role->id) }}" method="POST" style="display: none;">
                             @csrf
                             @method('DELETE')
-                            <button type="submit">Delete</button>
                         </form>
                     </td>
                 </tr>
-            @endforeach
+            @empty
+                <tr>
+                    <td colspan="3">No roles found.</td>
+                </tr>
+            @endforelse
         </tbody>
     </table>
 @endsection

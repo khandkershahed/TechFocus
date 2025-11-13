@@ -2,33 +2,23 @@
 
 namespace App\Models;
 
-use App\Models\Admin\Role;
-use App\Models\Admin\Permission;
 use Laravel\Sanctum\HasApiTokens;
 use Wildside\Userstamps\Userstamps;
-use App\Models\Admin\EmployeeCategory;
-use App\Traits\HasRolesAndPermissions;
-use App\Notifications\Admin\VerifyEmail;
 use Illuminate\Notifications\Notifiable;
-use App\Notifications\Admin\ResetPassword;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Spatie\Permission\Traits\HasRoles;
+use App\Models\Admin\Role;
+use App\Models\Admin\Permission;
+use App\Models\Admin\EmployeeCategory;
+use App\Notifications\Admin\VerifyEmail;
+use App\Notifications\Admin\ResetPassword;
 
 class Admin extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRolesAndPermissions, Userstamps;
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    // protected $fillable = [
-    //     'name',
-    //     'username',
-    //     'email',
-    //     'password',
-    // ];
+    use HasApiTokens, HasFactory, Notifiable, Userstamps, HasRoles;
+
     /**
      * The attributes that aren't mass assignable.
      *
@@ -56,9 +46,9 @@ class Admin extends Authenticatable implements MustVerifyEmail
     ];
 
     /**
-     * Auto hash password when create/update
+     * Auto hash password when creating/updating
      *
-     * @param $value
+     * @param string $value
      * @return void
      */
     public function setPasswordAttribute($value)
@@ -67,9 +57,9 @@ class Admin extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Send the password reset link notification.
+     * Send the password reset notification.
      *
-     * @param $token
+     * @param string $token
      * @return void
      */
     public function sendPasswordResetNotification($token)
@@ -87,35 +77,27 @@ class Admin extends Authenticatable implements MustVerifyEmail
         $this->notify(new VerifyEmail);
     }
 
-    // public function roles()
-    // {
-    //     return $this->belongsToMany(Role::class);
-    // }
+    /**
+     * Optional: Get category name for the admin
+     *
+     * @return string|null
+     */
+    public function getCategoryName()
+    {
+        return EmployeeCategory::where('id', $this->category_id)->value('name');
+    }
 
-    public function roles()
+    /**
+     * Optional: Direct relationships if you need custom tables
+     * (Spatie handles roles/permissions automatically with HasRoles)
+     */
+    public function rolesCustom()
     {
         return $this->belongsToMany(Role::class, 'user_roles', 'user_id', 'role_id');
     }
 
-    public function permissions()
+    public function permissionsCustom()
     {
         return $this->belongsToMany(Permission::class, 'user_permissions', 'user_id', 'permission_id');
-    }
-
-    // Method to check if admin has a specific role
-    public function hasRole($role)
-    {
-        return $this->roles()->where('name', $role)->first() !== null;
-    }
-
-    // Method to check if admin has a specific permission
-    public function hasPermission($permission)
-    {
-        return $this->permissions()->where('name', $permission)->first() !== null;
-    }
-
-    public function getCategoryName()
-    {
-        return EmployeeCategory::where('id', $this->category_id)->value('name');
     }
 }

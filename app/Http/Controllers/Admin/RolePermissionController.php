@@ -2,59 +2,35 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Admin\Role;
-use Illuminate\Http\Request;
-use App\Models\Admin\Permission;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+use Illuminate\Http\Request;
 
 class RolePermissionController extends Controller
 {
-    function show($roleId)
+    public function show($roleId)
     {
-        $data = [
-            'role' =>  Role::with('permissions')->findOrFail($roleId),
-            'permissions' => Permission::get(),
+        $role = Role::with('permissions')->findOrFail($roleId);
+        $permissions = Permission::all();
 
-        ];
-        return view('admin.pages.rolePermission.show', $data);
+        return view('admin.pages.rolePermission.show', compact('role', 'permissions'));
     }
 
-    /**
-     * Assign permission to a role.
-     *
-     * @param  Request  $request
-     * @param  int  $roleId
-     * @return \Illuminate\Http\Response
-     */
     public function assignPermission(Request $request, $roleId)
     {
         $request->validate([
-            'permission_id' => 'required|exists:permissions,id',
+            'permissions.*' => 'exists:permissions,id',
         ]);
 
         $role = Role::findOrFail($roleId);
-        $permissionId = $request->input('permission_id');
 
-        if (!$role->permissions()->find($permissionId)) {
-            $role->permissions()->attach($permissionId);
+        if ($request->has('permissions')) {
+            $role->syncPermissions($request->input('permissions'));
+        } else {
+            $role->syncPermissions([]); // remove all if none selected
         }
 
-        return redirect()->back()->with('success', 'Permission assigned successfully.');
-    }
-
-    /**
-     * Remove permission from a role.
-     *
-     * @param  int  $roleId
-     * @param  int  $permissionId
-     * @return \Illuminate\Http\Response
-     */
-    public function removePermission($roleId, $permissionId)
-    {
-        $role = Role::findOrFail($roleId);
-        $role->permissions()->detach($permissionId);
-
-        return redirect()->back()->with('success', 'Permission removed successfully.');
+        return redirect()->back()->with('success', 'Permissions updated successfully.');
     }
 }

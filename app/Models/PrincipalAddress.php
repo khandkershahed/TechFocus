@@ -18,10 +18,15 @@ class PrincipalAddress extends Model
         'state',
         'postal',
         'country_iso',
+        'country_name', // <-- Add this
     ];
 
     public function principal()
     {
         return $this->belongsTo(Principal::class);
+    }
+        public function country()
+    {
+        return $this->belongsTo(Country::class, 'country_id');
     }
 }

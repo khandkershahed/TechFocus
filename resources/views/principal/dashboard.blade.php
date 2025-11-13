@@ -3,14 +3,186 @@
 @section('content')
 <div class="flex items-center justify-between mb-6">
     <h1 class="text-2xl font-bold">Welcome Principal, {{ auth('principal')->user()->name }}</h1>
-    <form method="POST" action="{{ route('principal.logout') }}">
-        @csrf
-        <button type="submit" 
-                class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded transition duration-200">
-            Logout
-        </button>
-    </form>
+    
+    <div class="flex justify-end mb-4">
+    <a href="{{ route('principal.profile.edit') }}"
+       class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition duration-200">
+        Edit Profile
+    </a>
+
+
+        <form method="POST" action="{{ route('principal.logout') }}" class="inline-block">
+            @csrf
+            <button type="submit"
+                    class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded transition duration-200">
+                Logout
+            </button>
+        </form>
+    </div>
 </div>
+
+<!-- Principal Links -->
+<a href="{{ route('principal.links.create') }}" 
+   class="inline-block bg-blue-600 text-white font-semibold px-4 py-2 rounded hover:bg-blue-700 transition duration-200 mb-4">
+   Share a Link
+</a>
+
+<div class="bg-white rounded-lg shadow p-6 mb-8">
+    <h2 class="text-lg font-semibold text-gray-800 mb-4">Shared Links</h2>
+    @if($principal->links->count())
+        <ul class="list-disc list-inside space-y-2">
+            @foreach($principal->links as $link)
+                <li>
+                    <a href="{{ $link->url }}" target="_blank" class="text-blue-600 hover:underline">
+                        {{ $link->label }}
+                    </a>
+                </li>
+            @endforeach
+        </ul>
+    @else
+        <p class="text-gray-500">No shared links yet.</p>
+    @endif
+</div>
+
+<!-- Principal Info -->
+<div class="bg-white rounded-lg shadow p-6 mb-6">
+    <h2 class="text-lg font-semibold text-gray-800 mb-4">Principal Details</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div>
+            <p class="text-sm text-gray-500">Company Name</p>
+            <p class="font-medium text-gray-900">{{ auth('principal')->user()->name }}</p>
+        </div>
+        <div>
+            <p class="text-sm text-gray-500">Entity Type</p>
+            <p class="font-medium text-gray-900">
+                {{ auth('principal')->user()->entity_type ?? 'Not specified' }}
+            </p>
+        </div>
+        <div>
+            <p class="text-sm text-gray-500">Email</p>
+            <p class="font-medium text-gray-900">{{ auth('principal')->user()->email }}</p>
+        </div>
+    </div>
+</div> 
+
+<!-- Principal Overview -->
+<div class="bg-white rounded-lg shadow p-6 mb-8">
+    <h2 class="text-xl font-semibold text-gray-800 mb-4">Principal / Company Overview</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div>
+            <p class="text-sm text-gray-500">Legal Name</p>
+            <p class="font-medium text-gray-900">{{ $principal->legal_name ?? 'N/A' }}</p>
+        </div>
+        <div>
+            <p class="text-sm text-gray-500">Trading Name</p>
+            <p class="font-medium text-gray-900">{{ $principal->trading_name ?? 'N/A' }}</p>
+        </div>
+        <div>
+            <p class="text-sm text-gray-500">Entity Type</p>
+            <p class="font-medium text-gray-900">{{ $principal->entity_type ?? 'N/A' }}</p>
+        </div>
+        <div>
+            <p class="text-sm text-gray-500">Website</p>
+            <a href="{{ $principal->website_url }}" target="_blank" class="text-blue-600 hover:underline">
+                {{ $principal->website_url ?? 'N/A' }}
+            </a>
+        </div>
+        <div>
+            <p class="text-sm text-gray-500">Headquarters</p>
+            <p class="font-medium text-gray-900">
+                {{ $principal->hq_city ?? '—' }}, {{ $principal->country_iso ?? '—' }}
+            </p>
+        </div>
+        <div>
+            <p class="text-sm text-gray-500">Relationship Status</p>
+            <span class="px-2 py-1 text-xs rounded-full 
+                @if($principal->relationship_status == 'Active') bg-green-100 text-green-800
+                @elseif($principal->relationship_status == 'Prospect') bg-yellow-100 text-yellow-800
+                @elseif($principal->relationship_status == 'Dormant') bg-gray-200 text-gray-800
+                @else bg-red-100 text-red-800 @endif">
+                {{ $principal->relationship_status }}
+            </span>
+        </div>
+    </div>
+
+    @if($principal->notes)
+    <div class="mt-6">
+        <p class="text-sm text-gray-500">Internal Notes</p>
+        <div class="prose max-w-none text-sm text-gray-700">
+            {!! nl2br(e($principal->notes)) !!}
+        </div>
+    </div>
+    @endif
+</div>
+
+<!-- Contacts -->
+<div class="bg-white rounded-lg shadow p-6 mb-8">
+    <h2 class="text-lg font-semibold text-gray-800 mb-4">Contacts</h2>
+    @if($principal->contacts->count())
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead>
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Job Title</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Phone</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Preferred</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    @foreach($principal->contacts as $contact)
+                        <tr>
+                            <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ $contact->contact_name }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">{{ $contact->job_title ?? '—' }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">{{ $contact->email ?? '—' }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">{{ $contact->phone_e164 ?? '—' }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">{{ $contact->preferred_channel ?? '—' }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    @else
+        <p class="text-gray-500">No contacts available.</p>
+    @endif
+</div>
+
+<!-- Addresses -->
+<div class="bg-white rounded-lg shadow p-6 mb-8">
+    <h2 class="text-lg font-semibold text-gray-800 mb-4">Addresses</h2>
+    @if($principal->addresses->count())
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead>
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Address</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">City</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Country</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    @foreach($principal->addresses as $address)
+                        <tr>
+                            <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ $address->type }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">
+                                {{ $address->line1 }} 
+                                @if($address->line2)<br>{{ $address->line2 }}@endif
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-500">{{ $address->city ?? '—' }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">{{ $address->country_name ?? '—' }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    @else
+        <p class="text-gray-500">No addresses available.</p>
+    @endif
+</div>
+
 
 <!-- Stats Cards -->
 <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">

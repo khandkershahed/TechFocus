@@ -25,13 +25,11 @@ class Role extends Model
     //     return $this->belongsToMany(Admin::class);
     // }
 
-    public function permissions()
-    {
-        return $this->belongsToMany(Permission::class, 'role_permissions');
-    }
+
 
     public function admins()
     {
         return $this->belongsToMany(Admin::class, 'user_roles', 'role_id', 'user_id');
     }
+
 }

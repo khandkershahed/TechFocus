@@ -554,3 +554,14 @@ Route::delete('/admin/pages/contact/delete-all', [ContactController::class, 'del
 });
 Route::delete('/admin/principals/{principal}', [PrincipalController::class, 'destroy'])
     ->name('admin.principals.destroy');
+
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('roles/{role}/permissions', [RolePermissionController::class, 'show'])
+         ->name('role-permissions.show');
+});
+Route::prefix('admin')->name('admin.')->group(function () {
+
+    //Assign/update permissions to a role
+    Route::post('roles/{role}/permissions', [RolePermissionController::class, 'assignPermission'])
+         ->name('role-permissions.assign');
+});

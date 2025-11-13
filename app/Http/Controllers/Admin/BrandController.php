@@ -1,16 +1,17 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
-
+use App\Models\Admin;
 use App\Models\Admin\Brand;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use App\Models\Admin\NewsTrend;
 use App\Http\Requests\BrandRequest;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Session;
 use App\Repositories\Interfaces\BrandRepositoryInterface;
-use Illuminate\Http\Request;
 
 class BrandController extends Controller
 {
@@ -247,35 +248,65 @@ public function contentDetails($id)
 /**
  * Approve a brand.
  */
+// public function approve($id)
+// {
+//     try {
+//         $this->brandRepository->approveBrand($id);
+//         return redirect()->route('admin.brands.pending')
+//             ->with('success', 'Brand approved successfully!');
+//     } catch (\Exception $e) {
+//         return redirect()->route('admin.brands.pending')
+//             ->with('error', 'Error approving brand: ' . $e->getMessage());
+//     }
+// }
+
+// /**
+//  * Reject a brand.
+//  */
+// public function reject(Request $request, $id)
+// {
+//     $request->validate([
+//         'rejection_reason' => 'required|string|max:500'
+//     ]);
+
+//     try {
+//         $this->brandRepository->rejectBrand($id, $request->rejection_reason);
+//         return redirect()->route('admin.brands.pending')
+//             ->with('success', 'Brand rejected successfully!');
+//     } catch (\Exception $e) {
+//         return redirect()->route('admin.brands.pending')
+//             ->with('error', 'Error rejecting brand: ' . $e->getMessage());
+//     }
+// }
+
 public function approve($id)
 {
-    try {
-        $this->brandRepository->approveBrand($id);
-        return redirect()->route('admin.brands.pending')
-            ->with('success', 'Brand approved successfully!');
-    } catch (\Exception $e) {
-        return redirect()->route('admin.brands.pending')
-            ->with('error', 'Error approving brand: ' . $e->getMessage());
+    $user = Auth::guard('admin')->user();
+
+    // Normalize roles (support JSON or string)
+    $roles = [];
+    if (isset($user->role)) {
+        if (is_string($user->role)) {
+            $decoded = json_decode($user->role, true);
+            $roles = is_array($decoded) ? $decoded : [$user->role];
+        } elseif (is_array($user->role)) {
+            $roles = $user->role;
+        }
     }
+    $roles = array_map('strtolower', $roles);
+
+    if (!in_array('admin', $roles) && !in_array('super admin', $roles) && !$user->can_review_brands) {
+        abort(403, 'Unauthorized action.');
+    }
+
+    $brand = Brand::findOrFail($id);
+    $brand->status = 'approved';
+    $brand->rejection_reason = null;
+    $brand->save();
+
+    return redirect()->back()->with('success', 'Brand approved successfully.');
 }
 
-/**
- * Reject a brand.
- */
-public function reject(Request $request, $id)
-{
-    $request->validate([
-        'rejection_reason' => 'required|string|max:500'
-    ]);
 
-    try {
-        $this->brandRepository->rejectBrand($id, $request->rejection_reason);
-        return redirect()->route('admin.brands.pending')
-            ->with('success', 'Brand rejected successfully!');
-    } catch (\Exception $e) {
-        return redirect()->route('admin.brands.pending')
-            ->with('error', 'Error rejecting brand: ' . $e->getMessage());
-    }
-}
 
 }
