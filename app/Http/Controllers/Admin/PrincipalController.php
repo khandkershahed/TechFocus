@@ -8,6 +8,7 @@ use App\Models\Principal;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\PrincipalLink;
 
 class PrincipalController extends Controller
 {
@@ -59,12 +60,22 @@ class PrincipalController extends Controller
     /**
      * Show principal details with brands, products, contacts, addresses, and country.
      */
+    // public function show(Principal $principal): View
+    // {
+    //     $principal->load('country', 'brands', 'products', 'contacts', 'addresses');
+    //     return view('admin.principals.show', compact('principal'));
+    // }
     public function show(Principal $principal): View
     {
         $principal->load('country', 'brands', 'products', 'contacts', 'addresses');
-        return view('admin.principals.show', compact('principal'));
+        
+        // Load principal links with pagination
+        $links = PrincipalLink::where('principal_id', $principal->id)
+            ->latest()
+            ->paginate(10);
+            
+        return view('admin.principals.show', compact('principal', 'links'));
     }
-
     /**
      * Update principal status.
      */

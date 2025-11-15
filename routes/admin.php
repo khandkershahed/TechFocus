@@ -565,3 +565,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('roles/{role}/permissions', [RolePermissionController::class, 'assignPermission'])
          ->name('role-permissions.assign');
 });
+
+// Admin Principal Links Routes
+Route::prefix('admin/principals/{principal}/links')->name('admin.principals.links.')->group(function () {
+    Route::get('/', [PrincipalContactController::class, 'index'])->name('index');
+    Route::get('/{link}', [PrincipalContactController::class, 'show'])->name('show');
+    Route::delete('/{link}', [PrincipalContactController::class, 'destroy'])->name('destroy');
+});

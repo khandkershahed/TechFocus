@@ -169,10 +169,31 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
         Route::patch('/addresses/{address}', [PrincipalProfileController::class, 'update'])->name('principals.addresses.update');
         Route::delete('/addresses/{address}', [PrincipalProfileController::class, 'destroy'])->name('principals.addresses.destroy');
     });
-
-
-
 });
+
+
+   // Principal Links CRUD
+    Route::get('/links', [\App\Http\Controllers\Principal\PrincipalLinkController::class, 'index'])
+        ->name('principal.links.index');
+
+    Route::get('/links/create', [\App\Http\Controllers\Principal\PrincipalLinkController::class, 'create'])
+        ->name('principal.links.create');
+
+    Route::post('/links/store', [\App\Http\Controllers\Principal\PrincipalLinkController::class, 'store'])
+        ->name('principal.links.store');
+
+    Route::get('/links/{id}/edit', [\App\Http\Controllers\Principal\PrincipalLinkController::class, 'edit'])
+        ->name('principal.links.edit');
+
+    Route::put('/links/{id}', [\App\Http\Controllers\Principal\PrincipalLinkController::class, 'update'])
+        ->name('principal.links.update');
+
+    Route::get('/links/{id}', [\App\Http\Controllers\Principal\PrincipalLinkController::class, 'show'])
+        ->name('principal.links.show');
+
+    Route::delete('/links/{id}', [\App\Http\Controllers\Principal\PrincipalLinkController::class, 'destroy'])
+        ->name('principal.links.destroy');
+        
 require __DIR__ . '/frontend.php';
 require __DIR__ . '/auth.php';
 require __DIR__ . '/admin.php';

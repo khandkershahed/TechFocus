@@ -22,7 +22,7 @@
 </div>
 
 <!-- Principal Links -->
-<a href="{{ route('principal.links.create') }}" 
+{{-- <a href="{{ route('principal.links.create') }}" 
    class="inline-block bg-blue-600 text-white font-semibold px-4 py-2 rounded hover:bg-blue-700 transition duration-200 mb-4">
    Add a Link
 </a>
@@ -42,7 +42,47 @@
     @else
         <p class="text-gray-500">No shared links yet.</p>
     @endif
+</div> --}}
+<!-- Principal Links -->
+<a href="{{ route('principal.links.create') }}" 
+   class="inline-block bg-blue-600 text-white font-semibold px-4 py-2 rounded hover:bg-blue-700 transition duration-200 mb-4">
+   Add a Link
+</a>
+
+<!-- Shared Links Preview -->
+<div class="bg-white rounded-lg shadow p-6 mb-8">
+    <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-semibold text-gray-800"> Principal Shared Links</h2>
+        <a href="{{ route('principal.links.index') }}" 
+           class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+            View All Links
+        </a>
+    </div>
+
+    @if($principal->links->count())
+        <ul class="list-disc list-inside space-y-2">
+            @foreach($principal->links as $link)
+                @php
+                    // Decode JSON if stored as JSON
+                    $labels = is_string($link->label) ? json_decode($link->label, true) : $link->label;
+                    $urls   = is_string($link->url) ? json_decode($link->url, true) : $link->url;
+                @endphp
+
+                @foreach($labels as $i => $lbl)
+                    <li>
+                        <a href="{{ $urls[$i] ?? '#' }}" target="_blank" class="text-blue-600 hover:underline">
+                            {{ $lbl }}
+                        </a>
+                    </li>
+                @endforeach
+            @endforeach
+        </ul>
+    @else
+        <p class="text-gray-500">No shared links yet.</p>
+    @endif
 </div>
+
+
 
 <!-- Principal Info -->
 <div class="bg-white rounded-lg shadow p-6 mb-6">

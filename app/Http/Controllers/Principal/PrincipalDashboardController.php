@@ -1,12 +1,53 @@
 <?php
 
+// namespace App\Http\Controllers\Principal;
+// use App\Models\Admin\Brand;
+// use App\Models\Admin\Product;
+// use App\Http\Controllers\Controller;
+// use Illuminate\Support\Facades\Auth;
+// use App\Repositories\Interfaces\BrandRepositoryInterface;
+// use App\Repositories\Interfaces\ProductRepositoryInterface;
+
+// class PrincipalDashboardController extends Controller
+// { 
+//     public function index()
+//     {
+//         $principalId = Auth::guard('principal')->id();
+//         $principal = auth('principal')->user();
+
+//     //    $principal->load(['contacts', 'addresses']); // eager load related tables
+//     $principal->load(['contacts', 'addresses', 'links']); // load links too
+        
+//         $brands = Brand::where('principal_id', $principalId)->latest()->get();
+//         $products = Product::where('principal_id', $principalId)->latest()->get();
+        
+//         $stats = [
+//             // Brand stats
+//             'total_brands' => $brands->count(),
+//             'approved_brands' => $brands->where('status', 'approved')->count(),
+//             'pending_brands' => $brands->where('status', 'pending')->count(),
+//             'rejected_brands' => $brands->where('status', 'rejected')->count(),
+            
+//             // Product stats - using submission_status column
+//             'total_products' => $products->count(),
+//             'approved_products' => $products->where('submission_status', 'approved')->count(),
+//             'pending_products' => $products->where('submission_status', 'pending')->count(),
+//             'rejected_products' => $products->where('submission_status', 'rejected')->count(),
+//         ];
+
+//         // return view('principal.dashboard', compact('stats', 'brands', 'products'));
+//         return view('principal.dashboard', compact('stats', 'brands', 'products', 'principal'));
+
+//     }
+// }
+
+
 namespace App\Http\Controllers\Principal;
+
 use App\Models\Admin\Brand;
 use App\Models\Admin\Product;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Repositories\Interfaces\BrandRepositoryInterface;
-use App\Repositories\Interfaces\ProductRepositoryInterface;
 
 class PrincipalDashboardController extends Controller
 { 
@@ -15,28 +56,36 @@ class PrincipalDashboardController extends Controller
         $principalId = Auth::guard('principal')->id();
         $principal = auth('principal')->user();
 
-    //    $principal->load(['contacts', 'addresses']); // eager load related tables
-    $principal->load(['contacts', 'addresses', 'links']); // load links too
-        
+        // Eager load related tables
+        $principal->load(['contacts', 'addresses', 'links']);
+
         $brands = Brand::where('principal_id', $principalId)->latest()->get();
         $products = Product::where('principal_id', $principalId)->latest()->get();
-        
+
         $stats = [
             // Brand stats
             'total_brands' => $brands->count(),
             'approved_brands' => $brands->where('status', 'approved')->count(),
             'pending_brands' => $brands->where('status', 'pending')->count(),
             'rejected_brands' => $brands->where('status', 'rejected')->count(),
-            
-            // Product stats - using submission_status column
+
+            // Product stats
             'total_products' => $products->count(),
             'approved_products' => $products->where('submission_status', 'approved')->count(),
             'pending_products' => $products->where('submission_status', 'pending')->count(),
             'rejected_products' => $products->where('submission_status', 'rejected')->count(),
         ];
 
-        // return view('principal.dashboard', compact('stats', 'brands', 'products'));
-        return view('principal.dashboard', compact('stats', 'brands', 'products', 'principal'));
+        // Transform links so each label/url pair is an object
+        $principal->links->transform(function($link) {
+            // Decode JSON if stored as JSON
+            $link->label = is_string($link->label) ? json_decode($link->label, true) : $link->label;
+            $link->url   = is_string($link->url) ? json_decode($link->url, true) : $link->url;
+            $link->type  = is_string($link->type) ? json_decode($link->type, true) : $link->type;
+            return $link;
+        });
 
+        return view('principal.dashboard', compact('stats', 'brands', 'products', 'principal'));
     }
 }
+
