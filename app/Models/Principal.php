@@ -5,8 +5,10 @@ namespace App\Models;
 use App\Traits\HasSlug;
 use App\Models\Admin\Brand;
 use App\Models\Admin\Product;
+use App\Models\Admin\Category;
 use Laravel\Sanctum\HasApiTokens;
 use Wildside\Userstamps\Userstamps;
+use Spatie\Ignition\Contracts\Solution;
 use Illuminate\Notifications\Notifiable;
 use App\Notifications\PrincipalVerifyEmail;
 use Illuminate\Auth\Notifications\VerifyEmail;
@@ -173,5 +175,53 @@ public function products()
   public function links()
     {
         return $this->hasMany(PrincipalLink::class);
+    }
+
+  public function creator()
+    {
+        return $this->belongsTo(User::class, 'creator_id');
+    }
+
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class);
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    public function solution()
+    {
+        return $this->belongsTo(Solution::class);
+    }
+
+    public function shareLinks()
+    {
+        return $this->hasMany(ShareLink::class);
+    }
+
+    // Scope for user access
+    public function scopeAccessibleBy($query, User $user)
+    {
+        if ($user->hasRole('SuperAdmin')) {
+            return $query;
+        }
+
+        return $query->where(function ($q) use ($user) {
+            // Creator can always view their own records
+            $q->where('creator_id', $user->id)
+              ->orWhere('is_public', true);
+
+            // Add scoped access for BrandAdmin and Viewer
+            if ($user->hasRole('BrandAdmin') || $user->hasRole('Viewer')) {
+                $scopes = $user->getAdminScopes();
+                
+                foreach ($scopes as $scopeType => $scopeIds) {
+                    $q->orWhereIn("{$scopeType}_id", $scopeIds);
+                }
+            }
+        });
     }
 }

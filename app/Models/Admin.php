@@ -2,21 +2,32 @@
 
 namespace App\Models;
 
+use App\Models\Admin\Role;
+use App\Traits\HasAdminAccess;
+use App\Models\Admin\Permission;
 use Laravel\Sanctum\HasApiTokens;
 use Wildside\Userstamps\Userstamps;
+use App\Models\Admin\EmployeeCategory;
+use Spatie\Permission\Traits\HasRoles;
+use App\Notifications\Admin\VerifyEmail;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Notifications\Admin\ResetPassword;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Spatie\Permission\Traits\HasRoles;
-use App\Models\Admin\Role;
-use App\Models\Admin\Permission;
-use App\Models\Admin\EmployeeCategory;
-use App\Notifications\Admin\VerifyEmail;
-use App\Notifications\Admin\ResetPassword;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class Admin extends Authenticatable implements MustVerifyEmail
 {
+
+     use HasRoles, HasAdminAccess;
+
+    protected $fillable = [
+        'name', 'email', 'password',
+    ];
+
+
+    // Specify guard for spatie permission
+    protected $guard_name = 'admin'; // or 'web' depending on your setup
     use HasApiTokens, HasFactory, Notifiable, Userstamps, HasRoles;
 
     /**
@@ -100,4 +111,5 @@ class Admin extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsToMany(Permission::class, 'user_permissions', 'user_id', 'permission_id');
     }
+    
 }

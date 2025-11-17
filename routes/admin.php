@@ -6,6 +6,7 @@ use App\Http\Controllers\Rfq\RfqController;
 use App\Http\Controllers\Rfq\DealController;
 use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\RowController;
+use App\Http\Controllers\ShareLinkController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\HR\HolidayController;
 use App\Http\Controllers\PageBannerController;
@@ -37,6 +38,7 @@ use App\Http\Controllers\Admin\NewsTrendController;
 use App\Http\Controllers\Admin\PrincipalController;
 use App\Http\Controllers\Admin\VatAndTaxController;
 use App\Http\Controllers\HR\EmployeeTaskController;
+use App\Http\Controllers\Admin\AdminScopeController;
 use App\Http\Controllers\Admin\AttendanceController;
 use App\Http\Controllers\Admin\DynamicCssController;
 use App\Http\Controllers\Admin\NewsLetterController;
@@ -571,4 +573,126 @@ Route::prefix('admin/principals/{principal}/links')->name('admin.principals.link
     Route::get('/', [PrincipalContactController::class, 'index'])->name('index');
     Route::get('/{link}', [PrincipalContactController::class, 'show'])->name('show');
     Route::delete('/{link}', [PrincipalContactController::class, 'destroy'])->name('destroy');
+});
+
+
+
+// Route::prefix('admin')->name('admin.')->group(function () {
+//     // Role scopes management
+//     Route::get('roles/{role}/scopes', [AdminScopeController::class, 'edit'])
+//          ->name('role-scopes.edit');
+//     Route::put('roles/{role}/scopes', [AdminScopeController::class, 'update'])
+//          ->name('role-scopes.update');
+
+//     // Principals with scoped access
+//     Route::resource('principals', PrincipalController::class)->middleware([
+//         'auth', 
+//         'scoped.access:principal'
+//     ]);
+
+//     // Share links management
+//     Route::prefix('principals/{principal}/links')->name('principals.links.')->group(function () {
+//         Route::get('create', [ShareLinkController::class, 'create'])->name('create');
+//         Route::post('/', [ShareLinkController::class, 'store'])->name('store');
+//         Route::delete('/{link}', [ShareLinkController::class, 'destroy'])->name('destroy');
+//     });
+// });
+
+// // Public share links
+// Route::prefix('share')->name('share.links.')->group(function () {
+//     Route::get('/{token}', [ShareLinkController::class, 'show'])
+//          ->middleware('share.link')
+//          ->name('show');
+// });
+
+
+Route::prefix('admin')->name('admin.')->group(function () {
+    // Admin authentication routes (if you have separate admin login)
+    // Route::get('login', [AdminAuthController::class, 'showLoginForm'])->name('login');
+    // Route::post('login', [AdminAuthController::class, 'login']);
+    // Route::post('logout', [AdminAuthController::class, 'logout'])->name('logout');
+
+    // Admin middleware group - requires admin authentication
+    Route::middleware(['auth:admin'])->group(function () {
+        
+        // Role scopes management
+        Route::get('roles/{role}/scopes', [AdminScopeController::class, 'edit'])
+             ->name('role-scopes.edit');
+        Route::put('roles/{role}/scopes', [AdminScopeController::class, 'update'])
+             ->name('role-scopes.update');
+
+        // Principals with scoped access
+        Route::resource('principals', PrincipalController::class)->middleware([
+            'scoped.access:principal'
+        ]);
+
+        // Share links management
+        Route::prefix('principals/{principal}/links')->name('principals.links.')->group(function () {
+            Route::get('create', [ShareLinkController::class, 'create'])->name('create');
+            Route::post('/', [ShareLinkController::class, 'store'])->name('store');
+            Route::delete('/{link}', [ShareLinkController::class, 'destroy'])->name('destroy');
+        });
+
+        // // Admin dashboard
+        // Route::get('/dashboard', function () {
+        //     return view('admin.dashboard');
+        // })->name('dashboard');
+
+        // Add other admin routes here...
+    });
+});
+
+// Public share links (no auth required)
+Route::prefix('share')->name('share.links.')->group(function () {
+    Route::get('/{token}', [ShareLinkController::class, 'show'])
+         ->middleware('share.link')
+         ->name('show');
+});
+
+// // Optional: Redirect root to admin dashboard if needed
+// // Route::get('/', function () {
+// //     return redirect()->route('admin.dashboard');
+// });
+
+Route::prefix('admin')->name('admin.')->group(function () {
+    // Admin middleware group
+    Route::middleware(['auth:admin'])->group(function () {
+        
+        // Role permissions management
+        Route::prefix('roles/{role}/permissions')->name('role-permissions.')->group(function () {
+            Route::get('/', [RolePermissionController::class, 'show'])->name('show');
+            Route::post('/', [RolePermissionController::class, 'assignPermission'])->name('assign');
+            Route::delete('/{permission}', [RolePermissionController::class, 'removePermission'])->name('remove'); // ← Add this line
+        });
+
+        // Role scopes management
+        Route::get('roles/{role}/scopes', [AdminScopeController::class, 'edit'])
+             ->name('role-scopes.edit');
+        Route::put('roles/{role}/scopes', [AdminScopeController::class, 'update'])
+             ->name('role-scopes.update');
+
+        // Principals with scoped access
+        Route::resource('principals', PrincipalController::class)->middleware([
+            'scoped.access:principal'
+        ]);
+
+        // Share links management
+        Route::prefix('principals/{principal}/links')->name('principals.links.')->group(function () {
+            Route::get('create', [ShareLinkController::class, 'create'])->name('create');
+            Route::post('/', [ShareLinkController::class, 'store'])->name('store');
+            Route::delete('/{link}', [ShareLinkController::class, 'destroy'])->name('destroy');
+        });
+
+        // // Admin dashboard
+        // Route::get('/dashboard', function () {
+        //     return view('admin.dashboard');
+        // })->name('dashboard');
+    });
+});
+
+// Public share links
+Route::prefix('share')->name('share.links.')->group(function () {
+    Route::get('/{token}', [ShareLinkController::class, 'show'])
+         ->middleware('share.link')
+         ->name('show');
 });

@@ -72,7 +72,8 @@ class Kernel extends HttpKernel
     'check.principal.status' => \App\Http\Middleware\CheckPrincipalStatus::class,
     'verified.principal' => \App\Http\Middleware\EnsurePrincipalEmailIsVerified::class,
     'check.principal.status' => \App\Http\Middleware\CheckPrincipalStatus::class,
-    
+    'scoped.access' => \App\Http\Middleware\CheckScopedAccess::class,
+    'share.link' => \App\Http\Middleware\ShareLinkAccess::class,
     
     
     ];

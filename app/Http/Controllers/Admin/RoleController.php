@@ -9,82 +9,74 @@ use Spatie\Permission\Models\Permission;
 
 class RoleController extends Controller
 {
-    /**
-     * Display a listing of roles.
-     */
     public function index()
     {
-        $roles = Role::all();
-        return view('admin.pages.role.index', compact('roles'));
+        $roles = Role::with('permissions')->where('guard_name', 'admin')->get(); // Fixed: role -> roles
+        return view('admin.pages.role.index', compact('roles')); // Fixed: role -> roles
     }
 
-    /**
-     * Show the form for creating a new role.
-     */
     public function create()
     {
-        $permissions = Permission::all();
-        return view('admin.pages.role.create', compact('permissions'));
+        $permissions = Permission::where('guard_name', 'admin')->get();
+        return view('admin.pages.role.form', compact('permissions'));
     }
 
-    /**
-     * Store a newly created role.
-     */
     public function store(Request $request)
     {
         $request->validate([
-            'role_name' => 'required|string|unique:roles,name',
-            'permissions.*' => 'exists:permissions,id',
+            'name' => 'required|string|unique:roles,name', // Fixed: role -> roles
+            'permissions' => 'array',
+            'permissions.*' => 'exists:permissions,id'
         ]);
 
-        // Create the role with default 'web' guard
         $role = Role::create([
-            'name' => $request->input('role_name'),
-            'guard_name' => 'web',
+            'name' => $request->name,
+            'guard_name' => 'admin'
         ]);
 
-        // Assign selected permissions
         if ($request->has('permissions')) {
-            $role->syncPermissions($request->input('permissions'));
+            // Get permission names from IDs
+            $permissionNames = Permission::whereIn('id', $request->permissions)
+                                        ->where('guard_name', 'admin')
+                                        ->pluck('name')
+                                        ->toArray();
+            
+            $role->syncPermissions($permissionNames);
         }
 
         return redirect()->route('admin.role.index')
                          ->with('success', 'Role created successfully.');
     }
 
-    /**
-     * Show the form for editing a role.
-     */
     public function edit($id)
     {
-        $role = Role::findOrFail($id);
-        $permissions = Permission::all();
-        $rolePermissions = $role->permissions->pluck('id')->toArray();
-
-        return view('admin.pages.role.edit', compact('role', 'permissions', 'rolePermissions'));
+        $role = Role::with('permissions')->findOrFail($id);
+        $permissions = Permission::where('guard_name', 'admin')->get();
+        
+        return view('admin.pages.role.form', compact('role', 'permissions'));
     }
 
-    /**
-     * Update an existing role.
-     */
     public function update(Request $request, $id)
     {
         $role = Role::findOrFail($id);
 
         $request->validate([
-            'role_name' => 'required|string|unique:roles,name,' . $role->id,
-            'permissions.*' => 'exists:permissions,id',
+            'name' => 'required|string|unique:roles,name,' . $role->id, // Fixed: role -> roles
+            'permissions' => 'array',
+            'permissions.*' => 'exists:permissions,id'
         ]);
 
-        $role->update([
-            'name' => $request->input('role_name'),
-        ]);
+        $role->update(['name' => $request->name]);
 
-        // Sync permissions
         if ($request->has('permissions')) {
-            $role->syncPermissions($request->input('permissions'));
+            // Get permission names from IDs
+            $permissionNames = Permission::whereIn('id', $request->permissions)
+                                        ->where('guard_name', 'admin')
+                                        ->pluck('name')
+                                        ->toArray();
+            
+            $role->syncPermissions($permissionNames);
         } else {
-            // Remove all permissions if none selected
             $role->syncPermissions([]);
         }
 
@@ -92,12 +84,15 @@ class RoleController extends Controller
                          ->with('success', 'Role updated successfully.');
     }
 
-    /**
-     * Delete a role.
-     */
     public function destroy($id)
     {
         $role = Role::findOrFail($id);
+        
+        // Prevent deletion of SuperAdmin role
+        if ($role->name === 'SuperAdmin') {
+            return redirect()->back()->with('error', 'Cannot delete SuperAdmin role.');
+        }
+
         $role->delete();
 
         return redirect()->route('admin.role.index')

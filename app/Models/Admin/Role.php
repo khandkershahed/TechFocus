@@ -6,9 +6,11 @@ use App\Models\Admin;
 use Wildside\Userstamps\Userstamps;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Traits\HasAdminScopes;
 
 class Role extends Model
 {
+     use HasAdminScopes;
     use HasFactory, Userstamps;
 
     /**
