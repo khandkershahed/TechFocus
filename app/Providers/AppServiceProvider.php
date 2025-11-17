@@ -62,6 +62,7 @@ use App\Repositories\Interfaces\LeaveApplicationRepositoryInterface;
 use App\Repositories\Interfaces\ProductAttributeRepositoryInterface;
 use App\Repositories\Interfaces\EmployeeDepartmentRepositoryInterface;
 use App\Repositories\Interfaces\PolicyAcknowledgmentRepositoryInterface;
+use Illuminate\Support\Facades\Blade;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -230,6 +231,19 @@ public function boot()
     });
 
     Paginator::useBootstrap();
+
+
+
+            // Mask sensitive data
+        Blade::directive('maskData', function ($expression) {
+            return "<?php echo \App\Helpers\MaskHelper::maskSensitiveData($expression); ?>";
+        });
+
+        // Mask URL
+        Blade::directive('maskUrl', function ($expression) {
+            return "<?php echo \App\Helpers\MaskHelper::maskUrl($expression); ?>";
+        });
+
 }
 
 }

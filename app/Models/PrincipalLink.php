@@ -23,4 +23,9 @@ class PrincipalLink extends Model
         'type' => 'array',
         'file' => 'array', // cast JSON to array
     ];
+
+    public function shareTokens()
+{
+    return $this->hasMany(ShareToken::class);
+}
 }

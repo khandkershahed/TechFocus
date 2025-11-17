@@ -1,13 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\SharedFileController;
 use App\Http\Controllers\Admin\PrincipalController;
 use App\Http\Controllers\Principal\BrandController;
 use App\Http\Controllers\Principal\ProductController;
 use App\Http\Controllers\Principal\DashboardController;
 use App\Http\Controllers\Principal\Auth\LoginController;
-use App\Http\Controllers\Principal\Auth\RegisterController;
 
+use App\Http\Controllers\Principal\Auth\RegisterController;
 use App\Http\Controllers\Principal\PrincipalLinkController;
 use App\Http\Controllers\Principal\PrincipalProfileController;
 use App\Http\Controllers\Principal\Auth\PrincipalAuthController;
@@ -193,7 +194,43 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
 
     Route::delete('/links/{id}', [\App\Http\Controllers\Principal\PrincipalLinkController::class, 'destroy'])
         ->name('principal.links.destroy');
+
+
+
+//         // Share routes
+// Route::post('/principal/links/generate-share', [PrincipalLinkController::class, 'generateShare'])
+//     ->name('principal.links.generate-share');
+    
+// Route::get('/principal/links/shared', [PrincipalLinkController::class, 'sharedLinks'])
+//     ->name('principal.links.shared');
+    
+// Route::delete('/principal/links/revoke-share/{tokenId}', [PrincipalLinkController::class, 'revokeShare'])
+//     ->name('principal.links.revoke-share');
+
+// // Public shared link routes
+// Route::get('/shared/link/{token}', [PrincipalLinkController::class, 'viewSharedLink'])
+//     ->name('shared.link.view');
+    
+// Route::get('/shared/file/{token}/{file}', [SharedFileController::class, 'download'])
+//     ->name('shared.file.download');
         
+// Share routes
+Route::post('/principal/links/generate-share', [PrincipalLinkController::class, 'generateShare'])
+    ->name('principal.links.generate-share');
+    
+Route::get('/principal/links/shared', [PrincipalLinkController::class, 'sharedLinks'])
+    ->name('principal.links.shared');
+    
+Route::delete('/principal/links/revoke-share/{tokenId}', [PrincipalLinkController::class, 'revokeShare'])
+    ->name('principal.links.revoke-share');
+
+// Public shared link routes
+Route::get('/shared/link/{token}', [PrincipalLinkController::class, 'viewSharedLink'])
+    ->name('shared.link.view');
+    
+Route::post('/principal/links/send-share-email', [PrincipalLinkController::class, 'sendShareEmail'])
+    ->name('principal.links.send-share-email');
+    
 require __DIR__ . '/frontend.php';
 require __DIR__ . '/auth.php';
 require __DIR__ . '/admin.php';
