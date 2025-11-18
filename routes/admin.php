@@ -716,3 +716,33 @@ Route::prefix('admin')->name('admin.')->group(function () {
         });
     });
 });
+
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::middleware(['auth:admin'])->group(function () {
+        
+        // User Permissions Management
+        Route::prefix('user-permissions')->name('user-permission.')->group(function () {
+            Route::get('/', [UserPermissionController::class, 'index'])->name('index');
+            Route::get('/{userId}/create', [UserPermissionController::class, 'create'])->name('create');
+            Route::post('/{userId}', [UserPermissionController::class, 'store'])->name('store');
+            Route::get('/{userId}/edit', [UserPermissionController::class, 'edit'])->name('edit');
+            Route::delete('/{userId}/{permissionId}', [UserPermissionController::class, 'destroy'])->name('destroy');
+        });
+        
+        // Your existing routes...
+    });
+});
+
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::middleware(['auth:admin'])->group(function () {
+        
+        // Permission Management Routes
+        Route::get('/permissions', [PermissionController::class, 'index'])->name('permissions.index');
+        Route::get('/permissions/create', [PermissionController::class, 'create'])->name('permissions.create');
+        Route::post('/permissions', [PermissionController::class, 'store'])->name('permissions.store');
+        Route::get('/permissions/{permission}/edit', [PermissionController::class, 'edit'])->name('permissions.edit');
+        Route::put('/permissions/{permission}', [PermissionController::class, 'update'])->name('permissions.update');
+        Route::delete('/permissions/{permission}', [PermissionController::class, 'destroy'])->name('permissions.destroy');
+        
+    });
+});

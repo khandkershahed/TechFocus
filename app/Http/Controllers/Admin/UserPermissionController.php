@@ -9,6 +9,12 @@ use App\Http\Controllers\Controller;
 
 class UserPermissionController extends Controller
 {
+    // Add this method to UserPermissionController
+        public function index()
+        {
+            $users = Admin::with(['roles', 'permissions'])->get();
+            return view('admin.pages.user-permission.index', compact('users'));
+        }
     /**
      * Display a form for assigning permissions to a user.
      *
@@ -30,23 +36,40 @@ class UserPermissionController extends Controller
      * @param  int  $userId
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $adminId)
-    {
-        $request->validate([
-            'permissions' => 'array',
-            'permissions.*' => 'in:0,1',
-        ]);
+    // public function store(Request $request, $adminId)
+    // {
+    //     $request->validate([
+    //         'permissions' => 'array',
+    //         'permissions.*' => 'in:0,1',
+    //     ]);
 
-        $admin = Admin::findOrFail($adminId);
+    //     $admin = Admin::findOrFail($adminId);
 
-        $checkedPermissions = array_filter($request->input('permissions', []), function ($value) {
-            return $value == 1;
-        });
+    //     $checkedPermissions = array_filter($request->input('permissions', []), function ($value) {
+    //         return $value == 1;
+    //     });
 
-        $admin->permissions()->sync(array_keys($checkedPermissions));
+    //     $admin->permissions()->sync(array_keys($checkedPermissions));
 
-        return redirect()->back()->with('success', 'Permissions updated successfully.');
-    }
+    //     return redirect()->back()->with('success', 'Permissions updated successfully.');
+    // }
+    public function store(Request $request, $userId) // Changed from $adminId to $userId
+{
+    $request->validate([
+        'permissions' => 'array',
+        'permissions.*' => 'in:0,1',
+    ]);
+
+    $admin = Admin::findOrFail($userId); // Use $userId
+
+    $checkedPermissions = array_filter($request->input('permissions', []), function ($value) {
+        return $value == 1;
+    });
+
+    $admin->permissions()->sync(array_keys($checkedPermissions));
+
+    return redirect()->route('admin.user-permission.index')->with('success', 'Permissions updated successfully.');
+}
 
 
     /**

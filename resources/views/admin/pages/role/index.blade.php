@@ -31,6 +31,20 @@
         </a>
     </div>
 
+<div class="mb-4">
+    <a href="{{ route('admin.user-permission.index') }}" class="btn btn-info">
+        <i class="fas fa-key"></i> Manage User Permissions
+    </a>
+</div>
+
+<!-- In your admin sidebar -->
+<li class="nav-item">
+    <a class="nav-link" href="{{ route('admin.permission.create') }}">
+        <i class="fas fa-plus-circle"></i>
+        <span>Add New Permission</span>
+    </a>
+</li>
+
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
