@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\RowController;
 use App\Http\Controllers\ShareLinkController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\HR\HolidayController;
 use App\Http\Controllers\PageBannerController;
 use App\Http\Controllers\Admin\BrandController;
@@ -695,4 +696,23 @@ Route::prefix('share')->name('share.links.')->group(function () {
     Route::get('/{token}', [ShareLinkController::class, 'show'])
          ->middleware('share.link')
          ->name('show');
+});
+
+//role user
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::middleware(['auth:admin'])->group(function () {
+        
+        // User Management
+        Route::resource('users', UserController::class);
+        
+        // Existing routes...
+        Route::resource('roles', RoleController::class);
+        Route::resource('principals', PrincipalController::class);
+        
+        // Role Permissions Management
+        Route::prefix('roles/{role}/permissions')->name('role-permissions.')->group(function () {
+            Route::get('/', [RolePermissionController::class, 'show'])->name('show');
+            Route::post('/', [RolePermissionController::class, 'assignPermission'])->name('assign');
+        });
+    });
 });

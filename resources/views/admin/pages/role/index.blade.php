@@ -3,6 +3,26 @@
 @section('title', 'Manage Roles')
 
 @section('content')
+
+<!-- On admin dashboard -->
+<div class="col-md-3">
+    <div class="card bg-primary text-white">
+        <div class="card-body">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <h4>User Management</h4>
+                    <p>Manage admin users and roles</p>
+                </div>
+                <div>
+                    <i class="fas fa-users fa-2x"></i>
+                </div>
+            </div>
+            <a href="{{ route('admin.users.index') }}" class="btn btn-light btn-sm mt-2">
+                Manage Users <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</div>
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>Role Management</h2>

@@ -211,7 +211,7 @@ Route::post('/cart/rfq/clear', [CartController::class, 'clearRfq'])->name('cart.
 Route::get('/cart/debug', [CartController::class, 'debug'])->name('cart.debug');
 
 // RFQ Session Management Routes
-Route::post('/rfq/remove-from-session/{productId}', [RfqController::class, 'removeFromRfqSession'])->name('rfq.remove-from-session');
+// Route::post('/rfq/remove-from-session/{productId}', [RfqController::class, 'removeFromRfqSession'])->name('rfq.remove-from-session');
 Route::get('/rfq/session-items', [RfqController::class, 'getRfqSessionItems'])->name('rfq.session-items');
 Route::post('/rfq/clear-session', [RfqController::class, 'clearRfqSession'])->name('rfq.clear-session');
 // In routes/web.php
@@ -219,7 +219,7 @@ Route::post('/cart/remove-rfq', [CartController::class, 'removeFromRfq'])->name(
 
 //temp
 // Change from this (if you have it):
-Route::post('/rfq/remove-from-session/{productId}', [RfqController::class, 'removeFromRfqSession'])->name('rfq.remove-from-session');
+// Route::post('/rfq/remove-from-session/{productId}', [RfqController::class, 'removeFromRfqSession'])->name('rfq.remove-from-session');
 
 // To this:
 Route::post('/rfq/remove-from-session', [RfqController::class, 'removeFromRfqSession'])->name('rfq.remove-from-session');
