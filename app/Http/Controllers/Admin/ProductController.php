@@ -84,141 +84,173 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(ProductRequest $request)
-    {
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'name'       => 'required|unique:products,name|max:200',
-                'thumbnail'  => 'required|image|mimes:png,jpg,jpeg|max:5000',
-            ],
-            [
-                'thumbnail.max'   => 'The image field must be smaller than 5 MB.',
-                'thumbnail.image' => 'The file must be an image.',
-                'thumbnail.mimes' => 'The :attribute must be a file of type: PNG, JPEG, JPG.',
-                'required'        => 'The :attribute field is required.',
-                'unique'          => 'The Product Name already exists in the database.',
-            ]
-        );
+public function store(ProductRequest $request)
+{
+    // Add debug logging
+    \Log::info('Product store method called');
+    \Log::info('Request data:', $request->all());
+    
+    $validator = Validator::make(
+        $request->all(),
+        [
+            'name'       => 'required|unique:products,name|max:200',
+            'thumbnail'  => 'required|image|mimes:png,jpg,jpeg|max:5000',
+            'mf_code'    => 'nullable|unique:products,mf_code',
+            'color_id'   => 'nullable|array',
+            'color_id.*' => 'nullable|exists:product_colors,id',
+            'category_id' => 'nullable|array',
+            'category_id.*' => 'nullable|exists:categories,id',
+            'parent_id' => 'nullable|array',
+            'parent_id.*' => 'nullable|exists:products,id',
+            'child_id' => 'nullable|array',
+            'child_id.*' => 'nullable|exists:products,id',
+        ],
+        [
+            'thumbnail.max'   => 'The image field must be smaller than 5 MB.',
+            'thumbnail.image' => 'The file must be an image.',
+            'thumbnail.mimes' => 'The :attribute must be a file of type: PNG, JPEG, JPG.',
+            'required'        => 'The :attribute field is required.',
+            'unique'          => 'The :attribute already exists in the database.',
+        ]
+    );
 
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
-        
-        DB::beginTransaction();
-
-        try {
-            $thumbnail = $request->file('thumbnail');
-            $thumbnailName = Str::random(20) . '.' . $thumbnail->getClientOriginalExtension();
-            $thumbnailPath = $thumbnail->storeAs('upload/Products/thumbnail', $thumbnailName, 'public');
-            $save_url = asset('storage/' . $thumbnailPath);
-
-            $productData = [
-                'name'                      => $request->name,
-                'sku_code'                  => $request->sku_code,
-                'mf_code'                   => $request->mf_code,
-                'product_code'              => $request->product_code,
-                'tags'                      => $request->tags,
-                'price_status'              => $request->price_status,
-                'sas_price'                 => $request->sas_price,
-                'short_desc'                => $request->short_desc,
-                'overview'                  => $request->overview,
-                'specification'             => $request->specification,
-                'accessories'               => $request->accessories,
-                'warranty'                  => $request->warranty,
-                'thumbnail'                 => $save_url,
-                'stock'                     => $request->stock,
-                'currency_id'               => $request->currency_id,
-                'qty'                       => $request->qty,
-                'rfq'                       => ($request->price_status == 'rfq') ? '1' : '0',
-                'deal'                      => $request->deal,
-                'refurbished'               => $request->refurbished,
-                'product_type'              => $request->product_type,
-                'category_id'               => $request->has('category_id') ? $request->category_id : null,
-                'color_id'                  => $request->has('color_id') ? $request->color_id : null,
-                'parent_id'                 => $request->has('parent_id') ? $request->parent_id : null,
-                'child_id'                  => $request->has('child_id') ? $request->child_id : null,
-                'brand_id'                  => $request->brand_id,
-                'source_one_name'           => $request->source_one_name,
-                'source_one_link'           => $request->source_one_link,
-                'source_one_price'          => $request->source_one_price,
-                'source_one_estimate_time'  => $request->source_one_estimate_time,
-                'source_one_principal_time' => $request->source_one_principal_time,
-                'source_one_shipping_time'  => $request->source_one_shipping_time,
-                'source_one_location'       => $request->source_one_location,
-                'source_one_country'        => $request->source_one_country,
-                'source_two_name'           => $request->source_two_name,
-                'source_two_link'           => $request->source_two_link,
-                'source_two_price'          => $request->source_two_price,
-                'source_two_estimate_time'  => $request->source_two_estimate_time,
-                'source_two_principal_time' => $request->source_two_principal_time,
-                'source_two_shipping_time'  => $request->source_two_shipping_time,
-                'source_two_location'       => $request->source_two_location,
-                'source_two_country'        => $request->source_two_country,
-                'competitor_one_name'       => $request->competitor_one_name,
-                'competitor_one_price'      => $request->competitor_one_price,
-                'competitor_two_name'       => $request->competitor_two_name,
-                'competitor_two_price'      => $request->competitor_two_price,
-                'competitor_one_link'       => $request->competitor_one_link,
-                'competitor_two_link'       => $request->competitor_two_link,
-                'source_one_approval'       => ($request->source_one_price > $request->source_two_price) ? '0' : '1',
-                'source_two_approval'       => ($request->source_one_price > $request->source_two_price) ? '1' : '0',
-                'notification_days'         => $request->notification_days,
-                'create_date'               => Carbon::now(),
-                'solid_source'              => $request->solid_source,
-                'direct_principal'          => $request->direct_principal,
-                'agreement'                 => $request->agreement,
-                'source_type'               => $request->source_type,
-                'source_contact'            => $request->source_contact,
-                'added_by'                  => Auth::guard('admin')->user()->name,
-                'action_status'             => ($request->action == 'save') ? 'save' : 'listed',
-                'product_status'            => 'sourcing',
-                'created_at'                => Carbon::now(),
-            ];
-
-            $product = Product::create($productData);
-
-            // Multiple Image Upload
-            if ($request->hasFile('multi_img')) {
-                foreach ($request->file('multi_img') as $img) {
-                    $makeName = Str::random(20) . '.' . $img->getClientOriginalExtension();
-                    $multiPath = $img->storeAs('upload/Products/multi-image', $makeName, 'public');
-
-                    ProductImage::create([
-                        'product_id' => $product->id,
-                        'photo'      => asset('storage/' . $multiPath),
-                    ]);
-                }
-            }
-
-            // Attach industries
-            if (!empty($request->industry_id)) {
-                foreach ($request->industry_id as $industry) {
-                    IndustryProduct::create([
-                        'product_id' => $product->id,
-                        'industry_id' => $industry,
-                    ]);
-                }
-            }
-
-            // Attach solutions
-            if (!empty($request->solution_id)) {
-                foreach ($request->solution_id as $solution) {
-                    SolutionProduct::create([
-                        'product_id' => $product->id,
-                        'solution_id' => $solution,
-                    ]);
-                }
-            }
-
-            DB::commit();
-            Session::flash('success', 'Data has been inserted successfully!');
-            return redirect()->back();
-        } catch (\Exception $e) {
-            DB::rollback();
-            return redirect()->back()->withInput()->with('error', $e->getMessage());
-        }
+    if ($validator->fails()) {
+        \Log::error('Validation failed:', $validator->errors()->toArray());
+        return redirect()->back()->withErrors($validator)->withInput();
     }
+    
+    DB::beginTransaction();
+
+    try {
+        \Log::info('Starting product creation...');
+        
+        $thumbnail = $request->file('thumbnail');
+        $thumbnailName = Str::random(20) . '.' . $thumbnail->getClientOriginalExtension();
+        $thumbnailPath = $thumbnail->storeAs('upload/Products/thumbnail', $thumbnailName, 'public');
+        $save_url = asset('storage/' . $thumbnailPath);
+
+        \Log::info('Thumbnail saved:', ['url' => $save_url]);
+
+        $productData = [
+            'name'                      => $request->name,
+            'sku_code'                  => $request->sku_code,
+            'mf_code'                   => $request->mf_code ?? null,
+            'product_code'              => $request->product_code ?? null,
+            'tags'                      => $request->tags ?? null,
+            'price_status'              => $request->price_status,
+            'sas_price'                 => $request->sas_price ?? null,
+            'short_desc'                => $request->short_desc ?? null,
+            'overview'                  => $request->overview ?? null,
+            'specification'             => $request->specification ?? null,
+            'accessories'               => $request->accessories ?? null,
+            'warranty'                  => $request->warranty ?? null,
+            'thumbnail'                 => $save_url,
+            'stock'                     => $request->stock,
+            'currency_id'               => $request->currency_id ?? null,
+            'qty'                       => $request->qty ?? 0,
+            'rfq'                       => ($request->price_status == 'rfq') ? '1' : '0',
+            'deal'                      => $request->deal ?? null,
+            'refurbished'               => $request->refurbished ?? 0,
+            'product_type'              => $request->product_type,
+            'category_id'               => $request->has('category_id') ? json_encode($request->category_id) : null,
+            'color_id'                  => $request->has('color_id') ? json_encode($request->color_id) : null,
+            'parent_id'                 => $request->has('parent_id') ? json_encode($request->parent_id) : null,
+            'child_id'                  => $request->has('child_id') ? json_encode($request->child_id) : null,
+            'brand_id'                  => $request->brand_id,
+            'source_one_name'           => $request->source_one_name ?? null,
+            'source_one_link'           => $request->source_one_link ?? null,
+            'source_one_price'          => $request->source_one_price ?? null,
+            'source_one_estimate_time'  => $request->source_one_estimate_time ?? null,
+            'source_one_principal_time' => $request->source_one_principal_time ?? null,
+            'source_one_shipping_time'  => $request->source_one_shipping_time ?? null,
+            'source_one_location'       => $request->source_one_location ?? null,
+            'source_one_country'        => $request->source_one_country ?? null,
+            'source_two_name'           => $request->source_two_name ?? null,
+            'source_two_link'           => $request->source_two_link ?? null,
+            'source_two_price'          => $request->source_two_price ?? null,
+            'source_two_estimate_time'  => $request->source_two_estimate_time ?? null,
+            'source_two_principal_time' => $request->source_two_principal_time ?? null,
+            'source_two_shipping_time'  => $request->source_two_shipping_time ?? null,
+            'source_two_location'       => $request->source_two_location ?? null,
+            'source_two_country'        => $request->source_two_country ?? null,
+            'competitor_one_name'       => $request->competitor_one_name ?? null,
+            'competitor_one_price'      => $request->competitor_one_price ?? null,
+            'competitor_two_name'       => $request->competitor_two_name ?? null,
+            'competitor_two_price'      => $request->competitor_two_price ?? null,
+            'competitor_one_link'       => $request->competitor_one_link ?? null,
+            'competitor_two_link'       => $request->competitor_two_link ?? null,
+            'source_one_approval'       => ($request->source_one_price > $request->source_two_price) ? '0' : '1',
+            'source_two_approval'       => ($request->source_one_price > $request->source_two_price) ? '1' : '0',
+            'notification_days'         => $request->notification_days,
+            'create_date'               => Carbon::now(),
+            'solid_source'              => $request->solid_source ?? 'no',
+            'direct_principal'          => $request->direct_principal ?? 'no',
+            'agreement'                 => $request->agreement ?? 'no',
+            'source_type'               => $request->source_type ?? null,
+            'source_contact'            => $request->source_contact ?? null,
+            'added_by'                  => Auth::guard('admin')->user()->name,
+            'action_status'             => ($request->action == 'save') ? 'save' : 'listed',
+            'product_status'            => 'sourcing',
+            'created_at'                => Carbon::now(),
+        ];
+
+        \Log::info('Product data prepared:', $productData);
+
+        $product = Product::create($productData);
+        \Log::info('Product created with ID:', ['id' => $product->id]);
+
+        // Multiple Image Upload
+        if ($request->hasFile('multi_img')) {
+            \Log::info('Processing multiple images...');
+            foreach ($request->file('multi_img') as $img) {
+                $makeName = Str::random(20) . '.' . $img->getClientOriginalExtension();
+                $multiPath = $img->storeAs('upload/Products/multi-image', $makeName, 'public');
+
+                ProductImage::create([
+                    'product_id' => $product->id,
+                    'photo'      => asset('storage/' . $multiPath),
+                ]);
+            }
+        }
+
+        // Attach industries
+        if (!empty($request->industry_id)) {
+            \Log::info('Attaching industries...');
+            foreach ($request->industry_id as $industry) {
+                IndustryProduct::create([
+                    'product_id' => $product->id,
+                    'industry_id' => $industry,
+                ]);
+            }
+        }
+
+        // Attach solutions
+        if (!empty($request->solution_id)) {
+            \Log::info('Attaching solutions...');
+            foreach ($request->solution_id as $solution) {
+                SolutionProduct::create([
+                    'product_id' => $product->id,
+                    'solution_id' => $solution,
+                ]);
+            }
+        }
+
+        DB::commit();
+        \Log::info('Product stored successfully!');
+        Session::flash('success', 'Data has been inserted successfully!');
+        return redirect()->back();
+        
+    } catch (\Exception $e) {
+        DB::rollback();
+        \Log::error('Error storing product:', [
+            'message' => $e->getMessage(),
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
+            'trace' => $e->getTraceAsString()
+        ]);
+        return redirect()->back()->withInput()->with('error', $e->getMessage());
+    }
+}
 
     /**
      * Display the specified resource.
