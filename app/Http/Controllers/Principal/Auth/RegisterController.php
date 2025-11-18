@@ -23,6 +23,7 @@ class RegisterController extends Controller
         // Validate principal basics + contacts + addresses
         $request->validate([
             'legal_name' => 'required|string|max:255',
+            'company_name' => 'required|string|max:255',
             'trading_name' => 'nullable|string|max:255',
             'entity_type' => 'nullable|in:Manufacturer,Distributor,Supplier,Other',
             'website_url' => 'nullable|url|max:255',
@@ -42,6 +43,7 @@ class RegisterController extends Controller
         $principal = Principal::create([
             'name' => $request->legal_name,
             'legal_name' => $request->legal_name,
+            'company_name'=>$request->company_name,
             'trading_name' => $request->trading_name,
             'entity_type' => $request->entity_type,
             'website_url' => $request->website_url,

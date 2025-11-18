@@ -168,7 +168,8 @@
                     <div class="row g-4 align-items-end">
                         <div class="col-md-3">
                             <label class="form-label">Search Principals</label>
-                            <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="Search by name, email, company...">
+                            <input type="text" name="search" value="{{ request('search') }}" class="form-control" 
+                                   placeholder="Search by name, email, company, website, links...">
                         </div>
 
                         <div class="col-md-2">
@@ -204,6 +205,7 @@
                                 <option value="recently_updated" {{ request('sort') == 'recently_updated' ? 'selected' : '' }}>Recently Updated</option>
                                 <option value="name" {{ request('sort') == 'name' ? 'selected' : '' }}>Name</option>
                                 <option value="country" {{ request('sort') == 'country' ? 'selected' : '' }}>Country</option>
+                                <option value="website" {{ request('sort') == 'website' ? 'selected' : '' }}>Website</option>
                                 <option value="last_activity" {{ request('sort') == 'last_activity' ? 'selected' : '' }}>Last Activity</option>
                             </select>
                         </div>
@@ -215,6 +217,64 @@
                             <a href="{{ route('admin.principals.index') }}" class="btn btn-light">Reset</a>
                         </div>
                     </div>
+
+                    <!-- Advanced Filters -->
+                    <div class="row mt-3">
+                        <div class="col-md-3">
+                            <label class="form-label">Relationship Status</label>
+                            <select name="relationship_status" class="form-select">
+                                <option value="">All Status</option>
+                                <option value="active" {{ request('relationship_status') == 'active' ? 'selected' : '' }}>Active</option>
+                                <option value="inactive" {{ request('relationship_status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                                <option value="pending" {{ request('relationship_status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                            </select>
+                        </div>
+
+                        {{-- <div class="col-md-3">
+                            <label class="form-label">Brand</label>
+                            <select name="brand" class="form-select">
+                                <option value="">All Brands</option>
+                                @foreach(\App\Models\Brand::all() as $brand)
+                                    <option value="{{ $brand->id }}" {{ request('brand') == $brand->id ? 'selected' : '' }}>
+                                        {{ $brand->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div> --}}
+                            <div class="col-md-3">
+                                <label class="form-label">Brand</label>
+                                {{-- @php
+                                    $brands = \App\Models\Admin\Brand::get();
+                                    @endphp --}}
+                                    {{-- @dd($brands) --}}
+                                <select id="brand" name="brand" class="form-select" data-control="select2"> 
+                                    <option value="">All Brands</option>
+                                    @foreach($brands as $brand)
+                                        <option value="{{ $brand->id }}" {{ request('brand') == $brand->id ? 'selected' : '' }}>
+                                            {{ $brand->title }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        {{-- <div class="col-md-3">
+                            <label class="form-label">Authorization Type</label>
+                            <select name="authorization_type" class="form-select">
+                                <option value="">All Types</option>
+                                <option value="direct" {{ request('authorization_type') == 'direct' ? 'selected' : '' }}>Direct</option>
+                                <option value="distributor" {{ request('authorization_type') == 'distributor' ? 'selected' : '' }}>Distributor</option>
+                                <option value="reseller" {{ request('authorization_type') == 'reseller' ? 'selected' : '' }}>Reseller</option>
+                            </select>
+                        </div> --}}
+
+                        {{-- <div class="col-md-3">
+                            <label class="form-label">NDA Status</label>
+                            <select name="has_ndas" class="form-select">
+                                <option value="">All</option>
+                                <option value="1" {{ request('has_ndas') == '1' ? 'selected' : '' }}>Has NDA</option>
+                                <option value="0" {{ request('has_ndas') == '0' ? 'selected' : '' }}>No NDA</option>
+                            </select>
+                        </div>
+                    </div> --}}
                 </form>
 
                 @if ($principals->count() > 0)
@@ -225,6 +285,7 @@
                                     <th>Principal</th>
                                     <th>Email</th>
                                     <th>Company</th>
+                                    <th>Website</th>
                                     <th>Status</th>
                                     <th>Email Verified</th>
                                     <th>Last Seen</th>
@@ -243,17 +304,17 @@
                                             <div class="symbol symbol-50px me-3">
                                                 @if($principal->photo)
                                                     <img src="{{ asset('storage/' . $principal->photo) }}" 
-                                                         alt="{{ $principal->name }}" class="rounded-circle">
+                                                         alt="{{ $principal->legal_name}}" class="rounded-circle">
                                                 @else
                                                     <div class="symbol symbol-50px bg-light-primary rounded-circle">
                                                         <span class="symbol-label text-primary fw-bold fs-6">
-                                                            {{ strtoupper(substr($principal->name, 0, 1)) }}
+                                                            {{ strtoupper(substr($principal->legal_name, 0, 1)) }}
                                                         </span>
                                                     </div>
                                                 @endif
                                             </div>
                                             <div>
-                                                <span class="fw-bold text-dark mb-1 d-block">{{ $principal->name }}</span>
+                                                <span class="fw-bold text-dark mb-1 d-block">{{ $principal->legal_name }}</span>
                                                 <span class="text-muted fs-7">ID: {{ $principal->code ?? 'N/A' }}</span>
                                             </div>
                                         </div>
@@ -266,7 +327,19 @@
 
                                     <!-- Company -->
                                     <td>
-                                        <span class="text-muted">{{ $principal->company_name ?? 'N/A' }}</span>
+                                        <span class="text-muted">{{ $principal->name ?? 'N/A' }}</span>
+                                    </td>
+
+                                    <!-- Website -->
+                                    <td>
+                                        @if($principal->website_url)
+                                            <a href="{{ $principal->website_url }}" target="_blank" class="text-primary text-decoration-underline" 
+                                               title="Visit website">
+                                                {{ Str::limit($principal->website_url, 30) }}
+                                            </a>
+                                        @else
+                                            <span class="text-muted">N/A</span>
+                                        @endif
                                     </td>
 
                                     <!-- Status -->

@@ -4,6 +4,21 @@
 
 @section('content')
 <div class="container-fluid">
+    <!-- Success & Error Alerts -->
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fa-solid fa-check-circle me-2"></i>{{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
+    @if (session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fa-solid fa-exclamation-circle me-2"></i>{{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
     <!-- Page Header -->
     <div class="row">
         <div class="col-12">
@@ -62,7 +77,13 @@
                     <h5>Contact Information</h5>
                     <div class="text-start">
                         <p><strong>Email:</strong> {{ $principal->email ?? 'N/A' }}</p>
-                        <p><strong>Website:</strong> <a href="{{ $principal->website_url }}" target="_blank">{{ $principal->website_url ?? 'N/A' }}</a></p>
+                        <p><strong>Website:</strong> 
+                            @if($principal->website_url)
+                                <a href="{{ $principal->website_url }}" target="_blank">{{ $principal->website_url }}</a>
+                            @else
+                                N/A
+                            @endif
+                        </p>
                         <p><strong>HQ City:</strong> {{ $principal->hq_city ?? 'N/A' }}</p>
                         <p><strong>Country:</strong> {{ $principal->country->name ?? 'N/A' }}</p>
                     </div>
@@ -79,11 +100,20 @@
                     <div class="row">
                         <div class="col-md-6">
                             <p><strong>Legal Name:</strong> {{ $principal->legal_name }}</p>
+                            <p><strong>Company Name:</strong> {{ $principal->company_name ?? 'N/A' }}</p>
+                            <p><strong>Trading Name:</strong> {{ $principal->trading_name ?? 'N/A' }}</p>
                             <p><strong>Entity Type:</strong> {{ $principal->entity_type ?? 'N/A' }}</p>
-                            <p><strong>Website:</strong> {{ $principal->website_url ?? 'N/A' }}</p>
+                            <p><strong>Website:</strong> 
+                                @if($principal->website_url)
+                                    <a href="{{ $principal->website_url }}" target="_blank">{{ $principal->website_url }}</a>
+                                @else
+                                    N/A
+                                @endif
+                            </p>
                         </div>
                         <div class="col-md-6">
                             <p><strong>Created At:</strong> {{ $principal->created_at->format('M d, Y h:i A') }}</p>
+                            <p><strong>Updated At:</strong> {{ $principal->updated_at->format('M d, Y h:i A') }}</p>
                             <p><strong>Status:</strong> 
                                 <span class="badge bg-{{ $principal->status == 'active' ? 'success' : ($principal->status == 'inactive' ? 'warning' : 'secondary') }}">
                                     {{ ucfirst($principal->status) }}
@@ -92,6 +122,7 @@
                             <p><strong>Last Seen:</strong> 
                                 {{ $principal->last_seen ? \Carbon\Carbon::parse($principal->last_seen)->diffForHumans() : 'Never' }}
                             </p>
+                            <p><strong>Relationship Status:</strong> {{ ucfirst($principal->relationship_status) }}</p>
                         </div>
                     </div>
 
@@ -104,8 +135,9 @@
                                 <option value="active" {{ $principal->status == 'active' ? 'selected' : '' }}>Active</option>
                                 <option value="inactive" {{ $principal->status == 'inactive' ? 'selected' : '' }}>Inactive</option>
                                 <option value="suspended" {{ $principal->status == 'suspended' ? 'selected' : '' }}>Suspended</option>
+                                <option value="disabled" {{ $principal->status == 'disabled' ? 'selected' : '' }}>Disabled</option>
                             </select>
-                            <button type="submit" class="btn btn-primary">Update</button>
+                            <button type="submit" class="btn btn-primary">Update Status</button>
                         </form>
                     @endif
                 </div>

@@ -44,11 +44,16 @@
             <!-- Step 1: Company Information -->
             <div class="step-content" id="step-1">
                 <h6 class="mb-3 fw-semibold text-primary border-bottom pb-2">COMPANY INFORMATION</h6>
+                
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label class="form-label fw-semibold">Legal Name <span class="text-danger">*</span></label>
                         <input type="text" name="legal_name" class="form-control" value="{{ old('legal_name') }}" required>
                     </div>
+                        {{-- <div class="col-md-6">
+                        <label class="form-label fw-semibold">Company Name <span class="text-danger">*</span></label>
+                        <input type="text" name="company_name" class="form-control" value="{{ old('company_name') }}" required>
+                    </div> --}}
                     <div class="col-md-6">
                         <label class="form-label fw-semibold">Trading Name</label>
                         <input type="text" name="trading_name" class="form-control" value="{{ old('trading_name') }}">
@@ -95,7 +100,7 @@
             <div class="step-content d-none" id="step-2">
                 <h6 class="mb-3 fw-semibold text-primary border-bottom pb-2">ACCOUNT INFORMATION</h6>
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">Account Name <span class="text-danger">*</span></label>
+                    <label class="form-label fw-semibold">Company Name <span class="text-danger">*</span></label>
                     <input type="text" name="name" class="form-control" value="{{ old('name') }}" required>
                 </div>
                 <div class="mb-3">
