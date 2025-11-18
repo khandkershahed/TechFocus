@@ -20,6 +20,15 @@
         </div>
     </div>
 
+    <!-- Permission Alert for View Only Users -->
+    @if(!auth('admin')->user()->hasRole('SuperAdmin') && !auth('admin')->user()->can('edit principals'))
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            <i class="fa-solid fa-eye me-2"></i>
+            <strong>View Only Access:</strong> You can view principal details but cannot make any changes.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
     <!-- Profile + Info -->
     <div class="row">
         <div class="col-xl-4">
@@ -86,17 +95,19 @@
                         </div>
                     </div>
 
-                    <!-- Update Status -->
-                    <form action="{{ route('admin.principals.update-status', $principal->id) }}" method="POST" class="d-flex gap-2 mt-3">
-                        @csrf
-                        @method('PATCH')
-                        <select name="status" class="form-select" style="width:auto;">
-                            <option value="active" {{ $principal->status == 'active' ? 'selected' : '' }}>Active</option>
-                            <option value="inactive" {{ $principal->status == 'inactive' ? 'selected' : '' }}>Inactive</option>
-                            <option value="suspended" {{ $principal->status == 'suspended' ? 'selected' : '' }}>Suspended</option>
-                        </select>
-                        <button type="submit" class="btn btn-primary">Update</button>
-                    </form>
+                    <!-- Update Status - Only for SuperAdmin and users with edit principals permission -->
+                    @if(auth('admin')->user()->hasRole('SuperAdmin') || auth('admin')->user()->can('edit principals'))
+                        <form action="{{ route('admin.principals.update-status', $principal->id) }}" method="POST" class="d-flex gap-2 mt-3">
+                            @csrf
+                            @method('PATCH')
+                            <select name="status" class="form-select" style="width:auto;">
+                                <option value="active" {{ $principal->status == 'active' ? 'selected' : '' }}>Active</option>
+                                <option value="inactive" {{ $principal->status == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                                <option value="suspended" {{ $principal->status == 'suspended' ? 'selected' : '' }}>Suspended</option>
+                            </select>
+                            <button type="submit" class="btn btn-primary">Update</button>
+                        </form>
+                    @endif
                 </div>
             </div>
         </div>
@@ -107,9 +118,12 @@
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h4 class="card-title mb-0">Contacts</h4>
-                <button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#addContactModal">
-                    <i class="fas fa-plus"></i> Add Contact
-                </button>
+                <!-- Add Contact Button - Only for SuperAdmin and users with edit principals permission -->
+                @if(auth('admin')->user()->hasRole('SuperAdmin') || auth('admin')->user()->can('edit principals'))
+                    <button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#addContactModal">
+                        <i class="fas fa-plus"></i> Add Contact
+                    </button>
+                @endif
             </div>
 
             <div class="table-responsive">
@@ -123,7 +137,9 @@
                             <th>Phone</th>
                             <th>Preferred Channel</th>
                             <th>Primary?</th>
-                            <th>Actions</th>
+                            @if(auth('admin')->user()->hasRole('SuperAdmin') || auth('admin')->user()->can('edit principals'))
+                                <th>Actions</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -142,17 +158,21 @@
                                         <span class="badge bg-secondary">No</span>
                                     @endif
                                 </td>
-                                <td>
-                                    <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editContactModal{{ $contact->id }}">Edit</button>
-                                    <form action="{{ route('admin.principals.contacts.destroy', $contact->id) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button class="btn btn-sm btn-danger" onclick="return confirm('Delete this contact?')">Delete</button>
-                                    </form>
-                                </td>
+                                @if(auth('admin')->user()->hasRole('SuperAdmin') || auth('admin')->user()->can('edit principals'))
+                                    <td>
+                                        <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editContactModal{{ $contact->id }}">Edit</button>
+                                        <form action="{{ route('admin.principals.contacts.destroy', $contact->id) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button class="btn btn-sm btn-danger" onclick="return confirm('Delete this contact?')">Delete</button>
+                                        </form>
+                                    </td>
+                                @endif
                             </tr>
                         @empty
-                            <tr><td colspan="8" class="text-center">No contacts found.</td></tr>
+                            <tr>
+                                <td colspan="{{ auth('admin')->user()->hasRole('SuperAdmin') || auth('admin')->user()->can('edit principals') ? '8' : '7' }}" class="text-center">No contacts found.</td>
+                            </tr>
                         @endforelse
                     </tbody>
                 </table>
@@ -165,9 +185,12 @@
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h4 class="card-title mb-0">Addresses</h4>
-                <button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#addAddressModal">
-                    <i class="fas fa-plus"></i> Add Address
-                </button>
+                <!-- Add Address Button - Only for SuperAdmin and users with edit principals permission -->
+                @if(auth('admin')->user()->hasRole('SuperAdmin') || auth('admin')->user()->can('edit principals'))
+                    <button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#addAddressModal">
+                        <i class="fas fa-plus"></i> Add Address
+                    </button>
+                @endif
             </div>
 
             <div class="table-responsive">
@@ -181,7 +204,9 @@
                             <th>State</th>
                             <th>Postal</th>
                             <th>Country</th>
-                            <th>Actions</th>
+                            @if(auth('admin')->user()->hasRole('SuperAdmin') || auth('admin')->user()->can('edit principals'))
+                                <th>Actions</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -194,17 +219,21 @@
                                 <td>{{ $address->state ?? '—' }}</td>
                                 <td>{{ $address->postal ?? '—' }}</td>
                                 <td>{{ $address->country_name ?? '—' }}</td>
-                                <td>
-                                    <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editAddressModal{{ $address->id }}">Edit</button>
-                                    <form action="{{ route('admin.principals.addresses.destroy', ['principal' => $principal->id, 'address' => $address->id]) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button class="btn btn-sm btn-danger" onclick="return confirm('Delete this address?')">Delete</button>
-                                    </form>
-                                </td>
+                                @if(auth('admin')->user()->hasRole('SuperAdmin') || auth('admin')->user()->can('edit principals'))
+                                    <td>
+                                        <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editAddressModal{{ $address->id }}">Edit</button>
+                                        <form action="{{ route('admin.principals.addresses.destroy', ['principal' => $principal->id, 'address' => $address->id]) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button class="btn btn-sm btn-danger" onclick="return confirm('Delete this address?')">Delete</button>
+                                        </form>
+                                    </td>
+                                @endif
                             </tr>
                         @empty
-                            <tr><td colspan="8" class="text-center">No addresses found.</td></tr>
+                            <tr>
+                                <td colspan="{{ auth('admin')->user()->hasRole('SuperAdmin') || auth('admin')->user()->can('edit principals') ? '8' : '7' }}" class="text-center">No addresses found.</td>
+                            </tr>
                         @endforelse
                     </tbody>
                 </table>
@@ -212,302 +241,308 @@
         </div>
     </div>
 
-<!-- Brands Section -->
-<div class="card mt-4">
-    <div class="card-body">
-        <h4 class="card-title mb-3">Brands</h4>
-        <div class="table-responsive">
-            <table class="table table-bordered align-middle">
-                <thead class="table-light">
-                    <tr>
-                        <th>#</th>
-                        <th>Name</th>
-                        <th>Status</th>
-                        <th>Created At</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($principal->brands as $index => $brand)
+    <!-- Brands Section -->
+    <div class="card mt-4">
+        <div class="card-body">
+            <h4 class="card-title mb-3">Brands</h4>
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle">
+                    <thead class="table-light">
                         <tr>
-                            <td>{{ $index + 1 }}</td>
-                            <td>{{ $brand->name }}</td>
-                            <td>
-                                <span class="badge bg-{{ $brand->status == 'approved' ? 'success' : ($brand->status == 'pending' ? 'warning' : 'secondary') }}">
-                                    {{ ucfirst($brand->status) }}
-                                </span>
-                            </td>
-                            <td>{{ $brand->created_at->format('M d, Y') }}</td>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Status</th>
+                            <th>Created At</th>
                         </tr>
-                    @empty
-                        <tr>
-                            <td colspan="4" class="text-center">No brands found.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @forelse($principal->brands as $index => $brand)
+                            <tr>
+                                <td>{{ $index + 1 }}</td>
+                                <td>{{ $brand->name }}</td>
+                                <td>
+                                    <span class="badge bg-{{ $brand->status == 'approved' ? 'success' : ($brand->status == 'pending' ? 'warning' : 'secondary') }}">
+                                        {{ ucfirst($brand->status) }}
+                                    </span>
+                                </td>
+                                <td>{{ $brand->created_at->format('M d, Y') }}</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="4" class="text-center">No brands found.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</div>
-<!-- Principal Links Section -->
-<div class="card mt-4">
-    <div class="card-body">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h4 class="card-title mb-0">Shared Links</h4>
-            <span class="badge bg-primary">{{ $links->total() }} Total</span>
-        </div>
 
-        <div class="table-responsive">
-            <table class="table table-bordered align-middle">
-                <thead class="table-light">
-                    <tr>
-                        <th>#</th>
-                        <th>Labels</th>
-                        <th>URLs</th>
-                        <th>Types</th>
-                        <th>Files</th>
-                        <th>Created At</th>
-                        <th>Updated At</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($links as $index => $link)
+    <!-- Principal Links Section -->
+    <div class="card mt-4">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="card-title mb-0">Shared Links</h4>
+                <span class="badge bg-primary">{{ $links->total() }} Total</span>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle">
+                    <thead class="table-light">
                         <tr>
-                            <td>{{ $links->firstItem() + $index }}</td>
-                            <td>
-                                @if(is_array($link->label))
-                                    @foreach($link->label as $label)
-                                        <span class="badge bg-info mb-1">{{ $label }}</span><br>
-                                    @endforeach
-                                @else
-                                    <span class="badge bg-info">{{ $link->label }}</span>
-                                @endif
-                            </td>
-                            <td>
-                                @if(is_array($link->url))
-                                    @foreach($link->url as $url)
-                                        <a href="{{ $url }}" target="_blank" class="d-block text-truncate" style="max-width: 200px;" title="{{ $url }}">
-                                            {{ Str::limit($url, 30) }}
-                                        </a>
-                                    @endforeach
-                                @else
-                                    <a href="{{ $link->url }}" target="_blank" class="text-truncate d-block" style="max-width: 200px;" title="{{ $link->url }}">
-                                        {{ Str::limit($link->url, 30) }}
-                                    </a>
-                                @endif
-                            </td>
-                            <td>
-                                @if(is_array($link->type))
-                                    @foreach($link->type as $type)
-                                        <span class="badge bg-secondary mb-1">{{ $type }}</span><br>
-                                    @endforeach
-                                @else
-                                    <span class="badge bg-secondary">{{ $link->type ?? 'N/A' }}</span>
-                                @endif
-                            </td>
-                            <td>
-                                @if(is_array($link->file) && count($link->file) > 0)
-                                    @php
-                                        $fileCount = 0;
-                                        foreach($link->file as $fileArray) {
-                                            $fileCount += count($fileArray);
-                                        }
-                                    @endphp
-                                    <span class="badge bg-success">{{ $fileCount }} files</span>
-                                    <div class="mt-1">
-                                        @foreach($link->file as $rowIndex => $fileArray)
-                                            @foreach($fileArray as $filePath)
-                                                @if($filePath && Storage::disk('public')->exists($filePath))
-                                                    <a href="{{ asset('storage/' . $filePath) }}" 
-                                                       target="_blank" 
-                                                       class="d-block text-truncate small text-decoration-none" 
-                                                       style="max-width: 150px;"
-                                                       title="{{ basename($filePath) }}">
-                                                        📎 {{ Str::limit(basename($filePath), 20) }}
-                                                    </a>
-                                                @else
-                                                    <span class="text-muted small" title="File not found">
-                                                        ❌ {{ Str::limit(basename($filePath), 20) }}
-                                                    </span>
-                                                @endif
-                                            @endforeach
+                            <th>#</th>
+                            <th>Labels</th>
+                            <th>URLs</th>
+                            <th>Types</th>
+                            <th>Files</th>
+                            <th>Created At</th>
+                            <th>Updated At</th>
+                            @if(auth('admin')->user()->hasRole('SuperAdmin') || auth('admin')->user()->can('edit principals'))
+                                <th>Actions</th>
+                            @endif
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($links as $index => $link)
+                            <tr>
+                                <td>{{ $links->firstItem() + $index }}</td>
+                                <td>
+                                    @if(is_array($link->label))
+                                        @foreach($link->label as $label)
+                                            <span class="badge bg-info mb-1">{{ $label }}</span><br>
                                         @endforeach
-                                    </div>
-                                @else
-                                    <span class="text-muted">No files</span>
-                                @endif
-                            </td>
-                            <td>{{ $link->created_at->format('M d, Y h:i A') }}</td>
-                            <td>{{ $link->updated_at->format('M d, Y h:i A') }}</td>
-                            <td>
-                                <div class="btn-group btn-group-sm">
-                                    <!-- View Link -->
-                                    <button type="button" 
-                                            class="btn btn-info" 
-                                            title="View Details"
-                                            data-bs-toggle="modal" 
-                                            data-bs-target="#linkModal{{ $link->id }}">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    
-                                    <!-- Delete Link -->
-                                    <form action="{{ route('admin.principals.links.destroy', [$principal->id, $link->id]) }}" 
-                                          method="POST" 
-                                          class="d-inline"
-                                          onsubmit="return confirm('Delete this link entry?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger" title="Delete">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
-                                </div>
-
-                                <!-- Link Details Modal -->
-                                <div class="modal fade" id="linkModal{{ $link->id }}" tabindex="-1">
-                                    <div class="modal-dialog modal-lg">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">Link Details</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <h6>Labels:</h6>
-                                                        @if(is_array($link->label))
-                                                            @foreach($link->label as $label)
-                                                                <span class="badge bg-info mb-1">{{ $label }}</span>
-                                                            @endforeach
-                                                        @else
-                                                            <span class="badge bg-info">{{ $link->label }}</span>
-                                                        @endif
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <h6>Types:</h6>
-                                                        @if(is_array($link->type))
-                                                            @foreach($link->type as $type)
-                                                                <span class="badge bg-secondary mb-1">{{ $type }}</span>
-                                                            @endforeach
-                                                        @else
-                                                            <span class="badge bg-secondary">{{ $link->type ?? 'N/A' }}</span>
-                                                        @endif
-                                                    </div>
-                                                </div>
-                                                
-                                                <div class="mt-3">
-                                                    <h6>URLs:</h6>
-                                                    @if(is_array($link->url))
-                                                        @foreach($link->url as $url)
-                                                            <a href="{{ $url }}" target="_blank" class="d-block mb-1">
-                                                                {{ $url }}
-                                                            </a>
-                                                        @endforeach
-                                                    @else
-                                                        <a href="{{ $link->url }}" target="_blank" class="d-block">
-                                                            {{ $link->url }}
+                                    @else
+                                        <span class="badge bg-info">{{ $link->label }}</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if(is_array($link->url))
+                                        @foreach($link->url as $url)
+                                            <a href="{{ $url }}" target="_blank" class="d-block text-truncate" style="max-width: 200px;" title="{{ $url }}">
+                                                {{ Str::limit($url, 30) }}
+                                            </a>
+                                        @endforeach
+                                    @else
+                                        <a href="{{ $link->url }}" target="_blank" class="text-truncate d-block" style="max-width: 200px;" title="{{ $link->url }}">
+                                            {{ Str::limit($link->url, 30) }}
+                                        </a>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if(is_array($link->type))
+                                        @foreach($link->type as $type)
+                                            <span class="badge bg-secondary mb-1">{{ $type }}</span><br>
+                                        @endforeach
+                                    @else
+                                        <span class="badge bg-secondary">{{ $link->type ?? 'N/A' }}</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if(is_array($link->file) && count($link->file) > 0)
+                                        @php
+                                            $fileCount = 0;
+                                            foreach($link->file as $fileArray) {
+                                                $fileCount += count($fileArray);
+                                            }
+                                        @endphp
+                                        <span class="badge bg-success">{{ $fileCount }} files</span>
+                                        <div class="mt-1">
+                                            @foreach($link->file as $rowIndex => $fileArray)
+                                                @foreach($fileArray as $filePath)
+                                                    @if($filePath && Storage::disk('public')->exists($filePath))
+                                                        <a href="{{ asset('storage/' . $filePath) }}" 
+                                                           target="_blank" 
+                                                           class="d-block text-truncate small text-decoration-none" 
+                                                           style="max-width: 150px;"
+                                                           title="{{ basename($filePath) }}">
+                                                            📎 {{ Str::limit(basename($filePath), 20) }}
                                                         </a>
+                                                    @else
+                                                        <span class="text-muted small" title="File not found">
+                                                            ❌ {{ Str::limit(basename($filePath), 20) }}
+                                                        </span>
                                                     @endif
-                                                </div>
+                                                @endforeach
+                                            @endforeach
+                                        </div>
+                                    @else
+                                        <span class="text-muted">No files</span>
+                                    @endif
+                                </td>
+                                <td>{{ $link->created_at->format('M d, Y h:i A') }}</td>
+                                <td>{{ $link->updated_at->format('M d, Y h:i A') }}</td>
+                                @if(auth('admin')->user()->hasRole('SuperAdmin') || auth('admin')->user()->can('edit principals'))
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <!-- View Link -->
+                                            <button type="button" 
+                                                    class="btn btn-info" 
+                                                    title="View Details"
+                                                    data-bs-toggle="modal" 
+                                                    data-bs-target="#linkModal{{ $link->id }}">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            
+                                            <!-- Delete Link -->
+                                            <form action="{{ route('admin.principals.links.destroy', [$principal->id, $link->id]) }}" 
+                                                  method="POST" 
+                                                  class="d-inline"
+                                                  onsubmit="return confirm('Delete this link entry?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger" title="Delete">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
 
-                                                @if(is_array($link->file) && count($link->file) > 0)
-                                                    <div class="mt-3">
-                                                        <h6>Files:</h6>
-                                                        @foreach($link->file as $rowIndex => $fileArray)
-                                                            @foreach($fileArray as $filePath)
-                                                                @if($filePath && Storage::disk('public')->exists($filePath))
-                                                                    <div class="d-flex justify-content-between align-items-center mb-2 p-2 border rounded">
-                                                                        <div>
-                                                                            <a href="{{ asset('storage/' . $filePath) }}" 
-                                                                               target="_blank" 
-                                                                               class="text-decoration-none">
-                                                                                📎 {{ basename($filePath) }}
-                                                                            </a>
-                                                                        </div>
-                                                                        <small class="text-muted">
-                                                                            {{ Storage::disk('public')->size($filePath) }} bytes
-                                                                        </small>
-                                                                    </div>
-                                                                @else
-                                                                    <div class="text-muted mb-2">
-                                                                        ❌ File not found: {{ basename($filePath) }}
-                                                                    </div>
-                                                                @endif
-                                                            @endforeach
-                                                        @endforeach
+                                        <!-- Link Details Modal -->
+                                        <div class="modal fade" id="linkModal{{ $link->id }}" tabindex="-1">
+                                            <div class="modal-dialog modal-lg">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Link Details</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                     </div>
-                                                @endif
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                    <div class="modal-body">
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <h6>Labels:</h6>
+                                                                @if(is_array($link->label))
+                                                                    @foreach($link->label as $label)
+                                                                        <span class="badge bg-info mb-1">{{ $label }}</span>
+                                                                    @endforeach
+                                                                @else
+                                                                    <span class="badge bg-info">{{ $link->label }}</span>
+                                                                @endif
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <h6>Types:</h6>
+                                                                @if(is_array($link->type))
+                                                                    @foreach($link->type as $type)
+                                                                        <span class="badge bg-secondary mb-1">{{ $type }}</span>
+                                                                    @endforeach
+                                                                @else
+                                                                    <span class="badge bg-secondary">{{ $link->type ?? 'N/A' }}</span>
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <div class="mt-3">
+                                                            <h6>URLs:</h6>
+                                                            @if(is_array($link->url))
+                                                                @foreach($link->url as $url)
+                                                                    <a href="{{ $url }}" target="_blank" class="d-block mb-1">
+                                                                        {{ $url }}
+                                                                    </a>
+                                                                @endforeach
+                                                            @else
+                                                                <a href="{{ $link->url }}" target="_blank" class="d-block">
+                                                                    {{ $link->url }}
+                                                                </a>
+                                                            @endif
+                                                        </div>
+
+                                                        @if(is_array($link->file) && count($link->file) > 0)
+                                                            <div class="mt-3">
+                                                                <h6>Files:</h6>
+                                                                @foreach($link->file as $rowIndex => $fileArray)
+                                                                    @foreach($fileArray as $filePath)
+                                                                        @if($filePath && Storage::disk('public')->exists($filePath))
+                                                                            <div class="d-flex justify-content-between align-items-center mb-2 p-2 border rounded">
+                                                                                <div>
+                                                                                    <a href="{{ asset('storage/' . $filePath) }}" 
+                                                                                       target="_blank" 
+                                                                                       class="text-decoration-none">
+                                                                                        📎 {{ basename($filePath) }}
+                                                                                    </a>
+                                                                                </div>
+                                                                                <small class="text-muted">
+                                                                                    {{ Storage::disk('public')->size($filePath) }} bytes
+                                                                                </small>
+                                                                            </div>
+                                                                        @else
+                                                                            <div class="text-muted mb-2">
+                                                                                ❌ File not found: {{ basename($filePath) }}
+                                                                            </div>
+                                                                        @endif
+                                                                    @endforeach
+                                                                @endforeach
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
+                                    </td>
+                                @endif
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="{{ auth('admin')->user()->hasRole('SuperAdmin') || auth('admin')->user()->can('edit principals') ? '8' : '7' }}" class="text-center py-4">
+                                    <div class="text-muted">
+                                        <i class="fas fa-link fa-2x mb-2 d-block"></i>
+                                        No links shared yet.
                                     </div>
-                                </div>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="8" class="text-center py-4">
-                                <div class="text-muted">
-                                    <i class="fas fa-link fa-2x mb-2 d-block"></i>
-                                    No links shared yet.
-                                </div>
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Pagination -->
-        @if($links->hasPages())
-            <div class="d-flex justify-content-between align-items-center mt-3">
-                <div class="text-muted">
-                    Showing {{ $links->firstItem() }} to {{ $links->lastItem() }} of {{ $links->total() }} entries
-                </div>
-                {{ $links->links() }}
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
-        @endif
-    </div>
-</div>
-<!-- Products Section -->
-<div class="card mt-4">
-    <div class="card-body">
-        <h4 class="card-title mb-3">Products</h4>
-        <div class="table-responsive">
-            <table class="table table-bordered align-middle">
-                <thead class="table-light">
-                    <tr>
-                        <th>#</th>
-                        <th>Name</th>
-                        <th>Brand</th>
-                        <th>Status</th>
-                        <th>Created At</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($principal->products as $index => $product)
-                        <tr>
-                            <td>{{ $index + 1 }}</td>
-                            <td>{{ $product->name }}</td>
-                            <td>{{ $product->brand->name ?? '—' }}</td>
-                            <td>
-                                <span class="badge bg-{{ $product->status == 'approved' ? 'success' : ($product->status == 'pending' ? 'warning' : 'secondary') }}">
-                                    {{ ucfirst($product->status) }}
-                                </span>
-                            </td>
-                            <td>{{ $product->created_at->format('M d, Y') }}</td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="5" class="text-center">No products found.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+
+            <!-- Pagination -->
+            @if($links->hasPages())
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <div class="text-muted">
+                        Showing {{ $links->firstItem() }} to {{ $links->lastItem() }} of {{ $links->total() }} entries
+                    </div>
+                    {{ $links->links() }}
+                </div>
+            @endif
         </div>
     </div>
-</div>
+
+    <!-- Products Section -->
+    <div class="card mt-4">
+        <div class="card-body">
+            <h4 class="card-title mb-3">Products</h4>
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Brand</th>
+                            <th>Status</th>
+                            <th>Created At</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($principal->products as $index => $product)
+                            <tr>
+                                <td>{{ $index + 1 }}</td>
+                                <td>{{ $product->name }}</td>
+                                <td>{{ $product->brand->name ?? '—' }}</td>
+                                <td>
+                                    <span class="badge bg-{{ $product->status == 'approved' ? 'success' : ($product->status == 'pending' ? 'warning' : 'secondary') }}">
+                                        {{ ucfirst($product->status) }}
+                                    </span>
+                                </td>
+                                <td>{{ $product->created_at->format('M d, Y') }}</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" class="text-center">No products found.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
 @endsection

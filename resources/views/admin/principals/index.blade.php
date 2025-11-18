@@ -1,171 +1,227 @@
 @extends('admin.master')
 
-@section('title', 'Principals List')
+@section('title', 'Principals List - Admin Panel')
 
 @section('content')
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="page-title-box d-flex align-items-center justify-content-between">
-                <h4 class="mb-0">Principals Management</h4>
-                
-                <div class="page-title-right">
-                    <ol class="breadcrumb m-0">
-                        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                        <li class="breadcrumb-item active">Principals</li>
-                    </ol>
-                </div>
+    <!-- Check if user has permission to view principals -->
+    @if(auth('admin')->user()->hasRole('SuperAdmin') || auth('admin')->user()->can('view principals') || auth('admin')->user()->can('manage principals'))
+        <!-- Page Header -->
+        <div class="d-flex flex-column flex-sm-row align-items-center justify-content-between mb-8">
+            <div>
+                <h1 class="fw-bolder text-dark mb-2">Principals Management</h1>
+                <p class="text-muted fw-semibold fs-6">
+                    Manage all principals in the system - view details, update status, and monitor activity.
+                </p>
+            </div>
+            <div>
+                <a href="{{ route('admin.dashboard') }}" class="btn btn-light-primary">
+                    <i class="fa-solid fa-arrow-left me-2"></i>Back to Dashboard
+                </a>
+                @if(auth('admin')->user()->hasRole('SuperAdmin'))
+                    <a href="{{ route('admin.permissions.index') }}" class="btn btn-success">
+                        <i class="fa-solid fa-key me-2"></i>Manage Permissions
+                    </a>
+                @endif
             </div>
         </div>
-    </div>
 
-    <!-- Statistics Cards -->
-    <div class="row">
-        <div class="col-xl-3 col-md-6">
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-flex">
-                        <div class="flex-grow-1">
-                            <p class="text-truncate font-size-14 mb-2">Total Principals</p>
-                            <h4 class="mb-2">{{ $principals->count() }}</h4>
+        <!-- Permission Info Alert for SuperAdmin -->
+        @if(auth('admin')->user()->hasRole('SuperAdmin'))
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                <i class="fa-solid fa-info-circle me-2"></i>
+                <strong>SuperAdmin Access:</strong> You can grant principal management permissions to other admins from the 
+                <a href="{{ route('admin.permissions.index') }}" class="alert-link">Permissions Management</a> page.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
+        <!-- Permission Restrictions Alert for Different User Types -->
+        @if(!auth('admin')->user()->hasRole('SuperAdmin'))
+            @if(auth('admin')->user()->can('view principals') && !auth('admin')->user()->can('manage principals'))
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <i class="fa-solid fa-eye me-2"></i>
+                    <strong>View Only Access:</strong> You can only view principals. You cannot edit, delete, or manage their status.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @elseif(auth('admin')->user()->can('manage principals'))
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <i class="fa-solid fa-exclamation-triangle me-2"></i>
+                    <strong>Principal Manager Access:</strong> You can view and manage principals but only SuperAdmin can delete them.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+        @endif
+
+        <!-- Statistics Cards -->
+        <div class="row mb-6">
+            <div class="col-xl-3 col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex">
+                            <div class="flex-grow-1">
+                                <p class="text-truncate font-size-14 mb-2">Total Principals</p>
+                                <h4 class="mb-2">{{ $principals->count() }}</h4>
+                            </div>
+                            <div class="avatar-sm">
+                                <span class="avatar-title bg-light text-primary rounded-3">
+                                    <i class="fas fa-users font-size-24"></i>
+                                </span>
+                            </div>
                         </div>
-                        <div class="avatar-sm">
-                            <span class="avatar-title bg-light text-primary rounded-3">
-                                <i class="fas fa-users font-size-24"></i>
-                            </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex">
+                            <div class="flex-grow-1">
+                                <p class="text-truncate font-size-14 mb-2">Active Principals</p>
+                                <h4 class="mb-2">{{ $principals->where('status', 'active')->count() }}</h4>
+                            </div>
+                            <div class="avatar-sm">
+                                <span class="avatar-title bg-light text-success rounded-3">
+                                    <i class="fas fa-user-check font-size-24"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex">
+                            <div class="flex-grow-1">
+                                <p class="text-truncate font-size-14 mb-2">Verified Email</p>
+                                <h4 class="mb-2">{{ $principals->whereNotNull('email_verified_at')->count() }}</h4>
+                            </div>
+                            <div class="avatar-sm">
+                                <span class="avatar-title bg-light text-info rounded-3">
+                                    <i class="fas fa-envelope font-size-24"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex">
+                            <div class="flex-grow-1">
+                                <p class="text-truncate font-size-14 mb-2">Currently Online</p>
+                                <h4 class="mb-2">{{ $principals->where('last_seen', '>=', \Carbon\Carbon::now()->subMinutes(5))->count() }}</h4>
+                            </div>
+                            <div class="avatar-sm">
+                                <span class="avatar-title bg-light text-warning rounded-3">
+                                    <i class="fas fa-circle font-size-24"></i>
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-3 col-md-6">
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-flex">
-                        <div class="flex-grow-1">
-                            <p class="text-truncate font-size-14 mb-2">Active Principals</p>
-                            <h4 class="mb-2">{{ $principals->where('status', 'active')->count() }}</h4>
-                        </div>
-                        <div class="avatar-sm">
-                            <span class="avatar-title bg-light text-success rounded-3">
-                                <i class="fas fa-user-check font-size-24"></i>
-                            </span>
-                        </div>
+        <!-- Principals List Card -->
+        <div class="card">
+            <div class="card-header border-0 pt-6">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h2>Principals List</h2>
+                    <div class="text-muted">
+                        <i class="fa-solid fa-user-shield me-1"></i>
+                        Access: 
+                        @if(auth('admin')->user()->hasRole('SuperAdmin'))
+                            SuperAdmin
+                        @elseif(auth('admin')->user()->can('manage principals'))
+                            Principal Manager
+                        @else
+                            View Only
+                        @endif
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="col-xl-3 col-md-6">
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-flex">
-                        <div class="flex-grow-1">
-                            <p class="text-truncate font-size-14 mb-2">Verified Email</p>
-                            <h4 class="mb-2">{{ $principals->whereNotNull('email_verified_at')->count() }}</h4>
-                        </div>
-                        <div class="avatar-sm">
-                            <span class="avatar-title bg-light text-info rounded-3">
-                                <i class="fas fa-envelope font-size-24"></i>
-                            </span>
-                        </div>
+            <div class="card-body pt-0">
+                <!-- Success & Error Alerts -->
+                @if (session('success'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <i class="fa-solid fa-check-circle me-2"></i>{{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
-                </div>
-            </div>
-        </div>
+                @endif
 
-        <div class="col-xl-3 col-md-6">
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-flex">
-                        <div class="flex-grow-1">
-                            <p class="text-truncate font-size-14 mb-2">Currently Online</p>
-                            <h4 class="mb-2">{{ $principals->where('last_seen', '>=', \Carbon\Carbon::now()->subMinutes(5))->count() }}</h4>
-                        </div>
-                        <div class="avatar-sm">
-                            <span class="avatar-title bg-light text-warning rounded-3">
-                                <i class="fas fa-circle font-size-24"></i>
-                            </span>
-                        </div>
+                @if (session('error'))
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="fa-solid fa-exclamation-circle me-2"></i>{{ session('error') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
+                @endif
 
-    <!-- Principals List -->
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="card-title">Principals List</h4>
-                        
-                        {{-- <div class="d-flex gap-2">
-                            <input type="text" id="searchPrincipals" class="form-control" placeholder="Search principals..." style="width: 250px;">
-                            <button class="btn btn-primary" onclick="refreshTable()">
-                                <i class="fas fa-sync-alt"></i>
+                <!-- Search and Filters -->
+                <form method="GET" action="{{ route('admin.principals.index') }}" class="mb-6">
+                    <div class="row g-4 align-items-end">
+                        <div class="col-md-3">
+                            <label class="form-label">Search Principals</label>
+                            <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="Search by name, email, company...">
+                        </div>
+
+                        <div class="col-md-2">
+                            <label class="form-label">Entity Type</label>
+                            <select name="entity_type" class="form-select">
+                                <option value="">All Types</option>
+                                @php
+                                    $entityTypes = ['Manufacturer', 'Distributor', 'Supplier', 'Other'];
+                                @endphp
+                                @foreach($entityTypes as $type)
+                                    <option value="{{ $type }}" {{ request('entity_type') == $type ? 'selected' : '' }}>
+                                        {{ $type }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="col-md-2">
+                            <label class="form-label">Country</label>
+                            <select name="country" class="form-select">
+                                <option value="">All Countries</option>
+                                @foreach(\App\Models\Country::all() as $country)
+                                    <option value="{{ $country->id }}" {{ request('country') == $country->id ? 'selected' : '' }}>
+                                        {{ $country->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="col-md-2">
+                            <label class="form-label">Sort By</label>
+                            <select name="sort" class="form-select">
+                                <option value="recently_updated" {{ request('sort') == 'recently_updated' ? 'selected' : '' }}>Recently Updated</option>
+                                <option value="name" {{ request('sort') == 'name' ? 'selected' : '' }}>Name</option>
+                                <option value="country" {{ request('sort') == 'country' ? 'selected' : '' }}>Country</option>
+                                <option value="last_activity" {{ request('sort') == 'last_activity' ? 'selected' : '' }}>Last Activity</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-3">
+                            <button class="btn btn-primary me-2" type="submit">
+                                <i class="fas fa-search me-2"></i> Search
                             </button>
+                            <a href="{{ route('admin.principals.index') }}" class="btn btn-light">Reset</a>
                         </div>
-                    </div> --}}
-                    {{-- <form method="GET" action="{{ route('admin.principals.index') }}" class="d-flex gap-2 mb-3">
-                                <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="Search principals...">
-                                <button class="btn btn-primary" type="submit">
-                                    <i class="fas fa-search"></i>
-                                </button>
-                            </form> --}}
-                            <form method="GET" action="{{ route('admin.principals.index') }}" class="mb-3 row g-2 align-items-center">
-    <div class="col-auto">
-        <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="Search principals...">
-    </div>
+                    </div>
+                </form>
 
-    <div class="col-auto">
-                    <select name="entity_type" class="form-select">
-                    <option value="">Entity Type</option>
-                    @php
-                        $entityTypes = ['Manufacturer', 'Distributor', 'Supplier', 'Other'];
-                    @endphp
-                    @foreach($entityTypes as $type)
-                        <option value="{{ $type }}" {{ request('entity_type') == $type ? 'selected' : '' }}>
-                            {{ $type }}
-                        </option>
-                    @endforeach
-                </select>
-
-    </div>
-
-    <div class="col-auto">
-        <select name="country" class="form-select">
-            <option value="">Country</option>
-            @foreach(\App\Models\Country::all() as $country)
-                <option value="{{ $country->id }}" {{ request('country') == $country->id ? 'selected' : '' }}>
-                    {{ $country->name }}
-                </option>
-            @endforeach
-        </select>
-    </div>
-
-    <div class="col-auto">
-        <select name="sort" class="form-select">
-            <option value="recently_updated" {{ request('sort') == 'recently_updated' ? 'selected' : '' }}>Recently Updated</option>
-            <option value="name" {{ request('sort') == 'name' ? 'selected' : '' }}>Name</option>
-            <option value="country" {{ request('sort') == 'country' ? 'selected' : '' }}>Country</option>
-            <option value="last_activity" {{ request('sort') == 'last_activity' ? 'selected' : '' }}>Last Activity</option>
-        </select>
-    </div>
-
-    <div class="col-auto">
-        <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i> Search</button>
-    </div>
-</form>
-
-
+                @if ($principals->count() > 0)
                     <div class="table-responsive">
-                        <table class="table table-hover table-centered mb-0">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>#</th>
+                        <table class="table table-hover table-row-bordered align-middle gs-0 gy-4">
+                            <thead>
+                                <tr class="fw-bold text-muted bg-light">
                                     <th>Principal</th>
                                     <th>Email</th>
                                     <th>Company</th>
@@ -173,146 +229,254 @@
                                     <th>Email Verified</th>
                                     <th>Last Seen</th>
                                     <th>Registration Date</th>
-                                    <th>Actions</th>
+                                    @if(auth('admin')->user()->hasRole('SuperAdmin') || auth('admin')->user()->can('manage principals'))
+                                        <th class="text-end">Actions</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse($principals as $principal)
+                                @foreach($principals as $principal)
                                 <tr>
-                                    <td>{{ $loop->iteration }}</td>
+                                    <!-- Principal Info -->
                                     <td>
                                         <div class="d-flex align-items-center">
-                                            <div class="avatar-sm me-3">
+                                            <div class="symbol symbol-50px me-3">
                                                 @if($principal->photo)
-                                                    <img src="{{ asset('storage/' . $principal->photo) }}" alt="{{ $principal->name }}" class="img-fluid rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
+                                                    <img src="{{ asset('storage/' . $principal->photo) }}" 
+                                                         alt="{{ $principal->name }}" class="rounded-circle">
                                                 @else
-                                                    <div class="avatar-title bg-soft-primary text-primary rounded-circle font-size-16">
-                                                        {{ substr($principal->name, 0, 1) }}
+                                                    <div class="symbol symbol-50px bg-light-primary rounded-circle">
+                                                        <span class="symbol-label text-primary fw-bold fs-6">
+                                                            {{ strtoupper(substr($principal->name, 0, 1)) }}
+                                                        </span>
                                                     </div>
                                                 @endif
                                             </div>
                                             <div>
-                                                <h5 class="font-size-14 mb-1">
-                                                    <a href="{{ route('admin.principals.show', $principal->id) }}" class="text-dark">
-                                                        {{ $principal->name }}
-                                                    </a>
-                                                </h5>
-                                                <p class="text-muted mb-0">ID: {{ $principal->code ?? 'N/A' }}</p>
+                                                <span class="fw-bold text-dark mb-1 d-block">{{ $principal->name }}</span>
+                                                <span class="text-muted fs-7">ID: {{ $principal->code ?? 'N/A' }}</span>
                                             </div>
                                         </div>
                                     </td>
-                                    <td>{{ $principal->email }}</td>
-                                    <td>{{ $principal->company_name ?? 'N/A' }}</td>
+
+                                    <!-- Email -->
                                     <td>
-                                        <span class="badge bg-{{ $principal->status == 'active' ? 'success' : ($principal->status == 'inactive' ? 'warning' : 'danger') }}">
+                                        <span class="text-dark fw-semibold d-block">{{ $principal->email }}</span>
+                                    </td>
+
+                                    <!-- Company -->
+                                    <td>
+                                        <span class="text-muted">{{ $principal->company_name ?? 'N/A' }}</span>
+                                    </td>
+
+                                    <!-- Status -->
+                                    <td>
+                                        <span class="badge badge-light-{{ $principal->status == 'active' ? 'success' : ($principal->status == 'inactive' ? 'warning' : 'danger') }} fs-7">
                                             {{ ucfirst($principal->status) }}
                                         </span>
                                     </td>
+
+                                    <!-- Email Verified -->
                                     <td>
                                         @if($principal->email_verified_at)
-                                            <span class="badge bg-success">Verified</span>
+                                            <span class="badge badge-light-success fs-7">Verified</span>
                                         @else
-                                            <span class="badge bg-warning">Pending</span>
+                                            <span class="badge badge-light-warning fs-7">Pending</span>
                                         @endif
                                     </td>
+
+                                    <!-- Last Seen -->
                                     <td>
                                         @if($principal->last_seen && \Carbon\Carbon::parse($principal->last_seen)->diffInMinutes() < 5)
-                                            <span class="badge bg-success">
+                                            <span class="badge badge-light-success fs-7">
                                                 <i class="fas fa-circle me-1"></i> Online
                                             </span>
                                         @elseif($principal->last_seen)
-                                            <span class="text-muted" title="{{ $principal->last_seen }}">
+                                            <span class="text-muted fs-7" title="{{ $principal->last_seen }}">
                                                 {{ \Carbon\Carbon::parse($principal->last_seen)->diffForHumans() }}
                                             </span>
                                         @else
-                                            <span class="text-muted">Never</span>
+                                            <span class="text-muted fs-7">Never</span>
                                         @endif
                                     </td>
-                                    <td>{{ $principal->created_at->format('M d, Y') }}</td>
+
+                                    <!-- Registration Date -->
                                     <td>
-                                        <div class="d-flex gap-2">
-                                            <a href="{{ route('admin.principals.show', $principal->id) }}" class="btn btn-sm btn-outline-primary" title="View Details">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                            
-                                            <div class="dropdown">
-                                                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                                    <i class="fas fa-cog"></i>
-                                                </button>
-                                                <ul class="dropdown-menu">
-                                                    <li>
-                                                        <form action="{{ route('admin.principals.update-status', $principal->id) }}" method="POST" class="d-inline">
-                                                            @csrf
-                                                            @method('PATCH')
-                                                            <input type="hidden" name="status" value="active">
-                                                            <button type="submit" class="dropdown-item">Mark Active</button>
-                                                        </form>
-                                                    </li>
-                                                    <li>
-                                                        <form action="{{ route('admin.principals.update-status', $principal->id) }}" method="POST" class="d-inline">
-                                                            @csrf
-                                                            @method('PATCH')
-                                                            <input type="hidden" name="status" value="inactive">
-                                                            <button type="submit" class="dropdown-item">Mark Inactive</button>
-                                                        </form>
-                                                    </li>
-                                                    <li>
-                                                        <form action="{{ route('admin.principals.update-status', $principal->id) }}" method="POST" class="d-inline">
-                                                            @csrf
-                                                            @method('PATCH')
-                                                            <input type="hidden" name="status" value="suspended">
-                                                            <button type="submit" class="dropdown-item text-warning">Suspend</button>
-                                                        </form>
-                                                    </li>
+                                        <span class="text-muted fs-7">{{ $principal->created_at->format('M d, Y') }}</span>
+                                    </td>
 
-                                                    <li>
-                                                        <form action="{{ route('admin.principals.destroy', $principal->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this principal?');">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="dropdown-item text-danger">Delete</button>
-                                                        </form>
-                                                    </li>
+                                    <!-- Actions Column - Only show for users with management permissions -->
+                                    @if(auth('admin')->user()->hasRole('SuperAdmin') || auth('admin')->user()->can('manage principals'))
+                                        <td class="text-end">
+                                            <div class="d-flex justify-content-end gap-2">
+                                                <!-- View Button -->
+                                                <a href="{{ route('admin.principals.show', $principal->id) }}" 
+                                                   class="btn btn-sm btn-icon btn-light-primary" 
+                                                   title="View Principal Details">
+                                                    <i class="fa-solid fa-eye"></i>
+                                                </a>
 
-                                                </ul>
+                                                <!-- Status Management Dropdown (Available to both SuperAdmin and Principal Managers) -->
+                                                @if(auth('admin')->user()->hasRole('SuperAdmin') || auth('admin')->user()->can('manage principals'))
+                                                    <div class="dropdown">
+                                                        <button class="btn btn-sm btn-light-primary dropdown-toggle" 
+                                                                type="button" 
+                                                                data-bs-toggle="dropdown"
+                                                                title="Manage Status">
+                                                            <i class="fa-solid fa-sliders"></i>
+                                                        </button>
+                                                        <ul class="dropdown-menu">
+                                                            <li>
+                                                                <form action="{{ route('admin.principals.update-status', $principal->id) }}" method="POST" class="d-inline">
+                                                                    @csrf
+                                                                    @method('PATCH')
+                                                                    <input type="hidden" name="status" value="active">
+                                                                    <button type="submit" class="dropdown-item text-success">
+                                                                        <i class="fa-solid fa-check me-2"></i>Mark Active
+                                                                    </button>
+                                                                </form>
+                                                            </li>
+                                                            <li>
+                                                                <form action="{{ route('admin.principals.update-status', $principal->id) }}" method="POST" class="d-inline">
+                                                                    @csrf
+                                                                    @method('PATCH')
+                                                                    <input type="hidden" name="status" value="inactive">
+                                                                    <button type="submit" class="dropdown-item text-warning">
+                                                                        <i class="fa-solid fa-pause me-2"></i>Mark Inactive
+                                                                    </button>
+                                                                </form>
+                                                            </li>
+                                                            <li>
+                                                                <form action="{{ route('admin.principals.update-status', $principal->id) }}" method="POST" class="d-inline">
+                                                                    @csrf
+                                                                    @method('PATCH')
+                                                                    <input type="hidden" name="status" value="suspended">
+                                                                    <button type="submit" class="dropdown-item text-danger">
+                                                                        <i class="fa-solid fa-ban me-2"></i>Suspend
+                                                                    </button>
+                                                                </form>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                @endif
+
+                                                <!-- Delete Button (Only for SuperAdmin) -->
+                                                @if(auth('admin')->user()->hasRole('SuperAdmin'))
+                                                    <button type="button" class="btn btn-sm btn-danger"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#deleteModal{{ $principal->id }}"
+                                                            title="Delete Principal">
+                                                        <i class="fa-solid fa-trash"></i>
+                                                    </button>
+                                                @else
+                                                    <!-- Disabled Delete Button for Principal Managers -->
+                                                    <button type="button" class="btn btn-sm btn-danger" disabled
+                                                            title="Only SuperAdmin can delete principals">
+                                                        <i class="fa-solid fa-trash"></i>
+                                                    </button>
+                                                @endif
+                                            </div>
+                                        </td>
+                                    @endif
+                                </tr>
+
+                                <!-- Delete Modal (Only for SuperAdmin) -->
+                                @if(auth('admin')->user()->hasRole('SuperAdmin'))
+                                    <div class="modal fade" id="deleteModal{{ $principal->id }}" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <form action="{{ route('admin.principals.destroy', $principal->id) }}" method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Delete Principal</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p>You are about to delete principal <strong>{{ $principal->name }}</strong>.</p>
+                                                        <p class="text-danger"><strong>Warning:</strong> This action cannot be undone. All associated data will be permanently removed.</p>
+                                                        <div class="form-group mt-3">
+                                                            <label class="form-label">Confirm Principal Name *</label>
+                                                            <input type="text" name="confirm_name" class="form-control" 
+                                                                   placeholder="Type '{{ $principal->name }}' to confirm" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                        <button type="submit" class="btn btn-danger">Delete Principal</button>
+                                                    </div>
+                                                </form>
                                             </div>
                                         </div>
-                                    </td>
-                                </tr>
-                                @empty
-                                <tr>
-                                    <td colspan="9" class="text-center py-4">
-                                        <div class="text-muted">
-                                            <i class="fas fa-users fa-2x mb-2"></i>
-                                            <p>No principals found.</p>
-                                        </div>
-                                    </td>
-                                </tr>
-                                @endforelse
+                                    </div>
+                                @endif
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
-                </div>
+
+                    <!-- Pagination -->
+                    @if($principals->hasPages())
+                        <div class="d-flex justify-content-between align-items-center mt-6">
+                            <div class="text-muted">
+                                Showing {{ $principals->firstItem() }} to {{ $principals->lastItem() }} of {{ $principals->total() }} entries
+                            </div>
+                            <div>
+                                {{ $principals->links() }}
+                            </div>
+                        </div>
+                    @endif
+                @else
+                    <!-- Empty State -->
+                    <div class="text-center py-10">
+                        <i class="fa-solid fa-users text-primary mb-4" style="font-size: 4rem;"></i>
+                        <h3 class="text-dark mb-4">No Principals Found</h3>
+                        <p class="text-muted fs-6 mb-6">No principals match your search criteria.</p>
+                        <a href="{{ route('admin.principals.index') }}" class="btn btn-primary">
+                            <i class="fa-solid fa-refresh me-2"></i>Reset Filters
+                        </a>
+                    </div>
+                @endif
             </div>
         </div>
-    </div>
+    @else
+        <!-- Access Denied Message -->
+        <div class="alert alert-danger text-center">
+            <h4><i class="fa-solid fa-ban"></i> Access Denied</h4>
+            <p class="mb-0">You do not have permission to access the principals management system.</p>
+            <p class="mb-0">Only SuperAdmin and users with principal view permissions can access this page.</p>
+            <a href="{{ route('admin.dashboard') }}" class="btn btn-primary mt-3">
+                <i class="fa-solid fa-tachometer-alt"></i> Go to Dashboard
+            </a>
+        </div>
+    @endif
 </div>
 @endsection
 
 @push('scripts')
 <script>
-function refreshTable() {
-    location.reload();
-}
+    document.addEventListener('DOMContentLoaded', () => {
+        // Focus on confirmation input when delete modal opens
+        document.querySelectorAll('[id^="deleteModal"]').forEach(modal => {
+            modal.addEventListener('shown.bs.modal', function () {
+                const input = this.querySelector('input[name="confirm_name"]');
+                if (input) input.focus();
+            });
+        });
 
-// Simple search functionality
-document.getElementById('searchPrincipals').addEventListener('input', function(e) {
-    const searchTerm = e.target.value.toLowerCase();
-    const rows = document.querySelectorAll('tbody tr');
-    
-    rows.forEach(row => {
-        const text = row.textContent.toLowerCase();
-        row.style.display = text.includes(searchTerm) ? '' : 'none';
+        // Confirm deletion with principal name
+        document.querySelectorAll('form[action*="destroy"]').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                const principalName = this.closest('.modal-content').querySelector('strong').textContent;
+                const confirmInput = this.querySelector('input[name="confirm_name"]');
+                
+                if (confirmInput.value !== principalName) {
+                    e.preventDefault();
+                    alert('Please type the principal name exactly as shown to confirm deletion.');
+                    confirmInput.focus();
+                }
+            });
+        });
     });
-});
 </script>
 @endpush

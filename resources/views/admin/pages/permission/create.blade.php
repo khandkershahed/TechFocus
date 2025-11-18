@@ -41,7 +41,7 @@
                 <!-- Permission Checkboxes -->
                 <div class="border p-3 rounded">
                     <div class="row">
-                        @php
+                        {{-- @php
                             $defaultPermissions = [
                                 'view principals',
                                 'create principals',
@@ -50,9 +50,50 @@
                                 'manage users',
                                 'manage roles',
                                 'share principals',
-                                'manage settings'
+                                'manage settings',
+                                'review brands'
                             ];
-                        @endphp
+                        @endphp --}}
+   @php
+    $defaultPermissions = [
+        // Principal Management Permissions
+        'view principals',
+        'create principals', 
+        'edit principals',
+        'delete principals',
+        'manage principals', // General management permission
+        'share principals',
+        
+        // User & Role Management
+        'manage users',
+        'manage roles',
+        
+        // Brand Management Permissions
+        'review brands', // For approving/rejecting brand submissions
+        // 'view brands',
+        'create brands',
+        'edit brands',
+        'delete brands',
+        
+        // Product Management Permissions
+        'review products', // For approving/rejecting product submissions
+        // 'view products',
+        'create products',
+        'edit products',
+        'delete products',
+        
+        // System Permissions
+        'manage settings',
+        'view dashboard',
+        'export data',
+        'import data',
+        
+        // Content Management
+        'manage content',
+        'manage categories',
+        'manage notifications'
+    ];
+@endphp
 
                         @foreach($defaultPermissions as $permission)
                             <div class="col-md-6 mb-2">
