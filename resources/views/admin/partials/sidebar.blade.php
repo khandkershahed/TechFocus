@@ -999,7 +999,58 @@
                         </div>
                     </div>
                 </div>
-                {{-- <div class="menu-item">
+
+                <!-- Account Dropdown -->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-calculator"></i> Account
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="accountDropdown">
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('admin.expense-categories.index') }}">
+                                            <i class="fas fa-list me-2"></i> Expense Categories
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('admin.expense-types.index') }}">
+                                            <i class="fas fa-tags me-2"></i> Expense Types
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('admin.bankings.index') }}">
+                                            <i class="fas fa-university me-2"></i> Banking Transactions
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('admin.expenses.index') }}">
+                                            <i class="fas fa-money-bill-wave me-2"></i> Expenses
+                                        </a>
+                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('admin.accounts-receivables.index') }}">
+                                            <i class="fas fa-hand-holding-usd me-2"></i> Accounts Receivable
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('admin.accounts-payables.index') }}">
+                                            <i class="fas fa-file-invoice-dollar me-2"></i> Accounts Payable
+                                        </a>
+                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('admin.incomes.index') }}">
+                                            <i class="fas fa-chart-line me-2"></i> Incomes
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('admin.account-profit-losses.index') }}">
+                                            <i class="fas fa-calculator me-2"></i> Profit & Loss
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                                            {{-- <div class="menu-item">
                     <div class="menu-content pt-8 pb-0">
                         <span class="menu-section text-muted text-uppercase fs-8 ls-1">Layout</span>
                     </div>

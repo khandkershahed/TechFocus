@@ -74,6 +74,13 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Admin\PolicyAcknowledgmentController;
 use App\Http\Controllers\Admin\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
+use App\Http\Controllers\Admin\ExpenseCategoryController;
+use App\Http\Controllers\Admin\ExpenseTypeController;
+use App\Http\Controllers\Admin\ExpenseController;
+use App\Http\Controllers\Admin\AccountsReceivableController;
+use App\Http\Controllers\Admin\IncomeController;
+use App\Http\Controllers\Admin\AccountProfitLossController;
+use App\Http\Controllers\Admin\AccountsPayableController;
 
 /*
 |--------------------------------------------------------------------------
@@ -747,3 +754,23 @@ Route::prefix('admin')->name('admin.')->group(function () {
         
     });
 });
+
+//acount modeul 
+
+
+// Admin Routes Group
+Route::prefix('admin')->name('admin.')->group(function () {
+ // Resource Routes
+    Route::resource('expense-categories', ExpenseCategoryController::class);
+    Route::resource('expense-types', ExpenseTypeController::class);
+    Route::resource('bankings', BankingController::class);
+    Route::resource('expenses', ExpenseController::class);
+    Route::resource('accounts-receivables', AccountsReceivableController::class);
+    Route::resource('incomes', IncomeController::class);
+    Route::resource('account-profit-losses', AccountProfitLossController::class);
+    Route::resource('accounts-payables', AccountsPayableController::class);
+
+    // Additional route for dynamic dropdown
+    Route::get('/expense-types-by-category/{categoryId}', [ExpenseController::class, 'getTypesByCategory'])->name('expense-types.by-category');
+});
+

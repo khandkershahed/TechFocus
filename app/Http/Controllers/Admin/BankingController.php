@@ -3,133 +3,73 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\BankingRequest;
-use App\Repositories\Interfaces\BankingRepositoryInterface;
-use App\Repositories\Interfaces\CompanyRepositoryInterface;
+use App\Models\Banking;
+
+use App\Models\Country;
+use Illuminate\Http\Request;
 
 class BankingController extends Controller
 {
-    private $bankingRepository, $companyRepository;
-
-    public function __construct(BankingRepositoryInterface $bankingRepository, CompanyRepositoryInterface $companyRepository)
-    {
-        $this->bankingRepository = $bankingRepository;
-        $this->companyRepository = $companyRepository;
-    }
-
-    /** 
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        return view('admin.pages.banking.index', [
-            'bankings'  => $this->bankingRepository->allBanking(),
-            'companies' => $this->companyRepository->allCompany(),
-        ]);
+        $bankings = Banking::with([ 'country'])->get();
+        return view('admin.bankings.index', compact('bankings'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-        //
+       
+        $countries = Country::all();
+        return view('admin.bankings.create', compact('countries'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(BankingRequest $request)
+    public function store(Request $request)
     {
-        $data = [
-            'country_id'     => $request->country_id,
-            'company_id'     => $request->company_id,
-            'month'          => $request->month,
-            'date'           => $request->date,
-            'fiscal_year'    => $request->fiscal_year,
-            'bank_name'      => $request->bank_name,
-            'deposit'        => $request->deposit,
-            'withdraw'       => $request->withdraw,
-            'purpose'        => $request->purpose,
-            'notes'          => $request->notes,
-            'transaction_id' => $request->transaction_id,
-            'invoice_number' => $request->invoice_number,
-            'status'         => $request->status,
-        ];
-        $this->bankingRepository->storeBanking($data);
+        $request->validate([
+            'bank_name' => 'required|string|max:255',
+            'date' => 'required|date',
+            'deposit' => 'nullable|numeric',
+            'withdraw' => 'nullable|numeric',
+        ]);
 
-        session()->flash('success', 'Data has been saved successfully!');
-        return redirect()->back();
+        Banking::create($request->all());
+
+        return redirect()->route('admin.bankings.index')
+            ->with('success', 'Banking transaction created successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function show(Banking $banking)
     {
-        //
+        return view('admin.bankings.show', compact('banking'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    public function edit(Banking $banking)
     {
-        //
+        
+        $countries = Country::all();
+        return view('admin.bankings.edit', compact('banking','countries'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(BankingRequest $request, $id)
+    public function update(Request $request, Banking $banking)
     {
-        $data = [
-            'country_id'     => $request->country_id,
-            'company_id'     => $request->company_id,
-            'month'          => $request->month,
-            'date'           => $request->date,
-            'fiscal_year'    => $request->fiscal_year,
-            'bank_name'      => $request->bank_name,
-            'deposit'        => $request->deposit,
-            'withdraw'       => $request->withdraw,
-            'purpose'        => $request->purpose,
-            'notes'          => $request->notes,
-            'transaction_id' => $request->transaction_id,
-            'invoice_number' => $request->invoice_number,
-            'status'         => $request->status,
-        ];
+        $request->validate([
+            'bank_name' => 'required|string|max:255',
+            'date' => 'required|date',
+            'deposit' => 'nullable|numeric',
+            'withdraw' => 'nullable|numeric',
+        ]);
 
-        $this->bankingRepository->updateBanking($data, $id);
+        $banking->update($request->all());
 
-        session()->flash('success', 'Data has been saved successfully!');
-        return redirect()->back();
+        return redirect()->route('admin.bankings.index')
+            ->with('success', 'Banking transaction updated successfully.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function destroy(Banking $banking)
     {
-        $this->bankingRepository->destroyBanking($id);
+        $banking->delete();
+
+        return redirect()->route('admin.bankings.index')
+            ->with('success', 'Banking transaction deleted successfully.');
     }
 }
