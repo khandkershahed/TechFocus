@@ -253,7 +253,6 @@ class ProductController extends Controller
 // }
 public function store(ProductRequest $request)
 {
-    // Add debug logging
     \Log::info('Product store method called');
     \Log::info('Request data:', $request->all());
     
@@ -299,14 +298,35 @@ public function store(ProductRequest $request)
 
         \Log::info('Thumbnail saved:', ['url' => $save_url]);
 
-        // Handle checkbox values properly - use strict boolean casting
-        $refurbished = $request->has('is_refurbished') ? 1 : 0;
-        $dealValue = $request->has('is_deal') ? $request->deal : null;
+        // Handle checkbox values
+        $refurbished = $request->has('is_refurbished') && $request->is_refurbished == '1' ? '1' : '0';
+        $dealValue = $request->has('is_deal') && $request->is_deal == '1' ? $request->deal : null;
+        
+        // Handle RFQ value - must be string for ENUM
+        $rfqValue = '0'; // Default to '0'
+        if ($request->price_status == 'rfq') {
+            $rfqValue = '1';
+        }
+        
+        \Log::info('RFQ calculation:', [
+            'price_status' => $request->price_status,
+            'rfq_value' => $rfqValue,
+            'type' => gettype($rfqValue)
+        ]);
 
-        // FIX: Use strict boolean casting for rfq
-        $rfqValue = ($request->price_status == 'rfq') ? 1 : 0;
-        $rfqValue = (int) $rfqValue; // Explicit cast to integer
+        // Handle source approval - must be strings for ENUM columns
+        $sourceOnePrice = $request->source_one_price ? floatval($request->source_one_price) : null;
+        $sourceTwoPrice = $request->source_two_price ? floatval($request->source_two_price) : null;
+        
+        $sourceOneApproval = '1'; // Default to approved - must be string
+        $sourceTwoApproval = '0'; // Default to not approved - must be string
+        
+        if ($sourceOnePrice !== null && $sourceTwoPrice !== null) {
+            $sourceOneApproval = ($sourceOnePrice <= $sourceTwoPrice) ? '1' : '0';
+            $sourceTwoApproval = ($sourceOnePrice > $sourceTwoPrice) ? '1' : '0';
+        }
 
+        // Prepare all data with proper ENUM values as strings
         $productData = [
             'name'                      => $request->name,
             'sku_code'                  => $request->sku_code,
@@ -314,7 +334,7 @@ public function store(ProductRequest $request)
             'product_code'              => $request->product_code ?? null,
             'tags'                      => $request->tags ?? null,
             'price_status'              => $request->price_status,
-            'sas_price'                 => $request->sas_price ?? null,
+            'sas_price'                 => $request->sas_price ? floatval($request->sas_price) : null,
             'short_desc'                => $request->short_desc ?? null,
             'overview'                  => $request->overview ?? null,
             'specification'             => $request->specification ?? null,
@@ -322,20 +342,20 @@ public function store(ProductRequest $request)
             'warranty'                  => $request->warranty ?? null,
             'thumbnail'                 => $save_url,
             'stock'                     => $request->stock,
-            'currency_id'               => $request->currency_id ?? null,
-            'qty'                       => (int) ($request->qty ?? 0), // Fixed: proper null coalescing
-            'rfq'                       => $rfqValue, // Use the properly cast value
+            'currency_id'               => $request->currency_id ? intval($request->currency_id) : null,
+            'qty'                       => intval($request->qty ?? 0),
+            'rfq'                       => $rfqValue, // This must be string '0' or '1' for ENUM
             'deal'                      => $dealValue,
-            'refurbished'               => $refurbished,
+            'refurbished'               => $refurbished, // This must be string '0' or '1' for ENUM
             'product_type'              => $request->product_type,
-            'category_id'               => $request->has('category_id') ? json_encode($request->category_id) : null,
-            'color_id'                  => $request->has('color_id') ? json_encode($request->color_id) : null,
-            'parent_id'                 => $request->has('parent_id') ? json_encode($request->parent_id) : null,
-            'child_id'                  => $request->has('child_id') ? json_encode($request->child_id) : null,
-            'brand_id'                  => $request->brand_id,
+            'category_id'               => $request->has('category_id') && !empty($request->category_id) ? json_encode($request->category_id) : null,
+            'color_id'                  => $request->has('color_id') && !empty($request->color_id) ? json_encode($request->color_id) : null,
+            'parent_id'                 => $request->has('parent_id') && !empty($request->parent_id) ? json_encode($request->parent_id) : null,
+            'child_id'                  => $request->has('child_id') && !empty($request->child_id) ? json_encode($request->child_id) : null,
+            'brand_id'                  => intval($request->brand_id),
             'source_one_name'           => $request->source_one_name ?? null,
             'source_one_link'           => $request->source_one_link ?? null,
-            'source_one_price'          => $request->source_one_price ? (float) $request->source_one_price : null,
+            'source_one_price'          => $sourceOnePrice,
             'source_one_estimate_time'  => $request->source_one_estimate_time ?? null,
             'source_one_principal_time' => $request->source_one_principal_time ?? null,
             'source_one_shipping_time'  => $request->source_one_shipping_time ?? null,
@@ -343,21 +363,21 @@ public function store(ProductRequest $request)
             'source_one_country'        => $request->source_one_country ?? null,
             'source_two_name'           => $request->source_two_name ?? null,
             'source_two_link'           => $request->source_two_link ?? null,
-            'source_two_price'          => $request->source_two_price ? (float) $request->source_two_price : null,
+            'source_two_price'          => $sourceTwoPrice,
             'source_two_estimate_time'  => $request->source_two_estimate_time ?? null,
             'source_two_principal_time' => $request->source_two_principal_time ?? null,
             'source_two_shipping_time'  => $request->source_two_shipping_time ?? null,
             'source_two_location'       => $request->source_two_location ?? null,
             'source_two_country'        => $request->source_two_country ?? null,
             'competitor_one_name'       => $request->competitor_one_name ?? null,
-            'competitor_one_price'      => $request->competitor_one_price ? (float) $request->competitor_one_price : null,
+            'competitor_one_price'      => $request->competitor_one_price ? floatval($request->competitor_one_price) : null,
             'competitor_two_name'       => $request->competitor_two_name ?? null,
-            'competitor_two_price'      => $request->competitor_two_price ? (float) $request->competitor_two_price : null,
+            'competitor_two_price'      => $request->competitor_two_price ? floatval($request->competitor_two_price) : null,
             'competitor_one_link'       => $request->competitor_one_link ?? null,
             'competitor_two_link'       => $request->competitor_two_link ?? null,
-            'source_one_approval'       => (!empty($request->source_one_price) && !empty($request->source_two_price) && $request->source_one_price > $request->source_two_price) ? '0' : '1',
-            'source_two_approval'       => (!empty($request->source_one_price) && !empty($request->source_two_price) && $request->source_one_price > $request->source_two_price) ? '1' : '0',
-            'notification_days'         => $request->notification_days,
+            'source_one_approval'       => $sourceOneApproval, // Must be string '0' or '1'
+            'source_two_approval'       => $sourceTwoApproval, // Must be string '0' or '1'
+            'notification_days'         => intval($request->notification_days),
             'create_date'               => Carbon::now(),
             'solid_source'              => $request->solid_source ?? 'no',
             'direct_principal'          => $request->direct_principal ?? 'no',
@@ -368,9 +388,22 @@ public function store(ProductRequest $request)
             'action_status'             => ($request->action == 'save') ? 'save' : 'listed',
             'product_status'            => 'sourcing',
             'created_at'                => Carbon::now(),
+            'slug'                      => Str::slug($request->name),
+            'created_by'                => Auth::guard('admin')->id(),
+            'updated_by'                => Auth::guard('admin')->id(),
+            'updated_at'                => Carbon::now(),
         ];
 
-        \Log::info('Product data prepared - RFQ value:', ['rfq' => $rfqValue, 'type' => gettype($rfqValue)]);
+        \Log::info('Final product data prepared:', [
+            'rfq' => $productData['rfq'],
+            'rfq_type' => gettype($productData['rfq']),
+            'refurbished' => $productData['refurbished'],
+            'refurbished_type' => gettype($productData['refurbished']),
+            'source_one_approval' => $productData['source_one_approval'],
+            'source_one_approval_type' => gettype($productData['source_one_approval']),
+            'source_two_approval' => $productData['source_two_approval'],
+            'source_two_approval_type' => gettype($productData['source_two_approval'])
+        ]);
 
         $product = Product::create($productData);
         \Log::info('Product created with ID:', ['id' => $product->id]);
@@ -395,7 +428,7 @@ public function store(ProductRequest $request)
             foreach ($request->industry_id as $industry) {
                 IndustryProduct::create([
                     'product_id' => $product->id,
-                    'industry_id' => $industry,
+                    'industry_id' => intval($industry),
                 ]);
             }
         }
@@ -406,7 +439,7 @@ public function store(ProductRequest $request)
             foreach ($request->solution_id as $solution) {
                 SolutionProduct::create([
                     'product_id' => $product->id,
-                    'solution_id' => $solution,
+                    'solution_id' => intval($solution),
                 ]);
             }
         }
@@ -430,7 +463,9 @@ public function store(ProductRequest $request)
             'line' => $e->getLine(),
             'trace' => $e->getTraceAsString()
         ]);
-        return redirect()->back()->withInput()->with('error', 'Error storing product: ' . $e->getMessage());
+        
+        $errorMessage = 'Error storing product: ' . $e->getMessage();
+        return redirect()->back()->withInput()->with('error', $errorMessage);
     }
 }
     /**
