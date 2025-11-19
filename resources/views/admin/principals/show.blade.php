@@ -273,43 +273,58 @@
         </div>
     </div>
 
-    <!-- Brands Section -->
-    <div class="card mt-4">
-        <div class="card-body">
-            <h4 class="card-title mb-3">Brands</h4>
-            <div class="table-responsive">
-                <table class="table table-bordered align-middle">
-                    <thead class="table-light">
+    <!-- Debug Section (remove after fixing) -->
+{{-- @if($principal->brands->count() > 0)
+<div class="alert alert-info">
+    <h5>Debug Brands Data Structure:</h5>
+    <pre>@json($principal->brands->first()->toArray(), JSON_PRETTY_PRINT)</pre>
+    
+    @if($principal->brands->first()->brand)
+    <h6 class="mt-3">Related Brand Data:</h6>
+    <pre>@json($principal->brands->first()->brand->toArray(), JSON_PRETTY_PRINT)</pre>
+    @endif
+</div>
+@endif --}}
+
+<!-- Brands Section -->
+<div class="card mt-4">
+    <div class="card-body">
+        <h4 class="card-title mb-3">Brands</h4>
+        <div class="table-responsive">
+            <table class="table table-bordered align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th>Created At</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($principal->brands as $index => $brand)
                         <tr>
-                            <th>#</th>
-                            <th>Name</th>
-                            <th>Status</th>
-                            <th>Created At</th>
+                            <td>{{ $index + 1 }}</td>
+                            <td>
+                                <!-- Try different field names to see which one works -->
+                                {{ $brand->title ?? $brand->name ?? $brand->tittle ?? 'N/A' }}
+                            </td>
+                            <td>
+                                <span class="badge bg-{{ $brand->status == 'approved' ? 'success' : ($brand->status == 'pending' ? 'warning' : 'secondary') }}">
+                                    {{ ucfirst($brand->status) }}
+                                </span>
+                            </td>
+                            <td>{{ $brand->created_at->format('M d, Y') }}</td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($principal->brands as $index => $brand)
-                            <tr>
-                                <td>{{ $index + 1 }}</td>
-                                <td>{{ $brand->name }}</td>
-                                <td>
-                                    <span class="badge bg-{{ $brand->status == 'approved' ? 'success' : ($brand->status == 'pending' ? 'warning' : 'secondary') }}">
-                                        {{ ucfirst($brand->status) }}
-                                    </span>
-                                </td>
-                                <td>{{ $brand->created_at->format('M d, Y') }}</td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="4" class="text-center">No brands found.</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
+                    @empty
+                        <tr>
+                            <td colspan="4" class="text-center">No brands found.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
     </div>
-
+</div>
     <!-- Principal Links Section -->
     <div class="card mt-4">
         <div class="card-body">
@@ -538,7 +553,7 @@
         </div>
     </div>
 
-    <!-- Products Section -->
+    {{-- <!-- Products Section -->
     <div class="card mt-4">
         <div class="card-body">
             <h4 class="card-title mb-3">Products</h4>
@@ -558,7 +573,7 @@
                             <tr>
                                 <td>{{ $index + 1 }}</td>
                                 <td>{{ $product->name }}</td>
-                                <td>{{ $product->brand->name ?? '—' }}</td>
+                                <td>{{ $product->brand->tittle ?? '—' }}</td>
                                 <td>
                                     <span class="badge bg-{{ $product->status == 'approved' ? 'success' : ($product->status == 'pending' ? 'warning' : 'secondary') }}">
                                         {{ ucfirst($product->status) }}
@@ -575,6 +590,299 @@
                 </table>
             </div>
         </div>
-    </div>
+    </div> --}}
+    <!-- Debug Section (remove after fixing) -->
+{{-- @if($principal->products->count() > 0)
+<div class="alert alert-info">
+    <h5>Debug Product Brand Data:</h5>
+    @if($principal->products->first()->brand)
+    <pre>@json($principal->products->first()->brand->toArray(), JSON_PRETTY_PRINT)</pre>
+    @else
+    <p>No brand relationship found for this product.</p>
+    @endif
+</div>
+@endif --}}
 
+<!-- Products Section -->
+<div class="card mt-4">
+    <div class="card-body">
+        <h4 class="card-title mb-3">Products</h4>
+        <div class="table-responsive">
+            <table class="table table-bordered align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Brand</th>
+                        <th>Status</th>
+                        <th>Created At</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($principal->products as $index => $product)
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ $product->name }}</td>
+                            <td>
+                                @if($product->brand)
+                                    {{ $product->brand->name ?? $product->brand->title ?? $product->brand->brand_name ?? 'N/A' }}
+                                @else
+                                    <span class="text-muted">—</span>
+                                @endif
+                            </td>
+                            <td>
+                                 <span class="badge bg-{{ $brand->status == 'approved' ? 'success' : ($brand->status == 'pending' ? 'warning' : 'secondary') }}">
+                                    {{ ucfirst($brand->status) }}
+                                </span>
+                            </td>
+                            <td>{{ $product->created_at->format('M d, Y') }}</td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="text-center">No products found.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+    <!-- Add Contact Modal - Only show if user has permission -->
+    @if(auth('admin')->user()->hasRole('SuperAdmin') || auth('admin')->user()->can('edit principals'))
+    <div class="modal fade" id="addContactModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="{{ route('admin.principals.contacts.store', $principal->id) }}" method="POST">
+                    @csrf
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add Contact</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Contact Name *</label>
+                            <input type="text" class="form-control" name="contact_name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Job Title</label>
+                            <input type="text" class="form-control" name="job_title">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" name="email">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Phone</label>
+                            <input type="text" class="form-control" name="phone_e164">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Preferred Channel</label>
+                            <select class="form-select" name="preferred_channel">
+                                <option value="">Select Channel</option>
+                                <option value="email">Email</option>
+                                <option value="phone">Phone</option>
+                                <option value="whatsapp">WhatsApp</option>
+                            </select>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" name="is_primary" value="1">
+                            <label class="form-check-label">Primary Contact</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Add Contact</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    @endif
+
+    <!-- Edit Contact Modals - Only show if user has permission -->
+    @if(auth('admin')->user()->hasRole('SuperAdmin') || auth('admin')->user()->can('edit principals'))
+        @foreach($principal->contacts as $contact)
+        <div class="modal fade" id="editContactModal{{ $contact->id }}" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="{{ route('admin.principals.contacts.update', $contact->id) }}" method="POST">
+                        @csrf
+                        @method('PATCH')
+                        <div class="modal-header">
+                            <h5 class="modal-title">Edit Contact</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="form-label">Contact Name *</label>
+                                <input type="text" class="form-control" name="contact_name" value="{{ $contact->contact_name }}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Job Title</label>
+                                <input type="text" class="form-control" name="job_title" value="{{ $contact->job_title }}">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" name="email" value="{{ $contact->email }}">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Phone</label>
+                                <input type="text" class="form-control" name="phone_e164" value="{{ $contact->phone_e164 }}">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Preferred Channel</label>
+                                <select class="form-select" name="preferred_channel">
+                                    <option value="">Select Channel</option>
+                                    <option value="email" {{ $contact->preferred_channel == 'email' ? 'selected' : '' }}>Email</option>
+                                    <option value="phone" {{ $contact->preferred_channel == 'phone' ? 'selected' : '' }}>Phone</option>
+                                    <option value="whatsapp" {{ $contact->preferred_channel == 'whatsapp' ? 'selected' : '' }}>WhatsApp</option>
+                                </select>
+                            </div>
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" name="is_primary" value="1" {{ $contact->is_primary ? 'checked' : '' }}>
+                                <label class="form-check-label">Primary Contact</label>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Update Contact</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        @endforeach
+    @endif
+
+    <!-- Add Address Modal - Only show if user has permission -->
+    @if(auth('admin')->user()->hasRole('SuperAdmin') || auth('admin')->user()->can('edit principals'))
+    <div class="modal fade" id="addAddressModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="{{ route('admin.principals.addresses.store', $principal->id) }}" method="POST">
+                    @csrf
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add Address</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Address Type *</label>
+                            <select class="form-select" name="type" required>
+                                <option value="">Select Type</option>
+                                <option value="HQ">Headquarters</option>
+                                <option value="Branch">Branch</option>
+                                <option value="Warehouse">Warehouse</option>
+                                <option value="Billing">Billing</option>
+                                <option value="Shipping">Shipping</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Address Line 1 *</label>
+                            <input type="text" class="form-control" name="line1" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Address Line 2</label>
+                            <input type="text" class="form-control" name="line2">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">City</label>
+                            <input type="text" class="form-control" name="city">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">State</label>
+                            <input type="text" class="form-control" name="state">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Postal Code</label>
+                            <input type="text" class="form-control" name="postal">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Country</label>
+                            <select class="form-select" name="country_id">
+                                <option value="">Select Country</option>
+                                @foreach(\App\Models\Country::all() as $country)
+                                    <option value="{{ $country->id }}">{{ $country->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Add Address</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    @endif
+
+    <!-- Edit Address Modals - Only show if user has permission -->
+    @if(auth('admin')->user()->hasRole('SuperAdmin') || auth('admin')->user()->can('edit principals'))
+        @foreach($principal->addresses as $address)
+        <div class="modal fade" id="editAddressModal{{ $address->id }}" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="{{ route('admin.principals.addresses.update', ['principal' => $principal->id, 'address' => $address->id]) }}" method="POST">
+                        @csrf
+                        @method('PATCH')
+                        <div class="modal-header">
+                            <h5 class="modal-title">Edit Address</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="form-label">Address Type *</label>
+                                <select class="form-select" name="type" required>
+                                    <option value="HQ" {{ $address->type == 'HQ' ? 'selected' : '' }}>Headquarters</option>
+                                    <option value="Branch" {{ $address->type == 'Branch' ? 'selected' : '' }}>Branch</option>
+                                    <option value="Warehouse" {{ $address->type == 'Warehouse' ? 'selected' : '' }}>Warehouse</option>
+                                    <option value="Billing" {{ $address->type == 'Billing' ? 'selected' : '' }}>Billing</option>
+                                    <option value="Shipping" {{ $address->type == 'Shipping' ? 'selected' : '' }}>Shipping</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Address Line 1 *</label>
+                                <input type="text" class="form-control" name="line1" value="{{ $address->line1 }}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Address Line 2</label>
+                                <input type="text" class="form-control" name="line2" value="{{ $address->line2 }}">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">City</label>
+                                <input type="text" class="form-control" name="city" value="{{ $address->city }}">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">State</label>
+                                <input type="text" class="form-control" name="state" value="{{ $address->state }}">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Postal Code</label>
+                                <input type="text" class="form-control" name="postal" value="{{ $address->postal }}">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Country</label>
+                                <select class="form-select" name="country_id">
+                                    <option value="">Select Country</option>
+                                    @foreach(\App\Models\Country::all() as $country)
+                                        <option value="{{ $country->id }}" {{ $address->country_id == $country->id ? 'selected' : '' }}>
+                                            {{ $country->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Update Address</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        @endforeach
+    @endif
+</div>
 @endsection

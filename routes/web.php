@@ -151,11 +151,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:admin'])->group(functi
     
 });
 
-Route::middleware(['auth:principal'])->group(function () {
-    Route::get('/profile/edit', [PrincipalProfileController::class, 'edit'])->name('principal.profile.edit');
-    Route::post('/profile/update', [PrincipalProfileController::class, 'update'])->name('principal.profile.update');
+// Route::middleware(['auth:principal'])->group(function () {
+//     Route::get('/profile/edit', [PrincipalProfileController::class, 'edit'])->name('principal.profile.edit');
+//     Route::post('/profile/update', [PrincipalProfileController::class, 'update'])->name('principal.profile.update');
 
-});
+// });
 
 Route::prefix('principal')->middleware('auth:principal')->group(function() {
     Route::get('/links/create', [PrincipalLinkController::class, 'create'])->name('principal.links.create');
@@ -230,6 +230,15 @@ Route::get('/shared/link/{token}', [PrincipalLinkController::class, 'viewSharedL
     
 Route::post('/principal/links/send-share-email', [PrincipalLinkController::class, 'sendShareEmail'])
     ->name('principal.links.send-share-email');
+
+    Route::prefix('principal')->name('principal.')->group(function () {
+    // ... other routes
+    
+    Route::get('/profile', [PrincipalProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [PrincipalProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/contacts', [PrincipalProfileController::class, 'updateContacts'])->name('contacts.update');
+    Route::put('/profile/addresses', [PrincipalProfileController::class, 'updateAddresses'])->name('addresses.update');
+});
     
 require __DIR__ . '/frontend.php';
 require __DIR__ . '/auth.php';
