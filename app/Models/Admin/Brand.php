@@ -43,6 +43,25 @@ class Brand extends Model
         return $this->belongsTo(Country::class);
     }
 
+    /**
+     * Relationship with BrandPage - One brand can have one brand page
+     */
+    public function brandPage()
+    {
+        return $this->hasOne(BrandPage::class, 'brand_id');
+    }
+
+    public function brandProducts()
+    {
+        return $this->hasMany(Product::class, 'brand_id', 'id');
+    }
+
+    // If you already have 'products', maybe 'brandProducts' is redundant
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'brand_id', 'id');
+    }
+
     // Scopes
     public function scopeApproved($query)
     {
@@ -62,6 +81,35 @@ class Brand extends Model
     public function scopeByPrincipal($query, $principalId)
     {
         return $query->where('principal_id', $principalId);
+    }
+
+    public function scopeByCategory($query, $category)
+    {
+        return $query->where('category', $category);
+    }
+
+    /**
+     * Scope to get brands that have brand pages
+     */
+    public function scopeHasBrandPage($query)
+    {
+        return $query->whereHas('brandPage');
+    }
+
+    /**
+     * Scope to get brands that don't have brand pages
+     */
+    public function scopeDoesntHaveBrandPage($query)
+    {
+        return $query->whereDoesntHave('brandPage');
+    }
+
+    /**
+     * Scope to get brands with their brand pages
+     */
+    public function scopeWithBrandPage($query)
+    {
+        return $query->with('brandPage');
     }
 
     // Accessors
@@ -91,26 +139,48 @@ class Brand extends Model
         return $this->status === 'rejected';
     }
 
-    public function scopeByCategory($query, $category)
-{
-    return $query->where('category', $category);
-}
-public function brandPage()
-{
-    return $this->hasOne(\App\Models\Admin\BrandPage::class, 'brand_id');
-}
-
-
-
- public function brandProducts()
+    /**
+     * Check if brand has a brand page
+     */
+    public function getHasBrandPageAttribute()
     {
-        return $this->hasMany(Product::class, 'brand_id', 'id');
+        return $this->brandPage()->exists();
     }
 
-    // If you already have 'products', maybe 'brandProducts' is redundant
-    public function products()
+    /**
+     * Get brand page status
+     */
+    public function getBrandPageStatusAttribute()
     {
-        return $this->hasMany(Product::class, 'brand_id', 'id');
+        return $this->brandPage ? 'Created' : 'Not Created';
     }
 
+    /**
+     * Get display name with status indicator
+     */
+    public function getDisplayNameAttribute()
+    {
+        $statusIcon = $this->has_brand_page ? '✅' : '❌';
+        return "{$this->title} {$statusIcon}";
+    }
+
+    /**
+     * Automatically generate slug when creating brand
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($brand) {
+            if (empty($brand->slug)) {
+                $brand->slug = \Illuminate\Support\Str::slug($brand->title);
+            }
+        });
+
+        static::updating(function ($brand) {
+            if ($brand->isDirty('title') && empty($brand->slug)) {
+                $brand->slug = \Illuminate\Support\Str::slug($brand->title);
+            }
+        });
+    }
 }

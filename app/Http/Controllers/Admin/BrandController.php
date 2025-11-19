@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
+
 use App\Models\Admin;
 use App\Models\Admin\Brand;
 use Illuminate\Support\Str;
@@ -24,33 +25,26 @@ class BrandController extends Controller
 
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    // public function index()
-    // {
-    //     return view('admin.pages.brand.index', [
-    //         'brands' =>  $this->brandRepository->allBrand(),
-    //     ]);
-    // }
-// In Admin\BrandController
-public function index()
-{
-    return view('admin.pages.brand.index', [
-        'brands' => $this->brandRepository->allApprovedBrands(), // Only approved brands
-    ]);
-}
+    public function index()
+    {
+        return view('admin.pages.brand.index', [
+            'brands' => $this->brandRepository->allApprovedBrands(), // Only approved brands
+        ]);
+    }
 
-public function pending()
-{
-    return view('admin.pages.brand.pending', [
-        'pendingBrands' => $this->brandRepository->pendingBrands(),
-    ]);
-}
+    /**
+     * Display pending brands for approval.
+     */
+    public function pending()
+    {
+        return view('admin.pages.brand.pending', [
+            'pendingBrands' => $this->brandRepository->pendingBrands(),
+        ]);
+    }
+
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function create()
     {
@@ -59,13 +53,9 @@ public function pending()
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
      */
     public function store(BrandRequest $request)
     {
-
         $mainFile = $request->file('image');
         $logoFile = $request->file('logo');
 
@@ -96,12 +86,8 @@ public function pending()
         return redirect()->back()->with('success', 'Data has been saved successfully!');
     }
 
-
     /**
      * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
@@ -110,9 +96,6 @@ public function pending()
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
@@ -121,10 +104,6 @@ public function pending()
 
     /**
      * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function update(BrandRequest $request, $id)
     {
@@ -175,15 +154,11 @@ public function pending()
 
         $this->brandRepository->updateBrand($data, $id);
 
-        // session()->flash('success', 'Data has been saved successfully!');
         return redirect()->route('admin.brand.index')->with('message', 'Data updated Successfully');
     }
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
@@ -202,111 +177,113 @@ public function pending()
         $this->brandRepository->destroyBrand($id);
     }
 
-
-    // public function overview($slug)
-    // {
-    //     $brand = Brand::where('slug', $slug)
-    //         ->with('brandPage.rowFour', 'brandPage.rowFive', 'brandPage.rowSeven', 'brandPage.rowEight')
-    //         ->firstOrFail();
-
-    //     return view('frontend.pages.brandPage.overview', compact('brand'));
-    // }
-    //  public function products($slug)
-    // {
-    //     $brand = Brand::where('slug', $slug)->with('brandPage')->firstOrFail();
-    //     return view('frontend.pages.brandPage.products', compact('brand'));
-    // }
+    /**
+     * Brand overview page
+     */
     public function brandOverview($slug)
+    {
+        $brand = Brand::with('brandPage')->where('slug', $slug)->firstOrFail();
+        return view('frontend.pages.brandPage.overview', compact('brand'));
+    }
+
+    /**
+     * Content details page
+     */
+    public function contentDetails($id)
+    {
+        $newsTrend = NewsTrend::with('brand.brandPage')->findOrFail($id);
+        $brand = $newsTrend->brand;
+        return view('frontend.pages.brandPage.content_details', compact('newsTrend', 'brand'));
+    }
+
+    /**
+     * Approve a brand - FIXED to redirect to pending page
+     */
+    // public function approve($id)
+    // {
+    //     $user = Auth::guard('admin')->user();
+
+    //     // Normalize roles (support JSON or string)
+    //     $roles = [];
+    //     if (isset($user->role)) {
+    //         if (is_string($user->role)) {
+    //             $decoded = json_decode($user->role, true);
+    //             $roles = is_array($decoded) ? $decoded : [$user->role];
+    //         } elseif (is_array($user->role)) {
+    //             $roles = $user->role;
+    //         }
+    //     }
+    //     $roles = array_map('strtolower', $roles);
+
+    //     if (!in_array('admin', $roles) && !in_array('super admin', $roles) && !$user->can_review_brands) {
+    //         abort(403, 'Unauthorized action.');
+    //     }
+
+    //     $brand = Brand::findOrFail($id);
+    //     $brand->status = 'approved';
+    //     $brand->rejection_reason = null;
+    //     $brand->save();
+
+    //     // Redirect to pending brands page instead of back
+    //     return redirect()->route('admin.brands.pending')->with('success', 'Brand approved successfully.');
+    // }
+
+    public function approve($id)
 {
-    $brand = Brand::with('brandPage')->where('slug', $slug)->firstOrFail();
-    return view('frontend.pages.brandPage.overview', compact('brand'));
+    try {
+        $brand = Brand::findOrFail($id);
+        
+        // Update brand status
+        $brand->update([
+            'status' => 'approved',
+            'approved_by' => auth('admin')->id(),
+            'approved_at' => now(),
+        ]);
+
+        return redirect()->route('admin.brands.pending')
+            ->with('success', 'Brand "' . $brand->title . '" has been approved successfully.');
+
+    } catch (\Exception $e) {
+        \Log::error('Brand approval failed: ' . $e->getMessage());
+        
+        return redirect()->route('admin.brands.pending')
+            ->with('error', 'Failed to approve brand. Please try again.');
+    }
 }
 
-public function contentDetails($id)
-{
-    // Load the news trend by ID (or slug)
-    $newsTrend = NewsTrend::with('brand.brandPage')->findOrFail($id);
+    /**
+     * Reject a brand - ADDED MISSING METHOD
+     */
+    public function reject(Request $request, $id)
+    {
+        $user = Auth::guard('admin')->user();
 
-    // Get the related brand for the page header
-    $brand = $newsTrend->brand;
-
-    // Pass both to the view
-    return view('frontend.pages.brandPage.content_details', compact('newsTrend', 'brand'));
-}
-/**
- * Display pending brands for approval.
- */
-/**
- * Display pending brands from principals for approval.
- */
-// public function pending()
-// {
-//     return view('admin.pages.brand.pending', [
-//         'pendingBrands' => $this->brandRepository->pendingBrands(),
-//     ]);
-// }
-/**
- * Approve a brand.
- */
-// public function approve($id)
-// {
-//     try {
-//         $this->brandRepository->approveBrand($id);
-//         return redirect()->route('admin.brands.pending')
-//             ->with('success', 'Brand approved successfully!');
-//     } catch (\Exception $e) {
-//         return redirect()->route('admin.brands.pending')
-//             ->with('error', 'Error approving brand: ' . $e->getMessage());
-//     }
-// }
-
-// /**
-//  * Reject a brand.
-//  */
-// public function reject(Request $request, $id)
-// {
-//     $request->validate([
-//         'rejection_reason' => 'required|string|max:500'
-//     ]);
-
-//     try {
-//         $this->brandRepository->rejectBrand($id, $request->rejection_reason);
-//         return redirect()->route('admin.brands.pending')
-//             ->with('success', 'Brand rejected successfully!');
-//     } catch (\Exception $e) {
-//         return redirect()->route('admin.brands.pending')
-//             ->with('error', 'Error rejecting brand: ' . $e->getMessage());
-//     }
-// }
-
-public function approve($id)
-{
-    $user = Auth::guard('admin')->user();
-
-    // Normalize roles (support JSON or string)
-    $roles = [];
-    if (isset($user->role)) {
-        if (is_string($user->role)) {
-            $decoded = json_decode($user->role, true);
-            $roles = is_array($decoded) ? $decoded : [$user->role];
-        } elseif (is_array($user->role)) {
-            $roles = $user->role;
+        // Only SuperAdmin can reject brands
+        $roles = [];
+        if (isset($user->role)) {
+            if (is_string($user->role)) {
+                $decoded = json_decode($user->role, true);
+                $roles = is_array($decoded) ? $decoded : [$user->role];
+            } elseif (is_array($user->role)) {
+                $roles = $user->role;
+            }
         }
+        $roles = array_map('strtolower', $roles);
+
+        if (!in_array('super admin', $roles)) {
+            abort(403, 'Only SuperAdmin can reject brands.');
+        }
+
+        $request->validate([
+            'rejection_reason' => 'required|string|max:500'
+        ]);
+
+        $brand = Brand::findOrFail($id);
+        $brand->status = 'rejected';
+        $brand->rejection_reason = $request->rejection_reason;
+        $brand->save();
+dd("**");
+        // Redirect to pending brands page
+        return redirect()->route('admin.brands.pending')->with('success', 'Brand rejected successfully.');
     }
-    $roles = array_map('strtolower', $roles);
-
-    if (!in_array('admin', $roles) && !in_array('super admin', $roles) && !$user->can_review_brands) {
-        abort(403, 'Unauthorized action.');
-    }
-
-    $brand = Brand::findOrFail($id);
-    $brand->status = 'approved';
-    $brand->rejection_reason = null;
-    $brand->save();
-
-    return redirect()->back()->with('success', 'Brand approved successfully.');
-}
-
-
-
 }

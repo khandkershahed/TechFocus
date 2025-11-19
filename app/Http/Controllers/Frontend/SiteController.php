@@ -770,4 +770,3 @@ public function brandList()
 
 }
 
-

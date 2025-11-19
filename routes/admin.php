@@ -499,6 +499,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:admin'])->group(functi
     Route::post('/brands/{id}/reject', [BrandController::class, 'reject'])->name('brands.reject');
     Route::resource('brands', BrandController::class);
 });
+
 // Admin Product Routes
 Route::prefix('admin')->name('admin.')->middleware(['auth:admin'])->group(function () {
     // ... other routes
