@@ -58,56 +58,73 @@
                     </a>
                             </div>
                                 <!-- In your admin sidebar or navigation -->
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{{ route('admin.principals.index') }}">
-                                            <i class="fas fa-users me-2"></i>
-                                            Principals
-                                            <span class="badge bg-primary float-end">{{ \App\Models\Principal::count() }}</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                    <!-- Admin Pending Products Menu -->
-                                                        <a class="nav-link {{ Route::current()->getName() == 'admin.products.pending' ? 'active' : '' }}"
-                                                        href="{{ route('admin.products.pending') }}">
-                                                            <span class="nav-bullet">
-                                                                <span class="bullet bullet-dot"></span>
-                                                            </span>
-                                                            <span class="nav-title">Pending Products</span>
-                                                            @if(($pendingProductsCount ?? 0) > 0)
-                                                                <span class="badge badge-danger badge-pill">{{ $pendingProductsCount ?? 0 }}</span>
-                                                            @endif
-                                                        </a>
-                                                    
-                                                </li>
-                                 <li class="nav-item">
-                                            <a href="{{ route('admin.pages.contact.index') }}" 
-                                            class="nav-link {{ request()->routeIs('admin.pages.contact.*') ? 'active' : '' }}">
-                                                <i class="fa-solid fa-address-book me-2"></i>
-                                                <span>Contact List</span>
-                                            </a>
-                                        </li>
+                                    
+                                       <div data-kt-menu-trigger="click"
+    class="menu-item menu-accordion {{ in_array(Route::current()->getName(), [
+        'admin.principals.index',
+        'admin.products.pending',
+        'admin.pages.contact.index',
+        'admin.role.index',
+        'admin.brands.pending'
+    ]) ? 'here show' : '' }}">
+    
+    <span class="menu-link">
+        <span class="menu-icon">
+            <span class="svg-icon svg-icon-2">
+                <i class="fas fa-users side_baricon"></i>
+            </span>
+        </span>
+        <span class="menu-title">Principal Management</span>
+        <span class="menu-arrow"></span>
+    </span>
 
-                                        <li class="nav-item">
-                                                <a href="{{ route('admin.role.index') }}" class="nav-link">
-                                                    <i class="fas fa-user-shield"></i> <!-- optional icon -->
-                                                    <span>Roles</span>
-                                                </a>
-                                            </li>
+    <div class="menu-sub menu-sub-accordion">
+        <!-- Principals -->
+        <div class="menu-item">
+            <a class="menu-link {{ Route::current()->getName() == 'admin.principals.index' ? 'active' : '' }}"
+                href="{{ route('admin.principals.index') }}">
+                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                <span class="menu-title">Principals</span>
+                <span class="badge bg-primary float-end">{{ \App\Models\Principal::count() }}</span>
+            </a>
+        </div>
 
+        <!-- Pending Products -->
+        <div class="menu-item">
+            <a class="menu-link {{ Route::current()->getName() == 'admin.products.pending' ? 'active' : '' }}"
+                href="{{ route('admin.products.pending') }}">
+                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                <span class="menu-title">Pending Products</span>
+                @if(($pendingProductsCount ?? 0) > 0)
+                    <span class="badge badge-danger badge-pill">{{ $pendingProductsCount ?? 0 }}</span>
+                @endif
+            </a>
+        </div>
 
-                               <!-- In your admin sidebar -->
-                                        <div class="menu-item">
-                                            <a class="menu-link {{ Route::current()->getName() == 'admin.brands.pending' ? 'active' : '' }}"
-                                            href="{{ route('admin.brands.pending') }}">
-                                                <span class="menu-bullet">
-                                                    <span class="bullet bullet-dot"></span>
-                                                </span>
-                                                <span class="menu-title">Principal Brands Pending</span>
-                                                {{-- @if(($pendingBrandsCount ?? 0) > 0)
-                                                    <span class="badge badge-danger badge-pill">{{ $pendingBrandsCount ?? 0 }}</span>
-                                                @endif --}}
-                                            </a>
-                                        </div>
+    <!-- Roles -->
+        <div class="menu-item">
+            <a class="menu-link {{ Route::current()->getName() == 'admin.role.index' ? 'active' : '' }}"
+                href="{{ route('admin.role.index') }}">
+                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                <span class="menu-title">Roles</span>
+            </a>
+        </div>
+
+        <!-- Principal Brands Pending -->
+        <div class="menu-item">
+            <a class="menu-link {{ Route::current()->getName() == 'admin.brands.pending' ? 'active' : '' }}"
+                href="{{ route('admin.brands.pending') }}">
+                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                <span class="menu-title">Principal Brands Pending</span>
+                {{-- Optional badge --}}
+                {{-- @if(($pendingBrandsCount ?? 0) > 0)
+                    <span class="badge badge-danger badge-pill">{{ $pendingBrandsCount ?? 0 }}</span>
+                @endif --}}
+            </a>
+        </div>
+    </div>
+</div>
+
 
                 {{-- <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ Route::current()->getName() == 'admin.dashboard' ? 'here show' : '' }}">
                     <span class="menu-link">
@@ -355,6 +372,8 @@
                                 </a>
                             </div>
 
+                            
+
                     <div class="menu-sub menu-sub-accordion">
                         <div data-kt-menu-trigger="click"
                             class="menu-item menu-accordion {{ in_array(Route::current()->getName(), ['admin.rfq.index', 'admin.deal.index']) ? 'here show' : '' }}">
@@ -402,7 +421,14 @@
                                         <span class="menu-title">Deals</span>
                                     </a>
                                 </div>
-
+                                     <!-- Contact List -->
+                                    <div class="menu-item">
+                                        <a class="menu-link {{ request()->routeIs('admin.pages.contact.*') ? 'active' : '' }}"
+                                            href="{{ route('admin.pages.contact.index') }}">
+                                            <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                                            <span class="menu-title">Contact List</span>
+                                        </a>
+                                    </div>
                             </div>
                         </div>
                         <div data-kt-menu-trigger="click"
