@@ -44,23 +44,20 @@ class PrincipalController extends Controller
                       ->orWhere('relationship_status', 'like', "%{$search}%")
                       ->orWhere('status', 'like', "%{$search}%")
                       ->orWhere('trading_name', 'like', "%{$search}%")
-                      ->orWhere('authorization_type', 'like', "%{$search}%")
-                      ->orWhere('owner', 'like', "%{$search}%")
-                      
                       // Search in related models
                       ->orWhereHas('country', function ($q2) use ($search) {
                           $q2->where('name', 'like', "%{$search}%")
-                             ->orWhere('iso_code', 'like', "%{$search}%");
+                           ;
                       })
                       ->orWhereHas('brands', function ($q3) use ($search) {
                           $q3->where('name', 'like', "%{$search}%")
-                             ->orWhere('description', 'like', "%{$search}%");
+                             ;
                       })
-                      ->orWhereHas('products', function ($q4) use ($search) {
-                          $q4->where('name', 'like', "%{$search}%")
-                             ->orWhere('description', 'like', "%{$search}%")
-                             ->orWhere('sku', 'like', "%{$search}%");
-                      })
+                    //   ->orWhereHas('products', function ($q4) use ($search) {
+                    //       $q4->where('name', 'like', "%{$search}%")
+                             
+                    //          ->orWhere('sku', 'like', "%{$search}%");
+                    //   })
                       ->orWhereHas('links', function ($q5) use ($search) {
                           $q5->where('url', 'like', "%{$search}%")
                              ->orWhere('type', 'like', "%{$search}%");
@@ -77,9 +74,7 @@ class PrincipalController extends Controller
             ->when($filters['country'] ?? null, fn($q, $val) => $q->where('country_id', $val))
             ->when($filters['relationship_status'] ?? null, fn($q, $val) => $q->where('relationship_status', $val))
             ->when($filters['brand'] ?? null, fn($q, $val) => $q->whereHas('brands', fn($q2) => $q2->where('id', $val)))
-            ->when($filters['authorization_type'] ?? null, fn($q, $val) => $q->where('authorization_type', $val))
             ->when($filters['has_ndas'] ?? null, fn($q, $val) => $q->where('has_ndas', $val))
-            ->when($filters['owner'] ?? null, fn($q, $val) => $q->where('owner', 'like', "%{$val}%"))
             ->when($sort, function ($query, $sort) {
                 switch ($sort) {
                     case 'name':
