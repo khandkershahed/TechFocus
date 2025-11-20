@@ -14,12 +14,15 @@ use App\Http\Controllers\PageBannerController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\BannerController;
+use App\Http\Controllers\Admin\IncomeController;
 use App\Http\Controllers\Content\BlogController;
+use App\Http\Controllers\Admin\AccountController;
 use App\Http\Controllers\Admin\AddressController;
 use App\Http\Controllers\Admin\BankingController;
 use App\Http\Controllers\Admin\CatalogController;
 use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Admin\ContactController;
+use App\Http\Controllers\Admin\ExpenseController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\HR\ProjectKpiController;
@@ -47,6 +50,7 @@ use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\ProductSasController;
 use App\Http\Controllers\Admin\WebSettingController;
 use App\Http\Controllers\Site\DynamicSiteController;
+use App\Http\Controllers\Admin\ExpenseTypeController;
 use App\Http\Controllers\Admin\IndustryPageController;
 use App\Http\Controllers\Admin\ProductColorController;
 use App\Http\Controllers\Admin\SolutionCardController;
@@ -58,7 +62,9 @@ use App\Http\Controllers\Admin\AttributeValueController;
 use App\Http\Controllers\Admin\RolePermissionController;
 use App\Http\Controllers\Admin\TermsAndPolicyController;
 use App\Http\Controllers\Admin\UserPermissionController;
+use App\Http\Controllers\Admin\AccountsPayableController;
 use App\Http\Controllers\Admin\DynamicCategoryController;
+use App\Http\Controllers\Admin\ExpenseCategoryController;
 use App\Http\Controllers\Admin\SolutionDetailsController;
 use App\Http\Controllers\Sales\SalesTeamTargetController;
 use App\Http\Controllers\Sales\SalesYearTargetController;
@@ -68,19 +74,15 @@ use App\Http\Controllers\Admin\EmployeeCategoryController;
 use App\Http\Controllers\Admin\PrincipalAddressController;
 use App\Http\Controllers\Admin\PrincipalContactController;
 use App\Http\Controllers\Admin\ProductAttributeController;
+use App\Http\Controllers\Admin\AccountComparisonController;
+use App\Http\Controllers\Admin\AccountProfitLossController;
+use App\Http\Controllers\Admin\AccountsReceivableController;
 use App\Http\Controllers\Admin\EmployeeDepartmentController;
 use App\Http\Controllers\Accounts\AccountsDocumentController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Admin\PolicyAcknowledgmentController;
 use App\Http\Controllers\Admin\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
-use App\Http\Controllers\Admin\ExpenseCategoryController;
-use App\Http\Controllers\Admin\ExpenseTypeController;
-use App\Http\Controllers\Admin\ExpenseController;
-use App\Http\Controllers\Admin\AccountsReceivableController;
-use App\Http\Controllers\Admin\IncomeController;
-use App\Http\Controllers\Admin\AccountProfitLossController;
-use App\Http\Controllers\Admin\AccountsPayableController;
 
 /*
 |--------------------------------------------------------------------------
@@ -769,8 +771,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('incomes', IncomeController::class);
     Route::resource('account-profit-losses', AccountProfitLossController::class);
     Route::resource('accounts-payables', AccountsPayableController::class);
+    Route::get('/account-dashboard', [AccountController::class, 'dashboard'])->name('account.dashboard');
 
     // Additional route for dynamic dropdown
-    Route::get('/expense-types-by-category/{categoryId}', [ExpenseController::class, 'getTypesByCategory'])->name('expense-types.by-category');
+    // Route::get('/expense-types-by-category/{categoryId}', [ExpenseController::class, 'getTypesByCategory'])->name('expense-types.by-category');
+        // Additional route for dynamic expense type dropdown
+  Route::get('/expense-types-by-category/{categoryId}', [ExpenseController::class, 'getTypesByCategory'])
+    ->name('expenses.types.by-category');
+   
 });
-
+ Route::get('/account-comparison', [AccountComparisonController::class, 'comparison'])->name('account.comparison');
+// Add this inside the admin prefix group

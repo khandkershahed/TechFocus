@@ -1000,56 +1000,133 @@
                     </div>
                 </div>
 
-                <!-- Account Dropdown -->
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fas fa-calculator"></i> Account
-                                </a>
-                                <ul class="dropdown-menu" aria-labelledby="accountDropdown">
-                                    <li>
-                                        <a class="dropdown-item" href="{{ route('admin.expense-categories.index') }}">
-                                            <i class="fas fa-list me-2"></i> Expense Categories
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="{{ route('admin.expense-types.index') }}">
-                                            <i class="fas fa-tags me-2"></i> Expense Types
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="{{ route('admin.bankings.index') }}">
-                                            <i class="fas fa-university me-2"></i> Banking Transactions
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="{{ route('admin.expenses.index') }}">
-                                            <i class="fas fa-money-bill-wave me-2"></i> Expenses
-                                        </a>
-                                    </li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li>
-                                        <a class="dropdown-item" href="{{ route('admin.accounts-receivables.index') }}">
-                                            <i class="fas fa-hand-holding-usd me-2"></i> Accounts Receivable
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="{{ route('admin.accounts-payables.index') }}">
-                                            <i class="fas fa-file-invoice-dollar me-2"></i> Accounts Payable
-                                        </a>
-                                    </li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li>
-                                        <a class="dropdown-item" href="{{ route('admin.incomes.index') }}">
-                                            <i class="fas fa-chart-line me-2"></i> Incomes
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="{{ route('admin.account-profit-losses.index') }}">
-                                            <i class="fas fa-calculator me-2"></i> Profit & Loss
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
+               <div data-kt-menu-trigger="click"
+    class="menu-item menu-accordion {{ in_array(Route::current()->getName(), [
+        'admin.expense-categories.index',
+        'admin.expense-types.index',
+        'admin.bankings.index',
+        'admin.expenses.index',
+        'admin.accounts-receivables.index',
+        'admin.accounts-payables.index',
+        'admin.incomes.index',
+        'admin.account-profit-losses.index'
+    ]) ? 'here show' : '' }}">
+    
+    <span class="menu-link">
+        <span class="menu-icon">
+            <span class="svg-icon svg-icon-2">
+                <i class="fas fa-calculator side_baricon"></i>
+            </span>
+        </span>
+        <span class="menu-title">Account</span>
+        <span class="menu-arrow"></span>
+    </span>
+
+    <div class="menu-sub menu-sub-accordion">
+        
+        <!-- Account Dashboard -->
+        <div class="menu-item">
+            <a class="menu-link {{ Route::current()->getName() == 'admin.account.dashboard' ? 'active' : '' }}"
+                href="{{ route('admin.account.dashboard') }}">
+                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                <span class="menu-title">Dashboard</span>
+            </a>
+        </div>
+
+                        <!-- Account Comparison -->
+                <div class="menu-item">
+                    <a class="menu-link {{ Route::current()->getName() == 'account.comparison' ? 'active' : '' }}"
+                        href="{{ route('account.comparison') }}">
+                        <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                        <span class="menu-title">Accounts Comparison</span>
+                    </a>
+                </div>
+
+        <!-- Expense Categories -->
+        <div class="menu-item">
+            <a class="menu-link {{ Route::current()->getName() == 'admin.expense-categories.index' ? 'active' : '' }}"
+                href="{{ route('admin.expense-categories.index') }}">
+                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                <span class="menu-title">Expense Categories</span>
+            </a>
+        </div>
+
+        <!-- Expense Types -->
+        <div class="menu-item">
+            <a class="menu-link {{ Route::current()->getName() == 'admin.expense-types.index' ? 'active' : '' }}"
+                href="{{ route('admin.expense-types.index') }}">
+                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                <span class="menu-title">Expense Types</span>
+            </a>
+        </div>
+
+        <!-- Banking -->
+        <div class="menu-item">
+            <a class="menu-link {{ Route::current()->getName() == 'admin.bankings.index' ? 'active' : '' }}"
+                href="{{ route('admin.bankings.index') }}">
+                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                <span class="menu-title">Banking Transactions</span>
+            </a>
+        </div>
+
+        <!-- Expenses -->
+        <div class="menu-item">
+            <a class="menu-link {{ Route::current()->getName() == 'admin.expenses.index' ? 'active' : '' }}"
+                href="{{ route('admin.expenses.index') }}">
+                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                <span class="menu-title">Expenses</span>
+            </a>
+        </div>
+{{-- 
+        <!-- Section Divider -->
+        <div class="menu-item">
+            <hr>
+        </div> --}}
+
+        <!-- Accounts Receivable -->
+        <div class="menu-item">
+            <a class="menu-link {{ Route::current()->getName() == 'admin.accounts-receivables.index' ? 'active' : '' }}"
+                href="{{ route('admin.accounts-receivables.index') }}">
+                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                <span class="menu-title">Accounts Receivable</span>
+            </a>
+        </div>
+
+        <!-- Accounts Payable -->
+        <div class="menu-item">
+            <a class="menu-link {{ Route::current()->getName() == 'admin.accounts-payables.index' ? 'active' : '' }}"
+                href="{{ route('admin.accounts-payables.index') }}">
+                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                <span class="menu-title">Accounts Payable</span>
+            </a>
+        </div>
+
+        {{-- <!-- Divider -->
+        <div class="menu-item">
+            <hr>
+        </div> --}}
+
+        <!-- Incomes -->
+        <div class="menu-item">
+            <a class="menu-link {{ Route::current()->getName() == 'admin.incomes.index' ? 'active' : '' }}"
+                href="{{ route('admin.incomes.index') }}">
+                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                <span class="menu-title">Incomes</span>
+            </a>
+        </div>
+
+        <!-- Profit & Loss -->
+        <div class="menu-item">
+            <a class="menu-link {{ Route::current()->getName() == 'admin.account-profit-losses.index' ? 'active' : '' }}"
+                href="{{ route('admin.account-profit-losses.index') }}">
+                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                <span class="menu-title">Profit & Loss</span>
+            </a>
+        </div>
+
+    </div>
+</div>
+
                                             {{-- <div class="menu-item">
                     <div class="menu-content pt-8 pb-0">
                         <span class="menu-section text-muted text-uppercase fs-8 ls-1">Layout</span>

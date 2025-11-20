@@ -35,8 +35,10 @@
                                 <tr>
                                     <td>{{ $expense->id }}</td>
                                     <td>{{ $expense->date->format('M d, Y') }}</td>
-                                    <td>{{ $expense->category->name ?? 'N/A' }}</td>
-                                    <td>{{ $expense->type->name ?? 'N/A' }}</td>
+                                   
+                                        <td>{{ $expense->category ?? 'N/A' }}</td>
+                                        <td>{{ $expense->type?? 'N/A' }}</td>
+
                                     <td>{{ $expense->particulars }}</td>
                                     <td class="text-danger">{{ number_format($expense->amount, 2) }}</td>
                                     <td>
@@ -58,6 +60,9 @@
                                 @endforeach
                             </tbody>
                         </table>
+                        @if($expenses->isEmpty())
+                            <p class="text-center mt-3">No expenses found.</p>
+                        @endif
                     </div>
                 </div>
             </div>
