@@ -18,7 +18,7 @@
                     <span class="text-xl font-bold text-gray-800">TechFocus Principal</span>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <span class="text-gray-700">Welcome, {{ auth('principal')->user()->name }}</span>
+                    <span class="text-gray-700">Welcome, {{ auth('principal')->user()->legal_name }}</span>
                     <form method="POST" action="{{ route('principal.logout') }}">
                         @csrf
                         <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition duration-200">

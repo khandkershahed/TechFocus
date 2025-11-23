@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="flex items-center justify-between mb-6">
-    <h1 class="text-2xl font-bold">Welcome Principal, {{ auth('principal')->user()->name }}</h1>
+    <h1 class="text-2xl font-bold">Welcome Principal, {{ auth('principal')->user()->legal_name }}</h1>
     
     <div class="flex justify-end mb-4">
     <a href="{{ route('principal.profile.edit') }}"

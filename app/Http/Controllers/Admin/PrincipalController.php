@@ -1,16 +1,15 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
-
-use App\Models\Admin\Brand;
-use App\Models\Admin\Product;
+use App\Models\Country;
 use App\Models\Principal;
 use Illuminate\View\View;
+use App\Models\Admin\Brand;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use App\Models\Admin\Product;
 use App\Models\PrincipalLink;
-use App\Models\Country;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 
 class PrincipalController extends Controller
 {
