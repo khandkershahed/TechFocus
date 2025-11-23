@@ -4,17 +4,16 @@
 <div class="flex items-center justify-between mb-6">
     <h1 class="text-2xl font-bold">Welcome Principal, {{ auth('principal')->user()->legal_name }}</h1>
     
-    <div class="flex justify-end mb-4">
-    <a href="{{ route('principal.profile.edit') }}"
-       class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition duration-200">
-        Edit Profile
-    </a>
-
+    <div class="flex gap-3">
+        <a href="{{ route('principal.profile.edit') }}"
+           class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded transition duration-200">
+            Edit Profile
+        </a>
 
         <form method="POST" action="{{ route('principal.logout') }}" class="inline-block">
             @csrf
             <button type="submit"
-                    class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded transition duration-200">
+                    class="inline-flex items-center px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-semibold rounded transition duration-200">
                 Logout
             </button>
         </form>
@@ -22,41 +21,21 @@
 </div>
 
 <!-- Principal Links -->
-{{-- <a href="{{ route('principal.links.create') }}" 
-   class="inline-block bg-blue-600 text-white font-semibold px-4 py-2 rounded hover:bg-blue-700 transition duration-200 mb-4">
-   Add a Link
-</a>
-
-<div class="bg-white rounded-lg shadow p-6 mb-8">
-    <h2 class="text-lg font-semibold text-gray-800 mb-4">Shared Links</h2>
-    @if($principal->links->count())
-        <ul class="list-disc list-inside space-y-2">
-            @foreach($principal->links as $link)
-                <li>
-                    <a href="{{ $link->url }}" target="_blank" class="text-blue-600 hover:underline">
-                        {{ $link->label }}
-                    </a>
-                </li>
-            @endforeach
-        </ul>
-    @else
-        <p class="text-gray-500">No shared links yet.</p>
-    @endif
-</div> --}}
-<!-- Principal Links -->
-<a href="{{ route('principal.links.create') }}" 
-   class="inline-block bg-blue-600 text-white font-semibold px-4 py-2 rounded hover:bg-blue-700 transition duration-200 mb-4">
-   Add a Link
-</a>
-
-<!-- Shared Links Preview -->
 <div class="bg-white rounded-lg shadow p-6 mb-8">
     <div class="flex items-center justify-between mb-4">
-        <h2 class="text-lg font-semibold text-gray-800"> Principal Shared Links</h2>
-        <a href="{{ route('principal.links.index') }}" 
-           class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-            View All Links
-        </a>
+        <h2 class="text-lg font-semibold text-gray-800">Principal Shared Links</h2>
+
+        <div class="flex gap-3">
+            <a href="{{ route('principal.links.create') }}" 
+               class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition duration-200">
+                Add Link
+            </a>
+
+            <a href="{{ route('principal.links.index') }}" 
+               class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition duration-200">
+                View All Links
+            </a>
+        </div>
     </div>
 
     @if($principal->links->count())
@@ -82,25 +61,23 @@
     @endif
 </div>
 
-
-
 <!-- Principal Info -->
 <div class="bg-white rounded-lg shadow p-6 mb-6">
     <h2 class="text-lg font-semibold text-gray-800 mb-4">Principal Details</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <div>
-            <p class="text-sm text-gray-500">Company Name</p>
-            <p class="font-medium text-gray-900">{{ auth('principal')->user()->name }}</p>
+            <p class="text-sm font-medium text-gray-900">Company Name</p>
+            <p class="text-gray-700">{{ auth('principal')->user()->name }}</p>
         </div>
         <div>
-            <p class="text-sm text-gray-500">Entity Type</p>
-            <p class="font-medium text-gray-900">
+            <p class="text-sm font-medium text-gray-900">Entity Type</p>
+            <p class="text-gray-700">
                 {{ auth('principal')->user()->entity_type ?? 'Not specified' }}
             </p>
         </div>
         <div>
-            <p class="text-sm text-gray-500">Email</p>
-            <p class="font-medium text-gray-900">{{ auth('principal')->user()->email }}</p>
+            <p class="text-sm font-medium text-gray-900">Email</p>
+            <p class="text-gray-700">{{ auth('principal')->user()->email }}</p>
         </div>
     </div>
 </div> 
@@ -111,31 +88,31 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div>
-            <p class="text-sm text-gray-500">Legal Name</p>
-            <p class="font-medium text-gray-900">{{ $principal->legal_name ?? 'N/A' }}</p>
+            <p class="text-sm font-medium text-gray-900">Legal Name</p>
+            <p class="text-gray-700">{{ $principal->legal_name ?? 'N/A' }}</p>
         </div>
         <div>
-            <p class="text-sm text-gray-500">Trading Name</p>
-            <p class="font-medium text-gray-900">{{ $principal->trading_name ?? 'N/A' }}</p>
+            <p class="text-sm font-medium text-gray-900">Trading Name</p>
+            <p class="text-gray-700">{{ $principal->trading_name ?? 'N/A' }}</p>
         </div>
         <div>
-            <p class="text-sm text-gray-500">Entity Type</p>
-            <p class="font-medium text-gray-900">{{ $principal->entity_type ?? 'N/A' }}</p>
+            <p class="text-sm font-medium text-gray-900">Entity Type</p>
+            <p class="text-gray-700">{{ $principal->entity_type ?? 'N/A' }}</p>
         </div>
         <div>
-            <p class="text-sm text-gray-500">Website</p>
+            <p class="text-sm font-medium text-gray-900">Website</p>
             <a href="{{ $principal->website_url }}" target="_blank" class="text-blue-600 hover:underline">
                 {{ $principal->website_url ?? 'N/A' }}
             </a>
         </div>
         <div>
-            <p class="text-sm text-gray-500">Headquarters</p>
-            <p class="font-medium text-gray-900">
+            <p class="text-sm font-medium text-gray-900">Headquarters</p>
+            <p class="text-gray-700">
                 {{ $principal->hq_city ?? '—' }}, {{ $principal->country_iso ?? '—' }}
             </p>
         </div>
         <div>
-            <p class="text-sm text-gray-500">Relationship Status</p>
+            <p class="text-sm font-medium text-gray-900">Relationship Status</p>
             <span class="px-2 py-1 text-xs rounded-full 
                 @if($principal->relationship_status == 'Active') bg-green-100 text-green-800
                 @elseif($principal->relationship_status == 'Prospect') bg-yellow-100 text-yellow-800
@@ -148,7 +125,7 @@
 
     @if($principal->notes)
     <div class="mt-6">
-        <p class="text-sm text-gray-500">Internal Notes</p>
+        <p class="text-sm font-medium text-gray-900">Internal Notes</p>
         <div class="prose max-w-none text-sm text-gray-700">
             {!! nl2br(e($principal->notes)) !!}
         </div>
@@ -175,17 +152,17 @@
                     @foreach($principal->contacts as $contact)
                         <tr>
                             <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ $contact->contact_name }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-500">{{ $contact->job_title ?? '—' }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-500">{{ $contact->email ?? '—' }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-500">{{ $contact->phone_e164 ?? '—' }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-500">{{ $contact->preferred_channel ?? '—' }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-700">{{ $contact->job_title ?? '—' }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-700">{{ $contact->email ?? '—' }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-700">{{ $contact->phone_e164 ?? '—' }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-700">{{ $contact->preferred_channel ?? '—' }}</td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
         </div>
     @else
-        <p class="text-gray-500">No contacts available.</p>
+        <p class="text-gray-700">No contacts available.</p>
     @endif
 </div>
 
@@ -207,22 +184,23 @@
                     @foreach($principal->addresses as $address)
                         <tr>
                             <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ $address->type }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-500">
+                            <td class="px-6 py-4 text-sm text-gray-700">
                                 {{ $address->line1 }} 
                                 @if($address->line2)<br>{{ $address->line2 }}@endif
                             </td>
-                            <td class="px-6 py-4 text-sm text-gray-500">{{ $address->city ?? '—' }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-500">{{ $address->country_name ?? '—' }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-700">{{ $address->city ?? '—' }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-700">
+                                {{ $address->country_name ? ucwords(strtolower($address->country_name)) : '—' }}
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
         </div>
     @else
-        <p class="text-gray-500">No addresses available.</p>
+        <p class="text-gray-700">No addresses available.</p>
     @endif
 </div>
-
 
 <!-- Stats Cards -->
 <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
@@ -357,7 +335,7 @@
 
     <div class="bg-white rounded-lg shadow p-6">
         <h3 class="text-lg font-semibold text-gray-800 mb-4">Submission Guidelines</h3>
-        <ul class="space-y-2 text-sm text-gray-600">
+        <ul class="space-y-2 text-sm text-gray-700">
             <li class="flex items-start">
                 <i class="fa-solid fa-check text-green-500 mr-2 mt-1"></i>
                 <span>Ensure information is accurate and complete</span>
@@ -432,7 +410,7 @@
                                         {{ ucfirst($brand->status) }}
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                                     {{ $brand->category }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -455,7 +433,7 @@
             @else
                 <div class="text-center py-8">
                     <i class="fa-solid fa-store text-4xl text-gray-300 mb-4"></i>
-                    <p class="text-gray-500">No brands submitted yet.</p>
+                    <p class="text-gray-700">No brands submitted yet.</p>
                     <a href="{{ route('principal.brands.create') }}" 
                        class="mt-4 inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 transition duration-200">
                         Add Your First Brand
@@ -517,11 +495,11 @@
                                         {{ ucfirst($product->submission_status) }}
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                                     @if($product->price)
                                         ${{ number_format($product->price, 2) }}
                                     @else
-                                        <span class="text-gray-400">N/A</span>
+                                        <span class="text-gray-500">N/A</span>
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -544,7 +522,7 @@
             @else
                 <div class="text-center py-8">
                     <i class="fa-solid fa-cube text-4xl text-gray-300 mb-4"></i>
-                    <p class="text-gray-500">No products submitted yet.</p>
+                    <p class="text-gray-700">No products submitted yet.</p>
                     <a href="{{ route('principal.products.create') }}" 
                        class="mt-4 inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 transition duration-200">
                         Add Your First Product
