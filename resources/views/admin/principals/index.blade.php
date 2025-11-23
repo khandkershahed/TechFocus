@@ -315,7 +315,7 @@
                                             </div>
                                             <div>
                                                 <span class="fw-bold text-dark mb-1 d-block">{{ $principal->legal_name }}</span>
-                                                <span class="text-muted fs-7">ID: {{ $principal->code ?? 'N/A' }}</span>
+                                                <span class="text-muted fs-7">ID: {{ $principal->id ?? 'N/A' }}</span>
                                             </div>
                                         </div>
                                     </td>
