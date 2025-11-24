@@ -800,3 +800,6 @@ Route::prefix('admin/principals/{principal}/share-links')->name('admin.principal
 });
 
 Route::get('/guest/share/{token}', [ShareLinkController::class, 'show'])->name('guest.share-links.show');
+Route::get('/admin/get-rfq-details/{id}', [AccountsReceivableController::class, 'getRfqDetails']);
+Route::get('/admin/accounts-receivables/{id}/download-client-po', [App\Http\Controllers\Admin\AccountsReceivableController::class, 'downloadClientPo'])->name('admin.accounts-receivables.download-client-po');
+Route::get('/admin/accounts-receivables/{id}/download-invoice', [App\Http\Controllers\Admin\AccountsReceivableController::class, 'downloadInvoice'])->name('admin.accounts-receivables.download-invoice');
