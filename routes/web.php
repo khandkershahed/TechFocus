@@ -3,11 +3,12 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SharedFileController;
 use App\Http\Controllers\Admin\PrincipalController;
+use App\Http\Controllers\Admin\ShareLinkController;
 use App\Http\Controllers\Principal\BrandController;
 use App\Http\Controllers\Principal\ProductController;
 use App\Http\Controllers\Principal\DashboardController;
-use App\Http\Controllers\Principal\Auth\LoginController;
 
+use App\Http\Controllers\Principal\Auth\LoginController;
 use App\Http\Controllers\Principal\Auth\RegisterController;
 use App\Http\Controllers\Principal\PrincipalLinkController;
 use App\Http\Controllers\Principal\PrincipalProfileController;
@@ -250,6 +251,8 @@ Route::post('/notes/{activity}/pin', [PrincipalDashboardController::class, 'togg
 Route::get('/activities', [PrincipalDashboardController::class, 'getActivities'])->name('activities.index');
 
 });
+
+Route::get('/guest/share/{token}', [ShareLinkController::class, 'show'])->name('guest.share-links.show');
 require __DIR__ . '/frontend.php';
 require __DIR__ . '/auth.php';
 require __DIR__ . '/admin.php';

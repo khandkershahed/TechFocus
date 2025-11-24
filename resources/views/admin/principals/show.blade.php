@@ -603,6 +603,129 @@
 </div>
 @endif --}}
 
+
+<!-- Share Links Section - Only for users with share principals permission -->
+@if(auth('admin')->user()->hasRole('SuperAdmin') || auth('admin')->user()->can('share principals'))
+<div class="card mt-4">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="card-title mb-0">Share Links</h4>
+            <div>
+                <a href="{{ route('admin.principals.share-links.index', $principal->id) }}" 
+                   class="btn btn-sm btn-info me-2">
+                    <i class="fas fa-list"></i> View All Links
+                </a>
+                <a href="{{ route('admin.principals.share-links.create', $principal->id) }}" 
+                   class="btn btn-sm btn-success">
+                    <i class="fas fa-share-alt"></i> Create Share Link
+                </a>
+            </div>
+        </div>
+
+        <!-- Display recent share links -->
+        @php
+            $recentShareLinks = $principal->shareLinks()->latest()->limit(3)->get();
+        @endphp
+
+        @if($recentShareLinks->count() > 0)
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Token</th>
+                            <th>Expires</th>
+                            <th>Views</th>
+                                 
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($recentShareLinks as $link)
+                            <tr>
+                                <td>
+                                    <code class="text-truncate d-block" style="max-width: 150px;" 
+                                          title="{{ $link->token }}">
+                                        {{ Str::limit($link->token, 20) }}
+                                    </code>
+                                </td>
+                                <td>{{ $link->expires_at->format('M d, Y h:i A') }}</td>
+                                <td>{{ $link->view_count }} / {{ $link->max_views ?? '∞' }}</td>
+                                {{-- <td>
+                                    @if($link->isValid())
+                                        <span class="badge bg-success">Active</span>
+                                    @else
+                                        <span class="badge bg-danger">Expired</span>
+                                    @endif
+                                </td> --}}
+                                {{-- <td>
+                                    <!-- FIXED: Updated route name -->
+                                    <a href="{{ route('guest.share-links.show', $link->token) }}" 
+                                       target="_blank" 
+                                       class="btn btn-sm btn-primary">
+                                        <i class="fas fa-external-link-alt"></i> Open
+                                    </a>
+                                    <form action="{{ route('admin.principals.share-links.destroy', [$principal->id, $link->id]) }}" 
+                                          method="POST" 
+                                          class="d-inline"
+                                          onsubmit="return confirm('Delete this share link?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-danger">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </td> --}}
+                                <!-- In the share links section actions column -->
+                                            <td>
+                                                <div class="btn-group btn-group-sm">
+                                                    <!-- Open Link -->
+                                                    <a href="{{ route('guest.share-links.show', $link->token) }}" 
+                                                    target="_blank" 
+                                                    class="btn btn-primary" title="Open Link">
+                                                        <i class="fas fa-external-link-alt"></i>
+                                                    </a>
+                                                    
+                                                    <!-- Copy Link -->
+                                                    <button class="btn btn-info copy-link-btn" 
+                                                            title="Copy Share Link"
+                                                            data-principal-id="{{ $principal->id }}"
+                                                            data-share-link-id="{{ $link->id }}">
+                                                        <i class="fas fa-copy"></i>
+                                                    </button>
+                                                    
+                                                    <!-- Delete Link -->
+                                                    <form action="{{ route('admin.principals.share-links.destroy', [$principal->id, $link->id]) }}" 
+                                                        method="POST" 
+                                                        class="d-inline"
+                                                        onsubmit="return confirm('Delete this share link?')">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-danger" title="Delete">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @else
+            <div class="text-center py-4">
+                <div class="text-muted">
+                    <i class="fas fa-share-alt fa-2x mb-2 d-block"></i>
+                    No share links created yet.
+                </div>
+                <a href="{{ route('admin.principals.share-links.create', $principal->id) }}" 
+                   class="btn btn-primary mt-2">
+                    Create Your First Share Link
+                </a>
+            </div>
+        @endif
+    </div>
+</div>
+@endif
 <!-- Products Section -->
 <div class="card mt-4">
     <div class="card-body">
@@ -886,3 +1009,71 @@
     @endif
 </div>
 @endsection
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Copy link functionality
+    document.querySelectorAll('.copy-link-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const principalId = this.getAttribute('data-principal-id');
+            const shareLinkId = this.getAttribute('data-share-link-id');
+            
+            // Show loading state
+            const originalHtml = this.innerHTML;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            this.disabled = true;
+            
+            // Make API call to get the shareable URL
+            fetch(`/admin/principals/${principalId}/share-links/${shareLinkId}/copy`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Copy to clipboard
+                        navigator.clipboard.writeText(data.url).then(() => {
+                            // Show success state
+                            this.innerHTML = '<i class="fas fa-check"></i>';
+                            this.classList.remove('btn-info');
+                            this.classList.add('btn-success');
+                            
+                            // Optional: Show toast notification
+                            showToast(data.message, 'success');
+                            
+                            // Reset button after 2 seconds
+                            setTimeout(() => {
+                                this.innerHTML = originalHtml;
+                                this.classList.remove('btn-success');
+                                this.classList.add('btn-info');
+                                this.disabled = false;
+                            }, 2000);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    this.innerHTML = originalHtml;
+                    this.disabled = false;
+                    showToast('Failed to copy link', 'error');
+                });
+        });
+    });
+    
+    // Simple toast notification function
+    function showToast(message, type = 'info') {
+        // You can use a proper toast library or create a simple one
+        const toast = document.createElement('div');
+        toast.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+        toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 250px;';
+        toast.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        document.body.appendChild(toast);
+        
+        // Auto remove after 3 seconds
+        setTimeout(() => {
+            toast.remove();
+        }, 3000);
+    }
+});
+</script>
+@endpush

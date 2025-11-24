@@ -6,7 +6,7 @@ use App\Http\Controllers\Rfq\RfqController;
 use App\Http\Controllers\Rfq\DealController;
 use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\RowController;
-use App\Http\Controllers\ShareLinkController;
+use App\Http\Controllers\Admin\ShareLinkController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\HR\HolidayController;
@@ -782,3 +782,21 @@ Route::prefix('admin')->name('admin.')->group(function () {
 });
  Route::get('/account-comparison', [AccountComparisonController::class, 'comparison'])->name('account.comparison');
 // Add this inside the admin prefix group
+
+// Admin routes for share links
+// Route::prefix('admin/principals/{principal}/share-links')->name('admin.principals.share-links.')->group(function () {
+//     Route::get('/', [ShareLinkController::class, 'index'])->name('index');
+//     Route::get('/create', [ShareLinkController::class, 'create'])->name('create');
+//     Route::post('/', [ShareLinkController::class, 'store'])->name('store');
+//     Route::delete('/{shareLink}', [ShareLinkController::class, 'destroy'])->name('destroy');
+// });
+
+Route::prefix('admin/principals/{principal}/share-links')->name('admin.principals.share-links.')->group(function () {
+    Route::get('/', [ShareLinkController::class, 'index'])->name('index');
+    Route::get('/create', [ShareLinkController::class, 'create'])->name('create');
+    Route::post('/', [ShareLinkController::class, 'store'])->name('store');
+    Route::get('/{shareLink}/copy', [ShareLinkController::class, 'copyLink'])->name('copy');
+    Route::delete('/{shareLink}', [ShareLinkController::class, 'destroy'])->name('destroy');
+});
+
+Route::get('/guest/share/{token}', [ShareLinkController::class, 'show'])->name('guest.share-links.show');
