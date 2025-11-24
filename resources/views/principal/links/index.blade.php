@@ -237,17 +237,17 @@
                                     </svg>
                                     Gmail
                                 </button>
-                                <button type="button" onclick="shareViaOutlook()" class="flex-1 bg-blue-600 text-white px-2 py-1 rounded text-sm hover:bg-blue-700 flex items-center justify-center">
+                                {{-- <button type="button" onclick="shareViaOutlook()" class="flex-1 bg-blue-600 text-white px-2 py-1 rounded text-sm hover:bg-blue-700 flex items-center justify-center">
                                     <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24">
                                         <path d="M12 12.713l-11.985-9.713h23.97l-11.985 9.713zm0 2.574l-12-9.725v15.438h24v-15.438l-12 9.725z"/>
                                     </svg>
                                     Outlook
-                                </button>
+                                </button> --}}
                             </div>
                         </div>
 
                         <!-- Social Media -->
-                        <div class="flex space-x-2 mt-2">
+                        {{-- <div class="flex space-x-2 mt-2">
                             <button type="button" onclick="shareViaFacebook()" class="flex-1 bg-blue-800 text-white px-2 py-1 rounded text-sm hover:bg-blue-900">
                                 Facebook
                             </button>
@@ -257,7 +257,7 @@
                             <button type="button" onclick="shareViaLinkedIn()" class="flex-1 bg-blue-700 text-white px-2 py-1 rounded text-sm hover:bg-blue-800">
                                 LinkedIn
                             </button>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
 

@@ -224,4 +224,16 @@ public function products()
             }
         });
     }
+       public function activities()
+    {
+        return $this->hasMany(Activity::class);
+    }
+
+    /**
+     * Get the activities created by this principal.
+     */
+    public function createdActivities()
+    {
+        return $this->morphMany(Activity::class, 'created_by');
+    }
 }

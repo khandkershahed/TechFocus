@@ -240,6 +240,16 @@ Route::post('/principal/links/send-share-email', [PrincipalLinkController::class
     Route::put('/profile/addresses', [PrincipalProfileController::class, 'updateAddresses'])->name('addresses.update');
 });
     
+Route::prefix('principal')->name('principal.')->group(function () {
+   // Notes routes
+Route::post('/notes', [PrincipalDashboardController::class, 'storeNote'])->name('notes.store');
+Route::get('/notes/{activity}', [PrincipalDashboardController::class, 'getNote'])->name('notes.show');
+Route::put('/notes/{activity}', [PrincipalDashboardController::class, 'updateNote'])->name('notes.update');
+Route::delete('/notes/{activity}', [PrincipalDashboardController::class, 'deleteNote'])->name('notes.destroy');
+Route::post('/notes/{activity}/pin', [PrincipalDashboardController::class, 'togglePin'])->name('notes.pin');
+Route::get('/activities', [PrincipalDashboardController::class, 'getActivities'])->name('activities.index');
+
+});
 require __DIR__ . '/frontend.php';
 require __DIR__ . '/auth.php';
 require __DIR__ . '/admin.php';
