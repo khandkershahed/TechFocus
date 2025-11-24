@@ -108,77 +108,6 @@
             </div>
         </div>
 
-        <!-- Detailed Stats Section -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-            <!-- Brands Stats -->
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-                <div class="flex items-center justify-between mb-6">
-                    <h3 class="text-lg font-semibold text-gray-900">Brands Overview</h3>
-                    <i class="fa-solid fa-store text-gray-400"></i>
-                </div>
-                <div class="space-y-4">
-                    <div class="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
-                        <div class="flex items-center">
-                            <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center mr-3">
-                                <i class="fa-solid fa-layer-group text-white text-xs"></i>
-                            </div>
-                            <span class="text-sm font-medium text-gray-700">Total Brands</span>
-                        </div>
-                        <span class="text-lg font-bold text-gray-900">{{ $stats['total_brands'] }}</span>
-                    </div>
-                    
-                    <div class="grid grid-cols-3 gap-3">
-                        <div class="text-center p-3 bg-green-50 rounded-lg">
-                            <div class="text-lg font-bold text-green-600">{{ $stats['approved_brands'] }}</div>
-                            <div class="text-xs text-gray-600 mt-1">Approved</div>
-                        </div>
-                        <div class="text-center p-3 bg-yellow-50 rounded-lg">
-                            <div class="text-lg font-bold text-yellow-600">{{ $stats['pending_brands'] }}</div>
-                            <div class="text-xs text-gray-600 mt-1">Pending</div>
-                        </div>
-                        <div class="text-center p-3 bg-red-50 rounded-lg">
-                            <div class="text-lg font-bold text-red-600">{{ $stats['rejected_brands'] }}</div>
-                            <div class="text-xs text-gray-600 mt-1">Rejected</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Products Stats -->
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-                <div class="flex items-center justify-between mb-6">
-                    <h3 class="text-lg font-semibold text-gray-900">Products Overview</h3>
-                    <i class="fa-solid fa-cube text-gray-400"></i>
-                </div>
-                <div class="space-y-4">
-                    <div class="flex items-center justify-between p-3 bg-indigo-50 rounded-lg">
-                        <div class="flex items-center">
-                            <div class="w-8 h-8 bg-indigo-500 rounded-full flex items-center justify-center mr-3">
-                                <i class="fa-solid fa-boxes-stacked text-white text-xs"></i>
-                            </div>
-                            <span class="text-sm font-medium text-gray-700">Total Products</span>
-                        </div>
-                        <span class="text-lg font-bold text-gray-900">{{ $stats['total_products'] }}</span>
-                    </div>
-                    
-                    <div class="grid grid-cols-3 gap-3">
-                        <div class="text-center p-3 bg-green-50 rounded-lg">
-                            <div class="text-lg font-bold text-green-600">{{ $stats['approved_products'] }}</div>
-                            <div class="text-xs text-gray-600 mt-1">Approved</div>
-                        </div>
-                        <div class="text-center p-3 bg-yellow-50 rounded-lg">
-                            <div class="text-lg font-bold text-yellow-600">{{ $stats['pending_products'] }}</div>
-                            <div class="text-xs text-gray-600 mt-1">Pending</div>
-                        </div>
-                        <div class="text-center p-3 bg-red-50 rounded-lg">
-                            <div class="text-lg font-bold text-red-600">{{ $stats['rejected_products'] }}</div>
-                            <div class="text-xs text-gray-600 mt-1">Rejected</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <!-- Contacts & Addresses Section -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
             <!-- Contacts Card -->
@@ -311,6 +240,76 @@
         </ul>
     </div>
 </div>
+  <!-- Detailed Stats Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <!-- Brands Stats -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-lg font-semibold text-gray-900">Brands Overview</h3>
+                    <i class="fa-solid fa-store text-gray-400"></i>
+                </div>
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+                        <div class="flex items-center">
+                            <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center mr-3">
+                                <i class="fa-solid fa-layer-group text-white text-xs"></i>
+                            </div>
+                            <span class="text-sm font-medium text-gray-700">Total Brands</span>
+                        </div>
+                        <span class="text-lg font-bold text-gray-900">{{ $stats['total_brands'] }}</span>
+                    </div>
+                    
+                    <div class="grid grid-cols-3 gap-3">
+                        <div class="text-center p-3 bg-green-50 rounded-lg">
+                            <div class="text-lg font-bold text-green-600">{{ $stats['approved_brands'] }}</div>
+                            <div class="text-xs text-gray-600 mt-1">Approved</div>
+                        </div>
+                        <div class="text-center p-3 bg-yellow-50 rounded-lg">
+                            <div class="text-lg font-bold text-yellow-600">{{ $stats['pending_brands'] }}</div>
+                            <div class="text-xs text-gray-600 mt-1">Pending</div>
+                        </div>
+                        <div class="text-center p-3 bg-red-50 rounded-lg">
+                            <div class="text-lg font-bold text-red-600">{{ $stats['rejected_brands'] }}</div>
+                            <div class="text-xs text-gray-600 mt-1">Rejected</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Stats -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-lg font-semibold text-gray-900">Products Overview</h3>
+                    <i class="fa-solid fa-cube text-gray-400"></i>
+                </div>
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between p-3 bg-indigo-50 rounded-lg">
+                        <div class="flex items-center">
+                            <div class="w-8 h-8 bg-indigo-500 rounded-full flex items-center justify-center mr-3">
+                                <i class="fa-solid fa-boxes-stacked text-white text-xs"></i>
+                            </div>
+                            <span class="text-sm font-medium text-gray-700">Total Products</span>
+                        </div>
+                        <span class="text-lg font-bold text-gray-900">{{ $stats['total_products'] }}</span>
+                    </div>
+                    
+                    <div class="grid grid-cols-3 gap-3">
+                        <div class="text-center p-3 bg-green-50 rounded-lg">
+                            <div class="text-lg font-bold text-green-600">{{ $stats['approved_products'] }}</div>
+                            <div class="text-xs text-gray-600 mt-1">Approved</div>
+                        </div>
+                        <div class="text-center p-3 bg-yellow-50 rounded-lg">
+                            <div class="text-lg font-bold text-yellow-600">{{ $stats['pending_products'] }}</div>
+                            <div class="text-xs text-gray-600 mt-1">Pending</div>
+                        </div>
+                        <div class="text-center p-3 bg-red-50 rounded-lg">
+                            <div class="text-lg font-bold text-red-600">{{ $stats['rejected_products'] }}</div>
+                            <div class="text-xs text-gray-600 mt-1">Rejected</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 <!-- Recent Submissions -->
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
