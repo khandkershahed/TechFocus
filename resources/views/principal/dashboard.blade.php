@@ -493,11 +493,6 @@
 </div>
 
 
-                    <div class="p-5 bg-white border border-gray-200 shadow-sm rounded-xl">
-                                <h3 class="mb-4 font-semibold text-gray-800">Links & Files</h3>
-                                <div class="py-2 text-sm text-gray-600 border-t border-gray-100">Useful Links</div>
-                            </div>
-
                             <div class="p-6 transition-all duration-300 bg-white border border-gray-100 rounded-2xl">
                                 <!-- Header with Gradient Background -->
                                 <div class="p-4 mb-6 border border-blue-100 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl">
