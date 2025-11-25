@@ -58,13 +58,19 @@ class PrincipalDashboardController extends Controller
         ->orderBy('created_at', 'desc')
         ->first();
 
+
+           // Dashboard shortcuts
+
+
+
     return view('principal.dashboard', compact(
         'stats', 
         'brands', 
         'products', 
         'principal', 
         'activities',
-        'lastActivity'
+        'lastActivity',
+        // 'shortcuts'
     ));
     }
 

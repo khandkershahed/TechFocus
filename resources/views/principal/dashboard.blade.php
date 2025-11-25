@@ -127,138 +127,168 @@
                                     </div>
                                 </div>
                             </div>
+<div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+    <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+                <i class="fa-solid fa-users text-white text-sm"></i>
+            </div>
+            <div>
+                <h3 class="text-lg font-semibold text-gray-900">Contacts</h3>
+                <p class="text-sm text-gray-500">Manage your contact information</p>
+            </div>
+        </div>
+        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+            <i class="fa-solid fa-user mr-1 text-xs"></i>
+            {{ $principal->contacts->count() }} {{ Str::plural('Contact', $principal->contacts->count()) }}
+        </span>
+    </div>
 
-                            <div class="p-5 bg-white border border-gray-200 shadow-sm rounded-xl">
-                                <div class="flex items-center justify-between mb-4">
-                                    <h3 class="font-semibold text-gray-800">Contacts</h3>
-                                    <span class="px-2 py-1 text-xs text-gray-400 rounded bg-gray-50">Available v</span>
-                                </div>
-                                <table class="w-full text-left">
-                                    <thead>
-                                        <tr class="border-b border-gray-100">
-                                            <th class="pb-2 font-medium text-gray-500">Brand</th>
-                                            <th class="pb-2 font-medium text-gray-500">Authorization</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="space-y-3">
-                                        <tr class="border-b">
-                                            <td class="py-2">
-                                                <div class="rounded">Brand One</div>
-                                            </td>
-                                            <td class="text-sm text-gray-600 ">Authorized</td>
-                                        </tr>
-                                        <tr class="border-b">
-                                            <td class="py-2">
-                                                <div class="rounded ">Brand One</div>
-                                            </td>
-                                            <td class="text-sm text-gray-600 ">Unofficial</td>
-                                        </tr>
-                                        <tr class="border-b">
-                                            <td class="py-2">
-                                                <div class="rounded">Brand One</div>
-                                            </td>
-                                            <td class="text-sm text-gray-600 ">Unknown</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+    <div class="overflow-hidden rounded-lg border border-gray-200">
+        <table class="w-full">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                        <div class="flex items-center space-x-2">
+                            <i class="fa-solid fa-user text-gray-400 text-xs"></i>
+                            <span>Name</span>
+                        </div>
+                    </th>
+                    <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                        <div class="flex items-center space-x-2">
+                            <i class="fa-solid fa-briefcase text-gray-400 text-xs"></i>
+                            <span>Job Title</span>
+                        </div>
+                    </th>
+                    <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                        <div class="flex items-center space-x-2">
+                            <i class="fa-solid fa-envelope text-gray-400 text-xs"></i>
+                            <span>Email</span>
+                        </div>
+                    </th>
+                    <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                        <div class="flex items-center space-x-2">
+                            <i class="fa-solid fa-phone text-gray-400 text-xs"></i>
+                            <span>Phone</span>
+                        </div>
+                    </th>
+                    <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                        Actions
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                @forelse($principal->contacts as $contact)
+                <tr class="hover:bg-gray-50 transition-colors duration-150">
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
+                                <span class="text-white text-xs font-medium">
+                                    {{ substr($contact->contact_name, 0, 1) }}
+                                </span>
                             </div>
+                            <div>
+                                <div class="text-sm font-semibold text-gray-900">{{ $contact->contact_name }}</div>
+                                @if($contact->is_primary)
+                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 mt-1">
+                                    <i class="fa-solid fa-star mr-1 text-xs"></i>
+                                    Primary
+                                </span>
+                                @endif
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">
+                            {{ $contact->job_title ?? '—' }}
+                        </div>
+                        @if($contact->department)
+                        <div class="text-xs text-gray-500">{{ $contact->department }}</div>
+                        @endif
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        @if($contact->email)
+                        <div class="flex items-center space-x-2">
+                            <a href="mailto:{{ $contact->email }}" class="text-sm text-blue-600 hover:text-blue-800 transition-colors">
+                                {{ $contact->email }}
+                            </a>
+                            <button onclick="copyToClipboard('{{ $contact->email }}')" class="text-gray-400 hover:text-gray-600 transition-colors" title="Copy email">
+                                <i class="fa-regular fa-copy text-xs"></i>
+                            </button>
+                        </div>
+                        @else
+                        <span class="text-sm text-gray-400">—</span>
+                        @endif
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        @if($contact->phone_e164)
+                        <div class="flex items-center space-x-2">
+                            <a href="tel:{{ $contact->phone_e164 }}" class="text-sm text-gray-900 hover:text-blue-600 transition-colors">
+                                {{ $contact->phone_e164 }}
+                            </a>
+                            @if($contact->whatsapp)
+                            <a href="https://wa.me/{{ $contact->whatsapp }}" target="_blank" class="text-green-500 hover:text-green-600 transition-colors" title="WhatsApp">
+                                <i class="fa-brands fa-whatsapp"></i>
+                            </a>
+                            @endif
+                        </div>
+                        @else
+                        <span class="text-sm text-gray-400">—</span>
+                        @endif
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center space-x-2">
+                            <button class="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Edit Contact">
+                                <i class="fa-solid fa-pen text-xs"></i>
+                            </button>
+                            <button class="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors" title="Set as Primary">
+                                <i class="fa-solid fa-star text-xs"></i>
+                            </button>
+                            <button class="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Delete Contact">
+                                <i class="fa-solid fa-trash text-xs"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="5" class="px-6 py-12 text-center">
+                        <div class="flex flex-col items-center justify-center space-y-3">
+                            <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center">
+                                <i class="fa-solid fa-users text-2xl text-gray-300"></i>
+                            </div>
+                            <div>
+                                <p class="text-gray-500 font-medium">No contacts available</p>
+                                <p class="text-sm text-gray-400 mt-1">Add contacts to get started</p>
+                            </div>
+                            <button class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">
+                                <i class="fa-solid fa-plus mr-2"></i>
+                                Add First Contact
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
 
-                            <div class="p-5 bg-white border border-gray-200 shadow-sm rounded-xl">
-                                <h3 class="mb-4 font-semibold text-gray-800">Links & Files</h3>
-                                <div class="py-2 text-sm text-gray-600 border-t border-gray-100">Useful Links</div>
-                            </div>
-                            <div class="p-5 overflow-x-auto bg-white border border-gray-200 shadow-sm rounded-xl">
-                                <h3 class="mb-4 font-semibold text-gray-800">Brand</h3>
-                                <table class="w-full text-left min-w-[400px]">
-                                    <thead>
-                                        <tr class="text-xs font-medium text-gray-500 border-b border-gray-100">
-                                            <th class="pb-3 pr-4">Image</th>
-                                            <th class="pb-3 pr-4">Name</th>
-                                            <th class="pb-3 pr-4">Validity</th>
-                                            <th class="pb-3">Status</th>
-                                            <th class="pb-3">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach($brands->take(5) as $brand)
-                                        <tr>
-                                            <td>
-                                                @if($brand->logo)
-                                                <div class="flex-shrink-0 w-10 h-10">
-                                                    <img class="object-cover w-10 h-10 rounded-full"
-                                                        src="{{ asset('storage/brand/logo/'.$brand->logo) }}"
-                                                        alt="{{ $brand->title }}">
-                                                </div>
-                                                @endif
-                                            </td>
-                                            <td class="py-3 pr-4 text-sm font-bold text-gray-800">{{ $brand->title }}</td>
-                                            <td class="py-3 pr-4 text-sm text-gray-300">dd/mm</td>
-                                            <td class="py-3">
-                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                        @if($brand->status == 'approved') bg-green-100 text-green-800
-                                        @elseif($brand->status == 'pending') bg-yellow-100 text-yellow-800
-                                        @else bg-red-100 text-red-800 @endif">
-                                                    {{ ucfirst($brand->status) }}
-                                                </span>
-                                            </td>
-                                            <td class="text-center">
-                                                <a href="{{ route('principal.brands.index', $brand->id) }}"
-                                                    class="mr-3 text-indigo-600 hover:text-indigo-900">
-                                                    <i class="fas fa-expand"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="p-5 overflow-x-auto bg-white border border-gray-200 shadow-sm rounded-xl">
-                                <h3 class="mb-4 font-semibold text-gray-800">Products</h3>
-                                <table class="w-full text-left min-w-[400px]">
-                                    <thead>
-                                        <tr class="text-xs font-medium text-gray-500 border-b border-gray-100">
-                                            <th class="pb-3 pr-4">Image</th>
-                                            <th class="pb-3 pr-4">Name</th>
-                                            <th class="pb-3 pr-4">Validity</th>
-                                            <th class="pb-3">Status</th>
-                                            <th class="pb-3">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach($products->take(5) as $product)
-                                        <tr>
-                                            <td>
-                                                @if($product->logo)
-                                                <div class="flex-shrink-0 w-10 h-10">
-                                                    <img class="object-cover w-10 h-10 rounded-full"
-                                                        src="{{ asset('storage/brand/logo/'.$product->logo) }}"
-                                                        alt="{{ $product->title }}">
-                                                </div>
-                                                @endif
-                                            </td>
-                                            <td class="py-3 pr-4 text-sm font-bold text-gray-800">{{ $product->title }}</td>
-                                            <td class="py-3 pr-4 text-sm text-gray-300">dd/mm</td>
-                                            <td class="py-3">
-                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                        @if($product->status == 'approved') bg-green-100 text-green-800
-                                        @elseif($product->status == 'pending') bg-yellow-100 text-yellow-800
-                                        @else bg-red-100 text-red-800 @endif">
-                                                    {{ ucfirst($product->status) }}
-                                                </span>
-                                            </td>
-                                            <td class="text-center">
-                                                <a href="{{ route('principal.products.index', $product->id) }}"
-                                                    class="mr-3 text-indigo-600 hover:text-indigo-900">
-                                                    <i class="fas fa-expand"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
+    @if($principal->contacts->count() > 5)
+    <div class="mt-4 flex items-center justify-between">
+        <p class="text-sm text-gray-500">
+            Showing {{ min(5, $principal->contacts->count()) }} of {{ $principal->contacts->count() }} contacts
+        </p>
+        <button class="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors">
+            View All Contacts
+            <i class="fa-solid fa-arrow-right ml-2 text-xs"></i>
+        </button>
+    </div>
+    @endif
+</div>
 
-                            <div class="p-5 bg-white border border-gray-200 shadow-sm rounded-xl">
+
+
+                         <div class="p-5 bg-white border border-gray-200 shadow-sm rounded-xl">
                                 <h3 class="mb-4 font-semibold text-gray-800">Addresses</h3>
                                 @if($principal->addresses->count())
                                 <div class="space-y-4">
@@ -282,6 +312,192 @@
                                 @endif
 
                             </div>
+                         <div class="bg-white rounded-lg shadow">
+    <div class="px-6 py-4 border-b border-gray-200">
+        <h2 class="text-lg font-semibold">Recent Brands</h2>
+    </div>
+    <div class="p-6">
+        @if($brands->count() > 0)
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead>
+                    <tr>
+                        <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
+                            Brand
+                        </th>
+                        <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
+                            Status
+                        </th>
+                        <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
+                            Category
+                        </th>
+                        <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
+                            Actions
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    @foreach($brands->take(5) as $brand)
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                @if($brand->logo)
+                                <div class="flex-shrink-0 w-10 h-10">
+                                    <img class="object-cover w-10 h-10 rounded-full"
+                                         src="{{ asset('storage/brand/logo/'.$brand->logo) }}"
+                                         alt="{{ $brand->title }}">
+                                </div>
+                                @endif
+                                <div class="ml-4">
+                                    <div class="text-sm font-medium text-gray-900">
+                                        {{ $brand->title }}
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                @if($brand->status == 'approved') bg-green-100 text-green-800
+                                @elseif($brand->status == 'pending') bg-yellow-100 text-yellow-800
+                                @else bg-red-100 text-red-800 @endif">
+                                {{ ucfirst($brand->status) }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-700 whitespace-nowrap">
+                            {{ $brand->category ?? 'N/A' }}
+                        </td>
+                        <td class="px-6 py-4 text-sm font-medium whitespace-nowrap">
+                            <a href="{{ route('principal.brands.edit', $brand->id) }}"
+                               class="mr-3 text-indigo-600 hover:text-indigo-900">
+                                                    <i class="fas fa-expand"></i>
+                                                </a>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+
+        @if($brands->count() > 5)
+        <div class="mt-4 text-center">
+            <a href="{{ route('principal.brands.index') }}"
+               class="font-medium text-blue-600 hover:text-blue-800">
+               View All Brands →
+            </a>
+        </div>
+        @endif
+
+        @else
+        <div class="py-8 text-center">
+            <i class="mb-4 text-4xl text-gray-300 fa-solid fa-store"></i>
+            <p class="text-gray-700">No brands submitted yet.</p>
+            <a href="{{ route('principal.brands.create') }}"
+               class="inline-flex items-center px-4 py-2 mt-4 text-xs font-semibold tracking-widest text-white uppercase transition duration-200 bg-blue-600 border border-transparent rounded-md hover:bg-blue-700">
+               Add Your First Brand
+            </a>
+        </div>
+        @endif
+    </div>
+</div>
+
+ <div class="bg-white rounded-lg shadow">
+    <div class="px-6 py-4 border-b border-gray-200">
+        <h2 class="text-lg font-semibold">Products</h2>
+    </div>
+    <div class="p-6">
+        @if($products->count() > 0)
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead>
+                        <tr>
+                            <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
+                                Product
+                            </th>
+                            <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
+                                Status
+                            </th>
+                            <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
+                                Price
+                            </th>
+                            <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
+                                Actions
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        @foreach($products->take(5) as $product)
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    @if($product->thumbnail)
+                                    <div class="flex-shrink-0 w-10 h-10">
+                                        <img class="object-cover w-10 h-10 rounded"
+                                             src="{{ asset('storage/' . $product->thumbnail) }}"
+                                             alt="{{ $product->name }}">
+                                    </div>
+                                    @endif
+                                    <div class="ml-4">
+                                        <div class="text-sm font-medium text-gray-900">
+                                            {{ $product->name }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                    @if($product->submission_status == 'approved') bg-green-100 text-green-800
+                                    @elseif($product->submission_status == 'pending') bg-yellow-100 text-yellow-800
+                                    @else bg-red-100 text-red-800 @endif">
+                                    {{ ucfirst($product->submission_status) }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-700 whitespace-nowrap">
+                                @if($product->price)
+                                    ${{ number_format($product->price, 2) }}
+                                @else
+                                    <span class="text-gray-500">N/A</span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4 text-sm font-medium whitespace-nowrap">
+                                <a href="{{ route('principal.products.index', $product->id) }}"
+                                   class="mr-3 text-indigo-600 hover:text-indigo-900">
+                                                    <i class="fas fa-expand"></i>
+                                                </a>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+
+            @if($products->count() > 5)
+            <div class="mt-4 text-center">
+                <a href="{{ route('principal.products.index') }}"
+                   class="font-medium text-indigo-600 hover:text-indigo-800">
+                   View All Products →
+                </a>
+            </div>
+            @endif
+
+        @else
+            <div class="py-8 text-center">
+                <i class="mb-4 text-4xl text-gray-300 fa-solid fa-cube"></i>
+                <p class="text-gray-700">No products submitted yet.</p>
+                <a href="{{ route('principal.products.create') }}"
+                   class="inline-flex items-center px-4 py-2 mt-4 text-xs font-semibold tracking-widest text-white uppercase transition duration-200 bg-indigo-600 border border-transparent rounded-md hover:bg-indigo-700">
+                   Add Your First Product
+                </a>
+            </div>
+        @endif
+    </div>
+</div>
+
+
+                    <div class="p-5 bg-white border border-gray-200 shadow-sm rounded-xl">
+                                <h3 class="mb-4 font-semibold text-gray-800">Links & Files</h3>
+                                <div class="py-2 text-sm text-gray-600 border-t border-gray-100">Useful Links</div>
+                            </div>
+
                             <div class="p-6 transition-all duration-300 bg-white border border-gray-100 rounded-2xl">
                                 <!-- Header with Gradient Background -->
                                 <div class="p-4 mb-6 border border-blue-100 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl">
@@ -1935,5 +2151,25 @@
                 updateCharCount(textarea);
             }
         </script>
-        @endpush
-        @endsection
+        <script>
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        // Show notification
+        const notification = document.createElement('div');
+        notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50';
+        notification.innerHTML = `
+            <div class="flex items-center space-x-2">
+                <i class="fa-solid fa-check"></i>
+                <span>Copied to clipboard!</span>
+            </div>
+        `;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.remove();
+        }, 2000);
+    });
+}
+</script>
+  @endpush
+ @endsection

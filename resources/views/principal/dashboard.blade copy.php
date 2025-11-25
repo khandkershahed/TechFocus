@@ -403,90 +403,92 @@
 
     <!-- Recent Submissions -->
     <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <!-- Recent Brands -->
-        <div class="bg-white rounded-lg shadow">
-            <div class="px-6 py-4 border-b border-gray-200">
-                <h2 class="text-lg font-semibold">Recent Brands</h2>
-            </div>
-            <div class="p-6">
-                @if($brands->count() > 0)
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead>
-                            <tr>
-                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
-                                    Brand Name
-                                </th>
-                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
-                                    Status
-                                </th>
-                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
-                                    Category
-                                </th>
-                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
-                                    Actions
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            @foreach($brands->take(5) as $brand)
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        @if($brand->logo)
-                                        <div class="flex-shrink-0 w-10 h-10">
-                                            <img class="object-cover w-10 h-10 rounded-full"
-                                                src="{{ asset('storage/brand/logo/'.$brand->logo) }}"
-                                                alt="{{ $brand->title }}">
-                                        </div>
-                                        @endif
-                                        <div class="ml-4">
-                                            <div class="text-sm font-medium text-gray-900">
-                                                {{ $brand->title }}
-                                            </div>
-                                        </div>
+  <div class="bg-white rounded-lg shadow">
+    <div class="px-6 py-4 border-b border-gray-200">
+        <h2 class="text-lg font-semibold">Recent Brands</h2>
+    </div>
+    <div class="p-6">
+        @if($brands->count() > 0)
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead>
+                    <tr>
+                        <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
+                            Brand
+                        </th>
+                        <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
+                            Status
+                        </th>
+                        <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
+                            Category
+                        </th>
+                        <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
+                            Actions
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    @foreach($brands->take(5) as $brand)
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                @if($brand->logo)
+                                <div class="flex-shrink-0 w-10 h-10">
+                                    <img class="object-cover w-10 h-10 rounded-full"
+                                         src="{{ asset('storage/brand/logo/'.$brand->logo) }}"
+                                         alt="{{ $brand->title }}">
+                                </div>
+                                @endif
+                                <div class="ml-4">
+                                    <div class="text-sm font-medium text-gray-900">
+                                        {{ $brand->title }}
                                     </div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                        @if($brand->status == 'approved') bg-green-100 text-green-800
-                                        @elseif($brand->status == 'pending') bg-yellow-100 text-yellow-800
-                                        @else bg-red-100 text-red-800 @endif">
-                                        {{ ucfirst($brand->status) }}
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 text-sm text-gray-700 whitespace-nowrap">
-                                    {{ $brand->category }}
-                                </td>
-                                <td class="px-6 py-4 text-sm font-medium whitespace-nowrap">
-                                    <a href="{{ route('principal.brands.edit', $brand->id) }}"
-                                        class="mr-3 text-indigo-600 hover:text-indigo-900">Edit</a>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-                @if($brands->count() > 5)
-                <div class="mt-4 text-center">
-                    <a href="{{ route('principal.brands.index') }}"
-                        class="font-medium text-blue-600 hover:text-blue-800">
-                        View All Brands →
-                    </a>
-                </div>
-                @endif
-                @else
-                <div class="py-8 text-center">
-                    <i class="mb-4 text-4xl text-gray-300 fa-solid fa-store"></i>
-                    <p class="text-gray-700">No brands submitted yet.</p>
-                    <a href="{{ route('principal.brands.create') }}"
-                        class="inline-flex items-center px-4 py-2 mt-4 text-xs font-semibold tracking-widest text-white uppercase transition duration-200 bg-blue-600 border border-transparent rounded-md hover:bg-blue-700">
-                        Add Your First Brand
-                    </a>
-                </div>
-                @endif
-            </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                @if($brand->status == 'approved') bg-green-100 text-green-800
+                                @elseif($brand->status == 'pending') bg-yellow-100 text-yellow-800
+                                @else bg-red-100 text-red-800 @endif">
+                                {{ ucfirst($brand->status) }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-700 whitespace-nowrap">
+                            {{ $brand->category ?? 'N/A' }}
+                        </td>
+                        <td class="px-6 py-4 text-sm font-medium whitespace-nowrap">
+                            <a href="{{ route('principal.brands.edit', $brand->id) }}"
+                               class="mr-3 text-indigo-600 hover:text-indigo-900">Edit</a>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
+
+        @if($brands->count() > 5)
+        <div class="mt-4 text-center">
+            <a href="{{ route('principal.brands.index') }}"
+               class="font-medium text-blue-600 hover:text-blue-800">
+               View All Brands →
+            </a>
+        </div>
+        @endif
+
+        @else
+        <div class="py-8 text-center">
+            <i class="mb-4 text-4xl text-gray-300 fa-solid fa-store"></i>
+            <p class="text-gray-700">No brands submitted yet.</p>
+            <a href="{{ route('principal.brands.create') }}"
+               class="inline-flex items-center px-4 py-2 mt-4 text-xs font-semibold tracking-widest text-white uppercase transition duration-200 bg-blue-600 border border-transparent rounded-md hover:bg-blue-700">
+               Add Your First Brand
+            </a>
+        </div>
+        @endif
+    </div>
+</div>
+
 
         <!-- Recent Products -->
         <div class="bg-white rounded-lg shadow">
