@@ -10,22 +10,24 @@
                     <h4 class="card-title">Create Accounts Receivable</h4>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('admin.accounts-receivables.store') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('admin.accounts-receivables.store') }}" method="POST" enctype="multipart/form-data" id="accountsForm">
                         @csrf
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="rfq_id">RFQ *</label>
-                                    <select class="form-control @error('rfq_id') is-invalid @enderror" id="rfq_id" name="rfq_id" required onchange="loadRfqDetails(this.value)">
-                                            <option value="">Select RFQ</option>
-                                            @foreach($rfqs as $rfq)
-                                                <option value="{{ $rfq->id }}" {{ old('rfq_id') == $rfq->id ? 'selected' : '' }}>
-                                                    {{ $rfq->rfq_code }} - 
-                                                    {{ $rfq->company_name ?? $rfq->principal_name ?? $rfq->client_name ?? 'N/A' }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-
+                                    <select class="form-control @error('rfq_id') is-invalid @enderror" 
+                                        id="rfq_id" name="rfq_id" required onchange="handleRfqChange(this.value)">
+                                        <option value="">Select RFQ</option>
+                                        <option value="manual" {{ old('rfq_id') == 'manual' ? 'selected' : '' }}>
+                                            Manual Input (No RFQ)
+                                        </option>
+                                        @foreach($rfqs as $rfq)
+                                            <option value="{{ $rfq->id }}" {{ old('rfq_id') == $rfq->id ? 'selected' : '' }}>
+                                                {{ $rfq->rfq_code }} - {{ $rfq->name ?? 'No Name' }} - {{ $rfq->company_name ?? 'No Company' }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                     @error('rfq_id')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -47,7 +49,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <!-- Client Information Section -->
                         <div class="row">
                             <div class="col-md-6">
@@ -216,108 +218,79 @@
 </div>
 
 <script>
-// Enhanced function to load RFQ details with better debugging
-function loadRfqDetails(rfqId) {
-    console.log('Loading RFQ details for:', rfqId);
-    
-    if (rfqId) {
-        // Show loading state for relevant fields
-        const fieldsToLoad = ['client_name', 'client_email', 'client_phone', 'company_name', 'client_po_number', 'po_date', 'client_amount'];
-        fieldsToLoad.forEach(fieldId => {
-            const field = document.getElementById(fieldId);
-            if (field) {
-                field.placeholder = 'Loading...';
-                field.style.backgroundColor = '#f8f9fa';
-            }
-        });
-        
-        // Make AJAX call
-        fetch('/admin/get-rfq-details/' + rfqId)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log('Received data:', data);
-                if (data.success) {
-                    // Populate all fields with RFQ data
-                    const fieldMappings = {
-                        'client_name': data.data.client_name,
-                        'client_email': data.data.client_email,
-                        'client_phone': data.data.client_phone,
-                        'company_name': data.data.company_name,
-                        'client_po_number': data.data.client_po_number,
-                        'po_date': data.data.po_date,
-                        'client_amount': data.data.client_amount
-                    };
-                    
-                    Object.keys(fieldMappings).forEach(fieldId => {
-                        const field = document.getElementById(fieldId);
-                        if (field) {
-                            field.value = fieldMappings[fieldId] || '';
-                            console.log(`Set ${fieldId} to:`, fieldMappings[fieldId]);
-                        }
-                    });
-                    
-                    // Calculate due date if po_date is available
-                    if (data.data.po_date) {
-                        const poDate = new Date(data.data.po_date);
-                        const dueDate = new Date(poDate);
-                        dueDate.setDate(dueDate.getDate() + 30);
-                        document.getElementById('due_date').value = dueDate.toISOString().split('T')[0];
-                    }
-                    
-                    console.log('All fields populated successfully!');
-                } else {
-                    alert('Error: ' + data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error loading RFQ details. Please check console for details.');
-            })
-            .finally(() => {
-                // Remove loading state
-                fieldsToLoad.forEach(fieldId => {
-                    const field = document.getElementById(fieldId);
-                    if (field) {
-                        field.placeholder = '';
-                        field.style.backgroundColor = '';
-                    }
-                });
-            });
+function handleRfqChange(rfqId) {
+    if (rfqId && rfqId !== 'manual') {
+        loadRfqDetails(rfqId);
+        // makeFieldsReadOnly(true);
     } else {
-        // Clear fields if no RFQ selected
         clearFormFields();
+        makeFieldsReadOnly(false);
     }
 }
 
-// Function to clear form fields
+function loadRfqDetails(rfqId) {
+    const fieldsToLoad = ['client_name', 'client_email', 'client_phone', 'company_name', 'client_po_number', 'po_date', 'client_amount'];
+    fieldsToLoad.forEach(fieldId => {
+        const field = document.getElementById(fieldId);
+        if (field) field.placeholder = 'Loading...';
+    });
+
+    fetch('/admin/get-rfq-details/' + rfqId)
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                const fieldMappings = {
+                    'client_name': data.data.client_name,
+                    'client_email': data.data.client_email,
+                    'client_phone': data.data.client_phone,
+                    'company_name': data.data.company_name,
+                    'client_po_number': data.data.client_po_number,
+                    'po_date': data.data.po_date,
+                    'client_amount': data.data.client_amount
+                };
+                Object.keys(fieldMappings).forEach(fieldId => {
+                    const field = document.getElementById(fieldId);
+                    if (field) field.value = fieldMappings[fieldId] || '';
+                });
+
+                if (data.data.po_date) {
+                    const poDate = new Date(data.data.po_date);
+                    const dueDate = new Date(poDate);
+                    dueDate.setDate(dueDate.getDate() + 30);
+                    document.getElementById('due_date').value = dueDate.toISOString().split('T')[0];
+                }
+            } else {
+                alert(data.message);
+            }
+        })
+        .finally(() => {
+            fieldsToLoad.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (field) field.placeholder = '';
+            });
+        });
+}
+
 function clearFormFields() {
-    const fieldsToClear = [
-        'client_name', 'client_email', 'client_phone', 'company_name', 
-        'client_po_number', 'po_date', 'client_amount', 'due_date'
-    ];
-    
+    const fieldsToClear = ['client_name','client_email','client_phone','company_name','client_po_number','po_date','client_amount','due_date'];
     fieldsToClear.forEach(fieldId => {
         const field = document.getElementById(fieldId);
-        if (field) {
-            field.value = '';
-        }
+        if (field) field.value = '';
     });
 }
 
-// Load data if RFQ is preselected
-document.addEventListener('DOMContentLoaded', function() {
+function makeFieldsReadOnly(readOnly) {
+    const fields = ['client_name','client_email','client_phone','company_name','client_po_number','po_date','client_amount'];
+    fields.forEach(fieldId => {
+        const field = document.getElementById(fieldId);
+        if (field) field.readOnly = readOnly;
+    });
+}
+
+// Load preselected RFQ
+document.addEventListener('DOMContentLoaded', () => {
     const rfqSelect = document.getElementById('rfq_id');
-    const selectedRfqId = rfqSelect.value;
-    
-    if (selectedRfqId) {
-        console.log('Preselected RFQ found:', selectedRfqId);
-        loadRfqDetails(selectedRfqId);
-    }
+    if (rfqSelect.value) handleRfqChange(rfqSelect.value);
 });
 </script>
 

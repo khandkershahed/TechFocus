@@ -22,41 +22,89 @@ class AccountsReceivableController extends Controller
         return view('admin.accounts-receivables.create', compact('rfqs'));
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'rfq_id' => 'required|exists:rfqs,id',
-            'client_name' => 'required|string|max:255',
-            'client_amount' => 'required|numeric',
-            'due_date' => 'required|date',
-            'client_po' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048',
-            'invoice' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048',
-        ]);
+    // public function store(Request $request)
+    // {
+    //     $request->validate([
+    //         'rfq_id' => 'required|exists:rfqs,id',
+    //         'client_name' => 'required|string|max:255',
+    //         'client_amount' => 'required|numeric',
+    //         'due_date' => 'required|date',
+    //         'client_po' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048',
+    //         'invoice' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048',
+    //     ]);
 
-        $data = $request->except(['client_po', 'invoice']);
+    //     $data = $request->except(['client_po', 'invoice']);
 
-        // Handle file uploads with original names
-        if ($request->hasFile('client_po')) {
-            $file = $request->file('client_po');
-            $originalName = $file->getClientOriginalName();
-            $filename = pathinfo($originalName, PATHINFO_FILENAME) . '_' . time() . '.' . $file->getClientOriginalExtension();
-            $clientPoPath = $file->storeAs('client_pos', $filename, 'public');
-            $data['client_po'] = $clientPoPath;
-        }
+    //     // Handle file uploads with original names
+    //     if ($request->hasFile('client_po')) {
+    //         $file = $request->file('client_po');
+    //         $originalName = $file->getClientOriginalName();
+    //         $filename = pathinfo($originalName, PATHINFO_FILENAME) . '_' . time() . '.' . $file->getClientOriginalExtension();
+    //         $clientPoPath = $file->storeAs('client_pos', $filename, 'public');
+    //         $data['client_po'] = $clientPoPath;
+    //     }
 
-        if ($request->hasFile('invoice')) {
-            $file = $request->file('invoice');
-            $originalName = $file->getClientOriginalName();
-            $filename = pathinfo($originalName, PATHINFO_FILENAME) . '_' . time() . '.' . $file->getClientOriginalExtension();
-            $invoicePath = $file->storeAs('invoices', $filename, 'public');
-            $data['invoice'] = $invoicePath;
-        }
+    //     if ($request->hasFile('invoice')) {
+    //         $file = $request->file('invoice');
+    //         $originalName = $file->getClientOriginalName();
+    //         $filename = pathinfo($originalName, PATHINFO_FILENAME) . '_' . time() . '.' . $file->getClientOriginalExtension();
+    //         $invoicePath = $file->storeAs('invoices', $filename, 'public');
+    //         $data['invoice'] = $invoicePath;
+    //     }
 
-        AccountsReceivable::create($data);
+    //     AccountsReceivable::create($data);
 
-        return redirect()->route('admin.accounts-receivables.index')
-            ->with('success', 'Accounts receivable created successfully.');
+    //     return redirect()->route('admin.accounts-receivables.index')
+    //         ->with('success', 'Accounts receivable created successfully.');
+    // }
+
+
+public function store(Request $request)
+{
+    // Get valid RFQ IDs
+    $rfqIds = Rfq::pluck('id')->toArray();
+
+    // If "manual" is selected, rfq_id should be null
+    $rfqId = $request->rfq_id === 'manual' ? null : $request->rfq_id;
+
+    // Validate
+    $request->validate([
+        'rfq_id' => [
+            'required',
+            function ($attribute, $value, $fail) use ($rfqIds) {
+                if ($value !== 'manual' && !in_array($value, $rfqIds)) {
+                    $fail('The selected RFQ ID is invalid.');
+                }
+            },
+        ],
+        'client_name' => 'required|string|max:255',
+        'client_amount' => 'required|numeric',
+        'due_date' => 'required|date',
+        'client_po' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048',
+        'invoice' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048',
+    ]);
+
+    $data = $request->except(['client_po', 'invoice']);
+    $data['rfq_id'] = $rfqId;
+
+    // Handle file uploads
+    if ($request->hasFile('client_po')) {
+        $file = $request->file('client_po');
+        $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) . '_' . time() . '.' . $file->getClientOriginalExtension();
+        $data['client_po'] = $file->storeAs('client_pos', $filename, 'public');
     }
+
+    if ($request->hasFile('invoice')) {
+        $file = $request->file('invoice');
+        $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) . '_' . time() . '.' . $file->getClientOriginalExtension();
+        $data['invoice'] = $file->storeAs('invoices', $filename, 'public');
+    }
+
+    AccountsReceivable::create($data);
+
+    return redirect()->route('admin.accounts-receivables.index')
+        ->with('success', 'Accounts receivable created successfully.');
+}
 
     public function show(AccountsReceivable $accountsReceivable)
     {
@@ -69,67 +117,121 @@ class AccountsReceivableController extends Controller
         return view('admin.accounts-receivables.edit', compact('accountsReceivable', 'rfqs'));
     }
 
-    public function update(Request $request, AccountsReceivable $accountsReceivable)
-    {
-        $request->validate([
-            'rfq_id' => 'required|exists:rfqs,id',
-            'client_name' => 'required|string|max:255',
-            'client_amount' => 'required|numeric',
-            'due_date' => 'required|date',
-            'client_po' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048',
-            'invoice' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048',
-        ]);
+    // public function update(Request $request, AccountsReceivable $accountsReceivable)
+    // {
+    //     $request->validate([
+    //         'rfq_id' => 'required|exists:rfqs,id',
+    //         'client_name' => 'required|string|max:255',
+    //         'client_amount' => 'required|numeric',
+    //         'due_date' => 'required|date',
+    //         'client_po' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048',
+    //         'invoice' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048',
+    //     ]);
 
-        $data = $request->except(['client_po', 'invoice', 'remove_client_po', 'remove_invoice']);
+    //     $data = $request->except(['client_po', 'invoice', 'remove_client_po', 'remove_invoice']);
 
-        // Handle file uploads with original names
-        if ($request->hasFile('client_po')) {
-            // Delete old file if exists
-            if ($accountsReceivable->client_po && Storage::disk('public')->exists($accountsReceivable->client_po)) {
-                Storage::disk('public')->delete($accountsReceivable->client_po);
-            }
+    //     // Handle file uploads with original names
+    //     if ($request->hasFile('client_po')) {
+    //         // Delete old file if exists
+    //         if ($accountsReceivable->client_po && Storage::disk('public')->exists($accountsReceivable->client_po)) {
+    //             Storage::disk('public')->delete($accountsReceivable->client_po);
+    //         }
             
-            $file = $request->file('client_po');
-            $originalName = $file->getClientOriginalName();
-            $filename = pathinfo($originalName, PATHINFO_FILENAME) . '_' . time() . '.' . $file->getClientOriginalExtension();
-            $clientPoPath = $file->storeAs('client_pos', $filename, 'public');
-            $data['client_po'] = $clientPoPath;
-        }
+    //         $file = $request->file('client_po');
+    //         $originalName = $file->getClientOriginalName();
+    //         $filename = pathinfo($originalName, PATHINFO_FILENAME) . '_' . time() . '.' . $file->getClientOriginalExtension();
+    //         $clientPoPath = $file->storeAs('client_pos', $filename, 'public');
+    //         $data['client_po'] = $clientPoPath;
+    //     }
 
-        if ($request->hasFile('invoice')) {
-            // Delete old file if exists
-            if ($accountsReceivable->invoice && Storage::disk('public')->exists($accountsReceivable->invoice)) {
-                Storage::disk('public')->delete($accountsReceivable->invoice);
-            }
+    //     if ($request->hasFile('invoice')) {
+    //         // Delete old file if exists
+    //         if ($accountsReceivable->invoice && Storage::disk('public')->exists($accountsReceivable->invoice)) {
+    //             Storage::disk('public')->delete($accountsReceivable->invoice);
+    //         }
             
-            $file = $request->file('invoice');
-            $originalName = $file->getClientOriginalName();
-            $filename = pathinfo($originalName, PATHINFO_FILENAME) . '_' . time() . '.' . $file->getClientOriginalExtension();
-            $invoicePath = $file->storeAs('invoices', $filename, 'public');
-            $data['invoice'] = $invoicePath;
+    //         $file = $request->file('invoice');
+    //         $originalName = $file->getClientOriginalName();
+    //         $filename = pathinfo($originalName, PATHINFO_FILENAME) . '_' . time() . '.' . $file->getClientOriginalExtension();
+    //         $invoicePath = $file->storeAs('invoices', $filename, 'public');
+    //         $data['invoice'] = $invoicePath;
+    //     }
+
+    //     // Handle file removal
+    //     if ($request->has('remove_client_po')) {
+    //         if ($accountsReceivable->client_po && Storage::disk('public')->exists($accountsReceivable->client_po)) {
+    //             Storage::disk('public')->delete($accountsReceivable->client_po);
+    //         }
+    //         $data['client_po'] = null;
+    //     }
+
+    //     if ($request->has('remove_invoice')) {
+    //         if ($accountsReceivable->invoice && Storage::disk('public')->exists($accountsReceivable->invoice)) {
+    //             Storage::disk('public')->delete($accountsReceivable->invoice);
+    //         }
+    //         $data['invoice'] = null;
+    //     }
+
+    //     $accountsReceivable->update($data);
+
+    //     return redirect()->route('admin.accounts-receivables.index')
+    //         ->with('success', 'Accounts receivable updated successfully.');
+    // }
+public function update(Request $request, AccountsReceivable $accountsReceivable)
+{
+    $rfqId = $request->rfq_id === 'manual' ? null : $request->rfq_id;
+
+    $request->validate([
+        'rfq_id' => 'nullable|exists:rfqs,id',
+        'client_name' => 'required|string|max:255',
+        'client_amount' => 'required|numeric',
+        'due_date' => 'required|date',
+        'client_po' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048',
+        'invoice' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048',
+    ]);
+
+    $data = $request->except(['client_po', 'invoice', 'remove_client_po', 'remove_invoice']);
+    $data['rfq_id'] = $rfqId;
+
+    // Handle file uploads with deletion of old files
+    if ($request->hasFile('client_po')) {
+        if ($accountsReceivable->client_po && Storage::disk('public')->exists($accountsReceivable->client_po)) {
+            Storage::disk('public')->delete($accountsReceivable->client_po);
         }
-
-        // Handle file removal
-        if ($request->has('remove_client_po')) {
-            if ($accountsReceivable->client_po && Storage::disk('public')->exists($accountsReceivable->client_po)) {
-                Storage::disk('public')->delete($accountsReceivable->client_po);
-            }
-            $data['client_po'] = null;
-        }
-
-        if ($request->has('remove_invoice')) {
-            if ($accountsReceivable->invoice && Storage::disk('public')->exists($accountsReceivable->invoice)) {
-                Storage::disk('public')->delete($accountsReceivable->invoice);
-            }
-            $data['invoice'] = null;
-        }
-
-        $accountsReceivable->update($data);
-
-        return redirect()->route('admin.accounts-receivables.index')
-            ->with('success', 'Accounts receivable updated successfully.');
+        $file = $request->file('client_po');
+        $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) . '_' . time() . '.' . $file->getClientOriginalExtension();
+        $data['client_po'] = $file->storeAs('client_pos', $filename, 'public');
     }
 
+    if ($request->hasFile('invoice')) {
+        if ($accountsReceivable->invoice && Storage::disk('public')->exists($accountsReceivable->invoice)) {
+            Storage::disk('public')->delete($accountsReceivable->invoice);
+        }
+        $file = $request->file('invoice');
+        $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) . '_' . time() . '.' . $file->getClientOriginalExtension();
+        $data['invoice'] = $file->storeAs('invoices', $filename, 'public');
+    }
+
+    // Handle file removal
+    if ($request->has('remove_client_po')) {
+        if ($accountsReceivable->client_po && Storage::disk('public')->exists($accountsReceivable->client_po)) {
+            Storage::disk('public')->delete($accountsReceivable->client_po);
+        }
+        $data['client_po'] = null;
+    }
+
+    if ($request->has('remove_invoice')) {
+        if ($accountsReceivable->invoice && Storage::disk('public')->exists($accountsReceivable->invoice)) {
+            Storage::disk('public')->delete($accountsReceivable->invoice);
+        }
+        $data['invoice'] = null;
+    }
+
+    $accountsReceivable->update($data);
+
+    return redirect()->route('admin.accounts-receivables.index')
+        ->with('success', 'Accounts receivable updated successfully.');
+}
     public function destroy(AccountsReceivable $accountsReceivable)
     {
         // Delete associated files
