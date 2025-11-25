@@ -10,25 +10,7 @@
         <!-- Top Row -->
         <div class="flex items-center justify-between">
 
-<<<<<<< HEAD
-    <div class="flex items-center justify-between">
-
-        <!-- Left: Principal Basic Info -->
-        <div class="space-y-1">
-            <h1 class="text-2xl font-bold text-gray-900 flex items-center gap-2">
-                {{ $principal->legal_name }}
-
-                <!-- Country Flag -->
-                @if($principal->country)
-                    <img src="https://flagsapi.com/{{ strtoupper($principal->country_id ?? 'US') }}/flat/32.png" 
-                         class="w-6 h-6 rounded border" alt="Flag">
-                @endif
-            </h1>
-
             <!-- Entity Type + Relationship Status -->
-=======
-            <!-- Principal Name + Flag -->
->>>>>>> 060ea5f8811b73c30b158878b651821e242dde27
             <div class="flex items-center gap-3">
                 <h1 class="text-3xl font-bold text-gray-900 uppercase">
                     {{ $principal->legal_name }}
