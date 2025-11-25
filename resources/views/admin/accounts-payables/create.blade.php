@@ -17,16 +17,18 @@
                                 <div class="form-group">
                                     <label for="rfq_id">RFQ *</label>
                                <select class="form-control @error('rfq_id') is-invalid @enderror" 
-                                                id="rfq_id" name="rfq_id" required onchange="loadRfqDetails(this.value)">
-                                            <option value="">Select RFQ</option>
-                                            @foreach($rfqs as $rfq)
-                                                <option value="{{ $rfq->id }}" {{ old('rfq_id') == $rfq->id ? 'selected' : '' }}>
-                                                    {{ $rfq->rfq_code }} - 
-                                                    {{ $rfq->name ?? 'No Name' }} - 
-                                                    {{ $rfq->company_name ?? 'No Company' }}
+                                                    id="rfq_id" name="rfq_id" required onchange="handleRfqChange(this.value)">
+                                                <option value="">Select RFQ</option>
+                                                <option value="manual" {{ old('rfq_id') == 'manual' ? 'selected' : '' }}>
+                                                    Manual Input (No RFQ)
                                                 </option>
-                                            @endforeach
-                                        </select>
+                                                @foreach($rfqs as $rfq)
+                                                    <option value="{{ $rfq->id }}" {{ old('rfq_id') == $rfq->id ? 'selected' : '' }}>
+                                                        {{ $rfq->rfq_code }} - {{ $rfq->name ?? 'No Name' }} - {{ $rfq->company_name ?? 'No Company' }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+
 
                                     @error('rfq_id')
                                         <div class="invalid-feedback">{{ $message }}</div>

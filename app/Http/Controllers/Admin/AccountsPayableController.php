@@ -20,31 +20,41 @@ class AccountsPayableController extends Controller
         $rfqs = Rfq::all();
         return view('admin.accounts-payables.create', compact('rfqs'));
     }
+public function store(Request $request)
+{
+    $rfqIds = Rfq::pluck('id')->toArray();
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'rfq_id' => 'required|exists:rfqs,id',
-            'principal_name' => 'required|string|max:255',
-            'principal_amount' => 'required|numeric',
-            'due_date' => 'required|date',
-        ]);
+    $rfqId = $request->rfq_id === 'manual' ? null : $request->rfq_id;
 
-        if ($request->hasFile('invoice')) {
-            $invoicePath = $request->file('invoice')->store('payable_invoices', 'public');
-            $request->merge(['invoice' => $invoicePath]);
-        }
+    $request->validate([
+        'rfq_id' => ['required', function ($attr, $value, $fail) use ($rfqIds) {
+            if($value !== 'manual' && !in_array($value, $rfqIds)) {
+                $fail('The selected RFQ ID is invalid.');
+            }
+        }],
+        'principal_name' => 'required|string|max:255',
+        'principal_amount' => 'required|numeric',
+        'due_date' => 'required|date',
+        // Add other validations as needed
+    ]);
 
-        if ($request->hasFile('principal_po')) {
-            $principalPoPath = $request->file('principal_po')->store('principal_pos', 'public');
-            $request->merge(['principal_po' => $principalPoPath]);
-        }
+    $data = $request->except(['invoice','principal_po']);
+    $data['rfq_id'] = $rfqId;
 
-        AccountsPayable::create($request->all());
-
-        return redirect()->route('admin.accounts-payables.index')
-            ->with('success', 'Accounts payable created successfully.');
+    if($request->hasFile('invoice')) {
+        $data['invoice'] = $request->file('invoice')->store('payable_invoices','public');
     }
+
+    if($request->hasFile('principal_po')) {
+        $data['principal_po'] = $request->file('principal_po')->store('principal_pos','public');
+    }
+
+    AccountsPayable::create($data);
+
+    return redirect()->route('admin.accounts-payables.index')
+        ->with('success','Accounts payable created successfully.');
+}
+
 
     public function show(AccountsPayable $accountsPayable)
     {
