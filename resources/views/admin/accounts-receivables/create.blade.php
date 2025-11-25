@@ -17,13 +17,15 @@
                                 <div class="form-group">
                                     <label for="rfq_id">RFQ *</label>
                                     <select class="form-control @error('rfq_id') is-invalid @enderror" id="rfq_id" name="rfq_id" required onchange="loadRfqDetails(this.value)">
-                                        <option value="">Select RFQ</option>
-                                        @foreach($rfqs as $rfq)
-                                            <option value="{{ $rfq->id }}" {{ old('rfq_id') == $rfq->id ? 'selected' : '' }}>
-                                                {{ $rfq->rfq_code }} - {{ $rfq->name ?? $rfq->company_name ?? 'N/A' }}
-                                            </option>
-                                        @endforeach
-                                    </select>
+                                            <option value="">Select RFQ</option>
+                                            @foreach($rfqs as $rfq)
+                                                <option value="{{ $rfq->id }}" {{ old('rfq_id') == $rfq->id ? 'selected' : '' }}>
+                                                    {{ $rfq->rfq_code }} - 
+                                                    {{ $rfq->company_name ?? $rfq->principal_name ?? $rfq->client_name ?? 'N/A' }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+
                                     @error('rfq_id')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
