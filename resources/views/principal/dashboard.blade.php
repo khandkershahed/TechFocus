@@ -23,24 +23,98 @@
     background-image: linear-gradient(to bottom right, var(--tw-gradient-stops));
 }
 </style>
-<div class="flex items-center justify-between mb-6">
-    <h1 class="text-2xl font-bold">Welcome Principal, {{ auth('principal')->user()->legal_name }}</h1>
-    
-    <div class="flex gap-3">
-        <a href="{{ route('principal.profile.edit') }}"
-           class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded transition duration-200">
-            Edit Profile
-        </a>
+<!-- Header Section -->
+<div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
 
-        <form method="POST" action="{{ route('principal.logout') }}" class="inline-block">
-            @csrf
-            <button type="submit"
-                    class="inline-flex items-center px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-semibold rounded transition duration-200">
-                Logout
-            </button>
-        </form>
-    </div>
+    <div class="flex items-center justify-between">
+
+        <!-- Left: Principal Basic Info -->
+        <div class="space-y-1">
+            <h1 class="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                {{ $principal->legal_name }}
+
+                <!-- Country Flag -->
+                @if($principal->country)
+                    <img src="https://flagsapi.com/{{ strtoupper($principal->country_code ?? 'US') }}/flat/32.png" 
+                         class="w-6 h-6 rounded border" alt="Flag">
+                @endif
+            </h1>
+
+            <!-- Entity Type + Relationship Status -->
+            <div class="flex items-center gap-3">
+
+                <!-- Entity Type -->
+                <span class="px-2.5 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded-full">
+                    {{ $principal->entity_type ?? 'N/A' }}
+                </span>
+
+                <!-- Relationship Badge -->
+                <span class="px-2.5 py-1 text-xs font-medium rounded-full
+                    @if($principal->relationship_status == 'Active') bg-green-100 text-green-700
+                    @elseif($principal->relationship_status == 'Prospect') bg-yellow-100 text-yellow-700
+                    @elseif($principal->relationship_status == 'Dormant') bg-gray-100 text-gray-700
+                    @else bg-red-100 text-red-700 @endif">
+                    {{ $principal->relationship_status }}
+                </span>
+            </div>
+
+            <!-- Created Date + Created By -->
+            <p class="text-xs text-gray-500 mt-1">
+                Created on: <strong>{{ $principal->created_at->format('d M, Y') }}</strong> •
+                By: <strong>{{ $principal->created_by ?? 'System' }}</strong>
+            </p>
+        </div>
+
+        <!-- Right: Action Buttons -->
+  <div class="flex items-center gap-2">
+
+    {{-- Edit Profile --}}
+    <a href="{{ route('principal.profile.edit') }}"
+       class="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg flex items-center gap-1">
+        <i class="fa-solid fa-pen-to-square"></i> Edit
+    </a>
+
+    {{-- Share --}}
+    <a href="{{ route('principal.links.index') }}"
+       class="px-3 py-2 bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-medium rounded-lg flex items-center gap-1">
+        <i class="fa-solid fa-share-nodes"></i> Share
+    </a>
+
+    {{-- Add Note --}}
+     <a href="#"
+       class="px-3 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg flex items-center gap-1">
+        <i class="fa-solid fa-note-sticky"></i> Add Note
+        
+    </a>
+
+    {{-- Add Contact --}}
+    {{-- <a href="{{ route('principal.contacts.update') }}"
+       class="px-3 py-2 bg-yellow-500 hover:bg-yellow-600 text-white text-sm font-medium rounded-lg flex items-center gap-1">
+        <i class="fa-solid fa-user-plus"></i> Add Contact
+    </a> --}}
+
+    {{-- Attach File --}}
+    <a href="{{ route('principal.links.create') }}"
+       class="px-3 py-2 bg-purple-500 hover:bg-purple-600 text-white text-sm font-medium rounded-lg flex items-center gap-1">
+        <i class="fa-solid fa-paperclip"></i> Attach File
+    </a>
+
+    {{-- Archive --}}
+    {{-- <form action="{{ route('principal.archive', $principal->id) }}" method="POST">
+        @csrf
+        @method('PATCH')
+        <button type="submit"
+                class="px-3 py-2 bg-gray-700 hover:bg-gray-800 text-white text-sm font-medium rounded-lg flex items-center gap-1">
+            <i class="fa-solid fa-box-archive"></i> Archive
+        </button>
+    </form> --}}
+
 </div>
+
+    </div>
+
+</div>
+
     <!-- Main Content -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <!-- Quick Stats Grid -->
