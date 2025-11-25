@@ -30,7 +30,7 @@
                             <div class="text-xs font-weight-bold text-{{ $netCashFlow >= 0 ? 'success' : 'danger' }} text-uppercase mb-1">
                                 Net Cash Flow</div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                ৳{{ number_format($netCashFlow, 2) }}
+                                ${{ number_format($netCashFlow, 2) }}
                             </div>
                         </div>
                         <div class="col-auto">
@@ -120,19 +120,19 @@
                         <div class="col-4">
                             <div class="text-primary">
                                 <h6>Total</h6>
-                                <h4>৳{{ number_format($totalReceivables, 2) }}</h4>
+                                <h4>${{ number_format($totalReceivables, 2) }}</h4>
                             </div>
                         </div>
                         <div class="col-4">
                             <div class="text-success">
                                 <h6>Received</h6>
-                                <h4>৳{{ number_format($totalReceived, 2) }}</h4>
+                                <h4>${{ number_format($totalReceived, 2) }}</h4>
                             </div>
                         </div>
                         <div class="col-4">
                             <div class="text-warning">
                                 <h6>Pending</h6>
-                                <h4>৳{{ number_format($pendingReceivables, 2) }}</h4>
+                                <h4>${{ number_format($pendingReceivables, 2) }}</h4>
                             </div>
                         </div>
                     </div>
@@ -156,7 +156,7 @@
                                         </span>
                                     </td>
                                     <td>{{ $status->count }}</td>
-                                    <td>৳{{ number_format($status->amount, 2) }}</td>
+                                    <td>${{ number_format($status->amount, 2) }}</td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -169,7 +169,7 @@
                             <i class="fas fa-exclamation-triangle mr-1"></i>
                             Overdue Receivables: {{ $overdueReceivables->count() }}
                         </h6>
-                        <small class="text-muted">Total: ৳{{ number_format($overdueReceivables->sum('client_amount'), 2) }}</small>
+                        <small class="text-muted">Total: ${{ number_format($overdueReceivables->sum('client_amount'), 2) }}</small>
                     </div>
                     @endif
                 </div>
@@ -189,19 +189,19 @@
                         <div class="col-4">
                             <div class="text-danger">
                                 <h6>Total</h6>
-                                <h4>৳{{ number_format($totalPayables, 2) }}</h4>
+                                <h4>${{ number_format($totalPayables, 2) }}</h4>
                             </div>
                         </div>
                         <div class="col-4">
                             <div class="text-success">
                                 <h6>Paid</h6>
-                                <h4>৳{{ number_format($totalPaid, 2) }}</h4>
+                                <h4>${{ number_format($totalPaid, 2) }}</h4>
                             </div>
                         </div>
                         <div class="col-4">
                             <div class="text-warning">
                                 <h6>Pending</h6>
-                                <h4>৳{{ number_format($pendingPayables, 2) }}</h4>
+                                <h4>${{ number_format($pendingPayables, 2) }}</h4>
                             </div>
                         </div>
                     </div>
@@ -225,7 +225,7 @@
                                         </span>
                                     </td>
                                     <td>{{ $status->count }}</td>
-                                    <td>৳{{ number_format($status->amount, 2) }}</td>
+                                    <td>${{ number_format($status->amount, 2) }}</td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -238,7 +238,7 @@
                             <i class="fas fa-exclamation-triangle mr-1"></i>
                             Overdue Payables: {{ $overduePayables->count() }}
                         </h6>
-                        <small class="text-muted">Total: ৳{{ number_format($overduePayables->sum('principal_amount'), 2) }}</small>
+                        <small class="text-muted">Total: ${{ number_format($overduePayables->sum('principal_amount'), 2) }}</small>
                     </div>
                     @endif
                 </div>
@@ -269,7 +269,7 @@
                                 @foreach($recentReceivables as $receivable)
                                 <tr>
                                     <td>{{ $receivable->client_name }}</td>
-                                    <td class="text-success">৳{{ number_format($receivable->client_amount, 2) }}</td>
+                                    <td class="text-success">${{ number_format($receivable->client_amount, 2) }}</td>
                                     <td>
                                         @if($receivable->due_date)
                                             {{ \Carbon\Carbon::parse($receivable->due_date)->format('M d, Y') }}
@@ -312,7 +312,7 @@
                                 @foreach($recentPayables as $payable)
                                 <tr>
                                     <td>{{ $payable->principal_name }}</td>
-                                    <td class="text-danger">৳{{ number_format($payable->principal_amount, 2) }}</td>
+                                    <td class="text-danger">${{ number_format($payable->principal_amount, 2) }}</td>
                                     <td>
                                         @if($payable->due_date)
                                             {{ \Carbon\Carbon::parse($payable->due_date)->format('M d, Y') }}

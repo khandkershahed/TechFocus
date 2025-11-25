@@ -15,29 +15,32 @@
             </a>
         </div>
     </div>
-<!-- Comparison Link Card -->
-<div class="row mb-4">
-    <div class="col-12">
-        <div class="card border-left-info shadow">
-            <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                            Accounts Comparison</div>
-                        <div class="mb-0 font-weight-bold text-gray-800">
-                            Compare Accounts Receivable vs Payable performance and metrics
+
+    <!-- Comparison Link Card -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-left-info shadow">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                              <h2>  Accounts Comparison</h2>
+                            </div>
+                            <div class="mb-0 font-weight-bold text-gray-800">
+                                Compare Accounts Receivable vs Payable performance and metrics
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-auto">
-                        <a href="{{ route('account.comparison') }}" class="btn btn-info">
-                            <i class="fas fa-balance-scale-left mr-2"></i>View Comparison
-                        </a>
+                        <div class="col-auto">
+                            <a href="{{ route('account.comparison') }}" class="btn btn-info">
+                                <i class="fas fa-balance-scale-left mr-2"></i>View Comparison
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+
     <!-- Income Summary Cards -->
     <div class="row">
         <!-- Total Income Card -->
@@ -47,13 +50,14 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                Total Income</div>
+                                Total Income
+                            </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                ৳{{ number_format($totalIncome, 2) }}
+                                ${{ number_format($totalIncome, 2) }}
                             </div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                            <i class="fas fa-wallet fa-3x mb-2 text-primary" data-toggle="tooltip" title="Total Income"></i>
                         </div>
                     </div>
                 </div>
@@ -67,13 +71,14 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                Received Amount</div>
+                                Received Amount
+                            </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                ৳{{ number_format($totalReceived, 2) }}
+                                ${{ number_format($totalReceived, 2) }}
                             </div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+                            <i class="fas fa-hand-holding-usd fa-3x mb-2 text-success" data-toggle="tooltip" title="Received Amount"></i>
                         </div>
                     </div>
                 </div>
@@ -87,13 +92,14 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                Pending Income</div>
+                                Pending Income
+                            </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                ৳{{ number_format($pendingIncome, 2) }}
+                                ${{ number_format($pendingIncome, 2) }}
                             </div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-clock fa-2x text-gray-300"></i>
+                            <i class="fas fa-hourglass-half fa-3x mb-2 text-warning" data-toggle="tooltip" title="Pending Income"></i>
                         </div>
                     </div>
                 </div>
@@ -107,13 +113,14 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-{{ $netProfitLoss >= 0 ? 'info' : 'danger' }} text-uppercase mb-1">
-                                Net Profit/Loss</div>
+                                Net Profit/Loss
+                            </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                ৳{{ number_format($netProfitLoss, 2) }}
+                                ${{ number_format($netProfitLoss, 2) }}
                             </div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-chart-line fa-2x text-gray-300"></i>
+                            <i class="fas fa-chart-pie fa-3x mb-2 text-{{ $netProfitLoss >= 0 ? 'info' : 'danger' }}" data-toggle="tooltip" title="Net Profit or Loss"></i>
                         </div>
                     </div>
                 </div>
@@ -134,7 +141,7 @@
                             <div class="card border-left-primary mb-3">
                                 <div class="card-body">
                                     <h6 class="card-title">Corporate Income</h6>
-                                    <h4 class="text-primary">৳{{ number_format($corporateIncome, 2) }}</h4>
+                                    <h4 class="text-primary">${{ number_format($corporateIncome, 2) }}</h4>
                                     <small class="text-muted">
                                         {{ $totalIncome > 0 ? number_format(($corporateIncome / $totalIncome) * 100, 1) : 0 }}% of total
                                     </small>
@@ -145,7 +152,7 @@
                             <div class="card border-left-info mb-3">
                                 <div class="card-body">
                                     <h6 class="card-title">Online Income</h6>
-                                    <h4 class="text-info">৳{{ number_format($onlineIncome, 2) }}</h4>
+                                    <h4 class="text-info">${{ number_format($onlineIncome, 2) }}</h4>
                                     <small class="text-muted">
                                         {{ $totalIncome > 0 ? number_format(($onlineIncome / $totalIncome) * 100, 1) : 0 }}% of total
                                     </small>
@@ -166,30 +173,30 @@
                     <div class="row text-center">
                         <div class="col-6 mb-3">
                             <div class="text-danger">
-                                <i class="fas fa-money-bill-wave fa-2x mb-2"></i>
+                                <i class="fas fa-file-invoice-dollar fa-3x mb-2" data-toggle="tooltip" title="Expenses"></i>
                                 <h6>Expenses</h6>
-                                <h5>৳{{ number_format($totalExpenses, 2) }}</h5>
+                                <h5>${{ number_format($totalExpenses, 2) }}</h5>
                             </div>
                         </div>
                         <div class="col-6 mb-3">
                             <div class="text-success">
-                                <i class="fas fa-hand-holding-usd fa-2x mb-2"></i>
+                                <i class="fas fa-hand-holding-usd fa-3x mb-2" data-toggle="tooltip" title="Receivables"></i>
                                 <h6>Receivables</h6>
-                                <h5>৳{{ number_format($totalReceivables, 2) }}</h5>
+                                <h5>${{ number_format($totalReceivables, 2) }}</h5>
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="text-warning">
-                                <i class="fas fa-file-invoice-dollar fa-2x mb-2"></i>
+                                <i class="fas fa-file-invoice-dollar fa-3x mb-2" data-toggle="tooltip" title="Payables"></i>
                                 <h6>Payables</h6>
-                                <h5>৳{{ number_format($totalPayables, 2) }}</h5>
+                                <h5>${{ number_format($totalPayables, 2) }}</h5>
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="text-info">
-                                <i class="fas fa-university fa-2x mb-2"></i>
+                                <i class="fas fa-piggy-bank fa-3x mb-2" data-toggle="tooltip" title="Bank Balance"></i>
                                 <h6>Bank Balance</h6>
-                                <h5>৳{{ number_format($totalBankDeposits - $totalBankWithdrawals, 2) }}</h5>
+                                <h5>${{ number_format($totalBankDeposits - $totalBankWithdrawals, 2) }}</h5>
                             </div>
                         </div>
                     </div>
@@ -236,8 +243,8 @@
                                             {{ ucfirst($income->type) }}
                                         </span>
                                     </td>
-                                    <td class="text-success">৳{{ number_format($income->amount, 2) }}</td>
-                                    <td class="text-success">৳{{ number_format($income->received_value, 2) }}</td>
+                                    <td class="text-success">${{ number_format($income->amount, 2) }}</td>
+                                    <td class="text-success">${{ number_format($income->received_value, 2) }}</td>
                                     <td>
                                         @if($income->amount == $income->received_value)
                                             <span class="badge badge-success">Paid</span>
@@ -273,7 +280,7 @@
                             <span class="font-weight-bold">
                                 {{ \Carbon\Carbon::createFromDate($monthly->year, $monthly->month, 1)->format('M Y') }}
                             </span>
-                            <span class="text-success">৳{{ number_format($monthly->total_amount, 2) }}</span>
+                            <span class="text-success">${{ number_format($monthly->total_amount, 2) }}</span>
                         </div>
                         <div class="progress mb-2" style="height: 8px;">
                             <div class="progress-bar bg-success" role="progressbar" 
@@ -281,7 +288,7 @@
                             </div>
                         </div>
                         <small class="text-muted">
-                            Received: ৳{{ number_format($monthly->total_received, 2) }}
+                            Received: ${{ number_format($monthly->total_received, 2) }}
                         </small>
                     </div>
                     @empty
@@ -292,4 +299,14 @@
         </div>
     </div>
 </div>
+
+<!-- Initialize tooltips -->
+@push('scripts')
+<script>
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+@endpush
+
 @endsection

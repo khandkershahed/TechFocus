@@ -56,7 +56,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            {{-- <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="month">Month</label>
                                     <input type="text" class="form-control @error('month') is-invalid @enderror" id="month" name="month" value="{{ old('month') }}">
@@ -64,7 +64,31 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
+                            </div> --}}
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="month">Month</label>
+                                    <select class="form-control @error('month') is-invalid @enderror" id="month" name="month">
+                                        <option value="">-- Select Month --</option>
+                                        <option value="January" {{ old('month') == 'January' ? 'selected' : '' }}>January</option>
+                                        <option value="February" {{ old('month') == 'February' ? 'selected' : '' }}>February</option>
+                                        <option value="March" {{ old('month') == 'March' ? 'selected' : '' }}>March</option>
+                                        <option value="April" {{ old('month') == 'April' ? 'selected' : '' }}>April</option>
+                                        <option value="May" {{ old('month') == 'May' ? 'selected' : '' }}>May</option>
+                                        <option value="June" {{ old('month') == 'June' ? 'selected' : '' }}>June</option>
+                                        <option value="July" {{ old('month') == 'July' ? 'selected' : '' }}>July</option>
+                                        <option value="August" {{ old('month') == 'August' ? 'selected' : '' }}>August</option>
+                                        <option value="September" {{ old('month') == 'September' ? 'selected' : '' }}>September</option>
+                                        <option value="October" {{ old('month') == 'October' ? 'selected' : '' }}>October</option>
+                                        <option value="November" {{ old('month') == 'November' ? 'selected' : '' }}>November</option>
+                                        <option value="December" {{ old('month') == 'December' ? 'selected' : '' }}>December</option>
+                                    </select>
+                                    @error('month')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
                             </div>
+
                         </div>
                         <div class="row">
                             <div class="col-md-6">
