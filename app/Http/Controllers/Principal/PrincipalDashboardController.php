@@ -1,47 +1,4 @@
 <?php
-
-// namespace App\Http\Controllers\Principal;
-// use App\Models\Admin\Brand;
-// use App\Models\Admin\Product;
-// use App\Http\Controllers\Controller;
-// use Illuminate\Support\Facades\Auth;
-// use App\Repositories\Interfaces\BrandRepositoryInterface;
-// use App\Repositories\Interfaces\ProductRepositoryInterface;
-
-// class PrincipalDashboardController extends Controller
-// { 
-//     public function index()
-//     {
-//         $principalId = Auth::guard('principal')->id();
-//         $principal = auth('principal')->user();
-
-//     //    $principal->load(['contacts', 'addresses']); // eager load related tables
-//     $principal->load(['contacts', 'addresses', 'links']); // load links too
-        
-//         $brands = Brand::where('principal_id', $principalId)->latest()->get();
-//         $products = Product::where('principal_id', $principalId)->latest()->get();
-        
-//         $stats = [
-//             // Brand stats
-//             'total_brands' => $brands->count(),
-//             'approved_brands' => $brands->where('status', 'approved')->count(),
-//             'pending_brands' => $brands->where('status', 'pending')->count(),
-//             'rejected_brands' => $brands->where('status', 'rejected')->count(),
-            
-//             // Product stats - using submission_status column
-//             'total_products' => $products->count(),
-//             'approved_products' => $products->where('submission_status', 'approved')->count(),
-//             'pending_products' => $products->where('submission_status', 'pending')->count(),
-//             'rejected_products' => $products->where('submission_status', 'rejected')->count(),
-//         ];
-
-//         // return view('principal.dashboard', compact('stats', 'brands', 'products'));
-//         return view('principal.dashboard', compact('stats', 'brands', 'products', 'principal'));
-
-//     }
-// }
-
-
 namespace App\Http\Controllers\Principal;
 
 use App\Models\Admin\Brand;
@@ -111,63 +68,6 @@ class PrincipalDashboardController extends Controller
     ));
     }
 
-// public function storeNote(Request $request)
-// {
-//     $request->validate([
-//         'note' => 'required|string|max:2000',
-//         'type' => 'required|string|in:note,important,task',
-//         'pin' => 'nullable|boolean',
-//     ]);
-
-//     $principal = Auth::guard('principal')->user();
-
-//     try {
-//         // Create activity record
-//         $activity = Activity::create([
-//             'principal_id' => $principal->id,
-//             'type' => $request->type,
-//             'description' => $request->note,
-//             'rich_content' => $request->note,
-//             'created_by_id' => $principal->id,
-//             'created_by_type' => 'App\Models\Principal',
-//             'pinned' => $request->boolean('pin', false),
-//             'metadata' => [
-//                 'is_note' => true,
-//                 'created_via' => 'dashboard'
-//             ]
-//         ]);
-
-//         return response()->json([
-//             'success' => true,
-//             'message' => 'Note added successfully!',
-//             'activity' => $activity
-//         ]);
-
-//     } catch (\Exception $e) {
-//         return response()->json([
-//             'success' => false,
-//             'message' => 'Failed to save note: ' . $e->getMessage()
-//         ], 500);
-//     }
-// }
-
-// public function getNote(Activity $activity)
-// {
-//     $principal = Auth::guard('principal')->user();
-    
-//     // Check if the activity belongs to the principal
-//     if ($activity->principal_id !== $principal->id) {
-//         return response()->json([
-//             'success' => false,
-//             'message' => 'Unauthorized access to note.'
-//         ], 403);
-//     }
-
-//     return response()->json([
-//         'success' => true,
-//         'activity' => $activity
-//     ]);
-// }
 public function storeNote(Request $request)
 {
     $request->validate([

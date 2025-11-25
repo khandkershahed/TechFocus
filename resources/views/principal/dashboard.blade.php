@@ -35,7 +35,7 @@
 
                 <!-- Country Flag -->
                 @if($principal->country)
-                    <img src="https://flagsapi.com/{{ strtoupper($principal->country_code ?? 'US') }}/flat/32.png" 
+                    <img src="https://flagsapi.com/{{ strtoupper($principal->country_id ?? 'US') }}/flat/32.png" 
                          class="w-6 h-6 rounded border" alt="Flag">
                 @endif
             </h1>
