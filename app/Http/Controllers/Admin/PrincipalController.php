@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 use App\Models\Country;
+use App\Models\Activity;
 use App\Models\Principal;
+use App\Models\NoteReply;
 use Illuminate\View\View;
 use App\Models\Admin\Brand;
 use Illuminate\Http\Request;
@@ -180,4 +182,130 @@ class PrincipalController extends Controller
         return redirect()->route('admin.principals.index')
             ->with('success', 'Principal deleted successfully.');
     }
+
+
+
+
+    /**
+ * Store reply to note
+ */
+/**
+ * Store reply to note
+ */
+public function storeReply(Request $request, Principal $principal, $activityId)
+{
+    $request->validate([
+        'reply' => 'required|string|max:1000',
+    ]);
+
+    try {
+        $activity = Activity::findOrFail($activityId);
+        
+        // Check if the activity belongs to the principal
+        if ($activity->principal_id !== $principal->id) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized access to note.'
+            ], 403);
+        }
+
+        // IMPORTANT: Make sure your Admin model path is correct
+        $reply = NoteReply::create([
+            'activity_id' => $activityId,
+            'user_id' => auth('admin')->id(),
+            'user_type' => 'App\Models\Admin', // Check if this is correct
+            'reply' => $request->reply,
+            'metadata' => [
+                'created_via' => 'admin_dashboard',
+                'is_note_reply' => true,
+                'ip_address' => $request->ip(),
+                'user_agent' => $request->userAgent()
+            ]
+        ]);
+
+        // Load the reply with user relationship
+        $reply->load('user');
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Reply added successfully!',
+            'reply' => $reply
+        ]);
+
+    } catch (\Exception $e) {
+        \Log::error('Error storing reply: ' . $e->getMessage());
+        
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to add reply: ' . $e->getMessage()
+        ], 500);
+    }
+}
+/**
+ * Toggle pin status of note
+ */
+public function togglePin(Principal $principal, $activityId)
+{
+    try {
+        $activity = Activity::findOrFail($activityId);
+        
+        // Check if the activity belongs to the principal
+        if ($activity->principal_id !== $principal->id) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized access to note.'
+            ], 403);
+        }
+
+        $activity->update([
+            'pinned' => !$activity->pinned
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => $activity->pinned ? 'Note pinned!' : 'Note unpinned!'
+        ]);
+
+    } catch (\Exception $e) {
+        \Log::error('Error toggling pin: ' . $e->getMessage());
+        
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to update note: ' . $e->getMessage()
+        ], 500);
+    }
+}
+
+/**
+ * Delete note
+ */
+public function deleteNote(Principal $principal, $activityId)
+{
+    try {
+        $activity = Activity::findOrFail($activityId);
+        
+        // Check if the activity belongs to the principal
+        if ($activity->principal_id !== $principal->id) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized access to note.'
+            ], 403);
+        }
+
+        $activity->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Note deleted successfully!'
+        ]);
+
+    } catch (\Exception $e) {
+        \Log::error('Error deleting note: ' . $e->getMessage());
+        
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to delete note: ' . $e->getMessage()
+        ], 500);
+    }
+}
 }

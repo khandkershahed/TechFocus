@@ -251,6 +251,9 @@ Route::post('/notes/{activity}/pin', [PrincipalDashboardController::class, 'togg
 Route::get('/activities', [PrincipalDashboardController::class, 'getActivities'])->name('activities.index');
 
 });
+// Principal note reply routes
+Route::post('/principal/notes/{activity}/reply', [PrincipalDashboardController::class, 'storeReply'])->name('principal.notes.reply');
+Route::delete('/principal/replies/{reply}', [PrincipalDashboardController::class, 'deleteReply'])->name('principal.replies.delete');
 
 Route::get('/guest/share/{token}', [ShareLinkController::class, 'show'])->name('guest.share-links.show');
 require __DIR__ . '/frontend.php';

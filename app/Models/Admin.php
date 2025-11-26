@@ -13,6 +13,7 @@ use App\Notifications\Admin\VerifyEmail;
 use Illuminate\Notifications\Notifiable;
 use App\Notifications\Admin\ResetPassword;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -111,5 +112,11 @@ class Admin extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsToMany(Permission::class, 'user_permissions', 'user_id', 'permission_id');
     }
+        public function noteReplies(): HasMany
+    {
+        return $this->hasMany(NoteReply::class, 'user_id')
+            ->where('user_type', self::class);
+    }
+
     
 }

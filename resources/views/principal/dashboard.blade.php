@@ -83,7 +83,7 @@
                 $tabs = [
                 1 => 'Overview',
                 2 => 'Share',
-                3 => 'Add Note',
+                3 => 'Note',
                 4 => 'Archive',
                 5 => 'Settings'
                 ];
@@ -663,7 +663,274 @@
                                     </button>
                                 </div>
                             </div>
+                            
 
+
+                                    <!-- Security & Visibility Section -->
+                                    <div class="p-6 mt-4 bg-white border rounded-lg">
+                                        <h2 class="mb-6 text-xl font-semibold text-gray-800">Security & Visibility</h2>
+
+                                        <div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
+                                            <!-- Visibility Scope -->
+                                            <div>
+                                                <h3 class="mb-4 text-lg font-medium text-gray-900">Visibility Scope</h3>
+                                                <div class="space-y-4">
+                                                    <div>
+                                                        <p class="mb-2 text-sm font-medium text-gray-700">Current Scope</p>
+                                                        <div class="flex flex-wrap gap-2">
+                                                            <span class="inline-flex items-center px-3 py-1 text-sm font-medium text-blue-800 bg-blue-100 rounded-full">
+                                                                <i class="mr-2 fa-solid fa-globe"></i>Global Access
+                                                            </span>
+                                                            @if($principal->visibility_scopes)
+                                                            @foreach($principal->visibility_scopes as $scope)
+                                                            <span class="inline-flex items-center px-3 py-1 text-sm font-medium text-gray-800 bg-gray-100 rounded-full">
+                                                                {{ ucfirst($scope) }}
+                                                            </span>
+                                                            @endforeach
+                                                            @endif
+                                                        </div>
+                                                    </div>
+
+                                                    <div>
+                                                        <p class="mb-2 text-sm font-medium text-gray-700">Brand Access</p>
+                                                        <div class="flex flex-wrap gap-2">
+                                                            @if($principal->brands->count())
+                                                            @foreach($principal->brands->take(6) as $brand)
+                                                            <span class="inline-flex items-center px-3 py-1 text-sm font-medium text-green-800 bg-green-100 rounded-full">
+                                                                <i class="mr-2 text-xs fa-solid fa-store"></i>{{ $brand->title }}
+                                                            </span>
+                                                            @endforeach
+                                                            @if($principal->brands->count() > 6)
+                                                            <span class="inline-flex items-center px-3 py-1 text-sm font-medium text-gray-800 bg-gray-100 rounded-full">
+                                                                +{{ $principal->brands->count() - 6 }} more
+                                                            </span>
+                                                            @endif
+                                                            @else
+                                                            <span class="text-sm text-gray-500">No brands assigned</span>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+
+                                                    <div>
+                                                        <p class="mb-2 text-sm font-medium text-gray-700">Country Access</p>
+                                                        <div class="flex flex-wrap gap-2">
+                                                            @if($principal->countries && count($principal->countries))
+                                                            @foreach($principal->countries as $country)
+                                                            <span class="inline-flex items-center px-3 py-1 text-sm font-medium text-purple-800 bg-purple-100 rounded-full">
+                                                                <i class="mr-2 text-xs fa-solid fa-flag"></i>{{ $country }}
+                                                            </span>
+                                                            @endforeach
+                                                            @else
+                                                            <span class="text-sm text-gray-500">All countries</span>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Account Owners & Security -->
+                                            <div>
+                                                <h3 class="mb-4 text-lg font-medium text-gray-900">Account Management</h3>
+                                                <div class="space-y-6">
+                                                    <div>
+                                                        <p class="mb-3 text-sm font-medium text-gray-700">Account Owners</p>
+                                                        <div class="space-y-3">
+                                                            @if($principal->contacts->where('is_primary', true)->count())
+                                                            @foreach($principal->contacts->where('is_primary', true) as $contact)
+                                                            <div class="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
+                                                                <div class="flex items-center space-x-3">
+                                                                    <div class="flex items-center justify-center w-10 h-10 bg-blue-100 rounded-full">
+                                                                        <span class="text-sm font-medium text-blue-700">
+                                                                            {{ substr($contact->contact_name, 0, 1) }}
+                                                                        </span>
+                                                                    </div>
+                                                                    <div>
+                                                                        <p class="text-sm font-medium text-gray-900">{{ $contact->contact_name }}</p>
+                                                                        <p class="text-sm text-gray-500">{{ $contact->job_title ?? 'Primary Contact' }}</p>
+                                                                    </div>
+                                                                </div>
+                                                                <span class="inline-flex items-center px-2 py-1 text-xs font-medium text-green-800 bg-green-100 rounded-full">
+                                                                    Owner
+                                                                </span>
+                                                            </div>
+                                                            @endforeach
+                                                            @else
+                                                            <p class="text-sm text-gray-500">No primary contacts assigned</p>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+
+                                                    <div>
+                                                        <p class="mb-2 text-sm font-medium text-gray-700">Security Status</p>
+                                                        <div class="grid grid-cols-2 gap-4">
+                                                            <div class="p-3 text-center border border-green-200 rounded-lg bg-green-50">
+                                                                <i class="mb-2 text-xl text-green-600 fa-solid fa-shield-check"></i>
+                                                                <p class="text-sm font-medium text-green-800">Verified</p>
+                                                                <p class="text-xs text-green-600">Account Active</p>
+                                                            </div>
+                                                            {{-- <div class="p-3 text-center border border-blue-200 rounded-lg bg-blue-50">
+                            <i class="mb-2 text-xl text-blue-600 fa-solid fa-lock"></i>
+                            <p class="text-sm font-medium text-blue-800">Secure</p>
+                            <p class="text-xs text-blue-600">2FA Enabled</p>
+                        </div> --}}
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <p class="mb-3 text-sm font-medium text-gray-700">Activity Overview</p>
+                                                        <div class="space-y-3">
+                                                            <!-- Last Activity -->
+                                                            <div class="flex items-center justify-between">
+                                                                <span class="text-sm text-gray-600">Last activity</span>
+                                                                <span class="text-sm font-medium text-gray-900">
+                                                                    @if($lastActivity)
+                                                                    {{ $lastActivity->created_at->diffForHumans() }}
+                                                                    @else
+                                                                    <span class="text-gray-400">Never</span>
+                                                                    @endif
+                                                                </span>
+                                                            </div>
+
+                                                            <!-- Total Activities -->
+                                                            <div class="flex items-center justify-between">
+                                                                <span class="text-sm text-gray-600">Total activities</span>
+                                                                <span class="text-sm font-medium text-gray-900">
+                                                                    {{ $activities->count() }}
+                                                                </span>
+                                                            </div>
+
+                                                            <!-- Today's Activities -->
+                                                            <div class="flex items-center justify-between">
+                                                                <span class="text-sm text-gray-600">Today</span>
+                                                                <span class="text-sm font-medium text-gray-900">
+                                                                    {{ $activities->where('created_at', '>=', today())->count() }}
+                                                                </span>
+                                                            </div>
+
+                                                            <!-- Pinned Activities -->
+                                                            <div class="flex items-center justify-between">
+                                                                <span class="text-sm text-gray-600">Pinned</span>
+                                                                <span class="text-sm font-medium text-gray-900">
+                                                                    {{ $activities->where('pinned', true)->count() }}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div x-show="tab === 2" x-transition>
+                            <h2 class="text-xl font-semibold text-gray-800">Titan Maintenance</h2>
+                            <p class="text-gray-600">Content for titan maintenance...</p>
+                        </div>
+
+                        <div x-show="tab === 3" x-transition>
+                          <!-- Activity Timeline -->
+<div class="space-y-4" id="activitiesList">
+    @php
+    // Safe check for activities
+    $activities = $activities ?? collect();
+    @endphp
+
+    @if($activities->count())
+        @foreach($activities->sortByDesc('pinned') as $activity)
+        <div class="flex items-start space-x-4 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-all duration-200 {{ $activity->pinned ? 'bg-yellow-50 border-yellow-200' : 'bg-white' }}"
+            data-activity-id="{{ $activity->id }}" 
+            style="transition: all 0.3s ease-in-out;">
+
+            <!-- Activity Icon -->
+            <div class="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center
+                @if($activity->type == 'note') bg-blue-100 text-blue-600
+                @elseif($activity->type == 'important') bg-red-100 text-red-600
+                @elseif($activity->type == 'task') bg-green-100 text-green-600
+                @elseif($activity->type == 'created') bg-green-100 text-green-600
+                @elseif($activity->type == 'edited') bg-indigo-100 text-indigo-600
+                @elseif($activity->type == 'link_shared') bg-purple-100 text-purple-600
+                @elseif($activity->type == 'file_uploaded') bg-orange-100 text-orange-600
+                @else bg-gray-100 text-gray-600 @endif">
+                <!-- ... your icon code ... -->
+            </div>
+
+            <!-- Activity Content -->
+            <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between mb-2">
+                    <!-- ... your activity header code ... -->
+                </div>
+
+                <div class="prose-sm prose text-gray-700 break-words max-w-none" id="content-{{ $activity->id }}">
+                    {!! $activity->rich_content ?: nl2br(e($activity->description)) !!}
+                </div>
+
+                <!-- ENHANCED ATTACHMENTS SECTION -->
+                @if($activity->metadata && (isset($activity->metadata['attachments']) || isset($activity->metadata['file']) || isset($activity->metadata['link'])))
+                <div class="mt-4 space-y-3">
+                    <!-- ... your attachments code ... -->
+                </div>
+                @endif
+
+                <!-- REPLIES SECTION - SHOW ONLY REPLIES LIST -->
+                @if($activity->replies_count > 0)
+                <div class="mt-4 space-y-3">
+                    <!-- Replies List -->
+                    <div class="p-3 bg-gray-50 rounded-lg border border-gray-200">
+                        <div class="flex items-center justify-between mb-2">
+                            <h6 class="text-sm font-medium text-gray-900">Replies ({{ $activity->replies_count }})</h6>
+                        </div>
+                        <div class="space-y-3">
+                            @foreach($activity->replies as $reply)
+                            <div class="flex items-start space-x-2 p-2 bg-white rounded-lg border border-gray-100">
+                                <div class="flex-shrink-0 w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 text-xs font-medium">
+                                    {{ substr($reply->user_name, 0, 1) }}
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center justify-between mb-1">
+                                        <div class="flex items-center space-x-2">
+                                            <span class="text-xs font-medium text-gray-900">{{ $reply->user_name }}</span>
+                                            <span class="text-xs text-gray-500">{{ $reply->created_at->diffForHumans() }}</span>
+                                        </div>
+                                        @if($reply->user_id == auth('principal')->id() && $reply->user_type == 'App\Models\Principal')
+                                        <button onclick="deletePrincipalReply('{{ $reply->id }}', '{{ $activity->id }}')" 
+                                                class="text-red-500 hover:text-red-700 text-xs">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                        @endif
+                                    </div>
+                                    <p class="text-sm text-gray-700 whitespace-pre-wrap">{{ $reply->reply }}</p>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+                @endif
+                <!-- END REPLIES SECTION -->
+
+                <!-- Edit Form (Hidden by default) -->
+                <div id="edit-form-{{ $activity->id }}" class="hidden mt-4">
+                    <!-- ... your edit form code ... -->
+                </div>
+            </div>
+        </div>
+        @endforeach
+    @else
+        <!-- Empty State -->
+        <div class="py-12 text-center text-gray-500 border-2 border-gray-300 border-dashed rounded-lg bg-gray-50">
+            <i class="mb-4 text-5xl text-gray-300 fa-solid fa-inbox"></i>
+            <p class="mb-2 text-lg font-medium text-gray-400">No activities yet</p>
+            <p class="mb-4 text-sm text-gray-400">Start by adding your first note above</p>
+            <button onclick="toggleNoteForm()" class="inline-flex items-center px-4 py-2 text-white transition duration-200 bg-blue-600 rounded-lg hover:bg-blue-700">
+                <i class="mr-2 fa-solid fa-plus"></i>
+                Add Your First Note
+            </button>
+        </div>
+    @endif
+</div>
                             <div class="p-5 bg-white border border-gray-200 shadow-sm rounded-xl">
                                 <!-- Activity & Notes Section -->
                                 <div class="">
@@ -1161,174 +1428,7 @@
                                         </div>
                                         @endif
                                     </div>
-
-                                    <!-- Security & Visibility Section -->
-                                    <div class="p-6 mt-4 bg-white border rounded-lg">
-                                        <h2 class="mb-6 text-xl font-semibold text-gray-800">Security & Visibility</h2>
-
-                                        <div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
-                                            <!-- Visibility Scope -->
-                                            <div>
-                                                <h3 class="mb-4 text-lg font-medium text-gray-900">Visibility Scope</h3>
-                                                <div class="space-y-4">
-                                                    <div>
-                                                        <p class="mb-2 text-sm font-medium text-gray-700">Current Scope</p>
-                                                        <div class="flex flex-wrap gap-2">
-                                                            <span class="inline-flex items-center px-3 py-1 text-sm font-medium text-blue-800 bg-blue-100 rounded-full">
-                                                                <i class="mr-2 fa-solid fa-globe"></i>Global Access
-                                                            </span>
-                                                            @if($principal->visibility_scopes)
-                                                            @foreach($principal->visibility_scopes as $scope)
-                                                            <span class="inline-flex items-center px-3 py-1 text-sm font-medium text-gray-800 bg-gray-100 rounded-full">
-                                                                {{ ucfirst($scope) }}
-                                                            </span>
-                                                            @endforeach
-                                                            @endif
-                                                        </div>
-                                                    </div>
-
-                                                    <div>
-                                                        <p class="mb-2 text-sm font-medium text-gray-700">Brand Access</p>
-                                                        <div class="flex flex-wrap gap-2">
-                                                            @if($principal->brands->count())
-                                                            @foreach($principal->brands->take(6) as $brand)
-                                                            <span class="inline-flex items-center px-3 py-1 text-sm font-medium text-green-800 bg-green-100 rounded-full">
-                                                                <i class="mr-2 text-xs fa-solid fa-store"></i>{{ $brand->title }}
-                                                            </span>
-                                                            @endforeach
-                                                            @if($principal->brands->count() > 6)
-                                                            <span class="inline-flex items-center px-3 py-1 text-sm font-medium text-gray-800 bg-gray-100 rounded-full">
-                                                                +{{ $principal->brands->count() - 6 }} more
-                                                            </span>
-                                                            @endif
-                                                            @else
-                                                            <span class="text-sm text-gray-500">No brands assigned</span>
-                                                            @endif
-                                                        </div>
-                                                    </div>
-
-                                                    <div>
-                                                        <p class="mb-2 text-sm font-medium text-gray-700">Country Access</p>
-                                                        <div class="flex flex-wrap gap-2">
-                                                            @if($principal->countries && count($principal->countries))
-                                                            @foreach($principal->countries as $country)
-                                                            <span class="inline-flex items-center px-3 py-1 text-sm font-medium text-purple-800 bg-purple-100 rounded-full">
-                                                                <i class="mr-2 text-xs fa-solid fa-flag"></i>{{ $country }}
-                                                            </span>
-                                                            @endforeach
-                                                            @else
-                                                            <span class="text-sm text-gray-500">All countries</span>
-                                                            @endif
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <!-- Account Owners & Security -->
-                                            <div>
-                                                <h3 class="mb-4 text-lg font-medium text-gray-900">Account Management</h3>
-                                                <div class="space-y-6">
-                                                    <div>
-                                                        <p class="mb-3 text-sm font-medium text-gray-700">Account Owners</p>
-                                                        <div class="space-y-3">
-                                                            @if($principal->contacts->where('is_primary', true)->count())
-                                                            @foreach($principal->contacts->where('is_primary', true) as $contact)
-                                                            <div class="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
-                                                                <div class="flex items-center space-x-3">
-                                                                    <div class="flex items-center justify-center w-10 h-10 bg-blue-100 rounded-full">
-                                                                        <span class="text-sm font-medium text-blue-700">
-                                                                            {{ substr($contact->contact_name, 0, 1) }}
-                                                                        </span>
-                                                                    </div>
-                                                                    <div>
-                                                                        <p class="text-sm font-medium text-gray-900">{{ $contact->contact_name }}</p>
-                                                                        <p class="text-sm text-gray-500">{{ $contact->job_title ?? 'Primary Contact' }}</p>
-                                                                    </div>
-                                                                </div>
-                                                                <span class="inline-flex items-center px-2 py-1 text-xs font-medium text-green-800 bg-green-100 rounded-full">
-                                                                    Owner
-                                                                </span>
-                                                            </div>
-                                                            @endforeach
-                                                            @else
-                                                            <p class="text-sm text-gray-500">No primary contacts assigned</p>
-                                                            @endif
-                                                        </div>
-                                                    </div>
-
-                                                    <div>
-                                                        <p class="mb-2 text-sm font-medium text-gray-700">Security Status</p>
-                                                        <div class="grid grid-cols-2 gap-4">
-                                                            <div class="p-3 text-center border border-green-200 rounded-lg bg-green-50">
-                                                                <i class="mb-2 text-xl text-green-600 fa-solid fa-shield-check"></i>
-                                                                <p class="text-sm font-medium text-green-800">Verified</p>
-                                                                <p class="text-xs text-green-600">Account Active</p>
-                                                            </div>
-                                                            {{-- <div class="p-3 text-center border border-blue-200 rounded-lg bg-blue-50">
-                            <i class="mb-2 text-xl text-blue-600 fa-solid fa-lock"></i>
-                            <p class="text-sm font-medium text-blue-800">Secure</p>
-                            <p class="text-xs text-blue-600">2FA Enabled</p>
-                        </div> --}}
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <p class="mb-3 text-sm font-medium text-gray-700">Activity Overview</p>
-                                                        <div class="space-y-3">
-                                                            <!-- Last Activity -->
-                                                            <div class="flex items-center justify-between">
-                                                                <span class="text-sm text-gray-600">Last activity</span>
-                                                                <span class="text-sm font-medium text-gray-900">
-                                                                    @if($lastActivity)
-                                                                    {{ $lastActivity->created_at->diffForHumans() }}
-                                                                    @else
-                                                                    <span class="text-gray-400">Never</span>
-                                                                    @endif
-                                                                </span>
-                                                            </div>
-
-                                                            <!-- Total Activities -->
-                                                            <div class="flex items-center justify-between">
-                                                                <span class="text-sm text-gray-600">Total activities</span>
-                                                                <span class="text-sm font-medium text-gray-900">
-                                                                    {{ $activities->count() }}
-                                                                </span>
-                                                            </div>
-
-                                                            <!-- Today's Activities -->
-                                                            <div class="flex items-center justify-between">
-                                                                <span class="text-sm text-gray-600">Today</span>
-                                                                <span class="text-sm font-medium text-gray-900">
-                                                                    {{ $activities->where('created_at', '>=', today())->count() }}
-                                                                </span>
-                                                            </div>
-
-                                                            <!-- Pinned Activities -->
-                                                            <div class="flex items-center justify-between">
-                                                                <span class="text-sm text-gray-600">Pinned</span>
-                                                                <span class="text-sm font-medium text-gray-900">
-                                                                    {{ $activities->where('pinned', true)->count() }}
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                </div>
-                            </div>
-                        </div>
-
-                        <div x-show="tab === 2" x-transition>
-                            <h2 class="text-xl font-semibold text-gray-800">Titan Maintenance</h2>
-                            <p class="text-gray-600">Content for titan maintenance...</p>
-                        </div>
-
-                        <div x-show="tab === 3" x-transition>
-                            <h2 class="text-xl font-semibold text-gray-800">Loadout</h2>
-                            <p class="text-gray-600">Content for loadout...</p>
+                          
                         </div>
 
                         <div x-show="tab === 4" x-transition>

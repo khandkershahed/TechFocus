@@ -14,6 +14,7 @@ use App\Notifications\PrincipalVerifyEmail;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -235,5 +236,14 @@ public function products()
     public function createdActivities()
     {
         return $this->morphMany(Activity::class, 'created_by');
+    }
+
+    /**
+     * Get the note replies for the principal.
+     */
+    public function noteReplies(): HasMany
+    {
+        return $this->hasMany(NoteReply::class, 'user_id')
+            ->where('user_type', self::class);
     }
 }

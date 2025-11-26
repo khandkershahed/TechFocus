@@ -3,7 +3,7 @@ namespace App\Http\Controllers\Principal;
 
 use App\Models\Admin\Brand;
 use Illuminate\Support\Facades\Storage;
-
+use App\Models\NoteReply; 
 use App\Models\Activity;
 use Illuminate\Http\Request;
 use App\Models\Admin\Product;
@@ -12,56 +12,101 @@ use Illuminate\Support\Facades\Auth;
 
 class PrincipalDashboardController extends Controller
 { 
-    public function index()
-    {
-        $principalId = Auth::guard('principal')->id();
-        $principal = auth('principal')->user();
+    // public function index()
+    // {
+    //     $principalId = Auth::guard('principal')->id();
+    //     $principal = auth('principal')->user();
 
-        // Eager load related tables
-        $principal->load(['contacts', 'addresses', 'links']);
+    //     // Eager load related tables
+    //     $principal->load(['contacts', 'addresses', 'links']);
 
-        $brands = Brand::where('principal_id', $principalId)->latest()->get();
-        $products = Product::where('principal_id', $principalId)->latest()->get();
+    //     $brands = Brand::where('principal_id', $principalId)->latest()->get();
+    //     $products = Product::where('principal_id', $principalId)->latest()->get();
 
-        $stats = [
-            // Brand stats
-            'total_brands' => $brands->count(),
-            'approved_brands' => $brands->where('status', 'approved')->count(),
-            'pending_brands' => $brands->where('status', 'pending')->count(),
-            'rejected_brands' => $brands->where('status', 'rejected')->count(),
+    //     $stats = [
+    //         // Brand stats
+    //         'total_brands' => $brands->count(),
+    //         'approved_brands' => $brands->where('status', 'approved')->count(),
+    //         'pending_brands' => $brands->where('status', 'pending')->count(),
+    //         'rejected_brands' => $brands->where('status', 'rejected')->count(),
 
-            // Product stats
-            'total_products' => $products->count(),
-            'approved_products' => $products->where('submission_status', 'approved')->count(),
-            'pending_products' => $products->where('submission_status', 'pending')->count(),
-            'rejected_products' => $products->where('submission_status', 'rejected')->count(),
-        ];
+    //         // Product stats
+    //         'total_products' => $products->count(),
+    //         'approved_products' => $products->where('submission_status', 'approved')->count(),
+    //         'pending_products' => $products->where('submission_status', 'pending')->count(),
+    //         'rejected_products' => $products->where('submission_status', 'rejected')->count(),
+    //     ];
 
-        // Transform links so each label/url pair is an object
-        $principal->links->transform(function($link) {
-            // Decode JSON if stored as JSON
-            $link->label = is_string($link->label) ? json_decode($link->label, true) : $link->label;
-            $link->url   = is_string($link->url) ? json_decode($link->url, true) : $link->url;
-            $link->type  = is_string($link->type) ? json_decode($link->type, true) : $link->type;
-            return $link;
-        });
+    //     // Transform links so each label/url pair is an object
+    //     $principal->links->transform(function($link) {
+    //         // Decode JSON if stored as JSON
+    //         $link->label = is_string($link->label) ? json_decode($link->label, true) : $link->label;
+    //         $link->url   = is_string($link->url) ? json_decode($link->url, true) : $link->url;
+    //         $link->type  = is_string($link->type) ? json_decode($link->type, true) : $link->type;
+    //         return $link;
+    //     });
 
-        // return view('principal.dashboard', compact('stats', 'brands', 'products', 'principal'));
-        // Get recent activities for the timeline
+    //     // return view('principal.dashboard', compact('stats', 'brands', 'products', 'principal'));
+    //     // Get recent activities for the timeline
+    // $activities = Activity::where('principal_id', $principal->id)
+    //     ->orderBy('created_at', 'desc')
+    //     ->take(10)
+    //     ->get();
+
+    // // Calculate last activity dynamically
+    // $lastActivity = Activity::where('principal_id', $principal->id)
+    //     ->orderBy('created_at', 'desc')
+    //     ->first();
+
+
+    //        // Dashboard shortcuts
+
+
+
+    // return view('principal.dashboard', compact(
+    //     'stats', 
+    //     'brands', 
+    //     'products', 
+    //     'principal', 
+    //     'activities',
+    //     'lastActivity',
+    //     // 'shortcuts'
+    // ));
+    // }
+public function index()
+{
+    $principalId = Auth::guard('principal')->id();
+    $principal = auth('principal')->user();
+
+    // Eager load related tables
+    $principal->load(['contacts', 'addresses', 'links']);
+
+    $brands = Brand::where('principal_id', $principalId)->latest()->get();
+    $products = Product::where('principal_id', $principalId)->latest()->get();
+
+    $stats = [
+        // ... your stats code ...
+    ];
+
+    // Transform links
+    $principal->links->transform(function($link) {
+        $link->label = is_string($link->label) ? json_decode($link->label, true) : $link->label;
+        $link->url   = is_string($link->url) ? json_decode($link->url, true) : $link->url;
+        $link->type  = is_string($link->type) ? json_decode($link->type, true) : $link->type;
+        return $link;
+    });
+
+    // Get activities WITH replies
     $activities = Activity::where('principal_id', $principal->id)
+        ->with(['replies', 'replies.user', 'createdBy'])
+        ->orderBy('pinned', 'desc')
         ->orderBy('created_at', 'desc')
         ->take(10)
         ->get();
 
-    // Calculate last activity dynamically
     $lastActivity = Activity::where('principal_id', $principal->id)
         ->orderBy('created_at', 'desc')
         ->first();
-
-
-           // Dashboard shortcuts
-
-
 
     return view('principal.dashboard', compact(
         'stats', 
@@ -69,11 +114,9 @@ class PrincipalDashboardController extends Controller
         'products', 
         'principal', 
         'activities',
-        'lastActivity',
-        // 'shortcuts'
+        'lastActivity'
     ));
-    }
-
+}
 public function storeNote(Request $request)
 {
     $request->validate([
@@ -318,5 +361,95 @@ public function getNote($activityId)
         ], 500);
     }
 }
+
+
+//  public function storeReply(Request $request, $activityId)
+//     {
+//         $request->validate([
+//             'reply' => 'required|string|max:1000',
+//         ]);
+
+//         $principal = Auth::guard('principal')->user();
+
+//         try {
+//             $activity = Activity::findOrFail($activityId);
+            
+//             // Check if the activity belongs to the principal
+//             if ($activity->principal_id !== $principal->id) {
+//                 return response()->json([
+//                     'success' => false,
+//                     'message' => 'Unauthorized access to note.'
+//                 ], 403);
+//             }
+
+//             // Create the reply
+//             $reply = NoteReply::create([
+//                 'activity_id' => $activityId,
+//                 'user_id' => $principal->id,
+//                 'user_type' => 'App\Models\Principal',
+//                 'reply' => $request->reply,
+//                 'metadata' => [
+//                     'created_via' => 'principal_dashboard',
+//                     'is_note_reply' => true,
+//                     'ip_address' => $request->ip(),
+//                     'user_agent' => $request->userAgent()
+//                 ]
+//             ]);
+
+//             // Load the reply with user relationship
+//             $reply->load('user');
+
+//             return response()->json([
+//                 'success' => true,
+//                 'message' => 'Reply added successfully!',
+//                 'reply' => $reply
+//             ]);
+
+//         } catch (\Exception $e) {
+//             \Log::error('Error storing reply: ' . $e->getMessage());
+            
+//             return response()->json([
+//                 'success' => false,
+//                 'message' => 'Failed to add reply: ' . $e->getMessage()
+//             ], 500);
+//         }
+//     }
+
+//     /**
+//      * Delete reply from principal side
+//      */
+//     public function deleteReply($replyId)
+//     {
+//         $principal = Auth::guard('principal')->user();
+
+//         try {
+//             $reply = NoteReply::with('activity')->findOrFail($replyId);
+            
+//             // Check if the reply belongs to the principal AND the activity belongs to the principal
+//             if ($reply->user_id !== $principal->id || 
+//                 $reply->user_type !== 'App\Models\Principal' ||
+//                 $reply->activity->principal_id !== $principal->id) {
+//                 return response()->json([
+//                     'success' => false,
+//                     'message' => 'Unauthorized access to reply.'
+//                 ], 403);
+//             }
+
+//             $reply->delete();
+
+//             return response()->json([
+//                 'success' => true,
+//                 'message' => 'Reply deleted successfully!'
+//             ]);
+
+//         } catch (\Exception $e) {
+//             \Log::error('Error deleting reply: ' . $e->getMessage());
+            
+//             return response()->json([
+//                 'success' => false,
+//                 'message' => 'Failed to delete reply: ' . $e->getMessage()
+//             ], 500);
+//         }
+//     }
 }
 

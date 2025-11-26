@@ -771,6 +771,178 @@
     </div>
 </div>
 
+<!-- AFTER THE PRODUCTS SECTION -->
+
+<!-- Notes & Activity Timeline Section -->
+<div class="card mt-4">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="card-title mb-0">Notes & Activity Timeline</h4>
+            <span class="badge bg-primary">{{ $principal->activities()->count() }} Total</span>
+        </div>
+
+        <!-- Notes List -->
+        <div class="space-y-4" id="activitiesList">
+            @php
+                // SIMPLE QUERY WITHOUT REPLIES FOR NOW
+                $activities = $principal->activities()
+                    ->with('createdBy') // Only load createdBy, not replies
+                    ->orderBy('pinned', 'desc')
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(10);
+            @endphp
+
+            @if($activities->count() > 0)
+                @foreach($activities as $activity)
+                <div class="flex items-start space-x-4 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-all duration-200 {{ $activity->pinned ? 'bg-yellow-50 border-yellow-200' : 'bg-white' }}"
+                    data-activity-id="{{ $activity->id }}">
+
+                    <!-- Activity Icon -->
+                    <div class="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center
+                        @if($activity->type == 'note') bg-blue-100 text-blue-600
+                        @elseif($activity->type == 'important') bg-red-100 text-red-600
+                        @elseif($activity->type == 'task') bg-green-100 text-green-600
+                        @else bg-gray-100 text-gray-600 @endif">
+                        @if($activity->type == 'note')
+                        <i class="text-sm fa-solid fa-note-sticky"></i>
+                        @elseif($activity->type == 'important')
+                        <i class="text-sm fa-solid fa-exclamation"></i>
+                        @elseif($activity->type == 'task')
+                        <i class="text-sm fa-solid fa-square-check"></i>
+                        @else
+                        <i class="text-sm fa-solid fa-circle"></i>
+                        @endif
+                    </div>
+
+                    <!-- Activity Content -->
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex flex-wrap items-center space-x-2">
+                                <span class="text-sm font-medium text-gray-900">
+                                    @if($activity->createdBy)
+                                        {{ $activity->createdBy->name ?? $activity->createdBy->legal_name ?? 'System' }}
+                                    @else
+                                        System
+                                    @endif
+                                </span>
+                                <span class="text-xs text-gray-500">•</span>
+                                <span class="text-xs text-gray-500">
+                                    {{ $activity->created_at->diffForHumans() }}
+                                </span>
+
+                                @if($activity->pinned)
+                                <span class="inline-flex items-center px-2 py-1 text-xs font-medium text-yellow-800 bg-yellow-100 rounded-full">
+                                    <i class="mr-1 fa-solid fa-thumbtack"></i>Pinned
+                                </span>
+                                @endif
+
+                                <span class="inline-flex items-center px-2 py-1 text-xs font-medium 
+                                    @if($activity->type == 'note') bg-blue-100 text-blue-800
+                                    @elseif($activity->type == 'important') bg-red-100 text-red-800
+                                    @elseif($activity->type == 'task') bg-green-100 text-green-800
+                                    @else bg-gray-100 text-gray-800 @endif rounded-full">
+                                    {{ ucfirst($activity->type) }}
+                                </span>
+                            </div>
+
+                            <!-- Action Menu -->
+                            @if(auth('admin')->user()->hasRole('SuperAdmin') || auth('admin')->user()->can('edit principals'))
+                            <div class="relative group">
+                                <button
+                                    class="p-2 text-gray-400 transition duration-200 rounded-full hover:text-gray-600 hover:bg-gray-200"
+                                    onclick="toggleDropdown(this)">
+                                    <i class="text-sm fa-solid fa-ellipsis-vertical"></i>
+                                </button>
+
+                                <!-- Dropdown Menu -->
+                                <div class="absolute right-0 z-10 hidden w-48 mt-1 bg-white border border-gray-200 rounded-md shadow-lg top-full dropdown-menu">
+                                    <div class="py-1">
+                                        <button
+                                            onclick="showNoteModal('{{ $activity->id }}')"
+                                            class="flex items-center w-full px-4 py-2 text-sm text-gray-700 transition duration-150 hover:bg-gray-100">
+                                            <i class="w-4 mr-3 text-gray-500 fa-solid fa-eye"></i>
+                                            View Note
+                                        </button>
+                                        <button
+                                            onclick="togglePinNote('{{ $activity->id }}')"
+                                            class="flex items-center w-full px-4 py-2 text-sm text-gray-700 transition duration-150 hover:bg-gray-100">
+                                            <i class="w-4 mr-3 text-gray-500 fa-solid fa-thumbtack"></i>
+                                            {{ $activity->pinned ? 'Unpin' : 'Pin' }} Note
+                                        </button>
+                                        <hr class="my-1 border-gray-200">
+                                        <button
+                                            onclick="deleteNote('{{ $activity->id }}')"
+                                            class="flex items-center w-full px-4 py-2 text-sm text-red-600 transition duration-150 hover:bg-red-50">
+                                            <i class="w-4 mr-3 fa-solid fa-trash"></i>
+                                            Delete Note
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            @endif
+                        </div>
+
+                        <div class="prose-sm prose text-gray-700 break-words max-w-none">
+                            {!! $activity->rich_content ?: nl2br(e($activity->description)) !!}
+                        </div>
+
+                        <!-- Simple Reply Form -->
+                        @if(auth('admin')->user()->hasRole('SuperAdmin') || auth('admin')->user()->can('edit principals'))
+                        <div class="mt-3">
+                            <form onsubmit="submitQuickReply(event, '{{ $activity->id }}')" class="flex space-x-2">
+                                @csrf
+                                <input type="text" 
+                                    name="reply" 
+                                    placeholder="Type a quick reply..." 
+                                    class="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    required>
+                                <button type="submit" class="px-4 py-2 text-sm text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+                                    <i class="fa-solid fa-reply"></i>
+                                </button>
+                            </form>
+                        </div>
+                        @endif
+                    </div>
+                </div>
+                @endforeach
+
+                <!-- Pagination -->
+                @if($activities->hasPages())
+                <div class="mt-4">
+                    {{ $activities->links() }}
+                </div>
+                @endif
+            @else
+                <!-- Empty State -->
+                <div class="text-center py-8 text-gray-500">
+                    <i class="fa-solid fa-note-sticky text-4xl mb-4 text-gray-300"></i>
+                    <p class="text-lg font-medium text-gray-400">No notes yet</p>
+                    <p class="text-sm text-gray-400">No activity notes have been created for this principal.</p>
+                </div>
+            @endif
+        </div>
+    </div>
+</div>
+
+<!-- Note Details Modal -->
+<div class="modal fade" id="noteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Note Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="noteModalContent">
+                    <!-- Content will be loaded via JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- BEFORE THE ADD CONTACT MODAL -->
+
     <!-- Add Contact Modal - Only show if user has permission -->
     @if(auth('admin')->user()->hasRole('SuperAdmin') || auth('admin')->user()->can('edit principals'))
     <div class="modal fade" id="addContactModal" tabindex="-1">
@@ -1074,6 +1246,197 @@ document.addEventListener('DOMContentLoaded', function() {
             toast.remove();
         }, 3000);
     }
+});
+
+
+
+// Simple dropdown toggle function
+function toggleDropdown(button) {
+    const dropdown = button.nextElementSibling;
+    const allDropdowns = document.querySelectorAll('.dropdown-menu');
+
+    // Close all other dropdowns
+    allDropdowns.forEach(dd => {
+        if (dd !== dropdown) {
+            dd.classList.add('hidden');
+        }
+    });
+
+    // Toggle current dropdown
+    dropdown.classList.toggle('hidden');
+}
+
+// Close dropdowns when clicking outside
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.group')) {
+        document.querySelectorAll('.dropdown-menu').forEach(dropdown => {
+            dropdown.classList.add('hidden');
+        });
+    }
+});
+
+// Submit Quick Reply
+async function submitQuickReply(event, activityId) {
+    event.preventDefault();
+    
+    const form = event.target;
+    const replyInput = form.querySelector('input[name="reply"]');
+    const reply = replyInput.value.trim();
+
+    if (!reply) {
+        alert('Please enter a reply');
+        return;
+    }
+
+    const submitButton = form.querySelector('button[type="submit"]');
+    const originalText = submitButton.innerHTML;
+
+    // Show loading state
+    submitButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+    submitButton.disabled = true;
+
+    try {
+        const response = await fetch(`/admin/principals/{{ $principal->id }}/notes/${activityId}/reply`, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({ reply: reply })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            // Clear input
+            replyInput.value = '';
+            
+            // Show success message
+            alert('Reply added successfully!');
+            
+            // Optional: Reload the page to show changes
+            // location.reload();
+            
+        } else {
+            throw new Error(result.message || 'Failed to add reply');
+        }
+    } catch (error) {
+        console.error('Error adding reply:', error);
+        alert('Error adding reply: ' + error.message);
+    } finally {
+        // Reset button
+        submitButton.innerHTML = originalText;
+        submitButton.disabled = false;
+    }
+}
+
+// Toggle Pin Note
+async function togglePinNote(activityId) {
+    try {
+        const response = await fetch(`/admin/principals/{{ $principal->id }}/notes/${activityId}/pin`, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            location.reload();
+        } else {
+            throw new Error(result.message || 'Failed to toggle pin');
+        }
+    } catch (error) {
+        console.error('Error toggling pin:', error);
+        alert('Error toggling pin: ' + error.message);
+    }
+}
+
+// Delete Note
+async function deleteNote(activityId) {
+    if (!confirm('Are you sure you want to delete this note? This action cannot be undone.')) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`/admin/principals/{{ $principal->id }}/notes/${activityId}`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            location.reload();
+            alert('Note deleted successfully!');
+        } else {
+            throw new Error(result.message || 'Failed to delete note');
+        }
+    } catch (error) {
+        console.error('Error deleting note:', error);
+        alert('Error deleting note: ' + error.message);
+    }
+}
+
+// Show Note Modal (basic version)
+async function showNoteModal(activityId) {
+    alert('Note details feature coming soon! Note ID: ' + activityId);
+    // Basic implementation - you can enhance this later
+}
+
+// Copy link functionality (keep this as it's working)
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.copy-link-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const principalId = this.getAttribute('data-principal-id');
+            const shareLinkId = this.getAttribute('data-share-link-id');
+            
+            // Show loading state
+            const originalHtml = this.innerHTML;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            this.disabled = true;
+            
+            // Make API call to get the shareable URL
+            fetch(`/admin/principals/${principalId}/share-links/${shareLinkId}/copy`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Copy to clipboard
+                        navigator.clipboard.writeText(data.url).then(() => {
+                            // Show success state
+                            this.innerHTML = '<i class="fas fa-check"></i>';
+                            this.classList.remove('btn-info');
+                            this.classList.add('btn-success');
+                            
+                            // Reset button after 2 seconds
+                            setTimeout(() => {
+                                this.innerHTML = originalHtml;
+                                this.classList.remove('btn-success');
+                                this.classList.add('btn-info');
+                                this.disabled = false;
+                            }, 2000);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    this.innerHTML = originalHtml;
+                    this.disabled = false;
+                    alert('Failed to copy link');
+                });
+        });
+    });
 });
 </script>
 @endpush
