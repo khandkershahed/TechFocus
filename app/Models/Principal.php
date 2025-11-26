@@ -246,4 +246,11 @@ public function products()
         return $this->hasMany(NoteReply::class, 'user_id')
             ->where('user_type', self::class);
     }
+
+
+public function primaryContact()
+{
+    return $this->hasOne(PrincipalContact::class)->where('is_primary', true);
+}
+
 }
