@@ -367,7 +367,7 @@
                             {{ $brand->category ?? 'N/A' }}
                         </td>
                         <td class="px-6 py-4 text-sm font-medium whitespace-nowrap">
-                            <a href="{{ route('principal.brands.edit', $brand->id) }}"
+                            <a href="{{ route('principal.brands.index', $brand->id) }}"
                                class="mr-3 text-indigo-600 hover:text-indigo-900">
                                                     <i class="fas fa-expand"></i>
                                                 </a>
