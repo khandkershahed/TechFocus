@@ -105,7 +105,7 @@
                 <div x-show="tab === 1" x-transition class="space-y-6">
                     <!-- Stats Overview -->
                     <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
-                        <!-- Brands Stats -->
+                        {{-- <!-- Brands Stats -->
                         <div class="p-6 text-white shadow-lg bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl">
                             <div class="flex items-center justify-between">
                                 <div>
@@ -156,7 +156,7 @@
                                     <i class="text-xl fa-solid fa-link"></i>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
 
                     <!-- Main Content Grid -->
@@ -441,8 +441,8 @@
             </div>
  <div x-show="tab === 2" x-transition>
     <!-- 2x2 Grid Layout -->
+    
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
         <!-- ========================================================= -->
         <!-- TOP-LEFT: BRAND SUMMARY -->
         <!-- ========================================================= -->
