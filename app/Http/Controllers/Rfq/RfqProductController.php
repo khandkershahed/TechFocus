@@ -1,154 +1,184 @@
 <?php
 
 namespace App\Http\Controllers\Rfq;
+
+use Storage;
 use App\Models\Rfq;
-use Illuminate\Support\Str;
+use App\Models\Admin\Brand;
+use App\Models\Admin\Product;
 use Illuminate\Http\Request; 
+use App\Models\Admin\Category;
+use App\Models\Rfq\RfqProduct;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RfqProductRequest;
-use App\Models\Admin\Brand;
-use App\Models\Admin\Category;
-use App\Models\Admin\Product;
-
-use App\Models\Rfq\RfqProduct;
 
 class RfqProductController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function index()
     {
         return view('admin.pages.rfqProduct.index', [
-            'rfqProducts' => RfqProduct::get(),
-            'rfq_id'      => Rfq::get(),
-            'product_id'  => Product::get(),
-            // 'solution_id' => Solution::get(),
-            'category_id' => Category::get(),
-            'brand_id'    => Brand::get(),
-                
-             'rfqs'        => Rfq::all(),
-              'products'    => Product::all(),
-               'brands'      => Brand::all(),
-
-       ]);
+            'rfqProducts' => RfqProduct::with(['rfq', 'product'])->paginate(10), // Added pagination
+            'rfqs'        => Rfq::all(),
+            'products'    => Product::all(),
+            'brands'      => Brand::all(),
+        ]);
     }
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-  public function create()
-{
-    return view('admin.pages.rfqProduct.create', [
-        'rfqs'     => Rfq::all(),
-        'products' => Product::all(),
-        'brands'   => Brand::all(),
-    ]);
-}
-
+    public function create()
+    {
+        return view('admin.pages.rfqProduct.create', [
+            'rfqs'     => Rfq::all(),
+            'products' => Product::all(),
+            'brands'   => Brand::all(),
+        ]);
+    }
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
      */
     public function store(RfqProductRequest $request)
     {
+        // Calculate prices
+        $unitPrice = $request->unit_price;
+        $quantity = $request->qty;
+        $discount = $request->discount ?? 0;
+        $tax = $request->tax ?? 0;
+        $vat = $request->vat ?? 0;
+
+        // Calculate totals
+        $subTotal = $unitPrice * $quantity;
+        $discountAmount = ($subTotal * $discount) / 100;
+        $totalAfterDiscount = $subTotal - $discountAmount;
+        $taxAmount = ($totalAfterDiscount * $tax) / 100;
+        $vatAmount = ($totalAfterDiscount * $vat) / 100;
+        $grandTotal = $totalAfterDiscount + $taxAmount + $vatAmount;
+
         RfqProduct::create([
             'rfq_id'         => $request->rfq_id,
             'product_id'     => $request->product_id,
-            'solution_id'    => $request->solution_id,
-            'category_id'    => $request->category_id,
-            'brand_id'       => $request->brand_id,
-            'name'           => $request->name,
-            'qty'            => $request->qty,
-            'unit_price'     => $request->unit_price,
-            'discount'       => $request->discount,
-            'discount_price' => $request->discount_price,
-            'total_price'    => $request->total_price,
-            'sub_total'      => $request->sub_total,
-            'tax'            => $request->tax,
-            'tax_price'      => $request->tax_price,
-            'vat'            => $request->vat,
-            'vat_price'      => $request->vat_price,
-            'grand_total'    => $request->grand_total,
+            'qty'            => $quantity,
+            'unit_price'     => $unitPrice,
+            'discount'       => $discount,
+            'discount_price' => $discountAmount,
+            'total_price'    => $subTotal,
+            'sub_total'      => $subTotal,
+            'tax'            => $tax,
+            'tax_price'      => $taxAmount,
+            'vat'            => $vat,
+            'vat_price'      => $vatAmount,
+            'grand_total'    => $grandTotal,
             'product_des'    => $request->product_des,
+            'sku_no'         => $request->sku_no,
+            'model_no'       => $request->model_no,
+            'brand_name'     => $request->brand_name,
         ]);
-        return redirect()->back()->with('success', 'Data has been saved successfully!');
+
+        return redirect()->route('rfqProducts.index')->with('success', 'RFQ Product created successfully!');
     }
 
     /**
      * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        //
+        $rfqProduct = RfqProduct::with(['rfq', 'product'])->findOrFail($id);
+        return view('admin.pages.rfqProduct.show', compact('rfqProduct'));
     }
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
-        //
+        $rfqProduct = RfqProduct::with(['rfq', 'product'])->findOrFail($id);
+        
+        return view('admin.pages.rfqProduct.edit', [
+            'rfqProduct' => $rfqProduct,
+            'rfqs'       => Rfq::all(),
+            'products'   => Product::all(),
+            'brands'     => Brand::all(),
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-{
-    $rfqProduct = RfqProduct::findOrFail($id);
+    {
+        $rfqProduct = RfqProduct::findOrFail($id);
 
-    $rfqProduct->update([
-        'rfq_id' => $request->rfq_id ?? $rfqProduct->rfq_id,
-        'product_id' => $request->product_id ?? $rfqProduct->product_id,
-        'qty' => $request->qty,
-        'unit_price' => $request->unit_price,
-        'discount' => $request->discount,
-        'sku_no' => $request->sku_no,
-        'model_no' => $request->model_no,
-        'brand_name' => $request->brand_name,
-        'additional_product_name' => $request->additional_product_name,
-        'additional_qty' => $request->additional_qty,
-        'tax' => $request->tax,
-        'vat' => $request->vat,
-        'product_des' => $request->product_des,
-        'additional_info' => $request->additional_info,
-    ]);
+        // Calculate prices
+        $unitPrice = $request->unit_price ?? $rfqProduct->unit_price;
+        $quantity = $request->qty ?? $rfqProduct->qty;
+        $discount = $request->discount ?? $rfqProduct->discount ?? 0;
+        $tax = $request->tax ?? $rfqProduct->tax ?? 0;
+        $vat = $request->vat ?? $rfqProduct->vat ?? 0;
 
-    if ($request->hasFile('image')) {
-        $path = $request->file('image')->store('rfq_products', 'public');
-        $rfqProduct->update(['image' => $path]);
+        // Calculate totals
+        $subTotal = $unitPrice * $quantity;
+        $discountAmount = ($subTotal * $discount) / 100;
+        $totalAfterDiscount = $subTotal - $discountAmount;
+        $taxAmount = ($totalAfterDiscount * $tax) / 100;
+        $vatAmount = ($totalAfterDiscount * $vat) / 100;
+        $grandTotal = $totalAfterDiscount + $taxAmount + $vatAmount;
+
+        $updateData = [
+            'rfq_id'         => $request->rfq_id ?? $rfqProduct->rfq_id,
+            'product_id'     => $request->product_id ?? $rfqProduct->product_id,
+            'qty'            => $quantity,
+            'unit_price'     => $unitPrice,
+            'discount'       => $discount,
+            'discount_price' => $discountAmount,
+            'total_price'    => $subTotal,
+            'sub_total'      => $subTotal,
+            'tax'            => $tax,
+            'tax_price'      => $taxAmount,
+            'vat'            => $vat,
+            'vat_price'      => $vatAmount,
+            'grand_total'    => $grandTotal,
+            'sku_no'         => $request->sku_no ?? $rfqProduct->sku_no,
+            'model_no'       => $request->model_no ?? $rfqProduct->model_no,
+            'brand_name'     => $request->brand_name ?? $rfqProduct->brand_name,
+            'additional_product_name' => $request->additional_product_name ?? $rfqProduct->additional_product_name,
+            'additional_qty' => $request->additional_qty ?? $rfqProduct->additional_qty,
+            'product_des'    => $request->product_des ?? $rfqProduct->product_des,
+            'additional_info' => $request->additional_info ?? $rfqProduct->additional_info,
+        ];
+
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($rfqProduct->image) {
+                \Storage::disk('public')->delete($rfqProduct->image);
+            }
+            $path = $request->file('image')->store('rfq_products', 'public');
+            $updateData['image'] = $path;
+        }
+
+        $rfqProduct->update($updateData);
+
+        return redirect()->route('rfqProducts.index')->with('success', 'RFQ Product updated successfully.');
     }
-
-    return redirect()->route('rfqProducts.index')->with('success', 'RFQ Product updated successfully.');
-}
-
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        RfqProduct::find($id)->delete();
+        $rfqProduct = RfqProduct::findOrFail($id);
+        
+        // Delete image if exists
+        if ($rfqProduct->image) {
+            Storage::disk('public')->delete($rfqProduct->image);
+        }
+        
+        $rfqProduct->delete();
+        
+        return redirect()->route('rfqProducts.index')->with('success', 'RFQ Product deleted successfully.');
     }
 }

@@ -16,7 +16,7 @@
         </div>
 
         <!-- Debug Info -->
-        <div class="row mb-3">
+        {{-- <div class="row mb-3">
             <div class="col-12">
                 <div class="alert alert-info">
                     <small>
@@ -26,7 +26,7 @@
                     </small>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
         @if($brandCatalogs->count() > 0)
             <!-- Category Tabs -->
@@ -34,16 +34,16 @@
             <div class="row mb-4">
                 <div class="col-lg-12">
                     <ul class="nav nav-pills justify-content-center">
-                        <li class="nav-item">
+                        {{-- <li class="nav-item">
                             <a class="nav-link active" href="#all" data-bs-toggle="pill">All Catalogs</a>
-                        </li>
+                        </li> --}}
                         @foreach($catalogCategories as $category)
                             @if($category)
-                                <li class="nav-item">
+                                {{-- <li class="nav-item">
                                     <a class="nav-link" href="#category-{{ $loop->index }}" data-bs-toggle="pill">
                                         {{ ucfirst($category) }}
                                     </a>
-                                </li>
+                                </li> --}}
                             @endif
                         @endforeach
                     </ul>
