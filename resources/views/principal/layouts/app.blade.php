@@ -21,7 +21,7 @@
                 </div>
                 <div class="relative flex items-center space-x-4">
 
-                    <!-- User + Welcome -->
+                    {{-- <!-- User + Welcome -->
                     <div
                         id="userMenuBtn"
                         class="flex items-center space-x-2 cursor-pointer">
@@ -29,7 +29,105 @@
                             Welcome, {{ auth('principal')->user()->legal_name }}
                         </span>
                         <i class="text-3xl text-gray-600 fa-solid fa-user-circle"></i>
-                    </div>
+                    </div> --}}
+                    <!-- User + Welcome with Dropdown -->
+<div class="relative" x-data="{ open: false }">
+    <button
+        @click="open = !open"
+        class="flex items-center space-x-2 cursor-pointer focus:outline-none"
+        id="userMenuBtn">
+        <span class="font-semibold text-gray-700 uppercase">
+            Welcome, {{ auth('principal')->user()->legal_name }}
+        </span>
+        <i class="text-3xl text-gray-600 fa-solid fa-user-circle"></i>
+    </button>
+
+    <!-- Dropdown Menu -->
+    <div 
+        x-show="open" 
+        @click.away="open = false"
+        x-transition:enter="transition ease-out duration-200"
+        x-transition:enter-start="opacity-0 transform scale-95"
+        x-transition:enter-end="opacity-100 transform scale-100"
+        x-transition:leave="transition ease-in duration-75"
+        x-transition:leave-start="opacity-100 transform scale-100"
+        x-transition:leave-end="opacity-0 transform scale-95"
+        class="absolute right-0 z-50 w-56 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg top-full">
+        
+        <!-- User Info -->
+        <div class="p-3 border-b border-gray-100">
+            <p class="text-sm font-medium text-gray-900 truncate">{{ auth('principal')->user()->legal_name }}</p>
+            <p class="text-xs text-gray-500 truncate">{{ auth('principal')->user()->email ?? 'No email' }}</p>
+        </div>
+
+        <!-- Settings Options -->
+        <div class="p-1">
+            <a href="{{ route('principal.profile.edit') }}"
+               class="flex items-center px-3 py-2 text-sm text-gray-700 transition-colors rounded-lg hover:bg-gray-100">
+                <i class="w-5 mr-2 text-gray-500 fa-solid fa-user-edit"></i>
+                Edit Profile
+            </a>
+
+            <!-- Check if route exists before using it -->
+            @if(Route::has('principal.settings'))
+                <a href="{{ route('principal.settings') }}"
+                   class="flex items-center px-3 py-2 text-sm text-gray-700 transition-colors rounded-lg hover:bg-gray-100">
+                    <i class="w-5 mr-2 text-gray-500 fa-solid fa-cog"></i>
+                    Settings
+                </a>
+            @else
+                <a href="#"
+                   class="flex items-center px-3 py-2 text-sm text-gray-500 transition-colors rounded-lg hover:bg-gray-100 opacity-75 cursor-not-allowed">
+                    <i class="w-5 mr-2 fa-solid fa-cog"></i>
+                    Settings
+                </a>
+            @endif
+
+            @if(Route::has('principal.security'))
+                <a href="{{ route('principal.security') }}"
+                   class="flex items-center px-3 py-2 text-sm text-gray-700 transition-colors rounded-lg hover:bg-gray-100">
+                    <i class="w-5 mr-2 text-gray-500 fa-solid fa-shield-alt"></i>
+                    Security
+                </a>
+            @else
+                <a href="#"
+                   class="flex items-center px-3 py-2 text-sm text-gray-500 transition-colors rounded-lg hover:bg-gray-100 opacity-75 cursor-not-allowed">
+                    <i class="w-5 mr-2 fa-solid fa-shield-alt"></i>
+                    Security
+                </a>
+            @endif
+
+            @if(Route::has('principal.notifications'))
+                <a href="{{ route('principal.notifications') }}"
+                   class="flex items-center px-3 py-2 text-sm text-gray-700 transition-colors rounded-lg hover:bg-gray-100">
+                    <i class="w-5 mr-2 text-gray-500 fa-solid fa-bell"></i>
+                    Notifications
+                </a>
+            @else
+                <a href="#"
+                   class="flex items-center px-3 py-2 text-sm text-gray-500 transition-colors rounded-lg hover:bg-gray-100 opacity-75 cursor-not-allowed">
+                    <i class="w-5 mr-2 fa-solid fa-bell"></i>
+                    Notifications
+                </a>
+            @endif
+        </div>
+
+        <!-- Divider -->
+        <div class="border-t border-gray-100"></div>
+
+        <!-- Logout -->
+        <div class="p-1">
+            <form method="POST" action="{{ route('principal.logout') }}">
+                @csrf
+                <button type="submit" 
+                        class="flex items-center w-full px-3 py-2 text-sm text-red-600 transition-colors rounded-lg hover:bg-red-50">
+                    <i class="w-5 mr-2 fa-solid fa-right-from-bracket"></i>
+                    Sign Out
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
 
                     <!-- Dropdown -->
                     <div

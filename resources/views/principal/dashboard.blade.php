@@ -5,103 +5,100 @@
 <div class="min-h-screen py-6 bg-gray-50">
     <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
 
-        <!-- Header Section -->
-        <div class="p-6 mb-6 bg-white border border-gray-200 shadow-sm rounded-2xl">
-            <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-                <!-- Title and Badges -->
-                <div class="flex items-start gap-4">
-                    <div class="flex-shrink-0">
-                        <div class="flex items-center justify-center w-16 h-16 shadow-lg bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl">
-                            <span class="text-2xl font-bold text-white uppercase">
-                                {{ substr($principal->legal_name, 0, 1) }}
-                            </span>
+        <!-- Move x-data to wrap the entire content section -->
+        <div x-data="{ tab: 1 }">
+            <!-- Header Section -->
+            <div class="p-6 mb-6 bg-white border border-gray-200 shadow-sm rounded-2xl">
+                <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                    <!-- Title and Badges -->
+                    <div class="flex items-start gap-4">
+                        <div class="flex-shrink-0">
+                            <div class="flex items-center justify-center w-16 h-16 shadow-lg bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl">
+                                <span class="text-2xl font-bold text-white uppercase">
+                                    {{ substr($principal->legal_name, 0, 1) }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex items-center gap-3 mb-2">
+                                <h1 class="text-3xl font-bold text-gray-900">
+                                    {{ $principal->legal_name }}
+                                </h1>
+                                @if($principal->country)
+                                <img src="https://flagsapi.com/{{ strtoupper($principal->country_code ?? 'US') }}/flat/32.png"
+                                    class="w-8 h-8 rounded-lg shadow-sm" alt="Flag">
+                                @endif
+                            </div>
+
+                            <div class="flex flex-wrap items-center gap-2 mb-3">
+                                <span class="px-3 py-1.5 text-xs font-medium text-gray-700 bg-gray-100 rounded-lg border border-gray-200">
+                                    {{ $principal->entity_type ?? 'N/A' }}
+                                </span>
+                                <span class="px-3 py-1.5 text-xs font-medium rounded-lg border
+                                    @if($principal->relationship_status == 'Active') bg-green-100 text-green-700 border-green-200
+                                    @elseif($principal->relationship_status == 'Prospect') bg-yellow-100 text-yellow-700 border-yellow-200
+                                    @elseif($principal->relationship_status == 'Dormant') bg-gray-100 text-gray-700 border-gray-200
+                                    @else bg-red-100 text-red-700 border-red-200 @endif">
+                                    {{ $principal->relationship_status }}
+                                </span>
+                            </div>
+
+                            <p class="text-sm text-gray-500">
+                                Created on <strong>{{ $principal->created_at->format('d M, Y') }}</strong> •
+                                By: <strong>{{ $principal->created_by ?? 'System' }}</strong>
+                            </p>
                         </div>
                     </div>
-                    <div class="flex-1">
-                        <div class="flex items-center gap-3 mb-2">
-                            <h1 class="text-3xl font-bold text-gray-900">
-                                {{ $principal->legal_name }}
-                            </h1>
-                            @if($principal->country)
-                            <img src="https://flagsapi.com/{{ strtoupper($principal->country_code ?? 'US') }}/flat/32.png"
-                                class="w-8 h-8 rounded-lg shadow-sm" alt="Flag">
-                            @endif
-                        </div>
 
-                        <div class="flex flex-wrap items-center gap-2 mb-3">
-                            <span class="px-3 py-1.5 text-xs font-medium text-gray-700 bg-gray-100 rounded-lg border border-gray-200">
-                                {{ $principal->entity_type ?? 'N/A' }}
-                            </span>
-                            <span class="px-3 py-1.5 text-xs font-medium rounded-lg border
-                                @if($principal->relationship_status == 'Active') bg-green-100 text-green-700 border-green-200
-                                @elseif($principal->relationship_status == 'Prospect') bg-yellow-100 text-yellow-700 border-yellow-200
-                                @elseif($principal->relationship_status == 'Dormant') bg-gray-100 text-gray-700 border-gray-200
-                                @else bg-red-100 text-red-700 border-red-200 @endif">
-                                {{ $principal->relationship_status }}
-                            </span>
-                        </div>
-
-                        <p class="text-sm text-gray-500">
-                            Created on <strong>{{ $principal->created_at->format('d M, Y') }}</strong> •
-                            By: <strong>{{ $principal->created_by ?? 'System' }}</strong>
-                        </p>
+                    <!-- Action Buttons -->
+                    <div class="flex flex-wrap gap-2 lg:justify-end">
+                        <a href="{{ route('principal.profile.edit') }}"
+                            class="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition-all shadow-sm hover:shadow-md">
+                            <i class="text-sm fa-solid fa-pen-to-square"></i>
+                            <span>Edit Profile</span>
+                        </a>
+                        <a href="{{ route('principal.links.index') }}"
+                            class="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-indigo-500 rounded-xl hover:bg-indigo-600 transition-all shadow-sm hover:shadow-md">
+                            <i class="text-sm fa-solid fa-share-nodes"></i>
+                            <span>Share</span>
+                        </a>
+                        <!-- Note Button - Now it's inside the same Alpine component -->
+                        <button 
+                            @click="tab = 3"
+                            class="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-green-600 rounded-xl hover:bg-green-700 transition-all shadow-sm hover:shadow-md">
+                            <i class="text-sm fa-solid fa-note-sticky"></i>
+                            <span>Note</span>
+                        </button>
                     </div>
                 </div>
+            </div>
+    <!-- Tabs Navigation - Remove x-data from here since it's now on parent -->
+    <div class="mb-6">
+        <!-- Tab Navigation -->
+        <div class="p-1 bg-white border border-gray-200 shadow-sm rounded-2xl">
+            <div class="grid grid-cols-5 gap-1">
+                @php
+                $tabs = [
+                1 => 'Overview',
+                2 => 'Share',
+                3 => 'Notes',
+                // 4 => 'Archive',
+                5 => 'Security & Visibility'
+                ];
+                @endphp
 
-                <!-- Action Buttons -->
-                <div class="flex flex-wrap gap-2 lg:justify-end">
-                    <a href="{{ route('principal.profile.edit') }}"
-                        class="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition-all shadow-sm hover:shadow-md">
-                        <i class="text-sm fa-solid fa-pen-to-square"></i>
-                        <span>Edit Profile</span>
-                    </a>
-                    <a href="{{ route('principal.links.index') }}"
-                        class="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-indigo-500 rounded-xl hover:bg-indigo-600 transition-all shadow-sm hover:shadow-md">
-                        <i class="text-sm fa-solid fa-share-nodes"></i>
-                        <span>Share</span>
-                    </a>
-                    <a href="#"
-                        class="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-green-600 rounded-xl hover:bg-green-700 transition-all shadow-sm hover:shadow-md">
-                        <i class="text-sm fa-solid fa-note-sticky"></i>
-                        <span>Note</span>
-                    </a>
-                    <a href="{{ route('principal.links.create') }}"
-                        class="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-purple-500 rounded-xl hover:bg-purple-600 transition-all shadow-sm hover:shadow-md">
-                        <i class="text-sm fa-solid fa-paperclip"></i>
-                        <span>Attach</span>
-                    </a>
-                </div>
+                @foreach($tabs as $key => $label)
+                <button
+                    @click="tab = {{ $key }}"
+                    :class="tab === {{ $key }} 
+                        ? 'bg-blue-50 text-blue-700 border-blue-200 shadow-sm' 
+                        : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50 border-transparent'"
+                    class="px-4 py-3 text-sm font-medium transition-all duration-200 border rounded-xl">
+                    {{ $label }}
+                </button>
+                @endforeach
             </div>
         </div>
-
-        <!-- Tabs Navigation -->
-        <div x-data="{ tab: 1 }" class="mb-6">
-            <!-- Tab Navigation -->
-            <div class="p-1 bg-white border border-gray-200 shadow-sm rounded-2xl">
-                <div class="grid grid-cols-5 gap-1">
-                    @php
-                    $tabs = [
-                    1 => 'Overview',
-                    2 => 'Share',
-                    3 => 'Notes',
-                    4 => 'Archive',
-                    5 => 'Settings'
-                    ];
-                    @endphp
-
-                    @foreach($tabs as $key => $label)
-                    <button
-                        @click="tab = {{ $key }}"
-                        :class="tab === {{ $key }} 
-                            ? 'bg-blue-50 text-blue-700 border-blue-200 shadow-sm' 
-                            : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50 border-transparent'"
-                        class="px-4 py-3 text-sm font-medium transition-all duration-200 border rounded-xl">
-                        {{ $label }}
-                    </button>
-                    @endforeach
-                </div>
-            </div>
-
             <!-- Tab Content -->
             <div class="mt-6">
                 <!-- Overview Tab Content-->
@@ -1378,23 +1375,23 @@
 
                     </div>
 
-                    <div x-show="tab === 4" x-transition>
+                    {{-- <div x-show="tab === 4" x-transition>
                         <h2 class="text-xl font-semibold text-gray-800">Server Browser</h2>
                         <p class="text-gray-600">Content for server browser...</p>
-                    </div>
+                    </div> --}}
 
-                    <div x-show="tab === 5" x-transition>
+                    {{-- <div x-show="tab === 5" x-transition>
                         <h2 class="text-xl font-semibold text-gray-800">Settings</h2>
                         <p class="text-gray-600">Content for settings...</p>
-                    </div>
+                    </div> --}}
 
                 </div>
             </div>
-            <div x-show="tab === 4" x-transition>
+            {{-- <div x-show="tab === 4" x-transition>
                 Archive
-            </div>
+            </div> --}}
             <div x-show="tab === 5" x-transition>
-                <!-- Security & Visibility -->
+                {{-- <!-- Security & Visibility -->
                 <div class="p-6 bg-white border border-gray-200 shadow-sm rounded-2xl">
                     <h3 class="mb-4 text-lg font-semibold text-gray-900">Security & Visibility</h3>
 
@@ -1450,7 +1447,164 @@
                                     @endif
                                 </span>
                             </div>
+                        </div> --}}
+                        
+    <!-- Security & Visibility Section -->
+    <div class="p-6 bg-white rounded-lg shadow">
+      
+
+        <div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
+            <!-- Visibility Scope -->
+            <div>
+                <h3 class="mb-4 text-lg font-medium text-gray-900">Visibility Scope</h3>
+                <div class="space-y-4">
+                    <div>
+                        <p class="mb-2 text-sm font-medium text-gray-700">Current Scope</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="inline-flex items-center px-3 py-1 text-sm font-medium text-blue-800 bg-blue-100 rounded-full">
+                                <i class="mr-2 fa-solid fa-globe"></i>Global Access
+                            </span>
+                            @if($principal->visibility_scopes)
+                            @foreach($principal->visibility_scopes as $scope)
+                            <span class="inline-flex items-center px-3 py-1 text-sm font-medium text-gray-800 bg-gray-100 rounded-full">
+                                {{ ucfirst($scope) }}
+                            </span>
+                            @endforeach
+                            @endif
                         </div>
+                    </div>
+
+                    <div>
+                        <p class="mb-2 text-sm font-medium text-gray-700">Brand Access</p>
+                        <div class="flex flex-wrap gap-2">
+                            @if($principal->brands->count())
+                            @foreach($principal->brands->take(6) as $brand)
+                            <span class="inline-flex items-center px-3 py-1 text-sm font-medium text-green-800 bg-green-100 rounded-full">
+                                <i class="mr-2 text-xs fa-solid fa-store"></i>{{ $brand->title }}
+                            </span>
+                            @endforeach
+                            @if($principal->brands->count() > 6)
+                            <span class="inline-flex items-center px-3 py-1 text-sm font-medium text-gray-800 bg-gray-100 rounded-full">
+                                +{{ $principal->brands->count() - 6 }} more
+                            </span>
+                            @endif
+                            @else
+                            <span class="text-sm text-gray-500">No brands assigned</span>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div>
+                        <p class="mb-2 text-sm font-medium text-gray-700">Country Access</p>
+                        <div class="flex flex-wrap gap-2">
+                            @if($principal->countries && count($principal->countries))
+                            @foreach($principal->countries as $country)
+                            <span class="inline-flex items-center px-3 py-1 text-sm font-medium text-purple-800 bg-purple-100 rounded-full">
+                                <i class="mr-2 text-xs fa-solid fa-flag"></i>{{ $country }}
+                            </span>
+                            @endforeach
+                            @else
+                            <span class="text-sm text-gray-500">All countries</span>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Account Owners & Security -->
+            <div>
+                <h3 class="mb-4 text-lg font-medium text-gray-900">Account Management</h3>
+                <div class="space-y-6">
+                    <div>
+                        <p class="mb-3 text-sm font-medium text-gray-700">Account Owners</p>
+                        <div class="space-y-3">
+                            @if($principal->contacts->where('is_primary', true)->count())
+                            @foreach($principal->contacts->where('is_primary', true) as $contact)
+                            <div class="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
+                                <div class="flex items-center space-x-3">
+                                    <div class="flex items-center justify-center w-10 h-10 bg-blue-100 rounded-full">
+                                        <span class="text-sm font-medium text-blue-700">
+                                            {{ substr($contact->contact_name, 0, 1) }}
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-900">{{ $contact->contact_name }}</p>
+                                        <p class="text-sm text-gray-500">{{ $contact->job_title ?? 'Primary Contact' }}</p>
+                                    </div>
+                                </div>
+                                <span class="inline-flex items-center px-2 py-1 text-xs font-medium text-green-800 bg-green-100 rounded-full">
+                                    Owner
+                                </span>
+                            </div>
+                            @endforeach
+                            @else
+                            <p class="text-sm text-gray-500">No primary contacts assigned</p>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div>
+                        <p class="mb-2 text-sm font-medium text-gray-700">Security Status</p>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="p-3 text-center border border-green-200 rounded-lg bg-green-50">
+                                <i class="mb-2 text-xl text-green-600 fa-solid fa-shield-check"></i>
+                                <p class="text-sm font-medium text-green-800">Verified</p>
+                                <p class="text-xs text-green-600">Account Active</p>
+                            </div>
+                            {{-- <div class="p-3 text-center border border-blue-200 rounded-lg bg-blue-50">
+                            <i class="mb-2 text-xl text-blue-600 fa-solid fa-lock"></i>
+                            <p class="text-sm font-medium text-blue-800">Secure</p>
+                            <p class="text-xs text-blue-600">2FA Enabled</p>
+                        </div> --}}
+                        </div>
+                    </div>
+
+                    {{-- <div>
+                    <p class="mb-2 text-sm font-medium text-gray-700">Last Activity</p>
+                    <div class="flex items-center justify-between text-sm text-gray-600">
+                        <span>Last login</span>
+                        <span>{{ $principal->last_login_at ? $principal->last_login_at->diffForHumans() : 'Never' }}</span>
+                </div>
+            </div> --}}
+            <div>
+                <p class="mb-3 text-sm font-medium text-gray-700">Activity Overview</p>
+                <div class="space-y-3">
+                    <!-- Last Activity -->
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-600">Last activity</span>
+                        <span class="text-sm font-medium text-gray-900">
+                            @if($lastActivity)
+                            {{ $lastActivity->created_at->diffForHumans() }}
+                            @else
+                            <span class="text-gray-400">Never</span>
+                            @endif
+                        </span>
+                    </div>
+
+                    <!-- Total Activities -->
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-600">Total activities</span>
+                        <span class="text-sm font-medium text-gray-900">
+                            {{ $activities->count() }}
+                        </span>
+                    </div>
+
+                    <!-- Today's Activities -->
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-600">Today</span>
+                        <span class="text-sm font-medium text-gray-900">
+                            {{ $activities->where('created_at', '>=', today())->count() }}
+                        </span>
+                    </div>
+
+                    <!-- Pinned Activities -->
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-600">Pinned</span>
+                        <span class="text-sm font-medium text-gray-900">
+                            {{ $activities->where('pinned', true)->count() }}
+                        </span>
+                    </div>
+                </div>
                     </div>
                 </div>
             </div>
