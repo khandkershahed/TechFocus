@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Models\Admin\Brand;
 use Illuminate\Http\Request;
+use App\Models\Admin\Catalog;
 use App\Models\Admin\Product;
 use App\Models\Admin\Category;
 use App\Models\Admin\BrandPage;
@@ -36,78 +37,6 @@ class PageController extends Controller
             // 'brandProducts' => Brand::with('brandProducts')->where('slug', $slug)->select('id', 'slug', 'title', 'logo')->firstOrFail(),
         ];
         return view('frontend.pages.brandPage.products', $data);
-
-
-
-        // $data['brandpage'] = BrandPage::where('brand_id', $data['brand']->id)->first(['id', 'banner_image', 'brand_logo', 'header']);
-
-        // if (!empty($data['brandpage'])) {
-
-        //     $productIds = Product::where('brand_id', $data['brand']->id)
-        //         ->where('product_status', '=', 'product')
-        //         ->distinct()
-        //         ->pluck('id');
-        //     // $productIds = $data['products']->pluck('id')->all(); // Extracting product IDs
-        //     $data['products'] = Product::whereIn('id', $productIds)
-        //         ->select('id', 'brand_id', 'rfq', 'slug', 'name', 'thumbnail', 'price', 'discount', 'price_status', 'cat_id', 'sku_code', 'mf_code', 'product_code')
-        //         ->paginate(10);
-        //     // dd($data['products']);
-        //     $industryIds = MultiIndustry::whereIn('product_id', $productIds)
-        //         ->pluck('industry_id')
-        //         ->unique();
-
-        //     $data['industries'] = Industry::whereIn('id', $industryIds)->get();
-        //     foreach ($data['industries'] as $industry) {
-        //         // Fetch product IDs for the current industry
-        //         $productIdsForIndustry = MultiIndustry::where('industry_id', $industry->id)
-        //             ->whereIn('product_id', $productIds)
-        //             ->pluck('product_id')
-        //             ->toArray();
-
-        //         // Filter products collection for the current industry
-        //         $productsForIndustry = $data['products']->whereIn('id', $productIdsForIndustry)->all();
-
-        //         // Assign the products to the industry
-        //         $industry->products = $productsForIndustry;
-        //     }
-
-        //     $solutionIds = MultiSolution::whereIn('product_id', $productIds)
-        //         ->pluck('solution_id')
-        //         ->unique();
-
-        //     $data['solutions'] = SolutionDetail::whereIn('id', $solutionIds)->get();
-        //     foreach ($data['solutions'] as $solution) {
-        //         // Fetch product IDs for the current industry
-        //         $productIdsForSolution = MultiSolution::where('solution_id', $solution->id)
-        //             ->whereIn('product_id', $productIds)
-        //             ->pluck('product_id')
-        //             ->toArray();
-
-        //         // Filter products collection for the current industry
-        //         $productsForSolution = $data['products']->whereIn('id', $productIdsForSolution)->all();
-
-        //         // Assign the products to the industry
-        //         $solution->products = $productsForSolution;
-        //     }
-
-        //     $data['related_search'] = [
-        //         'categories' =>  Category::inRandomOrder()->limit(2)->get(),
-        //         'brands' =>  Brand::inRandomOrder()->limit(4)->get(),
-        //         'solutions' =>  SolutionDetail::inRandomOrder()->limit(4)->get('id', 'slug', 'name'),
-        //         'industries' =>  Industry::inRandomOrder()->limit(4)->get('id', 'slug', 'title'),
-        //     ];
-        //     // dd($data['related_search']['categories']);
-
-        //     if ($request->ajax()) {
-        //         return view('frontend.pages.kukapages.partial.product_pagination', $data);
-        //     }
-
-        //     // dd($data['industry_ids']);
-        //     return view('frontend.pages.kukapages.products', $data);
-        // } else {
-        //     Toastr::error('No Details information found for this Brand.');
-        //     return redirect()->back();
-        // }
     }
     public function productDetails($id, $slug, Request $request)
     {
@@ -124,73 +53,70 @@ class PageController extends Controller
 
         return view('frontend.pages.product.product_details', $data);
     }
-    // public function productDetails($id, $slug)
+   
+    // public function brandPdf($slug)
     // {
     //     $data = [
-    //         'product' => Product::with('multiImages')->where('slug', $slug)->firstOrFail(),
-    //         'brand' => Brand::with('brandPage')->where('slug', $id)->select('id', 'slug', 'title', 'logo')->firstOrFail(),
+    //         'brand' => Brand::with('brandPage')->where('slug', $slug)->select('id', 'slug', 'title', 'logo')->firstOrFail(),
     //     ];
-    //     return view('frontend.pages.product.product_details',$data);
-    //     // $data['sproduct'] = Product::where('slug', $id)->where('product_status', 'product')->first();
-    //     // if (!empty($data['sproduct']->cat_id)) {
-    //     //     $data['products'] = Product::where('cat_id', $data['sproduct']->cat_id)
-    //     //         ->where('product_status', 'product')
-    //     //         ->select('id', 'rfq', 'slug', 'name', 'thumbnail', 'price', 'discount', 'sku_code', 'mf_code', 'product_code', 'cat_id', 'brand_id')
-    //     //         ->limit(12)
-    //     //         ->distinct()
-    //     //         ->get();
-    //     // } else {
-    //     //     $data['products'] = Product::inRandomOrder()->where('product_status', 'product')->limit(12)->get();
-    //     // }
-
-    //     // $data['brand'] = Brand::where('id', $data['sproduct']->brand_id)->select('id', 'slug', 'title', 'image')->first();
-    //     // $data['brandpage'] = BrandPage::where('brand_id', $data['brand']->id)->first(['id', 'banner_image', 'brand_logo', 'header']);
-    //     // $data['related_search'] = [
-    //     //     'categories' =>  Category::where('id', '!=', $data['sproduct']->cat_id)->inRandomOrder()->limit(2)->get(),
-    //     //     'brands' =>  Brand::where('id', '!=', $data['sproduct']->brand_id)->inRandomOrder()->limit(20)->get(),
-    //     //     'solutions' =>  SolutionDetail::inRandomOrder()->limit(4)->get('id', 'slug', 'name'),
-    //     //     'industries' =>  Industry::inRandomOrder()->limit(4)->get('id', 'slug', 'title'),
-    //     // ];
-    //     // $data['brand_products'] = Product::where('brand_id', $data['sproduct']->brand_id)->where('id', '!=', $data['sproduct']->id)->inRandomOrder()->where('product_status', 'product')->limit(20)->get();
-
-    //     // $data['documents'] = DocumentPdf::where('product_id', $data['sproduct']->id)->get();
-
-    //     // if (!empty($data['brandpage'])) {
-    //     //     return view('frontend.pages.kukapages.product_details', $data);
-    //     // } else {
-    //     //     return view('frontend.pages.product.product_details', $data);
-    //     // }
+    //     return view('frontend.pages.brandPage.catalogs', $data);
+     
     // }
+public function brandPdf($slug)
+{
+    $brand = Brand::with('brandPage')
+        ->where('slug', $slug)
+        ->select('id', 'slug', 'title', 'logo')
+        ->firstOrFail();
 
-    public function brandPdf($slug)
-    {
-        $data = [
-            'brand' => Brand::with('brandPage')->where('slug', $slug)->select('id', 'slug', 'title', 'logo')->firstOrFail(),
-        ];
-        return view('frontend.pages.brandPage.catalogs', $data);
-        // $data['brand'] = Brand::where('slug', $id)->select('id', 'slug', 'title', 'image')->firstOrFail();
-        // $data['brandpage'] = BrandPage::where('brand_id', $data['brand']->id)->firstOrFail(['id', 'banner_image', 'brand_logo', 'header']);
+    // Try multiple approaches to find brand catalogs
+    $brandCatalogs = collect();
 
-        // $brandId = $data['brand']->id;
-        // $data['brand_documents'] = DocumentPdf::where('brand_id', $brandId)->get();
-        // $data['product_documents'] = DocumentPdf::join('products', 'document_pdfs.product_id', '=', 'products.id')
-        //     ->where('products.brand_id', '=', $brandId)
-        //     ->select('document_pdfs.id', 'document_pdfs.title', 'document_pdfs.document')
-        //     ->distinct()
-        //     ->paginate(18);
-        // $mergedData = $data['brand_documents']->concat($data['product_documents']);
-        // // Convert the merged data to an array
-        // $data['documents'] = $mergedData->toArray();
-
-        // $data['related_search'] = [
-        //     'categories' =>  Category::inRandomOrder()->limit(2)->get(),
-        //     'brands' =>  Brand::inRandomOrder()->limit(4)->get(),
-        //     'solutions' =>  SolutionDetail::inRandomOrder()->limit(4)->get('id', 'slug', 'name'),
-        //     'industries' =>  Industry::inRandomOrder()->limit(4)->get('id', 'slug', 'title'),
-        // ];
-        // return view('frontend.pages.kukapages.catalogs', $data);
+    // Method 1: Direct database JSON query
+    try {
+        $method1 = Catalog::where('brand_id', 'LIKE', '%"' . $brand->id . '"%')
+            ->orWhere('brand_id', 'LIKE', '%' . $brand->id . '%')
+            ->get();
+        \Log::info("Method 1 found: " . $method1->count() . " catalogs");
+        $brandCatalogs = $brandCatalogs->merge($method1);
+    } catch (\Exception $e) {
+        \Log::error("Method 1 failed: " . $e->getMessage());
     }
 
+    // Method 2: Using JSON contains with string
+    try {
+        $method2 = Catalog::whereJsonContains('brand_id', (string)$brand->id)->get();
+        \Log::info("Method 2 found: " . $method2->count() . " catalogs");
+        $brandCatalogs = $brandCatalogs->merge($method2);
+    } catch (\Exception $e) {
+        \Log::error("Method 2 failed: " . $e->getMessage());
+    }
+
+    // Method 3: Using JSON contains with integer
+    try {
+        $method3 = Catalog::whereJsonContains('brand_id', $brand->id)->get();
+        \Log::info("Method 3 found: " . $method3->count() . " catalogs");
+        $brandCatalogs = $brandCatalogs->merge($method3);
+    } catch (\Exception $e) {
+        \Log::error("Method 3 failed: " . $e->getMessage());
+    }
+
+    // Remove duplicates
+    $brandCatalogs = $brandCatalogs->unique('id');
+
+    \Log::info("Final brand catalogs count: " . $brandCatalogs->count());
+
+    // Get unique categories
+    $catalogCategories = $brandCatalogs->pluck('category')->unique();
+
+    $data = [
+        'brand' => $brand,
+        'brandCatalogs' => $brandCatalogs,
+        'catalogCategories' => $catalogCategories,
+    ];
+
+    return view('frontend.pages.brandPage.catalogs', $data);
+}
     public function pdfDetails($slug)
     {
         $data = [

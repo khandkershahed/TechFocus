@@ -4,111 +4,166 @@
 @section('content')
     @include('frontend.pages.brandPage.partials.page_header')
 
-        <div class="container my-4">
-            <div class="row align-items-center">
-                <div class="container px-4">
-                    <div class="row gx-5">
-                        <div class="col-lg-12">
-                            <div class="devider-wrap">
-                                <h4 class="devider-content mb-4">
-                                    <span class="devider-text">{{ $brand->title }} CATALOGS</span>
-                                </h4>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-2">
-                            <a href="">
-                                <div class="card projects-card rounded-0">
-                                    <img src="https://img.directindustry.com/pdf/repository_di/19826/product-line-transformers-power-supplies-reactors-emi-filters-642779_1mg.jpg"
-                                        class="card-img-top img-fluid rounded-0" alt="..." />
-                                    <div class="card-body">
-                                        <p class="card-text project-para text-center">
-                                            Product line Transformers
-                                        </p>
-                                        <div class="catalog-logo-area mt-3">
-                                            <p class="p-0 m-0" style="font-size: 10px">
-                                                2 Pages
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
+    <div class="container my-4">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="devider-wrap">
+                    <h4 class="devider-content mb-4">
+                        <span class="devider-text">{{ $brand->title }} CATALOGS</span>
+                    </h4>
                 </div>
             </div>
         </div>
-        {{-- <div class="container my-5 pt-5">
-            <div class="row">
-                <div class="col-lg-12">
-                    <p class="text-center">CHOOSE BY COMPANY NAME</p>
-                    <div class="d-flex justify-content-center">
-                        <div class="pagination">
-                            <a href="https://pdf.directindustry.com/pdf/soc-0-9.html">0-9</a>
-                            <span>-</span>
-                            <a href="https://pdf.directindustry.com/pdf/soc-A.html">A</a>
-                            <span>-</span>
-                            <a href="https://pdf.directindustry.com/pdf/soc-B.html">B</a>
-                            <span>-</span>
-                            <a href="https://pdf.directindustry.com/pdf/soc-C.html">C</a>
-                            <span>-</span>
-                            <a href="https://pdf.directindustry.com/pdf/soc-D.html">D</a>
-                            <span>-</span>
-                            <a href="https://pdf.directindustry.com/pdf/soc-E.html">E</a>
-                            <span>-</span>
-                            <a href="https://pdf.directindustry.com/pdf/soc-F.html">F</a>
-                            <span>-</span>
-                            <a href="https://pdf.directindustry.com/pdf/soc-G.html">G</a>
-                            <span>-</span>
-                            <a href="https://pdf.directindustry.com/pdf/soc-H.html">H</a>
-                            <span>-</span>
-                            <a href="https://pdf.directindustry.com/pdf/soc-I.html">I</a>
-                            <span>-</span>
-                            <a href="https://pdf.directindustry.com/pdf/soc-J.html">J</a>
-                            <span>-</span>
-                            <a href="https://pdf.directindustry.com/pdf/soc-K.html">K</a>
-                            <span>-</span>
-                            <a href="https://pdf.directindustry.com/pdf/soc-L.html">L</a>
-                            <span>-</span>
-                            <a href="https://pdf.directindustry.com/pdf/soc-M.html">M</a>
-                            <span>-</span>
-                            <a href="https://pdf.directindustry.com/pdf/soc-N.html">N</a>
-                            <span>-</span>
-                            <a href="https://pdf.directindustry.com/pdf/soc-O.html">O</a>
-                            <span>-</span>
-                            <a href="https://pdf.directindustry.com/pdf/soc-P.html">P</a>
-                            <span>-</span>
-                            <a href="https://pdf.directindustry.com/pdf/soc-Q.html">Q</a>
-                            <span>-</span>
-                            <a href="https://pdf.directindustry.com/pdf/soc-R.html">R</a>
-                            <span>-</span>
-                            <a href="https://pdf.directindustry.com/pdf/soc-S.html">S</a>
-                            <span>-</span>
-                            <a href="https://pdf.directindustry.com/pdf/soc-T.html">T</a>
-                            <span>-</span>
-                            <a href="https://pdf.directindustry.com/pdf/soc-U.html">U</a>
-                            <span>-</span>
-                            <a href="https://pdf.directindustry.com/pdf/soc-V.html">V</a>
-                            <span>-</span>
-                            <a href="https://pdf.directindustry.com/pdf/soc-W.html">W</a>
-                            <span>-</span>
-                            <a href="https://pdf.directindustry.com/pdf/soc-X.html">X</a>
-                            <span>-</span>
-                            <a href="https://pdf.directindustry.com/pdf/soc-Y.html">Y</a>
-                            <span>-</span>
-                            <a href="https://pdf.directindustry.com/pdf/soc-Z.html">Z</a>
+
+        <!-- Category Tabs -->
+        @if($catalogCategories->count() > 0)
+        <div class="row mb-4">
+            <div class="col-lg-12">
+                <ul class="nav nav-pills justify-content-center">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#all" data-bs-toggle="pill">All Catalogs</a>
+                    </li>
+                    @foreach($catalogCategories as $category)
+                        @if($category)
+                            <li class="nav-item">
+                                <a class="nav-link" href="#category-{{ $loop->index }}" data-bs-toggle="pill">
+                                    {{ ucfirst($category) }}
+                                </a>
+                            </li>
+                        @endif
+                    @endforeach
+                </ul>
+            </div>
+        </div>
+        @endif
+
+        <!-- Catalogs Content -->
+        <div class="tab-content">
+            <!-- All Catalogs Tab -->
+            <div class="tab-pane fade show active" id="all">
+                <div class="row">
+                    @forelse($brandCatalogs as $catalog)
+                        <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-4">
+                            <div class="card projects-card rounded-0 catalog-card"
+                                 style="cursor: pointer;"
+                                 data-pdf-url="{{ $catalog->document ? asset('storage/catalog/document/' . $catalog->document) : '' }}">
+                                
+                                <img src="{{ $catalog->thumbnail ? asset('storage/catalog/thumbnail/' . $catalog->thumbnail) : asset('frontend/images/no-shop-imge.png') }}"
+                                     class="card-img-top img-fluid rounded-0"
+                                     alt="{{ $catalog->name }}"
+                                     style="height: 150px; object-fit: cover;"
+                                     onerror="this.onerror=null;this.src='{{ asset('frontend/images/no-shop-imge.png') }}';" />
+                                
+                                <div class="card-body">
+                                    <p class="card-text project-para text-center">
+                                        {{ \Illuminate\Support\Str::limit($catalog->name, 40) }}
+                                    </p>
+                                    <div class="catalog-logo-area mt-3 text-center">
+                                        @if($brand->logo)
+                                            <img src="{{ asset('storage/brand/logo/' . $brand->logo) }}"
+                                                 alt="{{ $brand->title }}"
+                                                 style="max-height: 25px; object-fit: contain;"
+                                                 onerror="this.onerror=null;this.src='{{ asset('frontend/images/no-shop-imge.png') }}';">
+                                        @endif
+                                        <p class="p-0 m-0 mt-1" style="font-size: 10px">
+                                            {{ $catalog->page_number ?? 'N/A' }} Pages
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="col-12 text-center">
+                            <div class="alert alert-info">
+                                <p class="mb-0">No catalogs available for {{ $brand->title }} at the moment.</p>
+                            </div>
+                        </div>
+                    @endforelse
+                </div>
+            </div>
+
+            <!-- Category Tabs Content -->
+            @foreach($catalogCategories as $category)
+                @if($category)
+                    <div class="tab-pane fade" id="category-{{ $loop->index }}">
+                        <div class="row">
+                            @php
+                                $categoryCatalogs = $brandCatalogs->where('category', $category);
+                            @endphp
+                            
+                            @forelse($categoryCatalogs as $catalog)
+                                <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-4">
+                                    <div class="card projects-card rounded-0 catalog-card"
+                                         style="cursor: pointer;"
+                                         data-pdf-url="{{ $catalog->document ? asset('storage/catalog/document/' . $catalog->document) : '' }}">
+                                        
+                                        <img src="{{ $catalog->thumbnail ? asset('storage/catalog/thumbnail/' . $catalog->thumbnail) : asset('frontend/images/no-shop-imge.png') }}"
+                                             class="card-img-top img-fluid rounded-0"
+                                             alt="{{ $catalog->name }}"
+                                             style="height: 150px; object-fit: cover;"
+                                             onerror="this.onerror=null;this.src='{{ asset('frontend/images/no-shop-imge.png') }}';" />
+                                        
+                                        <div class="card-body">
+                                            <p class="card-text project-para text-center">
+                                                {{ \Illuminate\Support\Str::limit($catalog->name, 40) }}
+                                            </p>
+                                            <div class="catalog-logo-area mt-3 text-center">
+                                                @if($brand->logo)
+                                                    <img src="{{ asset('storage/brand/logo/' . $brand->logo) }}"
+                                                         alt="{{ $brand->title }}"
+                                                         style="max-height: 25px; object-fit: contain;"
+                                                         onerror="this.onerror=null;this.src='{{ asset('frontend/images/no-shop-imge.png') }}';">
+                                                @endif
+                                                <p class="p-0 m-0 mt-1" style="font-size: 10px">
+                                                    {{ $catalog->page_number ?? 'N/A' }} Pages
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @empty
+                                <div class="col-12 text-center">
+                                    <div class="alert alert-warning">
+                                        No catalogs found in {{ ucfirst($category) }} category.
+                                    </div>
+                                </div>
+                            @endforelse
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-12 col-sm-12">
-                    <p class="sub-color text-center w-75 mx-auto"> *Prices are pre-tax. They exclude delivery charges and customs
-                        duties and do not include additional charges for installation or activation options. Prices are
-                        indicative only and may vary by country, with changes to the cost of raw materials and exchange
-                        rates. </p>
-                </div>
-            </div>
-        </div> --}}
+                @endif
+            @endforeach
+        </div>
+    </div>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // PDF viewer functionality
+    document.querySelectorAll('.catalog-card').forEach(card => {
+        card.addEventListener('click', function() {
+            const pdfUrl = this.dataset.pdfUrl;
+            if (pdfUrl) {
+                window.open(pdfUrl, '_blank');
+            } else {
+                alert('PDF not available for this catalog.');
+            }
+        });
+    });
+
+    // Add hover effects
+    document.querySelectorAll('.catalog-card').forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px)';
+            this.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)';
+            this.style.transition = 'all 0.3s ease';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+            this.style.boxShadow = 'none';
+        });
+    });
+});
+</script>
+@endpush

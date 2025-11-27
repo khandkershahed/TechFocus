@@ -151,5 +151,9 @@ public function industries()
 {
     return $this->belongsToMany(Industry::class, 'catalog_industry', 'catalog_id', 'industry_id');
 }
-
+    // Relationship with brands (many-to-many)
+    public function brands()
+    {
+        return $this->belongsToMany(Brand::class, 'catalog_brand', 'catalog_id', 'brand_id');
+    }
 }

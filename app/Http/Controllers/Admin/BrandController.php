@@ -282,7 +282,7 @@ class BrandController extends Controller
         $brand->status = 'rejected';
         $brand->rejection_reason = $request->rejection_reason;
         $brand->save();
-dd("**");
+
         // Redirect to pending brands page
         return redirect()->route('admin.brands.pending')->with('success', 'Brand rejected successfully.');
     }
