@@ -209,67 +209,67 @@
                                </div> 
                             </div>
 
-                           <!-- Contact Details -->
-<div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-    <div class="flex items-center gap-3 mb-6">
-        <div class="p-3 bg-green-100 text-green-600 rounded-xl">
-            <i class="fa-solid fa-users text-lg"></i>
-        </div>
-        <div>
-            <h3 class="text-xl font-semibold text-gray-900">Contact Details</h3>
-            <p class="text-sm text-gray-500">Primary contact information</p>
-        </div>
-    </div>
+                                                                <!-- Contact Details -->
+                                        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+                                            <div class="flex items-center gap-3 mb-6">
+                                                <div class="p-3 bg-green-100 text-green-600 rounded-xl">
+                                                    <i class="fa-solid fa-users text-lg"></i>
+                                                </div>
+                                                <div>
+                                                    <h3 class="text-xl font-semibold text-gray-900">Contact Details</h3>
+                                                    <p class="text-sm text-gray-500">Primary contact information</p>
+                                                </div>
+                                            </div>
 
-    <div class="space-y-4">
-        <!-- Name Field -->
-        <div class="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border border-gray-200">
-            <div class="p-3 bg-purple-100 text-purple-600 rounded-lg">
-                <i class="fa-solid fa-user"></i>
-            </div>
-            <div class="flex-1">
-                <p class="text-sm font-medium text-gray-900">Contact Name</p>
-                <p class="text-gray-600">
-                    @if($principal->primaryContact && $principal->primaryContact->contact_name)
-                        {{ $principal->primaryContact->contact_name }}
-                    @else
-                        N/A
-                    @endif
-                </p>
-            </div>
-        </div>
+                                            <div class="space-y-4">
+                                                <!-- Name Field -->
+                                                <div class="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border border-gray-200">
+                                                    <div class="p-3 bg-purple-100 text-purple-600 rounded-lg">
+                                                        <i class="fa-solid fa-user"></i>
+                                                    </div>
+                                                    <div class="flex-1">
+                                                        <p class="text-sm font-medium text-gray-900">Contact Name</p>
+                                                        <p class="text-gray-600">
+                                                            @if($principal->primaryContact && $principal->primaryContact->contact_name)
+                                                                {{ $principal->primaryContact->contact_name }}
+                                                            @else
+                                                                N/A
+                                                            @endif
+                                                        </p>
+                                                    </div>
+                                                </div>
 
-        <!-- Email Field -->
-        <div class="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border border-gray-200">
-            <div class="p-3 bg-blue-100 text-blue-600 rounded-lg">
-                <i class="fa-solid fa-envelope"></i>
-            </div>
-            <div class="flex-1">
-                <p class="text-sm font-medium text-gray-900">Email Address</p>
-                <p class="text-gray-600">
-                    @if($principal->email)
-                        <a href="mailto:{{ $principal->email }}" class="text-blue-600 hover:text-blue-700 hover:underline">
-                            {{ $principal->email }}
-                        </a>
-                    @else
-                        N/A
-                    @endif
-                </p>
-            </div>
-        </div>
+                                                <!-- Email Field -->
+                                                <div class="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border border-gray-200">
+                                                    <div class="p-3 bg-blue-100 text-blue-600 rounded-lg">
+                                                        <i class="fa-solid fa-envelope"></i>
+                                                    </div>
+                                                    <div class="flex-1">
+                                                        <p class="text-sm font-medium text-gray-900">Email Address</p>
+                                                        <p class="text-gray-600">
+                                                            @if($principal->email)
+                                                                <a href="mailto:{{ $principal->email }}" class="text-blue-600 hover:text-blue-700 hover:underline">
+                                                                    {{ $principal->email }}
+                                                                </a>
+                                                            @else
+                                                                N/A
+                                                            @endif
+                                                        </p>
+                                                    </div>
+                                                </div>
 
-        <!-- Phone Field -->
-        <div class="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border border-gray-200">
-            <div class="p-3 bg-green-100 text-green-600 rounded-lg">
-                <i class="fa-solid fa-phone"></i>
-            </div>
-            <div class="flex-1">
-                <p class="text-sm font-medium text-gray-900">Phone Number</p>
-                <p class="text-gray-600">{{ $principal->primaryContact->phone_e164 ?? 'N/A' }}</p>
-            </div>
-        </div>
-    </div>
-</div>
+                                                <!-- Phone Field -->
+                                                <div class="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border border-gray-200">
+                                                    <div class="p-3 bg-green-100 text-green-600 rounded-lg">
+                                                        <i class="fa-solid fa-phone"></i>
+                                                    </div>
+                                                    <div class="flex-1">
+                                                        <p class="text-sm font-medium text-gray-900">Phone Number</p>
+                                                        <p class="text-gray-600">{{ $principal->primaryContact->phone_e164 ?? 'N/A' }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
 
                             <!-- Brands Section -->
                             <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
@@ -427,207 +427,207 @@
                                 @endif
                             </div>
                         </div>
-<!-- Right Column - 1/3 width -->
-<div class="space-y-6">
-    <!-- Addresses -->
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-        <div class="flex items-center justify-between mb-6">
-            <div class="flex items-center gap-3">
-                <div class="p-3 bg-green-100 text-green-600 rounded-xl">
-                    <i class="fa-solid fa-map-marker-alt text-lg"></i>
-                </div>
-                <div>
-                    <h3 class="text-lg font-semibold text-gray-900">Addresses</h3>
-                    <p class="text-sm text-gray-500">All registered addresses</p>
-                </div>
-            </div>
-            <span class="bg-green-100 text-green-800 text-sm font-medium px-3 py-1 rounded-full border border-green-200">
-                {{ $principal->addresses->count() }}
-            </span>
-        </div>
+                                        <!-- Right Column - 1/3 width -->
+                                        <div class="space-y-6">
+                                            <!-- Addresses -->
+                                            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+                                                <div class="flex items-center justify-between mb-6">
+                                                    <div class="flex items-center gap-3">
+                                                        <div class="p-3 bg-green-100 text-green-600 rounded-xl">
+                                                            <i class="fa-solid fa-map-marker-alt text-lg"></i>
+                                                        </div>
+                                                        <div>
+                                                            <h3 class="text-lg font-semibold text-gray-900">Addresses</h3>
+                                                            <p class="text-sm text-gray-500">All registered addresses</p>
+                                                        </div>
+                                                    </div>
+                                                    <span class="bg-green-100 text-green-800 text-sm font-medium px-3 py-1 rounded-full border border-green-200">
+                                                        {{ $principal->addresses->count() }}
+                                                    </span>
+                                                </div>
 
-        @if($principal->addresses->count())
-        <div class="space-y-3">
-            @foreach($principal->addresses->take(3) as $address)
-            <div class="p-3 border border-gray-200 rounded-lg hover:border-green-300 transition-all bg-gray-50 hover:bg-green-50">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="inline-flex items-center px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
-                        {{ $address->type }}
-                    </span>
-                </div>
-                <p class="text-sm font-medium text-gray-900 mb-1">{{ $address->line1 }}</p>
-                @if($address->line2)
-                <p class="text-sm text-gray-600 mb-1">{{ $address->line2 }}</p>
-                @endif
-                <p class="text-xs text-gray-500">
-                    {{ $address->city ?? '' }}{{ $address->state ? ', '.$address->state : '' }}{{ $address->postal ? ' '.$address->postal : '' }}
-                </p>
-            </div>
-            @endforeach
-        </div>
+                                                @if($principal->addresses->count())
+                                                <div class="space-y-3">
+                                                    @foreach($principal->addresses->take(3) as $address)
+                                                    <div class="p-3 border border-gray-200 rounded-lg hover:border-green-300 transition-all bg-gray-50 hover:bg-green-50">
+                                                        <div class="flex items-center justify-between mb-2">
+                                                            <span class="inline-flex items-center px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
+                                                                {{ $address->type }}
+                                                            </span>
+                                                        </div>
+                                                        <p class="text-sm font-medium text-gray-900 mb-1">{{ $address->line1 }}</p>
+                                                        @if($address->line2)
+                                                        <p class="text-sm text-gray-600 mb-1">{{ $address->line2 }}</p>
+                                                        @endif
+                                                        <p class="text-xs text-gray-500">
+                                                            {{ $address->city ?? '' }}{{ $address->state ? ', '.$address->state : '' }}{{ $address->postal ? ' '.$address->postal : '' }}
+                                                        </p>
+                                                    </div>
+                                                    @endforeach
+                                                </div>
 
-        @if($principal->addresses->count() > 3)
-        <div class="mt-4 text-center">
-            <button class="text-green-600 hover:text-green-800 font-medium inline-flex items-center gap-1 text-sm">
-                View All Addresses
-                <i class="fa-solid fa-arrow-right text-xs"></i>
-            </button>
-        </div>
-        @endif
+                                                @if($principal->addresses->count() > 3)
+                                                <div class="mt-4 text-center">
+                                                    <button class="text-green-600 hover:text-green-800 font-medium inline-flex items-center gap-1 text-sm">
+                                                        View All Addresses
+                                                        <i class="fa-solid fa-arrow-right text-xs"></i>
+                                                    </button>
+                                                </div>
+                                                @endif
 
-        @else
-        <div class="text-center py-4">
-            <div class="p-3 bg-green-50 rounded-xl inline-flex mb-3">
-                <i class="fa-solid fa-map-marker-alt text-green-500"></i>
-            </div>
-            <p class="text-sm text-gray-500">No addresses available</p>
-        </div>
-        @endif
-    </div>
+                                                @else
+                                                <div class="text-center py-4">
+                                                    <div class="p-3 bg-green-50 rounded-xl inline-flex mb-3">
+                                                        <i class="fa-solid fa-map-marker-alt text-green-500"></i>
+                                                    </div>
+                                                    <p class="text-sm text-gray-500">No addresses available</p>
+                                                </div>
+                                                @endif
+                                            </div>
 
-    <!-- Brands List -->
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-        <div class="flex items-center justify-between mb-6">
-            <div class="flex items-center gap-3">
-                <div class="p-3 bg-purple-100 text-purple-600 rounded-xl">
-                    <i class="fa-solid fa-store text-lg"></i>
-                </div>
-                <div>
-                    <h3 class="text-lg font-semibold text-gray-900">Brands</h3>
-                    <p class="text-sm text-gray-500">All registered brands</p>
-                </div>
-            </div>
-            <span class="bg-purple-100 text-purple-800 text-sm font-medium px-3 py-1 rounded-full border border-purple-200">
-                {{ $brands->count() }}
-            </span>
-        </div>
+                                            <!-- Brands List -->
+                                            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+                                                <div class="flex items-center justify-between mb-6">
+                                                    <div class="flex items-center gap-3">
+                                                        <div class="p-3 bg-purple-100 text-purple-600 rounded-xl">
+                                                            <i class="fa-solid fa-store text-lg"></i>
+                                                        </div>
+                                                        <div>
+                                                            <h3 class="text-lg font-semibold text-gray-900">Brands</h3>
+                                                            <p class="text-sm text-gray-500">All registered brands</p>
+                                                        </div>
+                                                    </div>
+                                                    <span class="bg-purple-100 text-purple-800 text-sm font-medium px-3 py-1 rounded-full border border-purple-200">
+                                                        {{ $brands->count() }}
+                                                    </span>
+                                                </div>
 
-        @if($brands->count())
-        <div class="space-y-3">
-            @foreach($brands->take(5) as $brand)
-            <div class="flex items-center gap-3 p-3 border border-gray-200 rounded-lg hover:border-purple-300 transition-all group">
-                @if($brand->logo)
-                <div class="flex-shrink-0 w-10 h-10">
-                    <img class="w-10 h-10 rounded-lg object-cover border border-gray-200"
-                         src="{{ asset('storage/brand/logo/'.$brand->logo) }}" 
-                         alt="{{ $brand->title }}">
-                </div>
-                @else
-                <div class="flex-shrink-0 w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                    <i class="fa-solid fa-store text-purple-600 text-sm"></i>
-                </div>
-                @endif
-                <div class="flex-1 min-w-0">
-                    <h4 class="font-medium text-gray-800 text-sm truncate">{{ $brand->title }}</h4>
-                    <div class="flex items-center gap-2 mt-1">
-                        <span class="text-xs text-gray-500">{{ $brand->category ?? 'N/A' }}</span>
-                        <span class="text-xs px-2 py-0.5 rounded-full 
-                            @if($brand->status == 'approved') bg-green-100 text-green-800
-                            @elseif($brand->status == 'pending') bg-yellow-100 text-yellow-800
-                            @else bg-red-100 text-red-800 @endif">
-                            {{ ucfirst($brand->status) }}
-                        </span>
-                    </div>
-                </div>
-            </div>
-            @endforeach
-        </div>
+                                                @if($brands->count())
+                                                <div class="space-y-3">
+                                                    @foreach($brands->take(5) as $brand)
+                                                    <div class="flex items-center gap-3 p-3 border border-gray-200 rounded-lg hover:border-purple-300 transition-all group">
+                                                        @if($brand->logo)
+                                                        <div class="flex-shrink-0 w-10 h-10">
+                                                            <img class="w-10 h-10 rounded-lg object-cover border border-gray-200"
+                                                                src="{{ asset('storage/brand/logo/'.$brand->logo) }}" 
+                                                                alt="{{ $brand->title }}">
+                                                        </div>
+                                                        @else
+                                                        <div class="flex-shrink-0 w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                                                            <i class="fa-solid fa-store text-purple-600 text-sm"></i>
+                                                        </div>
+                                                        @endif
+                                                        <div class="flex-1 min-w-0">
+                                                            <h4 class="font-medium text-gray-800 text-sm truncate">{{ $brand->title }}</h4>
+                                                            <div class="flex items-center gap-2 mt-1">
+                                                                <span class="text-xs text-gray-500">{{ $brand->category ?? 'N/A' }}</span>
+                                                                <span class="text-xs px-2 py-0.5 rounded-full 
+                                                                    @if($brand->status == 'approved') bg-green-100 text-green-800
+                                                                    @elseif($brand->status == 'pending') bg-yellow-100 text-yellow-800
+                                                                    @else bg-red-100 text-red-800 @endif">
+                                                                    {{ ucfirst($brand->status) }}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    @endforeach
+                                                </div>
 
-        @if($brands->count() > 5)
-        <div class="mt-4 text-center">
-            <a href="{{ route('principal.brands.index') }}" 
-               class="text-purple-600 hover:text-purple-800 font-medium inline-flex items-center gap-1 text-sm">
-                View All Brands
-                <i class="fa-solid fa-arrow-right text-xs"></i>
-            </a>
-        </div>
-        @endif
+                                                @if($brands->count() > 5)
+                                                <div class="mt-4 text-center">
+                                                    <a href="{{ route('principal.brands.index') }}" 
+                                                    class="text-purple-600 hover:text-purple-800 font-medium inline-flex items-center gap-1 text-sm">
+                                                        View All Brands
+                                                        <i class="fa-solid fa-arrow-right text-xs"></i>
+                                                    </a>
+                                                </div>
+                                                @endif
 
-        @else
-        <div class="text-center py-4">
-            <div class="p-3 bg-purple-50 rounded-xl inline-flex mb-3">
-                <i class="fa-solid fa-store text-purple-500"></i>
-            </div>
-            <p class="text-sm text-gray-500">No brands submitted yet</p>
-        </div>
-        @endif
-    </div>
+                                                @else
+                                                <div class="text-center py-4">
+                                                    <div class="p-3 bg-purple-50 rounded-xl inline-flex mb-3">
+                                                        <i class="fa-solid fa-store text-purple-500"></i>
+                                                    </div>
+                                                    <p class="text-sm text-gray-500">No brands submitted yet</p>
+                                                </div>
+                                                @endif
+                                            </div>
 
-    <!-- Products List -->
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-        <div class="flex items-center justify-between mb-6">
-            <div class="flex items-center gap-3">
-                <div class="p-3 bg-blue-100 text-blue-600 rounded-xl">
-                    <i class="fa-solid fa-cube text-lg"></i>
-                </div>
-                <div>
-                    <h3 class="text-lg font-semibold text-gray-900">Products</h3>
-                    <p class="text-sm text-gray-500">All registered products</p>
-                </div>
-            </div>
-            <span class="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full border border-blue-200">
-                {{ $products->count() }}
-            </span>
-        </div>
+                                            <!-- Products List -->
+                                            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+                                                <div class="flex items-center justify-between mb-6">
+                                                    <div class="flex items-center gap-3">
+                                                        <div class="p-3 bg-blue-100 text-blue-600 rounded-xl">
+                                                            <i class="fa-solid fa-cube text-lg"></i>
+                                                        </div>
+                                                        <div>
+                                                            <h3 class="text-lg font-semibold text-gray-900">Products</h3>
+                                                            <p class="text-sm text-gray-500">All registered products</p>
+                                                        </div>
+                                                    </div>
+                                                    <span class="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full border border-blue-200">
+                                                        {{ $products->count() }}
+                                                    </span>
+                                                </div>
 
-        @if($products->count())
-        <div class="space-y-3">
-            @foreach($products->take(5) as $product)
-            <div class="flex items-center gap-3 p-3 border border-gray-200 rounded-lg hover:border-blue-300 transition-all group">
-                @if($product->thumbnail)
-                <div class="flex-shrink-0 w-10 h-10">
-                    <img class="w-10 h-10 rounded-lg object-cover border border-gray-200"
-                         src="{{ asset('storage/' . $product->thumbnail) }}" 
-                         alt="{{ $product->name }}">
-                </div>
-                @else
-                <div class="flex-shrink-0 w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <i class="fa-solid fa-cube text-blue-600 text-sm"></i>
-                </div>
-                @endif
-                <div class="flex-1 min-w-0">
-                    <h4 class="font-medium text-gray-800 text-sm truncate">{{ $product->name }}</h4>
-                    <div class="flex items-center gap-2 mt-1">
-                        <span class="text-xs text-gray-500">
-                            @if($product->price)
-                                ${{ number_format($product->price, 2) }}
-                            @else
-                                N/A
-                            @endif
-                        </span>
-                        <span class="text-xs px-2 py-0.5 rounded-full 
-                            @if($product->submission_status == 'approved') bg-green-100 text-green-800
-                            @elseif($product->submission_status == 'pending') bg-yellow-100 text-yellow-800
-                            @else bg-red-100 text-red-800 @endif">
-                            {{ ucfirst($product->submission_status) }}
-                        </span>
-                    </div>
-                </div>
-            </div>
-            @endforeach
-        </div>
+                                                @if($products->count())
+                                                <div class="space-y-3">
+                                                    @foreach($products->take(5) as $product)
+                                                    <div class="flex items-center gap-3 p-3 border border-gray-200 rounded-lg hover:border-blue-300 transition-all group">
+                                                        @if($product->thumbnail)
+                                                        <div class="flex-shrink-0 w-10 h-10">
+                                                            <img class="w-10 h-10 rounded-lg object-cover border border-gray-200"
+                                                                src="{{ asset('storage/' . $product->thumbnail) }}" 
+                                                                alt="{{ $product->name }}">
+                                                        </div>
+                                                        @else
+                                                        <div class="flex-shrink-0 w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                                                            <i class="fa-solid fa-cube text-blue-600 text-sm"></i>
+                                                        </div>
+                                                        @endif
+                                                        <div class="flex-1 min-w-0">
+                                                            <h4 class="font-medium text-gray-800 text-sm truncate">{{ $product->name }}</h4>
+                                                            <div class="flex items-center gap-2 mt-1">
+                                                                <span class="text-xs text-gray-500">
+                                                                    @if($product->price)
+                                                                        ${{ number_format($product->price, 2) }}
+                                                                    @else
+                                                                        N/A
+                                                                    @endif
+                                                                </span>
+                                                                <span class="text-xs px-2 py-0.5 rounded-full 
+                                                                    @if($product->submission_status == 'approved') bg-green-100 text-green-800
+                                                                    @elseif($product->submission_status == 'pending') bg-yellow-100 text-yellow-800
+                                                                    @else bg-red-100 text-red-800 @endif">
+                                                                    {{ ucfirst($product->submission_status) }}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    @endforeach
+                                                </div>
 
-        @if($products->count() > 5)
-        <div class="mt-4 text-center">
-            <a href="{{ route('principal.products.index') }}" 
-               class="text-blue-600 hover:text-blue-800 font-medium inline-flex items-center gap-1 text-sm">
-                View All Products
-                <i class="fa-solid fa-arrow-right text-xs"></i>
-            </a>
-        </div>
-        @endif
+                                                @if($products->count() > 5)
+                                                <div class="mt-4 text-center">
+                                                    <a href="{{ route('principal.products.index') }}" 
+                                                    class="text-blue-600 hover:text-blue-800 font-medium inline-flex items-center gap-1 text-sm">
+                                                        View All Products
+                                                        <i class="fa-solid fa-arrow-right text-xs"></i>
+                                                    </a>
+                                                </div>
+                                                @endif
 
-        @else
-        <div class="text-center py-4">
-            <div class="p-3 bg-blue-50 rounded-xl inline-flex mb-3">
-                <i class="fa-solid fa-cube text-blue-500"></i>
-            </div>
-            <p class="text-sm text-gray-500">No products submitted yet</p>
-        </div>
-        @endif
-    </div>
-</div>
-                            <!-- Security & Visibility -->
+                                                @else
+                                                <div class="text-center py-4">
+                                                    <div class="p-3 bg-blue-50 rounded-xl inline-flex mb-3">
+                                                        <i class="fa-solid fa-cube text-blue-500"></i>
+                                                    </div>
+                                                    <p class="text-sm text-gray-500">No products submitted yet</p>
+                                                </div>
+                                                @endif
+                                            </div>
+                                        </div>
+                             <!-- Security & Visibility -->
                             <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
                                 <h3 class="text-lg font-semibold text-gray-900 mb-4">Security & Visibility</h3>
                                 
@@ -691,189 +691,150 @@
                 </div>
 
                         <div x-show="tab === 2" x-transition>
-                               {{-- <!-- Principal Links -->
-<div class="p-6 mb-8 bg-white rounded-lg shadow">
-    <div class="flex items-center justify-between mb-4">
-    
-        <div class="flex gap-3">
-            <a href="{{ route('principal.links.create') }}"
-    class="inline-flex items-center px-4 py-2 text-white transition duration-200 bg-blue-600 rounded hover:bg-blue-700">
-    Add Your Links
-    </a>
+                        <!-- Enhanced Principal Links Section -->
+                        <div class="p-6 mb-8 transition-all duration-300 bg-white border border-gray-100 shadow-lg rounded-2xl hover:shadow-xl">
+                            <!-- Header with Gradient Background -->
+                            <div class="p-4 mb-6 border border-blue-100 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="p-3 shadow-md bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl">
+                                            <i class="text-lg text-white fa-solid fa-link"></i>
+                                        </div>
+                                        <div>
+                                            <h2 class="text-xl font-bold text-gray-800">Quick Links & Resources</h2>
+                                            <p class="mt-1 text-sm text-gray-600">Share and manage your important links</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <span class="px-3 py-1 text-sm font-medium text-blue-600 bg-white border border-blue-200 rounded-full shadow-sm">
+                                            {{ $principal->links->count() }} {{ Str::plural('Link', $principal->links->count()) }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
 
-    <a href="{{ route('principal.links.index') }}"
-        class="inline-flex items-center px-4 py-2 text-white transition duration-200 bg-indigo-600 rounded hover:bg-indigo-700">
-        View Your All Links
-    </a>
-</div>
-</div>
+                            <!-- Action Buttons -->
+                            <div class="flex flex-wrap gap-3 mb-6">
+                                <a href="{{ route('principal.links.create') }}"
+                                    class="group inline-flex items-center px-5 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                                    <i class="mr-2 transition-transform fa-solid fa-plus group-hover:scale-110"></i>
+                                    Add New Links
+                                </a>
 
-@if($principal->links->count())
-<ul class="space-y-2 list-disc list-inside">
-    @foreach($principal->links as $link)
-    @php
-    // Decode JSON if stored as JSON
-    $labels = is_string($link->label) ? json_decode($link->label, true) : $link->label;
-    $urls = is_string($link->url) ? json_decode($link->url, true) : $link->url;
-    @endphp
+                                <a href="{{ route('principal.links.index') }}"
+                                    class="inline-flex items-center px-5 py-3 font-semibold text-gray-700 transition-all duration-300 bg-white border border-gray-200 shadow-sm group rounded-xl hover:border-indigo-300 hover:bg-indigo-50 hover:shadow-md">
+                                    <i class="mr-2 text-indigo-600 fa-solid fa-list"></i>
+                                    Manage All Links
+                                </a>
+                            </div>
 
-    @foreach($labels as $i => $lbl)
-    <li>
-        <a href="{{ $urls[$i] ?? '#' }}" target="_blank" class="text-blue-600 hover:underline">
-            {{ $lbl }}
-        </a>
-    </li>
-    @endforeach
-    @endforeach
-</ul>
-@else
-<p class="text-gray-500">No shared links yet.</p>
-@endif
-</div> --}}
-<!-- Enhanced Principal Links Section -->
-<div class="p-6 mb-8 transition-all duration-300 bg-white border border-gray-100 shadow-lg rounded-2xl hover:shadow-xl">
-    <!-- Header with Gradient Background -->
-    <div class="p-4 mb-6 border border-blue-100 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl">
-        <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="p-3 shadow-md bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl">
-                    <i class="text-lg text-white fa-solid fa-link"></i>
-                </div>
-                <div>
-                    <h2 class="text-xl font-bold text-gray-800">Quick Links & Resources</h2>
-                    <p class="mt-1 text-sm text-gray-600">Share and manage your important links</p>
-                </div>
-            </div>
-            <div class="flex items-center space-x-2">
-                <span class="px-3 py-1 text-sm font-medium text-blue-600 bg-white border border-blue-200 rounded-full shadow-sm">
-                    {{ $principal->links->count() }} {{ Str::plural('Link', $principal->links->count()) }}
-                </span>
-            </div>
-        </div>
-    </div>
+                            <!-- Links Grid -->
+                            @if($principal->links->count())
+                            <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                                @foreach($principal->links as $linkIndex => $link)
+                                @php
+                                $labels = is_string($link->label) ? json_decode($link->label, true) : $link->label;
+                                $urls = is_string($link->url) ? json_decode($link->url, true) : $link->url;
+                                $colors = ['blue', 'green', 'purple', 'orange', 'pink', 'indigo'];
+                                $colorClasses = [
+                                'blue' => 'from-blue-400 to-blue-500',
+                                'green' => 'from-green-400 to-green-500',
+                                'purple' => 'from-purple-400 to-purple-500',
+                                'orange' => 'from-orange-400 to-orange-500',
+                                'pink' => 'from-pink-400 to-pink-500',
+                                'indigo' => 'from-indigo-400 to-indigo-500'
+                                ];
+                                @endphp
 
-    <!-- Action Buttons -->
-    <div class="flex flex-wrap gap-3 mb-6">
-        <a href="{{ route('principal.links.create') }}"
-            class="group inline-flex items-center px-5 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-            <i class="mr-2 transition-transform fa-solid fa-plus group-hover:scale-110"></i>
-            Add New Links
-        </a>
+                                @foreach($labels as $i => $label)
+                                @php
+                                $colorIndex = ($linkIndex + $i) % count($colors);
+                                $color = $colors[$colorIndex];
+                                $gradientClass = $colorClasses[$color];
+                                @endphp
 
-        <a href="{{ route('principal.links.index') }}"
-            class="inline-flex items-center px-5 py-3 font-semibold text-gray-700 transition-all duration-300 bg-white border border-gray-200 shadow-sm group rounded-xl hover:border-indigo-300 hover:bg-indigo-50 hover:shadow-md">
-            <i class="mr-2 text-indigo-600 fa-solid fa-list"></i>
-            Manage All Links
-        </a>
-    </div>
+                                <div class="group relative bg-gradient-to-br from-white to-gray-50 rounded-xl border border-gray-200 p-4 hover:border-{{ $color }}-300 hover:shadow-md transition-all duration-300">
+                                    <!-- Link Icon -->
+                                    <div class="flex items-start justify-between mb-3">
+                                        <div class="p-2 bg-gradient-to-br {{ $gradientClass }} rounded-lg shadow-sm">
+                                            <i class="text-sm text-white fa-solid fa-link"></i>
+                                        </div>
+                                    </div>
 
-    <!-- Links Grid -->
-    @if($principal->links->count())
-    <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-        @foreach($principal->links as $linkIndex => $link)
-        @php
-        $labels = is_string($link->label) ? json_decode($link->label, true) : $link->label;
-        $urls = is_string($link->url) ? json_decode($link->url, true) : $link->url;
-        $colors = ['blue', 'green', 'purple', 'orange', 'pink', 'indigo'];
-        $colorClasses = [
-        'blue' => 'from-blue-400 to-blue-500',
-        'green' => 'from-green-400 to-green-500',
-        'purple' => 'from-purple-400 to-purple-500',
-        'orange' => 'from-orange-400 to-orange-500',
-        'pink' => 'from-pink-400 to-pink-500',
-        'indigo' => 'from-indigo-400 to-indigo-500'
-        ];
-        @endphp
+                                    <!-- Link Content -->
+                                    <div class="space-y-2">
+                                        <h3 class="font-semibold text-gray-800 text-sm line-clamp-2 group-hover:text-{{ $color }}-600 transition-colors">
+                                            {{ $label }}
+                                        </h3>
 
-        @foreach($labels as $i => $label)
-        @php
-        $colorIndex = ($linkIndex + $i) % count($colors);
-        $color = $colors[$colorIndex];
-        $gradientClass = $colorClasses[$color];
-        @endphp
+                                        @if(isset($urls[$i]) && $urls[$i])
+                                        <div class="flex items-center justify-between">
+                                            <a href="{{ $urls[$i] }}"
+                                                target="_blank"
+                                                class="text-xs text-gray-500 hover:text-{{ $color }}-600 transition-colors truncate flex-1 mr-2">
+                                                {{ \Illuminate\Support\Str::limit($urls[$i], 40) }}
+                                            </a>
+                                            <div class="flex-shrink-0">
+                                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-{{ $color }}-50 text-{{ $color }}-600 border border-{{ $color }}-200">
+                                                    <i class="mr-1 text-xs fa-solid fa-external-link"></i>
+                                                    Visit
+                                                </span>
+                                            </div>
+                                        </div>
+                                        @else
+                                        <span class="text-xs italic text-gray-400">No URL provided</span>
+                                        @endif
+                                    </div>
 
-        <div class="group relative bg-gradient-to-br from-white to-gray-50 rounded-xl border border-gray-200 p-4 hover:border-{{ $color }}-300 hover:shadow-md transition-all duration-300">
-            <!-- Link Icon -->
-            <div class="flex items-start justify-between mb-3">
-                <div class="p-2 bg-gradient-to-br {{ $gradientClass }} rounded-lg shadow-sm">
-                    <i class="text-sm text-white fa-solid fa-link"></i>
-                </div>
-            </div>
+                                    <!-- Hover Effect Border -->
+                                    <div class="absolute inset-0 rounded-xl border-2 border-transparent group-hover:border-{{ $color }}-200 transition-all duration-300 pointer-events-none"></div>
+                                </div>
+                                @endforeach
+                                @endforeach
+                            </div>
 
-            <!-- Link Content -->
-            <div class="space-y-2">
-                <h3 class="font-semibold text-gray-800 text-sm line-clamp-2 group-hover:text-{{ $color }}-600 transition-colors">
-                    {{ $label }}
-                </h3>
+                            <!-- Links Summary -->
+                            <div class="pt-4 mt-6 border-t border-gray-200">
+                                <div class="flex flex-wrap items-center justify-between text-sm text-gray-600">
+                                    <div class="flex items-center space-x-4">
+                                        <span class="flex items-center">
+                                            <i class="mr-2 text-blue-500 fa-solid fa-layer-group"></i>
+                                            {{ $principal->links->count() }} {{ Str::plural('Link Set', $principal->links->count()) }}
+                                        </span>
+                                        <span class="flex items-center">
+                                            <i class="mr-2 text-green-500 fa-solid fa-link"></i>
+                                            {{ array_reduce($principal->links->toArray(), function($carry, $link) {
+                                                    $labels = is_string($link['label']) ? json_decode($link['label'], true) : $link['label'];
+                                                    return $carry + count($labels);
+                                                }, 0) }} Total Links
+                                        </span>
+                                    </div>
+                                    <a href="{{ route('principal.links.index') }}"
+                                        class="inline-flex items-center font-medium text-blue-600 transition-colors hover:text-blue-700">
+                                        View Detailed Analytics
+                                        <i class="ml-1 text-xs fa-solid fa-arrow-right"></i>
+                                    </a>
+                                </div>
+                            </div>
 
-                @if(isset($urls[$i]) && $urls[$i])
-                <div class="flex items-center justify-between">
-                    <a href="{{ $urls[$i] }}"
-                        target="_blank"
-                        class="text-xs text-gray-500 hover:text-{{ $color }}-600 transition-colors truncate flex-1 mr-2">
-                        {{ \Illuminate\Support\Str::limit($urls[$i], 40) }}
-                    </a>
-                    <div class="flex-shrink-0">
-                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-{{ $color }}-50 text-{{ $color }}-600 border border-{{ $color }}-200">
-                            <i class="mr-1 text-xs fa-solid fa-external-link"></i>
-                            Visit
-                        </span>
-                    </div>
-                </div>
-                @else
-                <span class="text-xs italic text-gray-400">No URL provided</span>
-                @endif
-            </div>
-
-            <!-- Hover Effect Border -->
-            <div class="absolute inset-0 rounded-xl border-2 border-transparent group-hover:border-{{ $color }}-200 transition-all duration-300 pointer-events-none"></div>
-        </div>
-        @endforeach
-        @endforeach
-    </div>
-
-    <!-- Links Summary -->
-    <div class="pt-4 mt-6 border-t border-gray-200">
-        <div class="flex flex-wrap items-center justify-between text-sm text-gray-600">
-            <div class="flex items-center space-x-4">
-                <span class="flex items-center">
-                    <i class="mr-2 text-blue-500 fa-solid fa-layer-group"></i>
-                    {{ $principal->links->count() }} {{ Str::plural('Link Set', $principal->links->count()) }}
-                </span>
-                <span class="flex items-center">
-                    <i class="mr-2 text-green-500 fa-solid fa-link"></i>
-                    {{ array_reduce($principal->links->toArray(), function($carry, $link) {
-                            $labels = is_string($link['label']) ? json_decode($link['label'], true) : $link['label'];
-                            return $carry + count($labels);
-                        }, 0) }} Total Links
-                </span>
-            </div>
-            <a href="{{ route('principal.links.index') }}"
-                class="inline-flex items-center font-medium text-blue-600 transition-colors hover:text-blue-700">
-                View Detailed Analytics
-                <i class="ml-1 text-xs fa-solid fa-arrow-right"></i>
-            </a>
-        </div>
-    </div>
-
-    @else
-    <!-- Empty State -->
-    <div class="py-12 text-center">
-        <div class="max-w-md mx-auto">
-            <div class="flex items-center justify-center w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl">
-                <i class="text-2xl text-gray-400 fa-solid fa-link"></i>
-            </div>
-            <h3 class="mb-2 text-lg font-semibold text-gray-700">No Links Added Yet</h3>
-            <p class="mb-6 text-gray-500">Start by adding your important links and resources to share with your team.</p>
-            <a href="{{ route('principal.links.create') }}"
-                class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-                <i class="mr-2 fa-solid fa-plus"></i>
-                Create Your First Link Set
-            </a>
-        </div>
-    </div>
-    @endif
-</div>
+                            @else
+                            <!-- Empty State -->
+                            <div class="py-12 text-center">
+                                <div class="max-w-md mx-auto">
+                                    <div class="flex items-center justify-center w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl">
+                                        <i class="text-2xl text-gray-400 fa-solid fa-link"></i>
+                                    </div>
+                                    <h3 class="mb-2 text-lg font-semibold text-gray-700">No Links Added Yet</h3>
+                                    <p class="mb-6 text-gray-500">Start by adding your important links and resources to share with your team.</p>
+                                    <a href="{{ route('principal.links.create') }}"
+                                        class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                                        <i class="mr-2 fa-solid fa-plus"></i>
+                                        Create Your First Link Set
+                                    </a>
+                                </div>
+                            </div>
+                            @endif
+                        </div>
 
                         </div>
 
