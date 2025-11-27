@@ -21,13 +21,20 @@
                         </div>
                         <div class="flex-1">
                             <div class="flex items-center gap-3 mb-2">
-                                <h1 class="text-3xl font-bold text-gray-900">
-                                    {{ $principal->legal_name }}
-                                </h1>
-                                @if($principal->country)
-                                <img src="https://flagsapi.com/{{ strtoupper($principal->country_code ?? 'US') }}/flat/32.png"
-                                    class="w-8 h-8 rounded-lg shadow-sm" alt="Flag">
-                                @endif
+                                     <h1 class="text-3xl font-bold text-gray-900">
+                                                {{ $principal->legal_name }}
+                                            </h1>
+                                            @if($principal->country)
+                                                @php
+                                                    $iso = \App\Helpers\CountryHelper::isoCode($principal->country->name);
+                                                @endphp
+
+                                                @if($iso)
+                                                    <img src="https://flagsapi.com/{{ $iso }}/flat/32.png"
+                                                        class="w-8 h-8 rounded-lg shadow-sm" alt="Flag">
+                                                @endif
+                                            @endif
+
                             </div>
 
                             <div class="flex flex-wrap items-center gap-2 mb-3">
