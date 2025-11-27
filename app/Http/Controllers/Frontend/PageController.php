@@ -69,45 +69,18 @@ public function brandPdf($slug)
         ->select('id', 'slug', 'title', 'logo')
         ->firstOrFail();
 
-    // Try multiple approaches to find brand catalogs
-    $brandCatalogs = collect();
+    // Since your data stores brand IDs as strings in JSON arrays: ["10"]
+    // We need to search for the brand ID as a string
+    $brandCatalogs = Catalog::with(['attachments'])
+        ->whereJsonContains('brand_id', (string)$brand->id)
+        ->latest()
+        ->get();
 
-    // Method 1: Direct database JSON query
-    try {
-        $method1 = Catalog::where('brand_id', 'LIKE', '%"' . $brand->id . '"%')
-            ->orWhere('brand_id', 'LIKE', '%' . $brand->id . '%')
-            ->get();
-        \Log::info("Method 1 found: " . $method1->count() . " catalogs");
-        $brandCatalogs = $brandCatalogs->merge($method1);
-    } catch (\Exception $e) {
-        \Log::error("Method 1 failed: " . $e->getMessage());
-    }
-
-    // Method 2: Using JSON contains with string
-    try {
-        $method2 = Catalog::whereJsonContains('brand_id', (string)$brand->id)->get();
-        \Log::info("Method 2 found: " . $method2->count() . " catalogs");
-        $brandCatalogs = $brandCatalogs->merge($method2);
-    } catch (\Exception $e) {
-        \Log::error("Method 2 failed: " . $e->getMessage());
-    }
-
-    // Method 3: Using JSON contains with integer
-    try {
-        $method3 = Catalog::whereJsonContains('brand_id', $brand->id)->get();
-        \Log::info("Method 3 found: " . $method3->count() . " catalogs");
-        $brandCatalogs = $brandCatalogs->merge($method3);
-    } catch (\Exception $e) {
-        \Log::error("Method 3 failed: " . $e->getMessage());
-    }
-
-    // Remove duplicates
-    $brandCatalogs = $brandCatalogs->unique('id');
-
-    \Log::info("Final brand catalogs count: " . $brandCatalogs->count());
+    \Log::info("Brand: {$brand->title} (ID: {$brand->id})");
+    \Log::info("Catalogs found: " . $brandCatalogs->count());
 
     // Get unique categories
-    $catalogCategories = $brandCatalogs->pluck('category')->unique();
+    $catalogCategories = $brandCatalogs->pluck('category')->unique()->filter();
 
     $data = [
         'brand' => $brand,
