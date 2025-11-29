@@ -12,7 +12,7 @@ License: For each use you must have a valid license purchased only from above li
 -->
 <html lang="en">
 	<!--begin::Head-->
-<head><base href="">
+{{-- <head><base href="">
     <title>Metronic - the world's #1 selling Bootstrap Admin Theme</title>
 
     <meta charset="utf-8" />
@@ -30,8 +30,35 @@ License: For each use you must have a valid license purchased only from above li
     <!-- Global Stylesheets Bundle -->
     <link href="{{ asset('assets/plugins/global/plugins.bundle.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/css/style.bundle.css') }}" rel="stylesheet" type="text/css" />
-</head>
+</head> --}}
+<head>
+    <base href="">
+    <title>Your Page Title</title>
 
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <link rel="shortcut icon" href="{{ asset('assets/media/logos/favicon.ico') }}" />
+
+    <!-- Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
+
+    <!-- Alpine.js -->
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Metronic Styles -->
+    <link href="{{ asset('assets/plugins/custom/fullcalendar/fullcalendar.bundle.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('assets/plugins/custom/datatables/datatables.bundle.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('assets/plugins/global/plugins.bundle.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('assets/css/style.bundle.css') }}" rel="stylesheet" type="text/css" />
+</head>
 	<!--end::Head-->
 	<!--begin::Body-->
 	<body id="kt_body" class="header-fixed header-tablet-and-mobile-fixed toolbar-enabled toolbar-fixed aside-enabled aside-fixed" style="--kt-toolbar-height:55px;--kt-toolbar-height-tablet-and-mobile:55px">
@@ -86,6 +113,19 @@ License: For each use you must have a valid license purchased only from above li
 										<span class="menu-title">Dashboards</span>
 										<span class="menu-arrow"></span>
 									</span>
+
+                                            <!-- Logout Menu Item -->
+                                        <div class="menu-item">
+                                            <form method="POST" action="{{ route('principal.logout') }}" id="logout-form">
+                                                @csrf
+                                                <a class="menu-link" href="javascript:void(0)" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                                    <span class="menu-icon">
+                                                        <i class="fa-solid fa-right-from-bracket fs-2 text-danger"></i>
+                                                    </span>
+                                                    <span class="menu-title text-danger">Log Out</span>
+                                                </a>
+                                            </form>
+                                        </div>
 									<div class="menu-sub menu-sub-accordion menu-active-bg">
 										<div class="menu-item">
 											<a class="menu-link active" href="../../demo1/dist/index.html">
@@ -217,6 +257,7 @@ License: For each use you must have a valid license purchased only from above li
 												</a>
 											</div>
 										</div>
+                            
 										<div class="menu-item">
 											<div class="menu-content">
 												<a class="btn btn-flex btn-color-success fs-base p-0 ms-2 mb-2 collapsible collapsed rotate" data-bs-toggle="collapse" href="#kt_aside_menu_collapse" data-kt-toggle-text="Show Less">
