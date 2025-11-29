@@ -35,21 +35,19 @@
                                                     class="w-8 h-8 rounded-lg shadow-sm" alt="Flag">
                                             @endif
                                         @endif
-
-
                             </div>
 
                             <div class="flex flex-wrap items-center gap-2 mb-3">
                                 <span class="px-3 py-1.5 text-xs font-medium text-gray-700 bg-gray-100 rounded-lg border border-gray-200">
                                     {{ $principal->entity_type ?? 'N/A' }}
                                 </span>
-                                <span class="px-3 py-1.5 text-xs font-medium rounded-lg border
+                                {{-- <span class="px-3 py-1.5 text-xs font-medium rounded-lg border
                                     @if($principal->relationship_status == 'Active') bg-green-100 text-green-700 border-green-200
                                     @elseif($principal->relationship_status == 'Prospect') bg-yellow-100 text-yellow-700 border-yellow-200
                                     @elseif($principal->relationship_status == 'Dormant') bg-gray-100 text-gray-700 border-gray-200
                                     @else bg-red-100 text-red-700 border-red-200 @endif">
                                     {{ $principal->relationship_status }}
-                                </span>
+                                </span> --}}
                             </div>
 
                             <p class="text-sm text-gray-500">
@@ -66,6 +64,7 @@
                             <i class="text-sm fa-solid fa-pen-to-square"></i>
                             <span>Edit Profile</span>
                         </a>
+  
                         <a href="{{ route('principal.links.index') }}"
                             class="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-indigo-500 rounded-xl hover:bg-indigo-600 transition-all shadow-sm hover:shadow-md">
                             <i class="text-sm fa-solid fa-share-nodes"></i>
