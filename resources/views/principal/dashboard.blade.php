@@ -6,16 +6,23 @@
     {{-- Header & Actions --}}
     <div class="flex flex-col items-start justify-between p-6 mb-6 bg-white border shadow-xl border-slate-100 rounded-2xl md:flex-row md:items-center">
         <div>
-            <h1 class="mb-2 text-3xl font-extrabold text-slate-900 md:text-4xl">
-                {{ $principal->legal_name ?? $principal->name ?? 'Company Name' }}
-            </h1>
+                                <h1 class="mb-2 text-3xl font-extrabold text-slate-900 md:text-4xl flex items-center gap-2">
+                                    {{ $principal->legal_name ?? $principal->name ?? 'Company Name' }}
+                                    @if($principal->country)
+                                        @php
+                                            $iso = \App\Helpers\CountryHelper::isoCode($principal->country->name);
+                                        @endphp
+                                        @if($iso)
+                                            <img src="https://flagsapi.com/{{ $iso }}/flat/32.png" 
+                                                class="w-8 h-8 rounded-lg shadow-sm" alt="Flag">
+                                        @endif
+                                    @endif
+                                </h1>
             <div class="flex flex-wrap items-center gap-3">
                 <span class="px-3 py-1 text-xs font-semibold rounded-full shadow-sm text-cyan-700 bg-cyan-100">
                     <i class="mr-1 fa fa-industry"></i> Entity Type: {{ $principal->entity_type ?? 'N/A' }}
                 </span>
-                <span class="text-sm font-medium text-slate-500">
-                    <i class="mr-1 fa fa-hashtag"></i> ID: {{ $principal->id }}
-                </span>
+            
                 <span class="px-3 py-1 text-xs font-semibold rounded-full text-emerald-700 bg-emerald-100">
                     <i class="mr-1 fa fa-check-circle"></i> {{ $principal->relationship_status ?? 'Active' }}
                 </span>
