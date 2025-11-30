@@ -7,60 +7,63 @@
     <div class="flex flex-col items-start justify-between p-6 mb-6 bg-white border shadow-xl border-slate-100 rounded-2xl md:flex-row md:items-center">
         <div>
             <h1 class="mb-2 text-3xl font-extrabold text-slate-900 md:text-4xl">
-                COMPANY NAME LLC
+                {{ $principal->legal_name ?? $principal->name ?? 'Company Name' }}
             </h1>
             <div class="flex flex-wrap items-center gap-3">
                 <span class="px-3 py-1 text-xs font-semibold rounded-full shadow-sm text-cyan-700 bg-cyan-100">
-                    <i class="mr-1 fa fa-industry"></i> Supplier Type: Manufacturer
+                    <i class="mr-1 fa fa-industry"></i> Entity Type: {{ $principal->entity_type ?? 'N/A' }}
                 </span>
                 <span class="text-sm font-medium text-slate-500">
-                    <i class="mr-1 fa fa-hashtag"></i> Supplier ID: SUP-00123
+                    <i class="mr-1 fa fa-hashtag"></i> ID: {{ $principal->id }}
                 </span>
                 <span class="px-3 py-1 text-xs font-semibold rounded-full text-emerald-700 bg-emerald-100">
-                    <i class="mr-1 fa fa-check-circle"></i> Active
+                    <i class="mr-1 fa fa-check-circle"></i> {{ $principal->relationship_status ?? 'Active' }}
                 </span>
+                @if($principal->country)
                 <span class="px-3 py-1 text-xs font-semibold text-blue-700 bg-blue-100 rounded-full">
-                    <i class="mr-1 fa fa-stamp"></i> Authorized
+                    <i class="mr-1 fa fa-globe"></i> {{ $principal->country->name }}
                 </span>
-                <span class="px-3 py-1 text-xs font-semibold rounded-full text-amber-800 bg-amber-100">
-                    Key Vendor
-                </span>
+                @endif
             </div>
+            <p class="mt-2 text-sm text-slate-500">
+                Created on <strong>{{ $principal->created_at->format('d M, Y') }}</strong> • 
+                By: <strong>{{ $principal->created_by ?? 'System' }}</strong>
+            </p>
         </div>
 
         <div class="flex flex-wrap gap-3 p-3 mt-4 md:mt-0">
-            <button onclick="openModal('noteModal')" class="flex items-center px-5 py-2 text-white transition duration-200 rounded-full shadow-md bg-cyan-600 hover:bg-cyan-700 hover:shadow-lg">
+            <a href="{{ route('principal.profile.edit') }}" 
+               class="flex items-center px-5 py-2 text-white transition duration-200 rounded-full shadow-md bg-cyan-600 hover:bg-cyan-700 hover:shadow-lg">
                 <i class="mr-2 fa fa-pen"></i> Edit
-            </button>
-            <button onclick="openModal('shareModal')" class="flex items-center px-5 py-2 transition duration-200 border rounded-full text-slate-700 border-slate-300 hover:bg-slate-100">
+            </a>
+            <a href="{{ route('principal.links.index') }}" 
+               class="flex items-center px-5 py-2 transition duration-200 border rounded-full text-slate-700 border-slate-300 hover:bg-slate-100">
                 <i class="mr-2 fa fa-share-nodes"></i> Share
-            </button>
-            <button onclick="openModal('noteModal')" class="flex items-center px-5 py-2 transition duration-200 border rounded-full text-slate-700 border-slate-300 hover:bg-slate-100">
-                <i class="mr-2 fa fa-sticky-note"></i> Add Note
-            </button>
-            <button onclick="openModal('archiveModal')" class="flex items-center px-5 py-2 text-red-600 transition duration-200 border border-red-200 rounded-full hover:bg-red-50">
-                <i class="mr-2 fa fa-box-archive"></i> Archive
-            </button>
+            </a>
+           <a href="{{ route('principal.notes.index') }}" 
+                    class="flex items-center px-5 py-2 transition duration-200 border rounded-full text-slate-700 border-slate-300 hover:bg-slate-100">
+                        <i class="mr-2 fa fa-sticky-note"></i> Add Note
+                    </a>
         </div>
     </div>
 
     {{-- Stats Grid --}}
     <div class="grid grid-cols-2 gap-6 mb-10 md:grid-cols-4">
         <div class="p-5 text-center bg-white rounded-xl shadow-md border-t-4 border-cyan-500 transition duration-300 hover:shadow-xl hover:scale-[1.01]">
-            <h6 class="mb-1 text-sm font-medium text-slate-500">Assigned Manager</h6>
-            <p class="text-xl font-extrabold text-slate-800 md:text-2xl">John Smith</p>
+            <h6 class="mb-1 text-sm font-medium text-slate-500">Total Brands</h6>
+            <p class="text-xl font-extrabold text-slate-800 md:text-2xl">{{ $brands->count() }}</p>
+        </div>
+        <div class="p-5 text-center bg-white rounded-xl shadow-md border-t-4 border-green-500 transition duration-300 hover:shadow-xl hover:scale-[1.01]">
+            <h6 class="mb-1 text-sm font-medium text-slate-500">Total Products</h6>
+            <p class="text-xl font-extrabold text-green-600 md:text-2xl">{{ $products->count() }}</p>
+        </div>
+        <div class="p-5 text-center bg-white rounded-xl shadow-md border-t-4 border-purple-500 transition duration-300 hover:shadow-xl hover:scale-[1.01]">
+            <h6 class="mb-1 text-sm font-medium text-slate-500">Quick Links</h6>
+            <p class="text-xl font-extrabold text-purple-600 md:text-2xl">{{ $principal->links->count() }}</p>
         </div>
         <div class="p-5 text-center bg-white rounded-xl shadow-md border-t-4 border-cyan-500 transition duration-300 hover:shadow-xl hover:scale-[1.01]">
-            <h6 class="mb-1 text-sm font-medium text-slate-500">2024 Purchase</h6>
-            <p class="text-xl font-extrabold text-green-600 md:text-2xl">$1.2M USD</p>
-        </div>
-        <div class="p-5 text-center bg-white rounded-xl shadow-md border-t-4 border-red-500 transition duration-300 hover:shadow-xl hover:scale-[1.01]">
-            <h6 class="mb-1 text-sm font-medium text-slate-500">Risk Level</h6>
-            <p class="text-xl font-extrabold text-red-600 md:text-2xl">High (7/10)</p>
-        </div>
-        <div class="p-5 text-center bg-white rounded-xl shadow-md border-t-4 border-cyan-500 transition duration-300 hover:shadow-xl hover:scale-[1.01]">
-            <h6 class="mb-1 text-sm font-medium text-slate-500">Relationship Since</h6>
-            <p class="text-xl font-extrabold text-slate-800 md:text-2xl">2019</p>
+            <h6 class="mb-1 text-sm font-medium text-slate-500">Member Since</h6>
+            <p class="text-xl font-extrabold text-slate-800 md:text-2xl">{{ $principal->created_at->format('Y') }}</p>
         </div>
     </div>
 
@@ -75,99 +78,186 @@
                 <div class="grid gap-6 md:grid-cols-2">
                     <div class="p-6 bg-white border shadow-md border-slate-100 rounded-xl hover:shadow-lg">
                         <h3 class="mb-4 text-xl font-semibold text-slate-700"><i class="mr-2 text-cyan-500 fa fa-building"></i> Company Info</h3>
-                        <p><strong>Company Name:</strong> Company LLC [cite: 31]</p>
-                        <p><strong>Website:</strong> <a href="#" class="text-cyan-600 hover:underline">http://company.com</a></p>
-                        <p><strong>Country:</strong> USA</p>
-                        <p class="pt-2"><strong>Tags:</strong> <span class="px-3 py-1 text-xs font-semibold rounded-full text-amber-800 bg-amber-100">Key Vendor</span></p>
+                        <p><strong>Legal Name:</strong> {{ $principal->legal_name ?? 'N/A' }}</p>
+                        <p><strong>Trading Name:</strong> {{ $principal->name ?? 'N/A' }}</p>
+                        <p><strong>Website:</strong> 
+                            @if($principal->website_url)
+                            <a href="{{ $principal->website_url }}" target="_blank" class="text-cyan-600 hover:underline">{{ $principal->website_url }}</a>
+                            @else
+                            N/A
+                            @endif
+                        </p>
+                        <p><strong>Country:</strong> {{ $principal->country->name ?? 'N/A' }}</p>
+                        <p class="pt-2"><strong>Entity Type:</strong> 
+                            <span class="px-3 py-1 text-xs font-semibold rounded-full text-amber-800 bg-amber-100">
+                                {{ $principal->entity_type ?? 'N/A' }}
+                            </span>
+                        </p>
+                    </div>
+                    
+                    {{-- Primary Contact --}}
+                    <div class="p-6 bg-white border shadow-md border-slate-100 rounded-xl hover:shadow-lg">
+                        <h3 class="mb-4 text-xl font-semibold text-slate-700"><i class="mr-2 text-cyan-500 fa fa-user-tie"></i> Primary Contact</h3>
+                        @if($principal->primaryContact)
+                        <p><strong>Name:</strong> {{ $principal->primaryContact->contact_name ?? 'N/A' }}</p>
+                        <p><strong>Email:</strong> 
+                            @if($principal->email)
+                            <a href="mailto:{{ $principal->email }}" class="text-cyan-600 hover:underline">{{ $principal->email }}</a>
+                            @else
+                            N/A
+                            @endif
+                        </p>
+                        <p><strong>Phone:</strong> {{ $principal->primaryContact->phone_e164 ?? 'N/A' }}</p>
+                        <p><strong>Job Title:</strong> {{ $principal->primaryContact->job_title ?? 'N/A' }}</p>
+                        @else
+                        <p class="text-slate-500">No primary contact assigned</p>
+                        @endif
                     </div>
                 </div>
 
-                {{-- Contacts Tabs --}}
+                {{-- All Contacts --}}
                 <div class="p-6 mt-6 bg-white border shadow-xl border-slate-100 rounded-xl">
-                    <h3 class="mb-3 text-xl font-semibold text-slate-700"><i class="mr-2 text-cyan-500 fa fa-user-tie"></i> Contacts</h3>
-                    <div class="mb-4 border-b border-slate-200">
-                        <ul class="flex -mb-px space-x-4" role="tablist">
-                            <li><button data-target="contact-primary" class="inline-block px-1 py-2 font-semibold border-b-2 tab-btn text-cyan-600 border-cyan-600">Primary</button></li>
-                            <li><button data-target="contact-secondary" class="inline-block px-1 py-2 border-b-2 border-transparent tab-btn text-slate-500 hover:text-slate-600 hover:border-slate-300">Secondary</button></li>
-                            <li><button data-target="contact-other" class="inline-block px-1 py-2 border-b-2 border-transparent tab-btn text-slate-500 hover:text-slate-600 hover:border-slate-300">Other</button></li>
-                        </ul>
+                    <h3 class="mb-3 text-xl font-semibold text-slate-700"><i class="mr-2 text-cyan-500 fa fa-users"></i> All Contacts</h3>
+                    @if($principal->contacts->count())
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-slate-200">
+                            <thead class="bg-cyan-50">
+                                <tr>
+                                    <th class="px-4 py-3 text-left text-slate-700">Name</th>
+                                    <th class="px-4 py-3 text-left text-slate-700">Email</th>
+                                    <th class="px-4 py-3 text-left text-slate-700">Phone</th>
+                                    <th class="px-4 py-3 text-left text-slate-700">Job Title</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-slate-100">
+                                @foreach($principal->contacts as $contact)
+                                <tr class="hover:bg-slate-50">
+                                    <td class="px-4 py-3">
+                                        {{ $contact->contact_name }}
+                                        @if($contact->is_primary)
+                                        <span class="ml-2 px-2 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-full">Primary</span>
+                                        @endif
+                                    </td>
+                                    <td class="px-4 py-3">{{ $contact->email ?? 'N/A' }}</td>
+                                    <td class="px-4 py-3">{{ $contact->phone_e164 ?? 'N/A' }}</td>
+                                    <td class="px-4 py-3">{{ $contact->job_title ?? 'N/A' }}</td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
-
-                    <div id="contact-primary" class="grid grid-cols-1 gap-4 tab-content text-slate-700 md:grid-cols-2">
-                        <div>
-                            <p><strong>Name:</strong> Jane Doe</p>
-                            <p><strong>Designation:</strong> Head of Sales</p>
-                            <p><strong>Social:</strong> <a href="#" class="text-cyan-600 hover:underline"><i class="fa-brands fa-linkedin"></i> LinkedIn</a></p>
-                        </div>
-                        <div>
-                            <p><strong>Email:</strong> jane@company.com</p>
-                            <p><strong>Phone:</strong> +1 555 123 4567</p>
-                        </div>
-                    </div>
-
-                    <div id="contact-secondary" class="grid hidden grid-cols-1 gap-4 tab-content text-slate-700 md:grid-cols-2">
-                        <div>
-                            <p><strong>Name:</strong> Mark Johnson</p>
-                            <p><strong>Designation:</strong> Logistics Coordinator</p>
-                        </div>
-                        <div>
-                            <p><strong>Email:</strong> mark@company.com</p>
-                            <p><strong>Phone:</strong> +1 555 987 6543</p>
-                        </div>
-                    </div>
-
-                    <div id="contact-other" class="hidden tab-content">
-                        <div>
-                            <p><strong>Name:</strong> Lisa Ray</p>
-                            <p><strong>Designation:</strong> Consultant</p>
-                        </div>
-                        <div>
-                            <p><strong>Email:</strong> lisa@company.com</p>
-                            <p><strong>Phone:</strong> +1 555 321 7654</p>
-                        </div>
-                    </div>
+                    @else
+                    <p class="text-slate-500">No contacts available</p>
+                    @endif
                 </div>
             </div>
 
             {{-- Brand & Product Info --}}
             <div class="grid gap-8 mt-6 md:grid-cols-2">
+                {{-- Brands Section --}}
                 <div class="p-6 space-y-3 bg-white border shadow-md border-slate-100 rounded-xl">
-                    <h3 class="text-xl font-semibold text-slate-700"><i class="mr-2 text-cyan-500 fa fa-certificate"></i> Brand Info</h3>
-                    <p><strong>Brand List:</strong> Brand X, Brand Y, Brand Z</p>
-                    <p><strong>Authorization Status:</strong> <span class="px-3 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-full">Authorized</span></p>
-                    <p><strong>Authorization Expiry:</strong> 2026-12-31</p>
-                    <p><strong>Product Categories:</strong> Electronics, Hardware, Accessories</p>
-                    <div class="flex flex-wrap gap-3 pt-4 border-t border-slate-100">
-                        <button class="flex items-center px-4 py-2 text-white rounded-lg bg-cyan-600 hover:bg-cyan-700"><i class="mr-2 fa fa-download"></i> Download Docs</button>
-                        <button class="flex items-center px-4 py-2 border rounded-lg text-slate-700 border-slate-300 hover:bg-slate-100"><i class="mr-2 fa fa-upload"></i> Upload Docs</button>
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xl font-semibold text-slate-700"><i class="mr-2 text-cyan-500 fa fa-certificate"></i> Brand Info</h3>
+                        <a href="{{ route('principal.brands.create') }}" class="px-3 py-1 text-sm text-white bg-cyan-600 rounded-lg hover:bg-cyan-700">
+                            <i class="mr-1 fa fa-plus"></i> Add
+                        </a>
                     </div>
+                    
+                    @if($brands->count())
+                    <div class="space-y-2">
+                        @foreach($brands->take(3) as $brand)
+                        <div class="flex items-center justify-between p-3 border border-slate-200 rounded-lg hover:bg-slate-50">
+                            <div>
+                                <p class="font-medium text-slate-800">{{ $brand->name }}</p>
+                                <p class="text-sm text-slate-500">{{ $brand->category ?? 'No category' }}</p>
+                            </div>
+                            <span class="px-2 py-1 text-xs font-semibold rounded-full 
+                                @if($brand->status == 'approved') text-green-700 bg-green-100
+                                @elseif($brand->status == 'pending') text-yellow-700 bg-yellow-100
+                                @else text-red-700 bg-red-100 @endif">
+                                {{ ucfirst($brand->status) }}
+                            </span>
+                        </div>
+                        @endforeach
+                        
+                        @if($brands->count() > 3)
+                        <div class="pt-2 text-center">
+                            <a href="{{ route('principal.brands.index') }}" class="text-sm text-cyan-600 hover:underline">
+                                View all {{ $brands->count() }} brands
+                            </a>
+                        </div>
+                        @endif
+                    </div>
+                    @else
+                    <p class="text-slate-500">No brands added yet</p>
+                    <a href="{{ route('principal.brands.create') }}" class="inline-block px-4 py-2 text-white bg-cyan-600 rounded-lg hover:bg-cyan-700">
+                        <i class="mr-1 fa fa-plus"></i> Add First Brand
+                    </a>
+                    @endif
                 </div>
+
+                {{-- Products Section --}}
                 <div class="p-6 space-y-4 bg-white border shadow-md border-slate-100 rounded-xl">
-                    <h3 class="text-xl font-semibold text-slate-700"><i class="mr-2 text-cyan-500 fa fa-boxes-stacked"></i> Product List</h3>
-                    <table class="min-w-full divide-y table-auto divide-slate-200">
-                        <thead class="bg-cyan-50">
-                            <tr>
-                                <th class="px-4 py-3 text-left text-slate-700">Product Name</th>
-                                <th class="hidden px-4 py-3 text-left text-slate-700 sm:table-cell">SKU</th>
-                                <th class="px-4 py-3 text-left text-slate-700">Status</th>
-                                <th class="px-4 py-3 text-left text-slate-700">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-slate-100">
-                            <tr class="hover:bg-slate-50">
-                                <td class="px-4 py-3">Widget Pro Max</td>
-                                <td class="hidden px-4 py-3 sm:table-cell">WPM-001</td>
-                                <td class="px-4 py-3"><span class="px-3 py-1 text-xs font-medium text-green-700 bg-green-100 rounded-full">Active</span></td>
-                                <td class="px-4 py-3"><button onclick="openModal('productModal')" class="text-sm font-medium text-cyan-600 hover:text-cyan-800">View Details</button></td>
-                            </tr>
-                            <tr class="hover:bg-slate-50">
-                                <td class="px-4 py-3">Gadget Plus</td>
-                                <td class="hidden px-4 py-3 sm:table-cell">GP-002</td>
-                                <td class="px-4 py-3"><span class="px-3 py-1 text-xs font-medium text-yellow-700 bg-yellow-100 rounded-full">Pending</span></td>
-                                <td class="px-4 py-3"><button onclick="openModal('productModal')" class="text-sm font-medium text-cyan-600 hover:text-cyan-800">View Details</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xl font-semibold text-slate-700"><i class="mr-2 text-cyan-500 fa fa-boxes-stacked"></i> Product List</h3>
+                        <a href="{{ route('principal.products.create') }}" class="px-3 py-1 text-sm text-white bg-cyan-600 rounded-lg hover:bg-cyan-700">
+                            <i class="mr-1 fa fa-plus"></i> Add
+                        </a>
+                    </div>
+                    
+                    @if($products->count())
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-slate-200">
+                            <thead class="bg-cyan-50">
+                                <tr>
+                                    <th class="px-4 py-3 text-left text-slate-700">Product Name</th>
+                                    <th class="hidden px-4 py-3 text-left text-slate-700 sm:table-cell">Price</th>
+                                    <th class="px-4 py-3 text-left text-slate-700">Status</th>
+                                    <th class="px-4 py-3 text-left text-slate-700">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-slate-100">
+                                @foreach($products->take(5) as $product)
+                                <tr class="hover:bg-slate-50">
+                                    <td class="px-4 py-3">{{ $product->name }}</td>
+                                    <td class="hidden px-4 py-3 sm:table-cell">
+                                        @if($product->price)
+                                        ${{ number_format($product->price, 2) }}
+                                        @else
+                                        N/A
+                                        @endif
+                                    </td>
+                                    <td class="px-4 py-3">
+                                        <span class="px-2 py-1 text-xs font-semibold rounded-full 
+                                            @if($product->submission_status == 'approved') text-green-700 bg-green-100
+                                            @elseif($product->submission_status == 'pending') text-yellow-700 bg-yellow-100
+                                            @else text-red-700 bg-red-100 @endif">
+                                            {{ ucfirst($product->submission_status) }}
+                                        </span>
+                                    </td>
+                                    <td class="px-4 py-3">
+                                        <a href="{{ route('principal.products.edit', $product) }}" 
+                                           class="text-sm font-medium text-cyan-600 hover:text-cyan-800">View</a>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                        
+                        @if($products->count() > 5)
+                        <div class="pt-3 text-center">
+                            <a href="{{ route('principal.products.index') }}" class="text-sm text-cyan-600 hover:underline">
+                                View all {{ $products->count() }} products
+                            </a>
+                        </div>
+                        @endif
+                    </div>
+                    @else
+                    <p class="text-slate-500">No products added yet</p>
+                    <a href="{{ route('principal.products.create') }}" class="inline-block px-4 py-2 text-white bg-cyan-600 rounded-lg hover:bg-cyan-700">
+                        <i class="mr-1 fa fa-plus"></i> Add First Product
+                    </a>
+                    @endif
                 </div>
             </div>
         </div>
@@ -177,140 +267,326 @@
             {{-- Addresses --}}
             <div class="p-6 bg-white border shadow-md border-slate-100 rounded-xl">
                 <h3 class="mb-4 text-xl font-semibold text-slate-700"><i class="mr-2 text-cyan-500 fa fa-map-marked-alt"></i> Addresses</h3>
-                <p>Head Office: 123 Main St, NY</p>
-                <p>Factory: Industrial Zone, NY</p>
-                <p>Shipping: 99 Warehouse Rd, NY</p>
-                <p>Billing: Same as Head Office</p>
+                @if($principal->addresses->count())
+                <div class="space-y-3">
+                    @foreach($principal->addresses as $address)
+                    <div class="p-3 border border-slate-200 rounded-lg hover:bg-slate-50">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="px-2 py-1 text-xs font-semibold text-blue-700 bg-blue-100 rounded-full">
+                                {{ ucfirst($address->type) }}
+                            </span>
+                        </div>
+                        <p class="text-sm font-medium text-slate-800">{{ $address->line1 }}</p>
+                        @if($address->line2)
+                        <p class="text-sm text-slate-600">{{ $address->line2 }}</p>
+                        @endif
+                        <p class="text-xs text-slate-500">
+                            {{ $address->city ?? '' }}{{ $address->state ? ', '.$address->state : '' }}{{ $address->postal ? ' '.$address->postal : '' }}
+                        </p>
+                    </div>
+                    @endforeach
+                </div>
+                @else
+                <p class="text-slate-500">No addresses available</p>
+                @endif
             </div>
 
-            {{-- Quick Contact --}}
+
+
+{{-- Quick Contact --}}
+<div class="p-6 bg-white border shadow-md border-slate-100 rounded-xl">
+    <h3 class="mb-4 text-xl font-semibold text-slate-700">
+        <i class="mr-2 text-cyan-500 fa fa-bolt-lightning"></i> Quick Contact
+    </h3>
+    
+    @if($principal->primaryContact || $principal->email)
+    <div class="space-y-4">
+        <!-- Contact Info -->
+        {{-- <div class="p-3 bg-slate-50 rounded-lg">
+            <p class="text-sm font-medium text-slate-800">
+                {{ $principal->primaryContact->contact_name ?? 'Contact' }}
+            </p>
+            <p class="text-xs text-slate-600">
+                {{ $principal->primaryContact->job_title ?? 'Primary Contact' }}
+            </p>
+        </div> --}}
+
+        <!-- Contact Buttons -->
+        <div class="flex flex-wrap gap-3">
+            @php
+                // Get phone from primary contact or principal
+                $phone = $principal->primaryContact->phone_e164 ?? 
+                         $principal->primaryContact->phone ?? 
+                         $principal->phone ?? null;
+                
+                // Get email from primary contact OR principal's email field
+                $email = $principal->primaryContact->email ?? $principal->email ?? null;
+                
+                $whatsapp = $principal->primaryContact->whatsapp ?? $phone;
+                $wechat = $principal->primaryContact->wechat ?? null;
+            @endphp
+
+            <!-- Phone -->
+            @if($phone)
+            <a href="tel:{{ $phone }}" 
+               class="flex flex-col items-center justify-center w-16 h-16 transition duration-200 border rounded-full group border-slate-300 hover:bg-slate-100 hover:shadow-md"
+               title="Call {{ $phone }}">
+                <i class="mb-1 text-slate-600 fa fa-phone group-hover:text-cyan-600"></i>
+                <span class="text-xs text-slate-500">Call</span>
+            </a>
+            @endif
+
+            <!-- Email - FIXED -->
+            @if(!empty($email))
+            <a href="mailto:{{ $email }}" 
+               class="flex flex-col items-center justify-center w-16 h-16 transition duration-200 border rounded-full group border-slate-300 hover:bg-slate-100 hover:shadow-md"
+               title="Email {{ $email }}">
+                <i class="mb-1 text-slate-600 fa fa-envelope group-hover:text-cyan-600"></i>
+                <span class="text-xs text-slate-500">Email</span>
+            </a>
+            @endif
+
+            <!-- WhatsApp - FIXED CSS CLASSES -->
+            @if($whatsapp)
+            <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $whatsapp) }}?text=Hello%20{{ urlencode($principal->primaryContact->contact_name ?? 'there') }}" 
+               target="_blank"
+               class="flex flex-col items-center justify-center w-16 h-16 transition duration-200 border rounded-full group border-green-300 hover:bg-green-50 hover:shadow-md"
+               title="Message on WhatsApp">
+                <i class="mb-1 text-green-600 fa-brands fa-whatsapp group-hover:text-green-700"></i>
+                <span class="text-xs text-green-600">WhatsApp</span>
+            </a>
+            @endif
+
+            <!-- WeChat - FIXED CSS CLASSES -->
+            @if($wechat)
+            <button onclick="showWechatModal('{{ $wechat }}')"
+                    class="flex flex-col items-center justify-center w-16 h-16 transition duration-200 border rounded-full group border-green-400 hover:bg-green-50 hover:shadow-md"
+                    title="WeChat ID: {{ $wechat }}">
+                <i class="mb-1 text-green-600 fa-brands fa-weixin group-hover:text-green-700"></i>
+                <span class="text-xs text-green-600">WeChat</span>
+            </button>
+            @endif
+
+            <!-- SMS - FIXED CSS CLASSES -->
+            @if($phone)
+            <a href="sms:{{ $phone }}?body=Hello%20{{ urlencode($principal->primaryContact->contact_name ?? 'there') }}" 
+               class="flex flex-col items-center justify-center w-16 h-16 transition duration-200 border rounded-full group border-blue-300 hover:bg-blue-50 hover:shadow-md"
+               title="Send SMS">
+                <i class="mb-1 text-blue-600 fa fa-comment group-hover:text-blue-700"></i>
+                <span class="text-xs text-blue-600">SMS</span>
+            </a>
+            @endif
+        </div>
+
+      
+    </div>
+    @else
+    <div class="text-center">
+        <div class="inline-flex items-center justify-center w-12 h-12 mb-3 bg-slate-100 rounded-full">
+            <i class="text-slate-400 fa fa-user"></i>
+        </div>
+        <p class="text-slate-500">No contact information available</p>
+        <p class="text-sm text-slate-400 mt-1">Add contact details to enable quick communication</p>
+    </div>
+    @endif
+</div>
+
+<!-- WeChat Modal -->
+<dialog id="wechatModal" class="fixed inset-0 z-50 flex items-center justify-center hidden p-4 bg-black/30">
+    <div class="w-full max-w-sm p-6 bg-white rounded-xl">
+        <h3 class="mb-3 text-lg font-bold text-slate-800">WeChat Contact</h3>
+        <div class="text-center">
+            <i class="mb-4 text-4xl text-green-600 fa-brands fa-weixin"></i>
+            <p class="mb-2 text-sm text-slate-600">WeChat ID:</p>
+            <p class="mb-4 text-lg font-semibold text-slate-800" id="wechatId"></p>
+            <p class="text-xs text-slate-500">Add this ID in WeChat to connect</p>
+        </div>
+        <div class="flex justify-end mt-4">
+            <button onclick="closeWechatModal()" class="px-4 py-2 text-white rounded-lg bg-cyan-600 hover:bg-cyan-700">Close</button>
+        </div>
+    </div>
+</dialog>
+
+
+            {{-- Security & Visibility --}}
             <div class="p-6 bg-white border shadow-md border-slate-100 rounded-xl">
-                <h3 class="mb-4 text-xl font-semibold text-slate-700"><i class="mr-2 text-cyan-500 fa fa-bolt-lightning"></i> Quick Contact</h3>
-                <div class="flex space-x-3">
-                    <button class="flex items-center justify-center w-12 h-12 border rounded-full border-slate-300 hover:bg-slate-100"><i class="fa fa-phone"></i></button>
-                    <button class="flex items-center justify-center w-12 h-12 border rounded-full border-slate-300 hover:bg-slate-100"><i class="fa fa-envelope"></i></button>
-                    <button class="flex items-center justify-center w-12 h-12 text-green-600 border border-green-300 rounded-full hover:bg-green-100"><i class="fa-brands fa-whatsapp"></i></button>
+                <h3 class="mb-4 text-xl font-semibold text-slate-700"><i class="mr-2 text-cyan-500 fa fa-shield-alt"></i> Security & Visibility</h3>
+                
+                <div class="space-y-3">
+                    <div>
+                        <p class="text-sm font-medium text-slate-700">Visibility Scope</p>
+                        <div class="flex flex-wrap gap-1 mt-1">
+                            <span class="px-2 py-1 text-xs font-medium text-blue-700 bg-blue-100 rounded-full">
+                                Global Access
+                            </span>
+                            @if($principal->visibility_scopes)
+                            @foreach($principal->visibility_scopes as $scope)
+                            <span class="px-2 py-1 text-xs font-medium text-slate-700 bg-slate-100 rounded-full">
+                                {{ ucfirst($scope) }}
+                            </span>
+                            @endforeach
+                            @endif
+                        </div>
+                    </div>
+
+                    <div>
+                        <p class="text-sm font-medium text-slate-700">Brand Access</p>
+                        <div class="flex flex-wrap gap-1 mt-1">
+                            @if($principal->brands->count())
+                            @foreach($principal->brands->take(3) as $brand)
+                            <span class="px-2 py-1 text-xs font-medium text-green-700 bg-green-100 rounded-full">
+                                {{ $brand->name }}
+                            </span>
+                            @endforeach
+                            @if($principal->brands->count() > 3)
+                            <span class="px-2 py-1 text-xs font-medium text-slate-500 bg-slate-100 rounded-full">
+                                +{{ $principal->brands->count() - 3 }} more
+                            </span>
+                            @endif
+                            @else
+                            <span class="text-xs text-slate-500">No brands assigned</span>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div>
+                        <p class="text-sm font-medium text-slate-700">Account Status</p>
+                        <span class="inline-flex items-center px-2 py-1 mt-1 text-xs font-medium text-green-700 bg-green-100 rounded-full">
+                            <i class="mr-1 fa fa-check-circle"></i> Active & Verified
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    {{-- Timeline, Alerts, Agreements --}}
+    {{-- Timeline, Notes, Activities --}}
     <div class="grid gap-6 mt-8 md:grid-cols-3">
-        {{-- Relationship Timeline --}}
+        {{-- Recent Activities --}}
         <div class="p-6 bg-white border shadow-md border-slate-100 rounded-xl">
-            <h3 class="mb-4 text-xl font-semibold text-slate-700">Relationship Timeline</h3>
-            <ol class="relative border-l border-gray-200">
-                <li class="mb-10 ml-4">
-                    <div class="absolute w-3 h-3 bg-cyan-600 rounded-full -left-1.5 border border-white"></div>
-                    <time class="mb-1 text-sm text-gray-500">2020</time>
-                    <h4 class="text-lg font-semibold text-gray-900">Onboarded</h4>
-                </li>
-                <li class="mb-10 ml-4">
-                    <div class="absolute w-3 h-3 bg-cyan-600 rounded-full -left-1.5 border border-white"></div>
-                    <time class="mb-1 text-sm text-gray-500">2022</time>
-                    <h4 class="text-lg font-semibold text-gray-900">Certified Supplier</h4>
-                </li>
-                <li class="ml-4">
-                    <div class="absolute w-3 h-3 bg-cyan-600 rounded-full -left-1.5 border border-white"></div>
-                    <time class="mb-1 text-sm text-gray-500">2024</time>
-                    <h4 class="text-lg font-semibold text-gray-900">Preferred Vendor</h4>
-                </li>
-            </ol>
+            <h3 class="mb-4 text-xl font-semibold text-slate-700">Recent Activities</h3>
+            @if($activities->count())
+            <div class="space-y-4">
+                @foreach($activities->take(5) as $activity)
+                <div class="flex items-start space-x-3">
+                    <div class="flex-shrink-0 w-8 h-8 mt-1 rounded-full flex items-center justify-center
+                        @if($activity->type == 'note') bg-blue-100 text-blue-600
+                        @elseif($activity->type == 'important') bg-red-100 text-red-600
+                        @elseif($activity->type == 'task') bg-green-100 text-green-600
+                        @else bg-slate-100 text-slate-600 @endif">
+                        <i class="text-sm fa-solid fa-note-sticky"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm text-slate-700">{{ $activity->description }}</p>
+                        <p class="text-xs text-slate-500">{{ $activity->created_at->diffForHumans() }}</p>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+            @else
+            <p class="text-slate-500">No recent activities</p>
+            @endif
         </div>
 
-        {{-- Document Expiry Alerts --}}
+        {{-- Notes Summary --}}
         <div class="p-6 bg-white border shadow-md border-slate-100 rounded-xl">
-            <h3 class="mb-4 text-xl font-semibold text-slate-700">Document Expiry Alerts</h3>
-            <ul class="space-y-3 text-sm text-gray-700">
-                <li class="p-3 border border-red-100 rounded-lg bg-red-50"><span class="font-semibold">Insurance Certificate:</span> Expiring in 30 days</li>
-                <li class="p-3 border border-yellow-100 rounded-lg bg-yellow-50"><span class="font-semibold">ISO Certification:</span> Expiring in 90 days</li>
-                <li class="p-3 border border-green-100 rounded-lg bg-green-50"><span class="font-semibold">Contract Agreement:</span> Active until 2026</li>
-                <li class="p-3 border border-red-100 rounded-lg bg-red-50"><span class="font-semibold">Safety Audit:</span> Expiring in 15 days</li>
-            </ul>
-        </div>
-
-        {{-- Partner Agreements --}}
-        <div class="p-6 bg-white border shadow-md border-slate-100 rounded-xl">
-            <h3 class="mb-4 text-xl font-semibold text-slate-700">Partner Agreements</h3>
-            <ul class="space-y-3 text-sm text-gray-700">
-                <li class="p-3 bg-white border border-gray-200 rounded-lg hover:bg-cyan-50">2023 - Supply Contract</li>
-                <li class="p-3 bg-white border border-gray-200 rounded-lg hover:bg-cyan-50">2024 - NDA Agreement</li>
-                <li class="p-3 bg-white border border-gray-200 rounded-lg hover:bg-cyan-50">2025 - Logistics Partnership</li>
-                <li class="p-3 bg-white border border-gray-200 rounded-lg hover:bg-cyan-50">2024 - Tech Support SLA</li>
-            </ul>
+            <h3 class="mb-4 text-xl font-semibold text-slate-700">Notes Notifications</h3>
+            @if($activities->where('type', 'note')->count())
+            <div class="space-y-3">
+                @foreach($activities->where('type', 'note')->take(3) as $note)
+                <div class="p-3 border border-slate-200 rounded-lg hover:bg-slate-50">
+                    <p class="text-sm text-slate-700 line-clamp-2">{{ $note->description }}</p>
+                    <p class="text-xs text-slate-500 mt-1">{{ $note->created_at->diffForHumans() }}</p>
+                </div>
+                @endforeach
+            </div>
+            @else
+            <p class="text-slate-500">No notes yet</p>
+            <button onclick="openModal('noteModal')" class="inline-block px-3 py-1 mt-2 text-sm text-white bg-cyan-600 rounded-lg hover:bg-cyan-700">
+                <i class="mr-1 fa fa-plus"></i> Add Note
+            </button>
+            @endif
         </div>
     </div>
 
 </div>
 
-{{-- Modals --}}
+{{-- Note Modal --}}
 <dialog id="noteModal" class="fixed inset-0 z-50 flex items-center justify-center hidden p-4 bg-black/30">
     <div class="w-full max-w-lg p-6 bg-white rounded-xl">
         <h3 class="mb-4 text-xl font-bold text-slate-800">Add Note</h3>
-        <textarea class="w-full p-3 border rounded-md" rows="5" placeholder="Type your note here..."></textarea>
-        <div class="flex justify-end mt-4 space-x-3">
-            <button onclick="closeModal('noteModal')" class="px-4 py-2 text-white rounded-lg bg-cyan-600 hover:bg-cyan-700">Save</button>
-            <button onclick="closeModal('noteModal')" class="px-4 py-2 border rounded-lg border-slate-300 hover:bg-slate-100">Cancel</button>
-        </div>
-    </div>
-</dialog>
-
-<dialog id="productModal" class="fixed inset-0 z-50 flex items-center justify-center hidden p-4 bg-black/30">
-    <div class="w-full max-w-2xl p-6 bg-white rounded-xl">
-        <h3 class="mb-4 text-xl font-bold text-slate-800">Product Details</h3>
-        <p><strong>Name:</strong> Widget Pro Max</p>
-        <p><strong>SKU:</strong> WPM-001</p>
-        <p><strong>Status:</strong> Active</p>
-        <p><strong>Description:</strong> This is a sample description for the product.</p>
-        <div class="flex justify-end mt-4">
-            <button onclick="closeModal('productModal')" class="px-4 py-2 text-white rounded-lg bg-cyan-600 hover:bg-cyan-700">Close</button>
-        </div>
-    </div>
-</dialog>
-
-<dialog id="shareModal" class="fixed inset-0 z-50 flex items-center justify-center hidden p-4 bg-black/30">
-    <div class="w-full max-w-lg p-6 bg-white rounded-xl">
-        <h3 class="mb-4 text-xl font-bold text-slate-800">Share Company Info</h3>
-        <input type="email" class="w-full p-3 border rounded-md" placeholder="Recipient Email">
-        <div class="flex justify-end mt-4 space-x-3">
-            <button onclick="closeModal('shareModal')" class="px-4 py-2 text-white rounded-lg bg-cyan-600 hover:bg-cyan-700">Share</button>
-            <button onclick="closeModal('shareModal')" class="px-4 py-2 border rounded-lg border-slate-300 hover:bg-slate-100">Cancel</button>
-        </div>
-    </div>
-</dialog>
-
-<dialog id="archiveModal" class="fixed inset-0 z-50 flex items-center justify-center hidden p-4 bg-black/30">
-    <div class="w-full max-w-md p-6 bg-white rounded-xl">
-        <h3 class="mb-4 text-xl font-bold text-slate-800">Archive Company</h3>
-        <p>Are you sure you want to archive this company? This action cannot be undone.</p>
-        <div class="flex justify-end mt-4 space-x-3">
-            <button onclick="closeModal('archiveModal')" class="px-4 py-2 text-white bg-red-600 rounded-lg hover:bg-red-700">Archive</button>
-            <button onclick="closeModal('archiveModal')" class="px-4 py-2 border rounded-lg border-slate-300 hover:bg-slate-100">Cancel</button>
-        </div>
+        <form action="{{ route('principal.notes.store') }}" method="POST">
+            @csrf
+            <textarea name="note" class="w-full p-3 border rounded-md" rows="5" placeholder="Type your note here..." required></textarea>
+            <div class="flex justify-end mt-4 space-x-3">
+                <button type="submit" class="px-4 py-2 text-white rounded-lg bg-cyan-600 hover:bg-cyan-700">Save Note</button>
+                <button type="button" onclick="closeModal('noteModal')" class="px-4 py-2 border rounded-lg border-slate-300 hover:bg-slate-100">Cancel</button>
+            </div>
+        </form>
     </div>
 </dialog>
 
 @endsection
 
 @section('script')
-<script src="//unpkg.com/alpinejs" defer></script>
-    <script>
-      function app() {
-        return {
-          tab: "primary",
-          modals: { noteModal: false, productModal: false },
-          setTab(name) {
-            this.tab = name;
-          },
-          openModal(name) {
-            this.modals[name] = true;
-          },
-          closeModal(name) {
-            this.modals[name] = false;
-          },
-          init() {},
-        };
-      }
-    </script>
+<script>
+    // Simple modal functions
+    function openModal(modalId) {
+        document.getElementById(modalId).showModal();
+    }
+
+    function closeModal(modalId) {
+        document.getElementById(modalId).close();
+    }
+
+    // Close modal when clicking outside
+    document.addEventListener('click', function(e) {
+        if (e.target.tagName === 'DIALOG') {
+            e.target.close();
+        }
+    });
+
+    // Tab functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        
+        tabButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const target = this.getAttribute('data-target');
+                
+                // Update active tab
+                tabButtons.forEach(btn => {
+                    btn.classList.remove('text-cyan-600', 'border-cyan-600');
+                    btn.classList.add('text-slate-500', 'border-transparent');
+                });
+                this.classList.add('text-cyan-600', 'border-cyan-600');
+                this.classList.remove('text-slate-500', 'border-transparent');
+                
+                // Show target content
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.add('hidden');
+                });
+                document.getElementById(target).classList.remove('hidden');
+            });
+        });
+    });
+</script>
+<script>
+// WeChat Modal Functions
+function showWechatModal(wechatId) {
+    document.getElementById('wechatId').textContent = wechatId;
+    document.getElementById('wechatModal').showModal();
+}
+
+function closeWechatModal() {
+    document.getElementById('wechatModal').close();
+}
+
+// Close modal when clicking outside
+document.addEventListener('click', function(e) {
+    if (e.target.tagName === 'DIALOG') {
+        e.target.close();
+    }
+});
+</script>
 @endsection
