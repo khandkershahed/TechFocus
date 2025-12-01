@@ -239,6 +239,7 @@ Route::post('/principal/links/send-share-email', [PrincipalLinkController::class
     Route::put('/profile', [PrincipalProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/contacts', [PrincipalProfileController::class, 'updateContacts'])->name('contacts.update');
     Route::put('/profile/addresses', [PrincipalProfileController::class, 'updateAddresses'])->name('addresses.update');
+    Route::get('/profile/overview', [PrincipalDashboardController::class, 'overview'])->name('profile.overview');
 });
     
 Route::prefix('principal')->name('principal.')->group(function () {
