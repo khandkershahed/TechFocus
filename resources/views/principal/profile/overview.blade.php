@@ -26,7 +26,7 @@
         <div class="row g-4">
             <!-- Left Column -->
             <div class="gap-4 col-md-6 d-flex flex-column">
-    
+
                 <!-- Company Info -->
                 <div class="p-4 bg-white border shadow-sm rounded-4 h-100" style="background: linear-gradient(145deg, #ffffff, #e9f0ff);">
                     <h2 class="mb-3 fs-5 fw-bold text-primary">Company Info</h2>
@@ -34,7 +34,7 @@
                     <p><strong>Website:</strong> <a href="#" class="text-primary">http://company.com</a></p>
                     <p><strong>Country:</strong> USA</p>
                 </div>
-    
+
                 <!-- Contacts -->
                 <div class="p-4 bg-white border shadow-sm rounded-4 h-100" style="background: linear-gradient(145deg, #ffffff, #f2f9ff);">
                     <h2 class="mb-3 fs-5 fw-bold text-primary">Contacts</h2>
@@ -81,10 +81,10 @@
                     </div>
                 </div>
             </div>
-    
+
             <!-- Right Column -->
             <div class="gap-4 col-md-6 d-flex flex-column">
-    
+
                 <!-- Address -->
                 <div class="p-4 bg-white border shadow-sm rounded-4 h-100" style="background: linear-gradient(145deg, #ffffff, #e6f7ff);">
                     <h2 class="mb-3 fs-5 fw-bold text-primary">Address</h2>
@@ -116,7 +116,7 @@
                         </div>
                     </div>
                 </div>
-    
+
                 <!-- Quick Contact -->
                 <div class="p-4 bg-white border shadow-sm rounded-4 h-100" style="background: linear-gradient(145deg, #ffffff, #f0fff0);">
                     <h2 class="mb-3 fs-5 fw-bold text-primary">Quick Contact</h2>
@@ -129,10 +129,10 @@
                 </div>
             </div>
         </div>
-    
+
         <!-- SECTION 2 — Brand & Products -->
         <div class="mt-2 row g-4">
-    
+
             <!-- Brand Info -->
             <div class="gap-4 col-md-5 d-flex flex-column">
                 <div class="p-4 bg-white border shadow-sm rounded-4 h-100" style="background: linear-gradient(145deg, #ffffff, #f0f7ff);">
@@ -143,7 +143,7 @@
                         </div>
                         <button class="btn btn-primary btn-sm">+ Add Brand</button>
                     </div>
-    
+
                     <div class="gap-3 text-center d-flex">
                         <div class="p-3 border rounded shadow-sm flex-fill bg-light">
                             <h6 class="mb-1 text-muted">Total Products</h6>
@@ -158,7 +158,7 @@
                             <span class="fs-5 fw-bold text-primary">9</span>
                         </div>
                     </div>
-    
+
                     <div class="mt-4 table-responsive">
                         <table class="table text-center align-middle table-hover table-bordered">
                             <thead class="table-light">
@@ -186,7 +186,7 @@
                     </div>
                 </div>
             </div>
-    
+
             <!-- Product List -->
             <div class="gap-4 col-md-7 d-flex flex-column">
                 <div class="p-4 bg-white border shadow-sm rounded-4 h-100" style="background: linear-gradient(145deg, #ffffff, #f9f9ff);">
@@ -220,7 +220,7 @@
                 </div>
             </div>
         </div>
-    
+
         <!-- SECTION 3 — Product Info & Product List Table -->
         <div class="mt-2 row g-4">
             <!-- Product Info Summary -->
@@ -233,7 +233,7 @@
                         </div>
                         <button class="btn btn-primary btn-sm">+ Add Product</button>
                     </div>
-    
+
                     <div class="gap-3 text-center d-flex">
                         <div class="p-3 border rounded shadow-sm flex-fill bg-light">
                             <h6 class="mb-1 text-muted">Total Products</h6>
@@ -248,7 +248,7 @@
                             <span class="fs-5 fw-bold text-primary">9</span>
                         </div>
                     </div>
-    
+
                     <div class="mt-4 table-responsive">
                         <table class="table text-center align-middle table-hover table-bordered">
                             <thead class="table-light">
@@ -271,7 +271,7 @@
                     </div>
                 </div>
             </div>
-    
+
             <!-- Product List Table -->
             <div class="gap-4 col-md-7 d-flex flex-column">
                 <div class="p-4 bg-white border shadow-sm rounded-4 h-100" style="background: linear-gradient(145deg, #ffffff, #f9f9ff);">
@@ -311,56 +311,79 @@
                 </div>
             </div>
         </div>
-    
-        <!-- SECTION 4 — Useful Links & Security -->
+
+        <!-- SECTION 3 — AGREEMENTS & RESOURCES -->
         <div class="mt-2 row g-4">
-            <div class="gap-4 col-md-6 d-flex flex-column">
-                <div class="p-4 bg-white border shadow-sm rounded-4 h-100" style="background: linear-gradient(145deg, #ffffff, #f0f7ff);">
-                    <h3 class="mb-3 fs-5 fw-bold text-primary">Useful Links</h3>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><a href="#">Product Dashboard</a></li>
-                        <li class="list-group-item"><a href="#">Brand Details</a></li>
-                        <li class="list-group-item"><a href="#">Company Documents</a></li>
-                        <li class="list-group-item"><a href="#">Agreements</a></li>
-                    </ul>
+            <!-- Useful Links & Notes -->
+            <div class="col-md-6">
+                <div class="p-4 bg-white border shadow-sm rounded-4">
+                    <h3 class="mb-3 fs-4 fw-bold">Useful Links</h3>
+                    <p><a href="#" class="text-primary">Principal Portal Login</a></p>
+                    <p>
+                        <a href="#" class="text-primary">Technical Library - Docs & Manuals</a>
+                    </p>
+                    <p>
+                        <a href="#" class="text-primary">Technical Library - Docs & Manuals</a>
+                    </p>
+                    <p>
+                        <a href="#" class="text-primary">Technical Library - Docs & Manuals</a>
+                    </p>
                 </div>
             </div>
-    
-            <div class="gap-4 col-md-6 d-flex flex-column">
-                <div class="p-4 bg-white border shadow-sm rounded-4 h-100" style="background: linear-gradient(145deg, #ffffff, #f9f9ff);">
-                    <h3 class="mb-3 fs-5 fw-bold text-primary">Security & Visibility</h3>
-                    <p><strong>Role Access:</strong> Manager, Admin, Viewer</p>
-                    <p><strong>Visibility Level:</strong> Global / Restricted</p>
-                    <p><strong>Approval Required:</strong> Yes</p>
-                    <p><strong>Last Security Check:</strong> 2024-11-20</p>
+            <!-- Security & Visibility -->
+            <div class="col-md-6">
+                <div class="p-4 bg-white border shadow-sm rounded-4">
+                    <h3 class="mb-3 fs-4 fw-bold">Security & Visibility</h3>
+                    <!-- Key Info Cards -->
+                    <div class="flex-wrap gap-3 d-flex flex-column">
+                        <div class="d-flex justify-content-between">
+                            <!-- Visibility Scope -->
+                            <div
+                                class="p-3 text-center border rounded shadow-sm flex-fill bg-light">
+                                <h6 class="mb-1 text-muted">Visibility Scope</h6>
+                                <span class="fs-5 fw-bold">Global / Regional / Local</span>
+                            </div>
+                            <!-- Brand Access -->
+                            <div
+                                class="p-3 text-center border rounded shadow-sm flex-fill bg-light">
+                                <h6 class="mb-1 text-muted">Brand Access</h6>
+                                <span class="fs-5 fw-bold">Admin, Manager, Viewer</span>
+                            </div>
+                        </div>
+                        <!-- Account Status -->
+                        <div
+                            class="p-3 text-center border rounded shadow-sm flex-fill bg-light">
+                            <h6 class="mb-1 text-muted">Account Status</h6>
+                            <span class="fs-5 fw-bold text-success">Active</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    
-        <!-- SECTION 5 — Summary Cards -->
+        <!-- SUMMARY -->
         <div class="mt-4 row row-cols-md-4 g-3">
             <div class="col">
-                <div class="p-4 text-center shadow-sm bg-gradient-light rounded-4">
-                    <h6 class="fw-semibold text-muted">Assigned Manager</h6>
-                    <p class="fw-bold">John Smith</p>
+                <div class="p-4 text-center shadow-sm bg-light rounded-4">
+                    <h6 class="fw-semibold">Assigned Manager</h6>
+                    <p>John Smith</p>
                 </div>
             </div>
             <div class="col">
-                <div class="p-4 text-center shadow-sm bg-gradient-light rounded-4">
-                    <h6 class="fw-semibold text-muted">2024 Purchase</h6>
-                    <p class="fw-bold">$1.2M USD</p>
+                <div class="p-4 text-center shadow-sm bg-light rounded-4">
+                    <h6 class="fw-semibold">2024 Purchase</h6>
+                    <p>$1.2M USD</p>
                 </div>
             </div>
             <div class="col">
-                <div class="p-4 text-center shadow-sm bg-gradient-light rounded-4">
-                    <h6 class="fw-semibold text-muted">Risk Level</h6>
+                <div class="p-4 text-center shadow-sm bg-light rounded-4">
+                    <h6 class="fw-semibold">Risk Level</h6>
                     <p class="text-danger fw-bold">High (7/10)</p>
                 </div>
             </div>
             <div class="col">
-                <div class="p-4 text-center shadow-sm bg-gradient-light rounded-4">
-                    <h6 class="fw-semibold text-muted">Relationship</h6>
-                    <p class="fw-bold">Since 2019</p>
+                <div class="p-4 text-center shadow-sm bg-light rounded-4">
+                    <h6 class="fw-semibold">Relationship</h6>
+                    <p>Since 2019</p>
                 </div>
             </div>
         </div>
