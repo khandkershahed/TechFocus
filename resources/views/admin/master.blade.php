@@ -17,9 +17,6 @@
 	<!-- Also include CSRF token as hidden input for backup -->
 	<input type="hidden" name="_token" value="{{ csrf_token() }}">
 
-
-	<!-- Scripts -->
-
 	<!--begin::Root-->
 	<div class="d-flex flex-column flex-root">
 		<!--begin::Page-->

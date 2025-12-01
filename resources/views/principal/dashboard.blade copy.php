@@ -1,1311 +1,434 @@
 @extends('principal.layouts.app')
 
 @section('content')
-<style>
-    .line-clamp-2 {
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
+<div class="container min-h-screen p-4 mx-auto antialiased bg-slate-50 md:p-8">
 
-    /* Smooth shadow transitions */
-    .shadow-md {
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    }
-
-    .shadow-lg {
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    }
-
-    /* Custom gradient backgrounds */
-    .bg-gradient-to-br {
-        background-image: linear-gradient(to bottom right, var(--tw-gradient-stops));
-    }
-</style>
-<!-- Header Section -->
-<div class="p-6 mb-6 bg-white border border-gray-200 shadow-sm rounded-xl">
-
-    <div class="flex items-center justify-between">
-
-        <!-- Left: Principal Basic Info -->
-        <div class="space-y-1">
-            <h1 class="flex items-center gap-2 mb-5 text-3xl font-bold text-gray-900 uppercase">
-                {{ $principal->legal_name }}
-
-                <!-- Country Flag -->
+    {{-- Header & Actions --}}
+    <div class="flex flex-col items-start justify-between p-6 mb-6 bg-white border shadow-xl border-slate-100 rounded-2xl md:flex-row md:items-center">
+        <div>
+            <h1 class="flex items-center gap-2 mb-2 text-3xl font-extrabold text-slate-900 md:text-4xl">
+                {{ $principal->legal_name ?? $principal->name ?? 'Company Name' }}
                 @if($principal->country)
-                <img src="https://flagsapi.com/{{ strtoupper($principal->country_code ?? 'US') }}/flat/32.png"
-                    class="w-6 h-6 border rounded" alt="Flag">
+                @php
+                $iso = \App\Helpers\CountryHelper::isoCode($principal->country->name);
+                @endphp
+                @if($iso)
+                <img src="https://flagsapi.com/{{ $iso }}/flat/32.png"
+                    class="w-8 h-8 rounded-lg shadow-sm" alt="Flag">
+                @endif
                 @endif
             </h1>
-
-            <!-- Entity Type + Relationship Status -->
-            <div class="flex items-center gap-3">
-
-                <!-- Entity Type -->
-                <span class="px-2.5 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded-sm">
-                    {{ $principal->entity_type ?? 'N/A' }}
+            <div class="flex flex-wrap items-center gap-3">
+                <span class="px-3 py-1 text-xs font-semibold rounded-full shadow-sm text-cyan-700 bg-cyan-100">
+                    <i class="mr-1 fa fa-industry"></i> Entity Type: {{ $principal->entity_type ?? 'N/A' }}
                 </span>
 
-                <!-- Relationship Badge -->
-                <span class="px-2 py-1 text-xs font-medium rounded-sm
-                    @if($principal->relationship_status == 'Active') bg-green-100 text-green-700
-                    @elseif($principal->relationship_status == 'Prospect') bg-yellow-100 text-yellow-700
-                    @elseif($principal->relationship_status == 'Dormant') bg-gray-100 text-gray-700
-                    @else bg-red-100 text-red-700 @endif">
-                    {{ $principal->relationship_status }}
+                <span class="px-3 py-1 text-xs font-semibold rounded-full text-emerald-700 bg-emerald-100">
+                    <i class="mr-1 fa fa-check-circle"></i> {{ $principal->relationship_status ?? 'Active' }}
                 </span>
+                @if($principal->country)
+                <span class="px-3 py-1 text-xs font-semibold text-blue-700 bg-blue-100 rounded-full">
+                    <i class="mr-1 fa fa-globe"></i> {{ $principal->country->name }}
+                </span>
+                @endif
             </div>
-
-            <!-- Created Date + Created By -->
-            <p class="mt-1 text-xs text-gray-500">
-                Created by admin on <strong>{{ $principal->created_at->format('d M, Y') }}</strong> •
+            <p class="mt-2 text-sm text-slate-500">
+                Created on <strong>{{ $principal->created_at->format('d M, Y') }}</strong> •
                 By: <strong>{{ $principal->created_by ?? 'System' }}</strong>
             </p>
-            <ul id="tabs"
-                class="grid grid-flow-col p-1 text-center text-gray-500 bg-gray-100 rounded-lg cursor-pointer select-none">
-
-                <li data-tab="page1" class="py-4 transition rounded-lg tab-item">Pilot Training</li>
-
-                <li data-tab="page2" class="py-4 text-indigo-900 transition bg-white rounded-lg shadow tab-item">
-                    Titan Maintenance
-                </li>
-
-                <li data-tab="page3" class="py-4 transition rounded-lg tab-item">Loadout</li>
-
-                <li data-tab="page4" class="py-4 transition rounded-lg tab-item">Server Browser</li>
-
-                <li data-tab="page5" class="py-4 transition rounded-lg tab-item">Settings</li>
-            </ul>
-
         </div>
 
-        <!-- Right: Action Buttons -->
-        <div class="flex items-center gap-2">
-
-            {{-- Edit Profile --}}
+        <div class="flex flex-wrap gap-3 p-3 mt-4 md:mt-0">
             <a href="{{ route('principal.profile.edit') }}"
-                class="flex items-center gap-1 px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700">
-                <i class="fa-solid fa-pen-to-square"></i> Edit
+                class="flex items-center px-5 py-2 text-white transition duration-200 rounded-full shadow-md bg-cyan-600 hover:bg-cyan-700 hover:shadow-lg">
+                <i class="mr-2 fa fa-pen"></i> Edit
             </a>
-
-            {{-- Share --}}
             <a href="{{ route('principal.links.index') }}"
-                class="flex items-center gap-1 px-3 py-2 text-sm font-medium text-white bg-indigo-500 rounded-lg hover:bg-indigo-600">
-                <i class="fa-solid fa-share-nodes"></i> Share
+                class="flex items-center px-5 py-2 transition duration-200 border rounded-full text-slate-700 border-slate-300 hover:bg-slate-100">
+                <i class="mr-2 fa fa-share-nodes"></i> Share
             </a>
-
-            {{-- Add Note --}}
-            <a href="#"
-                class="flex items-center gap-1 px-3 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700">
-                <i class="fa-solid fa-note-sticky"></i> Add Note
-
+            <a href="{{ route('principal.notes.index') }}"
+                class="flex items-center px-5 py-2 transition duration-200 border rounded-full text-slate-700 border-slate-300 hover:bg-slate-100">
+                <i class="mr-2 fa fa-sticky-note"></i> Add Note
             </a>
-
-            {{-- Add Contact --}}
-            {{-- <a href="{{ route('principal.contacts.update') }}"
-            class="flex items-center gap-1 px-3 py-2 text-sm font-medium text-white bg-yellow-500 rounded-lg hover:bg-yellow-600">
-            <i class="fa-solid fa-user-plus"></i> Add Contact
-            </a> --}}
-
-            {{-- Attach File --}}
-            <a href="{{ route('principal.links.create') }}"
-                class="flex items-center gap-1 px-3 py-2 text-sm font-medium text-white bg-purple-500 rounded-lg hover:bg-purple-600">
-                <i class="fa-solid fa-paperclip"></i> Attach File
-            </a>
-
-            {{-- Archive --}}
-            {{-- <form action="{{ route('principal.archive', $principal->id) }}" method="POST">
-            @csrf
-            @method('PATCH')
-            <button type="submit"
-                class="flex items-center gap-1 px-3 py-2 text-sm font-medium text-white bg-gray-700 rounded-lg hover:bg-gray-800">
-                <i class="fa-solid fa-box-archive"></i> Archive
-            </button>
-            </form> --}}
-
-        </div>
-
-    </div>
-
-</div>
-
-<!-- Main Content -->
-<div class="px-4 py-8 mx-auto max-w-7xl sm:px-6 lg:px-8">
-    <!-- Quick Stats Grid -->
-    <div class="grid grid-cols-1 gap-6 mb-8 lg:grid-cols-2">
-        <!-- Principal Info Card -->
-        <div class="p-6 bg-white border border-gray-100 shadow-sm rounded-2xl">
-            <div class="flex items-center justify-between mb-4">
-                <h2 class="text-lg font-semibold text-gray-900">Company Profile</h2>
-                <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600">
-                    <i class="text-sm text-white fa-solid fa-building"></i>
-                </div>
-            </div>
-            <div class="space-y-3">
-                <div class="flex items-center justify-between py-2 border-b border-gray-100">
-                    <span class="text-sm text-gray-600">Legal Name</span>
-                    <span class="text-sm font-medium text-gray-900">{{ $principal->legal_name ?? 'N/A' }}</span>
-                </div>
-                <div class="flex items-center justify-between py-2 border-b border-gray-100">
-                    <span class="text-sm text-gray-600">Trading Name</span>
-                    <span class="text-sm font-medium text-gray-900">{{ $principal->trading_name ?? 'N/A' }}</span>
-                </div>
-                <div class="flex items-center justify-between py-2 border-b border-gray-100">
-                    <span class="text-sm text-gray-600">Entity Type</span>
-                    <span class="text-sm font-medium text-gray-900">{{ $principal->entity_type ?? 'N/A' }}</span>
-                </div>
-                <div class="flex items-center justify-between py-2">
-                    <span class="text-sm text-gray-600">Status</span>
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
-                            @if($principal->relationship_status == 'Active') bg-green-100 text-green-800
-                            @elseif($principal->relationship_status == 'Prospect') bg-yellow-100 text-yellow-800
-                            @elseif($principal->relationship_status == 'Dormant') bg-gray-100 text-gray-800
-                            @else bg-red-100 text-red-800 @endif">
-                        {{ $principal->relationship_status }}
-                    </span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Activity Summary Card -->
-        <div class="p-6 bg-white border border-gray-100 shadow-sm rounded-2xl">
-            <div class="flex items-center justify-between mb-4">
-                <h2 class="text-lg font-semibold text-gray-900">Activity Summary</h2>
-                <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-r from-green-500 to-teal-600">
-                    <i class="text-sm text-white fa-solid fa-chart-line"></i>
-                </div>
-            </div>
-            <div class="grid grid-cols-2 gap-4">
-                <div class="p-4 text-center bg-gray-50 rounded-xl">
-                    <div class="text-2xl font-bold text-gray-900">{{ $stats['total_brands'] }}</div>
-                    <div class="mt-1 text-sm text-gray-600">Total Brands</div>
-                </div>
-                <div class="p-4 text-center bg-gray-50 rounded-xl">
-                    <div class="text-2xl font-bold text-gray-900">{{ $stats['total_products'] }}</div>
-                    <div class="mt-1 text-sm text-gray-600">Total Products</div>
-                </div>
-                <div class="p-4 text-center bg-gray-50 rounded-xl">
-                    <div class="text-2xl font-bold text-green-600">{{ $stats['approved_brands'] }}</div>
-                    <div class="mt-1 text-sm text-gray-600">Approved Brands</div>
-                </div>
-                <div class="p-4 text-center bg-gray-50 rounded-xl">
-                    <div class="text-2xl font-bold text-green-600">{{ $stats['approved_products'] }}</div>
-                    <div class="mt-1 text-sm text-gray-600">Approved Products</div>
-                </div>
-            </div>
         </div>
     </div>
 
-    <!-- Contacts & Addresses Section -->
-    <div class="grid grid-cols-1 gap-8 mb-8 lg:grid-cols-2">
-        <!-- Contacts Card -->
-        <div class="p-6 bg-white border border-gray-100 shadow-sm rounded-2xl">
-            <div class="flex items-center justify-between mb-6">
-                <h3 class="text-lg font-semibold text-gray-900">Contacts</h3>
-                <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
-                    {{ $principal->contacts->count() }} contacts
-                </span>
-            </div>
+    {{-- Stats Grid --}}
+    <div class="grid grid-cols-2 gap-6 mb-10 md:grid-cols-4">
+        <div class="p-5 text-center bg-white rounded-xl shadow-md border-t-4 border-cyan-500 transition duration-300 hover:shadow-xl hover:scale-[1.01]">
+            <h6 class="mb-1 text-sm font-medium text-slate-500">Total Brands</h6>
+            <p class="text-xl font-extrabold text-slate-800 md:text-2xl">{{ $brands->count() }}</p>
+        </div>
+        <div class="p-5 text-center bg-white rounded-xl shadow-md border-t-4 border-green-500 transition duration-300 hover:shadow-xl hover:scale-[1.01]">
+            <h6 class="mb-1 text-sm font-medium text-slate-500">Total Products</h6>
+            <p class="text-xl font-extrabold text-green-600 md:text-2xl">{{ $products->count() }}</p>
+        </div>
+        <div class="p-5 text-center bg-white rounded-xl shadow-md border-t-4 border-purple-500 transition duration-300 hover:shadow-xl hover:scale-[1.01]">
+            <h6 class="mb-1 text-sm font-medium text-slate-500">Quick Links</h6>
+            <p class="text-xl font-extrabold text-purple-600 md:text-2xl">{{ $principal->links->count() }}</p>
+        </div>
+        <div class="p-5 text-center bg-white rounded-xl shadow-md border-t-4 border-cyan-500 transition duration-300 hover:shadow-xl hover:scale-[1.01]">
+            <h6 class="mb-1 text-sm font-medium text-slate-500">Member Since</h6>
+            <p class="text-xl font-extrabold text-slate-800 md:text-2xl">{{ $principal->created_at->format('Y') }}</p>
+        </div>
+    </div>
 
-            @if($principal->contacts->count())
-            <div class="space-y-4">
-                @foreach($principal->contacts as $contact)
-                <div class="flex items-center justify-between p-4 transition-colors bg-gray-50 rounded-xl hover:bg-gray-100">
-                    <div class="flex items-center">
-                        <div class="flex items-center justify-center w-10 h-10 mr-4 rounded-full bg-gradient-to-r from-blue-500 to-purple-600">
-                            <span class="text-sm font-medium text-white">
-                                {{ substr($contact->contact_name, 0, 1) }}
+    <div class="grid gap-8 md:grid-cols-3">
+
+        {{-- Left Column --}}
+        <div class="space-y-8 md:col-span-2">
+
+            {{-- Company Info --}}
+            <div class="p-6 bg-white border shadow-xl border-slate-100 rounded-xl">
+                <h2 class="pb-2 mb-4 text-2xl font-extrabold border-b-2 text-slate-800 border-cyan-100">Company & Contact Details</h2>
+                <div class="grid gap-6 md:grid-cols-2">
+                    <div class="p-6 bg-white border shadow-md border-slate-100 rounded-xl hover:shadow-lg">
+                        <h3 class="mb-4 text-xl font-semibold text-slate-700"><i class="mr-2 text-cyan-500 fa fa-building"></i> Company Info</h3>
+                        <p><strong>Legal Name:</strong> {{ $principal->legal_name ?? 'N/A' }}</p>
+                        <p><strong>Trading Name:</strong> {{ $principal->name ?? 'N/A' }}</p>
+                        <p><strong>Website:</strong>
+                            @if($principal->website_url)
+                            <a href="{{ $principal->website_url }}" target="_blank" class="text-cyan-600 hover:underline">{{ $principal->website_url }}</a>
+                            @else
+                            N/A
+                            @endif
+                        </p>
+                        <p><strong>Country:</strong> {{ $principal->country->name ?? 'N/A' }}</p>
+                        <p class="pt-2"><strong>Entity Type:</strong>
+                            <span class="px-3 py-1 text-xs font-semibold rounded-full text-amber-800 bg-amber-100">
+                                {{ $principal->entity_type ?? 'N/A' }}
                             </span>
-                        </div>
-                        <div>
-                            <h4 class="text-sm font-semibold text-gray-900">{{ $contact->contact_name }}</h4>
-                            <p class="text-xs text-gray-500">{{ $contact->job_title ?? 'No title' }}</p>
-                        </div>
+                        </p>
                     </div>
-                    <div class="text-right">
-                        <p class="text-sm text-gray-900">{{ $contact->email ?? '—' }}</p>
-                        <p class="text-xs text-gray-500">{{ $contact->phone_e164 ?? '—' }}</p>
-                    </div>
-                </div>
-                @endforeach
-            </div>
-            @else
-            <div class="py-8 text-center">
-                <i class="mb-3 text-4xl text-gray-300 fa-solid fa-users"></i>
-                <p class="text-gray-500">No contacts available</p>
-            </div>
-            @endif
-        </div>
 
-        <!-- Addresses Card -->
-        <div class="p-6 bg-white border border-gray-100 shadow-sm rounded-2xl">
-            <div class="flex items-center justify-between mb-6">
-                <h3 class="text-lg font-semibold text-gray-900">Addresses</h3>
-                <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
-                    {{ $principal->addresses->count() }} addresses
-                </span>
-            </div>
-
-            @if($principal->addresses->count())
-            <div class="space-y-4">
-                @foreach($principal->addresses as $address)
-                <div class="p-4 transition-colors bg-gray-50 rounded-xl hover:bg-gray-100">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                            {{ $address->type }}
-                        </span>
-                        <i class="text-gray-400 fa-solid fa-location-dot"></i>
-                    </div>
-                    <p class="mb-1 text-sm font-medium text-gray-900">
-                        {{ $address->line1 }}
-                        @if($address->line2)
-                        <br>{{ $address->line2 }}
+                    {{-- Primary Contact --}}
+                    <div class="p-6 bg-white border shadow-md border-slate-100 rounded-xl hover:shadow-lg">
+                        <h3 class="mb-4 text-xl font-semibold text-slate-700"><i class="mr-2 text-cyan-500 fa fa-user-tie"></i> Primary Contact</h3>
+                        @if($principal->primaryContact)
+                        <p><strong>Name:</strong> {{ $principal->primaryContact->contact_name ?? 'N/A' }}</p>
+                        <p><strong>Email:</strong>
+                            @if($principal->email)
+                            <a href="mailto:{{ $principal->email }}" class="text-cyan-600 hover:underline">{{ $principal->email }}</a>
+                            @else
+                            N/A
+                            @endif
+                        </p>
+                        <p><strong>Phone:</strong> {{ $principal->primaryContact->phone_e164 ?? 'N/A' }}</p>
+                        <p><strong>Job Title:</strong> {{ $principal->primaryContact->job_title ?? 'N/A' }}</p>
+                        @else
+                        <p class="text-slate-500">No primary contact assigned</p>
                         @endif
-                    </p>
-                    <p class="text-xs text-gray-500">
-                        {{ $address->city ?? '—' }},
-                        {{ $address->country_name ? ucwords(strtolower($address->country_name)) : '—' }}
-                    </p>
-                </div>
-                @endforeach
-            </div>
-            @else
-            <div class="py-8 text-center">
-                <i class="mb-3 text-4xl text-gray-300 fa-solid fa-map-marker-alt"></i>
-                <p class="text-gray-500">No addresses available</p>
-            </div>
-            @endif
-        </div>
-    </div>
-
-    <!-- Quick Actions -->
-    <div class="grid grid-cols-1 gap-6 mb-8 md:grid-cols-2">
-        <div class="p-6 bg-white rounded-lg shadow">
-            <h3 class="mb-4 text-lg font-semibold text-gray-800">Quick Actions</h3>
-            <div class="space-y-3">
-                <a href="{{ route('principal.brands.create') }}"
-                    class="flex items-center p-3 transition duration-200 border border-gray-200 rounded-lg hover:bg-blue-50 hover:border-blue-200">
-                    <i class="mr-3 text-blue-600 fa-solid fa-plus"></i>
-                    <span>Add New Brand</span>
-                </a>
-                <a href="{{ route('principal.products.create') }}"
-                    class="flex items-center p-3 transition duration-200 border border-gray-200 rounded-lg hover:bg-indigo-50 hover:border-indigo-200">
-                    <i class="mr-3 text-indigo-600 fa-solid fa-plus"></i>
-                    <span>Add New Product</span>
-                </a>
-                <a href="{{ route('principal.brands.index') }}"
-                    class="flex items-center p-3 transition duration-200 border border-gray-200 rounded-lg hover:bg-green-50 hover:border-green-200">
-                    <i class="mr-3 text-green-600 fa-solid fa-list"></i>
-                    <span>View All Brands</span>
-                </a>
-                <a href="{{ route('principal.products.index') }}"
-                    class="flex items-center p-3 transition duration-200 border border-gray-200 rounded-lg hover:bg-green-50 hover:border-green-200">
-                    <i class="mr-3 text-green-600 fa-solid fa-list"></i>
-                    <span>View All Products</span>
-                </a>
-            </div>
-        </div>
-
-        <div class="p-6 bg-white rounded-lg shadow">
-            <h3 class="mb-4 text-lg font-semibold text-gray-800">Submission Guidelines</h3>
-            <ul class="space-y-2 text-sm text-gray-700">
-                <li class="flex items-start">
-                    <i class="mt-1 mr-2 text-green-500 fa-solid fa-check"></i>
-                    <span>Ensure information is accurate and complete</span>
-                </li>
-                <li class="flex items-start">
-                    <i class="mt-1 mr-2 text-green-500 fa-solid fa-check"></i>
-                    <span>Upload high-quality images</span>
-                </li>
-                <li class="flex items-start">
-                    <i class="mt-1 mr-2 text-green-500 fa-solid fa-check"></i>
-                    <span>Provide valid details and pricing</span>
-                </li>
-                <li class="flex items-start">
-                    <i class="mt-1 mr-2 text-green-500 fa-solid fa-check"></i>
-                    <span>Submissions require admin approval before going live</span>
-                </li>
-            </ul>
-        </div>
-    </div>
-    <!-- Detailed Stats Section -->
-    <div class="grid grid-cols-1 gap-8 mb-8 lg:grid-cols-2">
-        <!-- Brands Stats -->
-        <div class="p-6 bg-white border border-gray-100 shadow-sm rounded-2xl">
-            <div class="flex items-center justify-between mb-6">
-                <h3 class="text-lg font-semibold text-gray-900">Brands Overview</h3>
-                <i class="text-gray-400 fa-solid fa-store"></i>
-            </div>
-            <div class="space-y-4">
-                <div class="flex items-center justify-between p-3 rounded-lg bg-blue-50">
-                    <div class="flex items-center">
-                        <div class="flex items-center justify-center w-8 h-8 mr-3 bg-blue-500 rounded-full">
-                            <i class="text-xs text-white fa-solid fa-layer-group"></i>
-                        </div>
-                        <span class="text-sm font-medium text-gray-700">Total Brands</span>
-                    </div>
-                    <span class="text-lg font-bold text-gray-900">{{ $stats['total_brands'] }}</span>
-                </div>
-
-                <div class="grid grid-cols-3 gap-3">
-                    <div class="p-3 text-center rounded-lg bg-green-50">
-                        <div class="text-lg font-bold text-green-600">{{ $stats['approved_brands'] }}</div>
-                        <div class="mt-1 text-xs text-gray-600">Approved</div>
-                    </div>
-                    <div class="p-3 text-center rounded-lg bg-yellow-50">
-                        <div class="text-lg font-bold text-yellow-600">{{ $stats['pending_brands'] }}</div>
-                        <div class="mt-1 text-xs text-gray-600">Pending</div>
-                    </div>
-                    <div class="p-3 text-center rounded-lg bg-red-50">
-                        <div class="text-lg font-bold text-red-600">{{ $stats['rejected_brands'] }}</div>
-                        <div class="mt-1 text-xs text-gray-600">Rejected</div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- Products Stats -->
-        <div class="p-6 bg-white border border-gray-100 shadow-sm rounded-2xl">
-            <div class="flex items-center justify-between mb-6">
-                <h3 class="text-lg font-semibold text-gray-900">Products Overview</h3>
-                <i class="text-gray-400 fa-solid fa-cube"></i>
-            </div>
-            <div class="space-y-4">
-                <div class="flex items-center justify-between p-3 rounded-lg bg-indigo-50">
-                    <div class="flex items-center">
-                        <div class="flex items-center justify-center w-8 h-8 mr-3 bg-indigo-500 rounded-full">
-                            <i class="text-xs text-white fa-solid fa-boxes-stacked"></i>
-                        </div>
-                        <span class="text-sm font-medium text-gray-700">Total Products</span>
+                {{-- All Contacts --}}
+                <div class="p-6 mt-6 bg-white border shadow-xl border-slate-100 rounded-xl">
+                    <h3 class="mb-3 text-xl font-semibold text-slate-700"><i class="mr-2 text-cyan-500 fa fa-users"></i> All Contacts</h3>
+                    @if($principal->contacts->count())
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-slate-200">
+                            <thead class="bg-cyan-50">
+                                <tr>
+                                    <th class="px-4 py-3 text-left text-slate-700">Name</th>
+                                    <th class="px-4 py-3 text-left text-slate-700">Email</th>
+                                    <th class="px-4 py-3 text-left text-slate-700">Phone</th>
+                                    <th class="px-4 py-3 text-left text-slate-700">Job Title</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-slate-100">
+                                @foreach($principal->contacts as $contact)
+                                <tr class="hover:bg-slate-50">
+                                    <td class="px-4 py-3">
+                                        {{ $contact->contact_name }}
+                                        @if($contact->is_primary)
+                                        <span class="px-2 py-1 ml-2 text-xs font-semibold text-green-700 bg-green-100 rounded-full">Primary</span>
+                                        @endif
+                                    </td>
+                                    <td class="px-4 py-3">{{ $contact->email ?? 'N/A' }}</td>
+                                    <td class="px-4 py-3">{{ $contact->phone_e164 ?? 'N/A' }}</td>
+                                    <td class="px-4 py-3">{{ $contact->job_title ?? 'N/A' }}</td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
-                    <span class="text-lg font-bold text-gray-900">{{ $stats['total_products'] }}</span>
+                    @else
+                    <p class="text-slate-500">No contacts available</p>
+                    @endif
                 </div>
-
-                <div class="grid grid-cols-3 gap-3">
-                    <div class="p-3 text-center rounded-lg bg-green-50">
-                        <div class="text-lg font-bold text-green-600">{{ $stats['approved_products'] }}</div>
-                        <div class="mt-1 text-xs text-gray-600">Approved</div>
-                    </div>
-                    <div class="p-3 text-center rounded-lg bg-yellow-50">
-                        <div class="text-lg font-bold text-yellow-600">{{ $stats['pending_products'] }}</div>
-                        <div class="mt-1 text-xs text-gray-600">Pending</div>
-                    </div>
-                    <div class="p-3 text-center rounded-lg bg-red-50">
-                        <div class="text-lg font-bold text-red-600">{{ $stats['rejected_products'] }}</div>
-                        <div class="mt-1 text-xs text-gray-600">Rejected</div>
-                    </div>
-                </div>
             </div>
-        </div>
-    </div>
 
-    <!-- Recent Submissions -->
-    <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
-  <div class="bg-white rounded-lg shadow">
-    <div class="px-6 py-4 border-b border-gray-200">
-        <h2 class="text-lg font-semibold">Recent Brands</h2>
-    </div>
-    <div class="p-6">
-        @if($brands->count() > 0)
-        <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead>
-                    <tr>
-                        <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
-                            Brand
-                        </th>
-                        <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
-                            Status
-                        </th>
-                        <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
-                            Category
-                        </th>
-                        <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
-                            Actions
-                        </th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    @foreach($brands->take(5) as $brand)
-                    <tr>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="flex items-center">
-                                @if($brand->logo)
-                                <div class="flex-shrink-0 w-10 h-10">
-                                    <img class="object-cover w-10 h-10 rounded-full"
-                                         src="{{ asset('storage/brand/logo/'.$brand->logo) }}"
-                                         alt="{{ $brand->title }}">
-                                </div>
-                                @endif
-                                <div class="ml-4">
-                                    <div class="text-sm font-medium text-gray-900">
-                                        {{ $brand->title }}
-                                    </div>
-                                </div>
+            {{-- Brand & Product Info --}}
+            <div class="grid gap-8 mt-6 md:grid-cols-2">
+                {{-- Brands Section --}}
+                <div class="p-6 space-y-3 bg-white border shadow-md border-slate-100 rounded-xl">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xl font-semibold text-slate-700"><i class="mr-2 text-cyan-500 fa fa-certificate"></i> Brand Info</h3>
+                        <a href="{{ route('principal.brands.create') }}" class="px-3 py-1 text-sm text-white rounded-lg bg-cyan-600 hover:bg-cyan-700">
+                            <i class="mr-1 fa fa-plus"></i> Add
+                        </a>
+                    </div>
+
+                    @if($brands->count())
+                    <div class="space-y-2">
+                        @foreach($brands->take(3) as $brand)
+                        <div class="flex items-center justify-between p-3 border rounded-lg border-slate-200 hover:bg-slate-50">
+                            <div>
+                                <p class="font-medium text-slate-800">{{ $brand->name }}</p>
+                                <p class="text-sm text-slate-500">{{ $brand->category ?? 'No category' }}</p>
                             </div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                @if($brand->status == 'approved') bg-green-100 text-green-800
-                                @elseif($brand->status == 'pending') bg-yellow-100 text-yellow-800
-                                @else bg-red-100 text-red-800 @endif">
+                            <span class="px-2 py-1 text-xs font-semibold rounded-full 
+                                @if($brand->status == 'approved') text-green-700 bg-green-100
+                                @elseif($brand->status == 'pending') text-yellow-700 bg-yellow-100
+                                @else text-red-700 bg-red-100 @endif">
                                 {{ ucfirst($brand->status) }}
                             </span>
-                        </td>
-                        <td class="px-6 py-4 text-sm text-gray-700 whitespace-nowrap">
-                            {{ $brand->category ?? 'N/A' }}
-                        </td>
-                        <td class="px-6 py-4 text-sm font-medium whitespace-nowrap">
-                            <a href="{{ route('principal.brands.edit', $brand->id) }}"
-                               class="mr-3 text-indigo-600 hover:text-indigo-900">Edit</a>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-
-        @if($brands->count() > 5)
-        <div class="mt-4 text-center">
-            <a href="{{ route('principal.brands.index') }}"
-               class="font-medium text-blue-600 hover:text-blue-800">
-               View All Brands →
-            </a>
-        </div>
-        @endif
-
-        @else
-        <div class="py-8 text-center">
-            <i class="mb-4 text-4xl text-gray-300 fa-solid fa-store"></i>
-            <p class="text-gray-700">No brands submitted yet.</p>
-            <a href="{{ route('principal.brands.create') }}"
-               class="inline-flex items-center px-4 py-2 mt-4 text-xs font-semibold tracking-widest text-white uppercase transition duration-200 bg-blue-600 border border-transparent rounded-md hover:bg-blue-700">
-               Add Your First Brand
-            </a>
-        </div>
-        @endif
-    </div>
-</div>
-
-
-        <!-- Recent Products -->
-        <div class="bg-white rounded-lg shadow">
-            <div class="px-6 py-4 border-b border-gray-200">
-                <h2 class="text-lg font-semibold">Recent Products</h2>
-            </div>
-            <div class="p-6">
-                @if($products->count() > 0)
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead>
-                            <tr>
-                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
-                                    Product Name
-                                </th>
-                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
-                                    Status
-                                </th>
-                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
-                                    Price
-                                </th>
-                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
-                                    Actions
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            @foreach($products->take(5) as $product)
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        @if($product->thumbnail)
-                                        <div class="flex-shrink-0 w-10 h-10">
-                                            <img class="object-cover w-10 h-10 rounded"
-                                                src="{{ asset('storage/' . $product->thumbnail) }}"
-                                                alt="{{ $product->name }}">
-                                        </div>
-                                        @endif
-                                        <div class="ml-4">
-                                            <div class="text-sm font-medium text-gray-900">
-                                                {{ $product->name }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                        @if($product->submission_status == 'approved') bg-green-100 text-green-800
-                                        @elseif($product->submission_status == 'pending') bg-yellow-100 text-yellow-800
-                                        @else bg-red-100 text-red-800 @endif">
-                                        {{ ucfirst($product->submission_status) }}
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 text-sm text-gray-700 whitespace-nowrap">
-                                    @if($product->price)
-                                    ${{ number_format($product->price, 2) }}
-                                    @else
-                                    <span class="text-gray-500">N/A</span>
-                                    @endif
-                                </td>
-                                <td class="px-6 py-4 text-sm font-medium whitespace-nowrap">
-                                    <a href="{{ route('principal.products.edit', $product->id) }}"
-                                        class="mr-3 text-indigo-600 hover:text-indigo-900">Edit</a>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-                @if($products->count() > 5)
-                <div class="mt-4 text-center">
-                    <a href="{{ route('principal.products.index') }}"
-                        class="font-medium text-indigo-600 hover:text-indigo-800">
-                        View All Products →
-                    </a>
-                </div>
-                @endif
-                @else
-                <div class="py-8 text-center">
-                    <i class="mb-4 text-4xl text-gray-300 fa-solid fa-cube"></i>
-                    <p class="text-gray-700">No products submitted yet.</p>
-                    <a href="{{ route('principal.products.create') }}"
-                        class="inline-flex items-center px-4 py-2 mt-4 text-xs font-semibold tracking-widest text-white uppercase transition duration-200 bg-indigo-600 border border-transparent rounded-md hover:bg-indigo-700">
-                        Add Your First Product
-                    </a>
-                </div>
-                @endif
-            </div>
-        </div>
-    </div>
-
-
-    {{-- <!-- Principal Links -->
-<div class="p-6 mb-8 bg-white rounded-lg shadow">
-    <div class="flex items-center justify-between mb-4">
-    
-        <div class="flex gap-3">
-            <a href="{{ route('principal.links.create') }}"
-    class="inline-flex items-center px-4 py-2 text-white transition duration-200 bg-blue-600 rounded hover:bg-blue-700">
-    Add Your Links
-    </a>
-
-    <a href="{{ route('principal.links.index') }}"
-        class="inline-flex items-center px-4 py-2 text-white transition duration-200 bg-indigo-600 rounded hover:bg-indigo-700">
-        View Your All Links
-    </a>
-</div>
-</div>
-
-@if($principal->links->count())
-<ul class="space-y-2 list-disc list-inside">
-    @foreach($principal->links as $link)
-    @php
-    // Decode JSON if stored as JSON
-    $labels = is_string($link->label) ? json_decode($link->label, true) : $link->label;
-    $urls = is_string($link->url) ? json_decode($link->url, true) : $link->url;
-    @endphp
-
-    @foreach($labels as $i => $lbl)
-    <li>
-        <a href="{{ $urls[$i] ?? '#' }}" target="_blank" class="text-blue-600 hover:underline">
-            {{ $lbl }}
-        </a>
-    </li>
-    @endforeach
-    @endforeach
-</ul>
-@else
-<p class="text-gray-500">No shared links yet.</p>
-@endif
-</div> --}}
-<!-- Enhanced Principal Links Section -->
-<div class="p-6 mb-8 transition-all duration-300 bg-white border border-gray-100 shadow-lg rounded-2xl hover:shadow-xl">
-    <!-- Header with Gradient Background -->
-    <div class="p-4 mb-6 border border-blue-100 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl">
-        <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="p-3 shadow-md bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl">
-                    <i class="text-lg text-white fa-solid fa-link"></i>
-                </div>
-                <div>
-                    <h2 class="text-xl font-bold text-gray-800">Quick Links & Resources</h2>
-                    <p class="mt-1 text-sm text-gray-600">Share and manage your important links</p>
-                </div>
-            </div>
-            <div class="flex items-center space-x-2">
-                <span class="px-3 py-1 text-sm font-medium text-blue-600 bg-white border border-blue-200 rounded-full shadow-sm">
-                    {{ $principal->links->count() }} {{ Str::plural('Link', $principal->links->count()) }}
-                </span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Action Buttons -->
-    <div class="flex flex-wrap gap-3 mb-6">
-        <a href="{{ route('principal.links.create') }}"
-            class="group inline-flex items-center px-5 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-            <i class="mr-2 transition-transform fa-solid fa-plus group-hover:scale-110"></i>
-            Add New Links
-        </a>
-
-        <a href="{{ route('principal.links.index') }}"
-            class="inline-flex items-center px-5 py-3 font-semibold text-gray-700 transition-all duration-300 bg-white border border-gray-200 shadow-sm group rounded-xl hover:border-indigo-300 hover:bg-indigo-50 hover:shadow-md">
-            <i class="mr-2 text-indigo-600 fa-solid fa-list"></i>
-            Manage All Links
-        </a>
-    </div>
-
-    <!-- Links Grid -->
-    @if($principal->links->count())
-    <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-        @foreach($principal->links as $linkIndex => $link)
-        @php
-        $labels = is_string($link->label) ? json_decode($link->label, true) : $link->label;
-        $urls = is_string($link->url) ? json_decode($link->url, true) : $link->url;
-        $colors = ['blue', 'green', 'purple', 'orange', 'pink', 'indigo'];
-        $colorClasses = [
-        'blue' => 'from-blue-400 to-blue-500',
-        'green' => 'from-green-400 to-green-500',
-        'purple' => 'from-purple-400 to-purple-500',
-        'orange' => 'from-orange-400 to-orange-500',
-        'pink' => 'from-pink-400 to-pink-500',
-        'indigo' => 'from-indigo-400 to-indigo-500'
-        ];
-        @endphp
-
-        @foreach($labels as $i => $label)
-        @php
-        $colorIndex = ($linkIndex + $i) % count($colors);
-        $color = $colors[$colorIndex];
-        $gradientClass = $colorClasses[$color];
-        @endphp
-
-        <div class="group relative bg-gradient-to-br from-white to-gray-50 rounded-xl border border-gray-200 p-4 hover:border-{{ $color }}-300 hover:shadow-md transition-all duration-300">
-            <!-- Link Icon -->
-            <div class="flex items-start justify-between mb-3">
-                <div class="p-2 bg-gradient-to-br {{ $gradientClass }} rounded-lg shadow-sm">
-                    <i class="text-sm text-white fa-solid fa-link"></i>
-                </div>
-            </div>
-
-            <!-- Link Content -->
-            <div class="space-y-2">
-                <h3 class="font-semibold text-gray-800 text-sm line-clamp-2 group-hover:text-{{ $color }}-600 transition-colors">
-                    {{ $label }}
-                </h3>
-
-                @if(isset($urls[$i]) && $urls[$i])
-                <div class="flex items-center justify-between">
-                    <a href="{{ $urls[$i] }}"
-                        target="_blank"
-                        class="text-xs text-gray-500 hover:text-{{ $color }}-600 transition-colors truncate flex-1 mr-2">
-                        {{ \Illuminate\Support\Str::limit($urls[$i], 40) }}
-                    </a>
-                    <div class="flex-shrink-0">
-                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-{{ $color }}-50 text-{{ $color }}-600 border border-{{ $color }}-200">
-                            <i class="mr-1 text-xs fa-solid fa-external-link"></i>
-                            Visit
-                        </span>
-                    </div>
-                </div>
-                @else
-                <span class="text-xs italic text-gray-400">No URL provided</span>
-                @endif
-            </div>
-
-            <!-- Hover Effect Border -->
-            <div class="absolute inset-0 rounded-xl border-2 border-transparent group-hover:border-{{ $color }}-200 transition-all duration-300 pointer-events-none"></div>
-        </div>
-        @endforeach
-        @endforeach
-    </div>
-
-    <!-- Links Summary -->
-    <div class="pt-4 mt-6 border-t border-gray-200">
-        <div class="flex flex-wrap items-center justify-between text-sm text-gray-600">
-            <div class="flex items-center space-x-4">
-                <span class="flex items-center">
-                    <i class="mr-2 text-blue-500 fa-solid fa-layer-group"></i>
-                    {{ $principal->links->count() }} {{ Str::plural('Link Set', $principal->links->count()) }}
-                </span>
-                <span class="flex items-center">
-                    <i class="mr-2 text-green-500 fa-solid fa-link"></i>
-                    {{ array_reduce($principal->links->toArray(), function($carry, $link) {
-                            $labels = is_string($link['label']) ? json_decode($link['label'], true) : $link['label'];
-                            return $carry + count($labels);
-                        }, 0) }} Total Links
-                </span>
-            </div>
-            <a href="{{ route('principal.links.index') }}"
-                class="inline-flex items-center font-medium text-blue-600 transition-colors hover:text-blue-700">
-                View Detailed Analytics
-                <i class="ml-1 text-xs fa-solid fa-arrow-right"></i>
-            </a>
-        </div>
-    </div>
-
-    @else
-    <!-- Empty State -->
-    <div class="py-12 text-center">
-        <div class="max-w-md mx-auto">
-            <div class="flex items-center justify-center w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl">
-                <i class="text-2xl text-gray-400 fa-solid fa-link"></i>
-            </div>
-            <h3 class="mb-2 text-lg font-semibold text-gray-700">No Links Added Yet</h3>
-            <p class="mb-6 text-gray-500">Start by adding your important links and resources to share with your team.</p>
-            <a href="{{ route('principal.links.create') }}"
-                class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-                <i class="mr-2 fa-solid fa-plus"></i>
-                Create Your First Link Set
-            </a>
-        </div>
-    </div>
-    @endif
-</div>
-
-<!-- Activity & Notes Section -->
-<div class="p-6 mb-8 bg-white rounded-lg shadow">
-    <div class="flex items-center justify-between mb-6">
-        <h2 class="text-xl font-semibold text-gray-800">Activity & Notes Timeline</h2>
-        <button onclick="toggleNoteForm()" class="px-4 py-2 font-semibold text-white transition duration-200 bg-blue-600 rounded hover:bg-blue-700">
-            <i class="mr-2 fa-solid fa-plus"></i>Add Note
-        </button>
-    </div>
-
-    <!-- Rich Text Note Form (Initially Hidden) -->
-    <div id="noteFormContainer" class="hidden p-4 mb-6 border border-gray-200 rounded-lg">
-        <form id="noteForm" action="{{ route('principal.notes.store') }}" method="POST" enctype="multipart/form-data">
-            @csrf
-            <div class="mb-4">
-                <label class="block mb-2 text-sm font-medium text-gray-700">Note Type</label>
-                <div class="flex space-x-4">
-                    <label class="inline-flex items-center">
-                        <input type="radio" name="type" value="note" class="text-blue-600 focus:ring-blue-500" checked>
-                        <span class="ml-2 text-sm text-gray-700">General Note</span>
-                    </label>
-                    <label class="inline-flex items-center">
-                        <input type="radio" name="type" value="important" class="text-red-600 focus:ring-red-500">
-                        <span class="ml-2 text-sm text-gray-700">Important</span>
-                    </label>
-                    <label class="inline-flex items-center">
-                        <input type="radio" name="type" value="task" class="text-green-600 focus:ring-green-500">
-                        <span class="ml-2 text-sm text-gray-700">Task</span>
-                    </label>
-                </div>
-            </div>
-
-            <div class="mb-4">
-                <label for="richNote" class="block mb-2 text-sm font-medium text-gray-700">Your Note</label>
-                <div class="border border-gray-300 rounded-lg">
-                    <!-- Rich Text Toolbar -->
-                    <div class="flex items-center p-2 space-x-1 border-b border-gray-200 rounded-t-lg bg-gray-50">
-                        <button type="button" class="p-1 rounded hover:bg-gray-200" onclick="formatText('bold')">
-                            <i class="text-sm fa-solid fa-bold"></i>
-                        </button>
-                        <button type="button" class="p-1 rounded hover:bg-gray-200" onclick="formatText('italic')">
-                            <i class="text-sm fa-solid fa-italic"></i>
-                        </button>
-                        <button type="button" class="p-1 rounded hover:bg-gray-200" onclick="formatText('underline')">
-                            <i class="text-sm fa-solid fa-underline"></i>
-                        </button>
-                        <div class="w-px h-6 mx-1 bg-gray-300"></div>
-                        <button type="button" class="p-1 rounded hover:bg-gray-200" onclick="insertMention()">
-                            <i class="text-sm fa-solid fa-at"></i>
-                        </button>
-                        <button type="button" class="p-1 rounded hover:bg-gray-200" onclick="insertLink()">
-                            <i class="text-sm fa-solid fa-link"></i>
-                        </button>
-                    </div>
-                    <!-- Rich Text Area -->
-                    <textarea
-                        id="richNote"
-                        name="note"
-                        rows="4"
-                        class="w-full px-3 py-2 border-0 rounded-b-lg resize-none focus:outline-none focus:ring-0"
-                        placeholder="Type your note here... Use @ to mention team members or # to add tags"
-                        oninput="handleInput(this)"></textarea>
-                </div>
-                <div class="flex items-center justify-between mt-2">
-                    <span class="text-xs text-gray-500">
-                        <span id="charCount">0</span>/2000 characters
-                    </span>
-                    <div class="flex items-center space-x-4">
-                        <label class="inline-flex items-center">
-                            <input type="checkbox" name="pin" class="text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                            <span class="ml-2 text-sm text-gray-700">Pin this note</span>
-                        </label>
-                        <button type="button" onclick="toggleNoteForm()" class="text-sm text-gray-600 hover:text-gray-800">
-                            Cancel
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- File Upload Section -->
-            <div class="mb-4">
-                <label class="block mb-2 text-sm font-medium text-gray-700">Attachments</label>
-
-                <!-- Link Input -->
-                <div class="mb-3">
-                    <label class="block mb-1 text-xs font-medium text-gray-600">Add Link</label>
-                    <div class="flex space-x-2">
-                        <input type="url"
-                            id="linkUrl"
-                            placeholder="https://example.com"
-                            class="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                        <input type="text"
-                            id="linkTitle"
-                            placeholder="Link title (optional)"
-                            class="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                        <button type="button" onclick="addLink()" class="px-4 py-2 text-sm text-white bg-gray-600 rounded-lg hover:bg-gray-700">
-                            <i class="fa-solid fa-plus"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- File Upload -->
-                <div class="mb-3">
-                    <label class="block mb-1 text-xs font-medium text-gray-600">Upload Files</label>
-                    <div class="flex items-center space-x-2">
-                        <input type="file"
-                            id="fileInput"
-                            multiple
-                            accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.xls,.xlsx"
-                            class="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                    </div>
-                    <p class="mt-1 text-xs text-gray-500">Supported: PDF, DOC, TXT, Images, Excel (Max: 10MB)</p>
-                </div>
-
-                <!-- Attachments Preview -->
-                <div id="attachmentsPreview" class="hidden mt-3 space-y-2">
-                    <h4 class="text-xs font-medium text-gray-700">Attachments:</h4>
-                    <div id="attachmentsList" class="space-y-2"></div>
-                </div>
-            </div>
-
-            <div class="flex justify-end space-x-3">
-                <button type="button" onclick="toggleNoteForm()" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
-                    Cancel
-                </button>
-                <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700">
-                    Save Note
-                </button>
-            </div>
-        </form>
-    </div>
-
-    <!-- Activity Timeline -->
-    <div class="space-y-4" id="activitiesList">
-        @php
-        // Safe check for activities
-        $activities = $activities ?? collect();
-        @endphp
-
-        @if($activities->count())
-        @foreach($activities->sortByDesc('pinned') as $activity)
-        <div class="flex items-start space-x-4 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-all duration-200 {{ $activity->pinned ? 'bg-yellow-50 border-yellow-200' : 'bg-white' }}"
-            data-activity-id="{{ $activity->id }}"
-            style="transition: all 0.3s ease-in-out;">
-
-            <!-- Activity Icon -->
-            <div class="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center
-                @if($activity->type == 'note') bg-blue-100 text-blue-600
-                @elseif($activity->type == 'important') bg-red-100 text-red-600
-                @elseif($activity->type == 'task') bg-green-100 text-green-600
-                @elseif($activity->type == 'created') bg-green-100 text-green-600
-                @elseif($activity->type == 'edited') bg-indigo-100 text-indigo-600
-                @elseif($activity->type == 'link_shared') bg-purple-100 text-purple-600
-                @elseif($activity->type == 'file_uploaded') bg-orange-100 text-orange-600
-                @else bg-gray-100 text-gray-600 @endif">
-                @if($activity->type == 'note')
-                <i class="text-sm fa-solid fa-note-sticky"></i>
-                @elseif($activity->type == 'important')
-                <i class="text-sm fa-solid fa-exclamation"></i>
-                @elseif($activity->type == 'task')
-                <i class="text-sm fa-solid fa-square-check"></i>
-                @elseif($activity->type == 'created')
-                <i class="text-sm fa-solid fa-plus"></i>
-                @elseif($activity->type == 'edited')
-                <i class="text-sm fa-solid fa-pen"></i>
-                @elseif($activity->type == 'link_shared')
-                <i class="text-sm fa-solid fa-link"></i>
-                @elseif($activity->type == 'file_uploaded')
-                <i class="text-sm fa-solid fa-file"></i>
-                @else
-                <i class="text-sm fa-solid fa-circle"></i>
-                @endif
-            </div>
-
-            <!-- Activity Content -->
-            <!-- Activity Content -->
-            <div class="flex-1 min-w-0">
-                <div class="flex items-center justify-between mb-2">
-                    <div class="flex flex-wrap items-center space-x-2">
-                        <span class="text-sm font-medium text-gray-900">
-                            @if($activity->createdBy && method_exists($activity->createdBy, 'name'))
-                            {{ $activity->createdBy->name }}
-                            @else
-                            You
-                            @endif
-                        </span>
-                        <span class="text-xs text-gray-500">•</span>
-                        <span class="text-xs text-gray-500">
-                            @if(method_exists($activity->created_at, 'diffForHumans'))
-                            {{ $activity->created_at->diffForHumans() }}
-                            @else
-                            Recently
-                            @endif
-                        </span>
-
-                        @if($activity->pinned)
-                        <span class="inline-flex items-center px-2 py-1 text-xs font-medium text-yellow-800 bg-yellow-100 rounded-full pinned-badge">
-                            <i class="mr-1 fa-solid fa-thumbtack"></i>Pinned
-                        </span>
-                        @endif
-
-                        @if(isset($activity->metadata['last_edited_at']))
-                        <span class="text-xs text-gray-400" title="Edited {{ \Carbon\Carbon::parse($activity->metadata['last_edited_at'])->diffForHumans() }}">
-                            <i class="mr-1 fa-solid fa-pen"></i>Edited
-                        </span>
-                        @endif
-                    </div>
-
-                    <!-- Action Menu -->
-                    <div class="relative group">
-                        <button
-                            class="p-2 text-gray-400 transition duration-200 rounded-full hover:text-gray-600 hover:bg-gray-200 action-menu-btn"
-                            data-activity-id="{{ $activity->id }}"
-                            onclick="toggleDropdown(this)">
-                            <i class="text-sm fa-solid fa-ellipsis-vertical"></i>
-                        </button>
-
-                        <!-- Dropdown Menu -->
-                        <div class="absolute right-0 z-10 hidden w-48 mt-1 bg-white border border-gray-200 rounded-md shadow-lg top-full dropdown-menu">
-                            <div class="py-1">
-                                <button
-                                    onclick="editNote('{{ $activity->id }}')"
-                                    class="flex items-center w-full px-4 py-2 text-sm text-gray-700 transition duration-150 hover:bg-gray-100 edit-note-btn"
-                                    data-activity-id="{{ $activity->id }}">
-                                    <i class="w-4 mr-3 text-gray-500 fa-solid fa-pen"></i>
-                                    Edit Note
-                                </button>
-                                <button
-                                    onclick="togglePinNote('{{ $activity->id }}')"
-                                    class="flex items-center w-full px-4 py-2 text-sm text-gray-700 transition duration-150 hover:bg-gray-100 pin-note-btn"
-                                    data-activity-id="{{ $activity->id }}">
-                                    <i class="w-4 mr-3 text-gray-500 fa-solid fa-thumbtack"></i>
-                                    <span class="pin-text">{{ $activity->pinned ? 'Unpin' : 'Pin' }}</span> Note
-                                </button>
-                                <hr class="my-1 border-gray-200">
-                                <button
-                                    onclick="deleteNote('{{ $activity->id }}')"
-                                    class="flex items-center w-full px-4 py-2 text-sm text-red-600 transition duration-150 hover:bg-red-50 delete-note-btn"
-                                    data-activity-id="{{ $activity->id }}">
-                                    <i class="w-4 mr-3 fa-solid fa-trash"></i>
-                                    Delete Note
-                                </button>
-                            </div>
                         </div>
-                    </div>
-                </div>
+                        @endforeach
 
-                <div class="prose-sm prose text-gray-700 break-words max-w-none" id="content-{{ $activity->id }}">
-                    {!! $activity->rich_content ?: nl2br(e($activity->description)) !!}
-                </div>
-
-                <!-- Enhanced Attachments Section -->
-                @if($activity->metadata && (isset($activity->metadata['attachments']) || isset($activity->metadata['file']) || isset($activity->metadata['link'])))
-                <div class="mt-4 space-y-3">
-                    <!-- Files Section -->
-                    @php
-                    $fileAttachments = [];
-                    $linkAttachments = [];
-
-                    // Collect all file attachments
-                    if (isset($activity->metadata['attachments']) && is_array($activity->metadata['attachments'])) {
-                    foreach ($activity->metadata['attachments'] as $attachment) {
-                    if ($attachment['type'] === 'file') {
-                    $fileAttachments[] = $attachment;
-                    } elseif ($attachment['type'] === 'link') {
-                    $linkAttachments[] = $attachment;
-                    }
-                    }
-                    }
-
-                    // Legacy single file support
-                    if (isset($activity->metadata['file'])) {
-                    $fileAttachments[] = [
-                    'type' => 'file',
-                    'name' => $activity->metadata['file']['name'] ?? 'Attachment',
-                    'url' => $activity->metadata['file']['url'] ?? '#',
-                    'size' => $activity->metadata['file']['size'] ?? null
-                    ];
-                    }
-
-                    // Legacy single link support
-                    if (isset($activity->metadata['link'])) {
-                    $linkAttachments[] = [
-                    'type' => 'link',
-                    'name' => $activity->metadata['link']['title'] ?? 'Link',
-                    'url' => $activity->metadata['link']['url'] ?? '#'
-                    ];
-                    }
-                    @endphp
-
-                    <!-- File Attachments -->
-                    @if(count($fileAttachments) > 0)
-                    <div class="p-3 border-l-4 border-blue-500 rounded-r-lg bg-blue-50">
-                        <div class="flex items-center mb-2">
-                            <i class="mr-2 text-blue-500 fa-solid fa-paperclip"></i>
-                            <span class="text-sm font-medium text-blue-800">Attached Files</span>
-                            <span class="px-2 py-1 ml-2 text-xs text-blue-600 bg-blue-100 rounded-full">
-                                {{ count($fileAttachments) }} file{{ count($fileAttachments) > 1 ? 's' : '' }}
-                            </span>
-                        </div>
-                        <div class="space-y-2">
-                            @foreach($fileAttachments as $file)
-                            <div class="flex items-center justify-between p-2 transition-colors bg-white border border-blue-200 rounded-lg hover:border-blue-300">
-                                <div class="flex items-center flex-1 min-w-0 space-x-3">
-                                    @php
-                                    $fileExtension = pathinfo($file['name'], PATHINFO_EXTENSION);
-                                    $icon = 'fa-file';
-                                    $color = 'text-gray-500';
-
-                                    switch(strtolower($fileExtension)) {
-                                    case 'pdf':
-                                    $icon = 'fa-file-pdf';
-                                    $color = 'text-red-500';
-                                    break;
-                                    case 'doc':
-                                    case 'docx':
-                                    $icon = 'fa-file-word';
-                                    $color = 'text-blue-500';
-                                    break;
-                                    case 'xls':
-                                    case 'xlsx':
-                                    $icon = 'fa-file-excel';
-                                    $color = 'text-green-500';
-                                    break;
-                                    case 'jpg':
-                                    case 'jpeg':
-                                    case 'png':
-                                    case 'gif':
-                                    $icon = 'fa-file-image';
-                                    $color = 'text-purple-500';
-                                    break;
-                                    case 'zip':
-                                    case 'rar':
-                                    $icon = 'fa-file-archive';
-                                    $color = 'text-yellow-500';
-                                    break;
-                                    case 'txt':
-                                    $icon = 'fa-file-text';
-                                    $color = 'text-gray-500';
-                                    break;
-                                    }
-                                    @endphp
-                                    <i class="fa-solid {{ $icon }} {{ $color }} text-lg"></i>
-                                    <div class="flex-1 min-w-0">
-                                        <p class="text-sm font-medium text-gray-900 truncate">{{ $file['name'] }}</p>
-                                        @if(isset($file['size']))
-                                        <p class="text-xs text-gray-500">
-                                            {{ round($file['size'] / 1024 / 1024, 2) }} MB
-                                        </p>
-                                        @endif
-                                    </div>
-                                </div>
-                                <div class="flex items-center ml-3 space-x-2">
-                                    <a href="{{ $file['url'] }}"
-                                        target="_blank"
-                                        class="text-blue-600 transition-colors hover:text-blue-800"
-                                        title="Download {{ $file['name'] }}">
-                                        <i class="fa-solid fa-download"></i>
-                                    </a>
-                                    <a href="{{ $file['url'] }}"
-                                        target="_blank"
-                                        class="text-green-600 transition-colors hover:text-green-800"
-                                        title="View {{ $file['name'] }}">
-                                        <i class="fa-solid fa-eye"></i>
-                                    </a>
-                                </div>
-                            </div>
-                            @endforeach
-                        </div>
-                    </div>
-                    @endif
-
-                    <!-- Link Attachments -->
-                    @if(count($linkAttachments) > 0)
-                    <div class="p-3 border-l-4 border-green-500 rounded-r-lg bg-green-50">
-                        <div class="flex items-center mb-2">
-                            <i class="mr-2 text-green-500 fa-solid fa-link"></i>
-                            <span class="text-sm font-medium text-green-800">Related Links</span>
-                            <span class="px-2 py-1 ml-2 text-xs text-green-600 bg-green-100 rounded-full">
-                                {{ count($linkAttachments) }} link{{ count($linkAttachments) > 1 ? 's' : '' }}
-                            </span>
-                        </div>
-                        <div class="space-y-2">
-                            @foreach($linkAttachments as $link)
-                            <div class="flex items-center justify-between p-2 transition-colors bg-white border border-green-200 rounded-lg hover:border-green-300">
-                                <div class="flex items-center flex-1 min-w-0 space-x-3">
-                                    <i class="text-green-500 fa-solid fa-external-link-alt"></i>
-                                    <div class="flex-1 min-w-0">
-                                        <p class="text-sm font-medium text-gray-900 truncate">{{ $link['name'] }}</p>
-                                        <p class="text-xs text-gray-500 truncate">{{ $link['url'] }}</p>
-                                    </div>
-                                </div>
-                                <a href="{{ $link['url'] }}"
-                                    target="_blank"
-                                    class="px-3 py-1 ml-3 text-xs text-white transition-colors bg-green-600 rounded hover:bg-green-700 whitespace-nowrap">
-                                    Visit
-                                </a>
-                            </div>
-                            @endforeach
-                        </div>
-                    </div>
-                    @endif
-
-                    <!-- Legacy Metadata Display (for backward compatibility) -->
-                    @if($activity->metadata && (isset($activity->metadata['file']) || isset($activity->metadata['link'])) && empty($fileAttachments) && empty($linkAttachments))
-                    <div class="flex flex-wrap gap-3 mt-3">
-                        @if(isset($activity->metadata['file']))
-                        <div class="flex items-center px-3 py-1 space-x-2 text-xs text-gray-600 bg-gray-100 rounded-full">
-                            <i class="fa-solid fa-paperclip"></i>
-                            <span class="font-medium">{{ $activity->metadata['file']['name'] ?? 'Attachment' }}</span>
-                        </div>
-                        @endif
-                        @if(isset($activity->metadata['link']))
-                        <div class="flex items-center px-3 py-1 space-x-2 text-xs text-gray-600 bg-gray-100 rounded-full">
-                            <i class="fa-solid fa-link"></i>
-                            <a href="{{ $activity->metadata['link']['url'] }}" target="_blank" class="font-medium hover:text-blue-700">
-                                {{ $activity->metadata['link']['title'] ?? 'Link' }}
+                        @if($brands->count() > 3)
+                        <div class="pt-2 text-center">
+                            <a href="{{ route('principal.brands.index') }}" class="text-sm text-cyan-600 hover:underline">
+                                View all {{ $brands->count() }} brands
                             </a>
                         </div>
                         @endif
                     </div>
+                    @else
+                    <p class="text-slate-500">No brands added yet</p>
+                    <a href="{{ route('principal.brands.create') }}" class="inline-block px-4 py-2 text-white rounded-lg bg-cyan-600 hover:bg-cyan-700">
+                        <i class="mr-1 fa fa-plus"></i> Add First Brand
+                    </a>
                     @endif
                 </div>
-                @endif
 
-                <!-- Edit Form (Hidden by default) -->
-                <div id="edit-form-{{ $activity->id }}" class="hidden mt-4">
-                    <form class="edit-note-form" data-activity-id="{{ $activity->id }}">
-                        @csrf
-                        <input type="hidden" name="_method" value="PUT">
+                {{-- Products Section --}}
+                <div class="p-6 space-y-4 bg-white border shadow-md border-slate-100 rounded-xl">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xl font-semibold text-slate-700"><i class="mr-2 text-cyan-500 fa fa-boxes-stacked"></i> Product List</h3>
+                        <a href="{{ route('principal.products.create') }}" class="px-3 py-1 text-sm text-white rounded-lg bg-cyan-600 hover:bg-cyan-700">
+                            <i class="mr-1 fa fa-plus"></i> Add
+                        </a>
+                    </div>
 
-                        <div class="mb-3">
-                            <label class="block mb-1 text-sm font-medium text-gray-700">Note Type</label>
-                            <div class="flex space-x-3">
-                                <label class="inline-flex items-center">
-                                    <input type="radio" name="type" value="note" class="text-blue-600 focus:ring-blue-500" {{ $activity->type == 'note' ? 'checked' : '' }}>
-                                    <span class="ml-2 text-sm text-gray-700">General</span>
-                                </label>
-                                <label class="inline-flex items-center">
-                                    <input type="radio" name="type" value="important" class="text-red-600 focus:ring-red-500" {{ $activity->type == 'important' ? 'checked' : '' }}>
-                                    <span class="ml-2 text-sm text-gray-700">Important</span>
-                                </label>
-                                <label class="inline-flex items-center">
-                                    <input type="radio" name="type" value="task" class="text-green-600 focus:ring-green-500" {{ $activity->type == 'task' ? 'checked' : '' }}>
-                                    <span class="ml-2 text-sm text-gray-700">Task</span>
-                                </label>
-                            </div>
+                    @if($products->count())
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-slate-200">
+                            <thead class="bg-cyan-50">
+                                <tr>
+                                    <th class="px-4 py-3 text-left text-slate-700">Product Name</th>
+                                    <th class="hidden px-4 py-3 text-left text-slate-700 sm:table-cell">Price</th>
+                                    <th class="px-4 py-3 text-left text-slate-700">Status</th>
+                                    <th class="px-4 py-3 text-left text-slate-700">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-slate-100">
+                                @foreach($products->take(5) as $product)
+                                <tr class="hover:bg-slate-50">
+                                    <td class="px-4 py-3">{{ $product->name }}</td>
+                                    <td class="hidden px-4 py-3 sm:table-cell">
+                                        @if($product->price)
+                                        ${{ number_format($product->price, 2) }}
+                                        @else
+                                        N/A
+                                        @endif
+                                    </td>
+                                    <td class="px-4 py-3">
+                                        <span class="px-2 py-1 text-xs font-semibold rounded-full 
+                                            @if($product->submission_status == 'approved') text-green-700 bg-green-100
+                                            @elseif($product->submission_status == 'pending') text-yellow-700 bg-yellow-100
+                                            @else text-red-700 bg-red-100 @endif">
+                                            {{ ucfirst($product->submission_status) }}
+                                        </span>
+                                    </td>
+                                    <td class="px-4 py-3">
+                                        <a href="{{ route('principal.products.edit', $product) }}"
+                                            class="text-sm font-medium text-cyan-600 hover:text-cyan-800">View</a>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+
+                        @if($products->count() > 5)
+                        <div class="pt-3 text-center">
+                            <a href="{{ route('principal.products.index') }}" class="text-sm text-cyan-600 hover:underline">
+                                View all {{ $products->count() }} products
+                            </a>
                         </div>
-
-                        <div class="mb-3">
-                            <label for="edit-note-{{ $activity->id }}" class="block mb-1 text-sm font-medium text-gray-700">Your Note</label>
-                            <textarea
-                                id="edit-note-{{ $activity->id }}"
-                                name="note"
-                                rows="3"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                required
-                                maxlength="2000">{{ $activity->description }}</textarea>
-                            <div class="flex items-center justify-between mt-1">
-                                <span class="text-xs text-gray-500">
-                                    <span class="edit-char-count-{{ $activity->id }}">{{ strlen($activity->description) }}</span>/2000 characters
-                                </span>
-                            </div>
-                        </div>
-
-                        <div class="flex items-center justify-between">
-                            <label class="inline-flex items-center">
-                                <input type="checkbox" name="pin" value="1" class="text-blue-600 border-gray-300 rounded focus:ring-blue-500" {{ $activity->pinned ? 'checked' : '' }}>
-                                <span class="ml-2 text-sm text-gray-700">Pin this note</span>
-                            </label>
-                            <div class="flex space-x-2">
-                                <button type="button" onclick="cancelEdit('{{ $activity->id }}')" class="px-3 py-1.5 text-sm text-gray-600 hover:text-gray-800">
-                                    Cancel
-                                </button>
-                                <button type="submit" class="px-4 py-1.5 text-sm font-medium text-white bg-green-600 border border-transparent rounded-md hover:bg-green-700">
-                                    Update Note
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+                        @endif
+                    </div>
+                    @else
+                    <p class="text-slate-500">No products added yet</p>
+                    <a href="{{ route('principal.products.create') }}" class="inline-block px-4 py-2 text-white rounded-lg bg-cyan-600 hover:bg-cyan-700">
+                        <i class="mr-1 fa fa-plus"></i> Add First Product
+                    </a>
+                    @endif
                 </div>
             </div>
         </div>
-        @endforeach
-        @else
-        <!-- Empty State -->
-        <div class="py-12 text-center text-gray-500 border-2 border-gray-300 border-dashed rounded-lg bg-gray-50">
-            <i class="mb-4 text-5xl text-gray-300 fa-solid fa-inbox"></i>
-            <p class="mb-2 text-lg font-medium text-gray-400">No activities yet</p>
-            <p class="mb-4 text-sm text-gray-400">Start by adding your first note above</p>
-            <button onclick="toggleNoteForm()" class="inline-flex items-center px-4 py-2 text-white transition duration-200 bg-blue-600 rounded-lg hover:bg-blue-700">
-                <i class="mr-2 fa-solid fa-plus"></i>
-                Add Your First Note
-            </button>
-        </div>
-        @endif
-    </div>
-    <!-- Simple dropdown toggle function -->
-    <script>
-        function toggleDropdown(button) {
-            const dropdown = button.nextElementSibling;
-            const allDropdowns = document.querySelectorAll('.dropdown-menu');
 
-            // Close all other dropdowns
-            allDropdowns.forEach(dd => {
-                if (dd !== dropdown) {
-                    dd.classList.add('hidden');
-                }
-            });
+        {{-- Right Column --}}
+        <div class="space-y-8">
+            {{-- Addresses --}}
+            <div class="p-6 bg-white border shadow-md border-slate-100 rounded-xl">
+                <h3 class="mb-4 text-xl font-semibold text-slate-700"><i class="mr-2 text-cyan-500 fa fa-map-marked-alt"></i> Addresses</h3>
+                @if($principal->addresses->count())
+                <div class="space-y-3">
+                    @foreach($principal->addresses as $address)
+                    <div class="p-3 border rounded-lg border-slate-200 hover:bg-slate-50">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="px-2 py-1 text-xs font-semibold text-blue-700 bg-blue-100 rounded-full">
+                                {{ ucfirst($address->type) }}
+                            </span>
+                        </div>
+                        <p class="text-sm font-medium text-slate-800">{{ $address->line1 }}</p>
+                        @if($address->line2)
+                        <p class="text-sm text-slate-600">{{ $address->line2 }}</p>
+                        @endif
+                        <p class="text-xs text-slate-500">
+                            {{ $address->city ?? '' }}{{ $address->state ? ', '.$address->state : '' }}{{ $address->postal ? ' '.$address->postal : '' }}
+                        </p>
+                    </div>
+                    @endforeach
+                </div>
+                @else
+                <p class="text-slate-500">No addresses available</p>
+                @endif
+            </div>
 
-            // Toggle current dropdown
-            dropdown.classList.toggle('hidden');
-        }
 
-        // Close dropdowns when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!e.target.closest('.group')) {
-                document.querySelectorAll('.dropdown-menu').forEach(dropdown => {
-                    dropdown.classList.add('hidden');
-                });
-            }
-        });
-    </script>
 
-    <!-- Security & Visibility Section -->
-    <div class="p-6 bg-white rounded-lg shadow">
-        <h2 class="mb-6 text-xl font-semibold text-gray-800">Security & Visibility</h2>
+            {{-- Quick Contact --}}
+            <div class="p-6 bg-white border shadow-md border-slate-100 rounded-xl">
+                <h3 class="mb-4 text-xl font-semibold text-slate-700">
+                    <i class="mr-2 text-cyan-500 fa fa-bolt-lightning"></i> Quick Contact
+                </h3>
 
-        <div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
-            <!-- Visibility Scope -->
-            <div>
-                <h3 class="mb-4 text-lg font-medium text-gray-900">Visibility Scope</h3>
+                @if($principal->primaryContact || $principal->email)
                 <div class="space-y-4">
+                    <!-- Contact Info -->
+                    <div class="p-3 rounded-lg bg-slate-50">
+                        <p class="text-sm font-medium text-slate-800">
+                            {{ $principal->primaryContact->contact_name ?? 'Contact' }}
+                        </p>
+                        <p class="text-xs text-slate-600">
+                            {{ $principal->primaryContact->job_title ?? 'Primary Contact' }}
+                        </p>
+                    </div>
+
+                    <!-- Contact Buttons -->
+                    <div class="flex flex-wrap gap-3">
+                        @php
+                        // Get phone from primary contact or principal
+                        $phone = $principal->primaryContact->phone_e164 ??
+                        $principal->primaryContact->phone ??
+                        $principal->phone ?? null;
+
+                        // Get email from primary contact OR principal's email field
+                        $email = $principal->primaryContact->email ?? $principal->email ?? null;
+
+                        $whatsapp = $principal->primaryContact->whatsapp ?? $phone;
+                        $wechat = $principal->primaryContact->wechat ?? null;
+                        @endphp
+
+                        <!-- Phone -->
+                        @if($phone)
+                        <a href="tel:{{ $phone }}"
+                            class="flex flex-col items-center justify-center w-16 h-16 transition duration-200 border rounded-full group border-slate-300 hover:bg-slate-100 hover:shadow-md"
+                            title="Call {{ $phone }}">
+                            <i class="mb-1 text-slate-600 fa fa-phone group-hover:text-cyan-600"></i>
+                            <span class="text-xs text-slate-500">Call</span>
+                        </a>
+                        @endif
+
+                        <!-- Email - FIXED -->
+                        @if(!empty($email))
+                        <a href="mailto:{{ $email }}"
+                            class="flex flex-col items-center justify-center w-16 h-16 transition duration-200 border rounded-full group border-slate-300 hover:bg-slate-100 hover:shadow-md"
+                            title="Email {{ $email }}">
+                            <i class="mb-1 text-slate-600 fa fa-envelope group-hover:text-cyan-600"></i>
+                            <span class="text-xs text-slate-500">Email</span>
+                        </a>
+                        @endif
+
+                        <!-- WhatsApp - FIXED CSS CLASSES -->
+                        @if($whatsapp)
+                        <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $whatsapp) }}?text=Hello%20{{ urlencode($principal->primaryContact->contact_name ?? 'there') }}"
+                            target="_blank"
+                            class="flex flex-col items-center justify-center w-16 h-16 transition duration-200 border border-green-300 rounded-full group hover:bg-green-50 hover:shadow-md"
+                            title="Message on WhatsApp">
+                            <i class="mb-1 text-green-600 fa-brands fa-whatsapp group-hover:text-green-700"></i>
+                            <span class="text-xs text-green-600">WhatsApp</span>
+                        </a>
+                        @endif
+
+                        <!-- WeChat - FIXED CSS CLASSES -->
+                        @if($wechat)
+                        <button onclick="showWechatModal('{{ $wechat }}')"
+                            class="flex flex-col items-center justify-center w-16 h-16 transition duration-200 border border-green-400 rounded-full group hover:bg-green-50 hover:shadow-md"
+                            title="WeChat ID: {{ $wechat }}">
+                            <i class="mb-1 text-green-600 fa-brands fa-weixin group-hover:text-green-700"></i>
+                            <span class="text-xs text-green-600">WeChat</span>
+                        </button>
+                        @endif
+
+                        <!-- SMS - FIXED CSS CLASSES -->
+                        @if($phone)
+                        <a href="sms:{{ $phone }}?body=Hello%20{{ urlencode($principal->primaryContact->contact_name ?? 'there') }}"
+                            class="flex flex-col items-center justify-center w-16 h-16 transition duration-200 border border-blue-300 rounded-full group hover:bg-blue-50 hover:shadow-md"
+                            title="Send SMS">
+                            <i class="mb-1 text-blue-600 fa fa-comment group-hover:text-blue-700"></i>
+                            <span class="text-xs text-blue-600">SMS</span>
+                        </a>
+                        @endif
+                    </div>
+
+
+                </div>
+                @else
+                <div class="text-center">
+                    <div class="inline-flex items-center justify-center w-12 h-12 mb-3 rounded-full bg-slate-100">
+                        <i class="text-slate-400 fa fa-user"></i>
+                    </div>
+                    <p class="text-slate-500">No contact information available</p>
+                    <p class="mt-1 text-sm text-slate-400">Add contact details to enable quick communication</p>
+                </div>
+                @endif
+            </div>
+
+            <!-- WeChat Modal -->
+            <dialog id="wechatModal" class="fixed inset-0 z-50 flex items-center justify-center hidden p-4 bg-black/30">
+                <div class="w-full max-w-sm p-6 bg-white rounded-xl">
+                    <h3 class="mb-3 text-lg font-bold text-slate-800">WeChat Contact</h3>
+                    <div class="text-center">
+                        <i class="mb-4 text-4xl text-green-600 fa-brands fa-weixin"></i>
+                        <p class="mb-2 text-sm text-slate-600">WeChat ID:</p>
+                        <p class="mb-4 text-lg font-semibold text-slate-800" id="wechatId"></p>
+                        <p class="text-xs text-slate-500">Add this ID in WeChat to connect</p>
+                    </div>
+                    <div class="flex justify-end mt-4">
+                        <button onclick="closeWechatModal()" class="px-4 py-2 text-white rounded-lg bg-cyan-600 hover:bg-cyan-700">Close</button>
+                    </div>
+                </div>
+            </dialog>
+
+
+            {{-- Security & Visibility --}}
+            <div class="p-6 bg-white border shadow-md border-slate-100 rounded-xl">
+                <h3 class="mb-4 text-xl font-semibold text-slate-700"><i class="mr-2 text-cyan-500 fa fa-shield-alt"></i> Security & Visibility</h3>
+
+                <div class="space-y-3">
                     <div>
-                        <p class="mb-2 text-sm font-medium text-gray-700">Current Scope</p>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="inline-flex items-center px-3 py-1 text-sm font-medium text-blue-800 bg-blue-100 rounded-full">
-                                <i class="mr-2 fa-solid fa-globe"></i>Global Access
+                        <p class="text-sm font-medium text-slate-700">Visibility Scope</p>
+                        <div class="flex flex-wrap gap-1 mt-1">
+                            <span class="px-2 py-1 text-xs font-medium text-blue-700 bg-blue-100 rounded-full">
+                                Global Access
                             </span>
                             @if($principal->visibility_scopes)
                             @foreach($principal->visibility_scopes as $scope)
-                            <span class="inline-flex items-center px-3 py-1 text-sm font-medium text-gray-800 bg-gray-100 rounded-full">
+                            <span class="px-2 py-1 text-xs font-medium rounded-full text-slate-700 bg-slate-100">
                                 {{ ucfirst($scope) }}
                             </span>
                             @endforeach
@@ -1314,905 +437,163 @@
                     </div>
 
                     <div>
-                        <p class="mb-2 text-sm font-medium text-gray-700">Brand Access</p>
-                        <div class="flex flex-wrap gap-2">
+                        <p class="text-sm font-medium text-slate-700">Brand Access</p>
+                        <div class="flex flex-wrap gap-1 mt-1">
                             @if($principal->brands->count())
-                            @foreach($principal->brands->take(6) as $brand)
-                            <span class="inline-flex items-center px-3 py-1 text-sm font-medium text-green-800 bg-green-100 rounded-full">
-                                <i class="mr-2 text-xs fa-solid fa-store"></i>{{ $brand->title }}
+                            @foreach($principal->brands->take(3) as $brand)
+                            <span class="px-2 py-1 text-xs font-medium text-green-700 bg-green-100 rounded-full">
+                                {{ $brand->name }}
                             </span>
                             @endforeach
-                            @if($principal->brands->count() > 6)
-                            <span class="inline-flex items-center px-3 py-1 text-sm font-medium text-gray-800 bg-gray-100 rounded-full">
-                                +{{ $principal->brands->count() - 6 }} more
+                            @if($principal->brands->count() > 3)
+                            <span class="px-2 py-1 text-xs font-medium rounded-full text-slate-500 bg-slate-100">
+                                +{{ $principal->brands->count() - 3 }} more
                             </span>
                             @endif
                             @else
-                            <span class="text-sm text-gray-500">No brands assigned</span>
+                            <span class="text-xs text-slate-500">No brands assigned</span>
                             @endif
                         </div>
                     </div>
 
                     <div>
-                        <p class="mb-2 text-sm font-medium text-gray-700">Country Access</p>
-                        <div class="flex flex-wrap gap-2">
-                            @if($principal->countries && count($principal->countries))
-                            @foreach($principal->countries as $country)
-                            <span class="inline-flex items-center px-3 py-1 text-sm font-medium text-purple-800 bg-purple-100 rounded-full">
-                                <i class="mr-2 text-xs fa-solid fa-flag"></i>{{ $country }}
-                            </span>
-                            @endforeach
-                            @else
-                            <span class="text-sm text-gray-500">All countries</span>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Account Owners & Security -->
-            <div>
-                <h3 class="mb-4 text-lg font-medium text-gray-900">Account Management</h3>
-                <div class="space-y-6">
-                    <div>
-                        <p class="mb-3 text-sm font-medium text-gray-700">Account Owners</p>
-                        <div class="space-y-3">
-                            @if($principal->contacts->where('is_primary', true)->count())
-                            @foreach($principal->contacts->where('is_primary', true) as $contact)
-                            <div class="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
-                                <div class="flex items-center space-x-3">
-                                    <div class="flex items-center justify-center w-10 h-10 bg-blue-100 rounded-full">
-                                        <span class="text-sm font-medium text-blue-700">
-                                            {{ substr($contact->contact_name, 0, 1) }}
-                                        </span>
-                                    </div>
-                                    <div>
-                                        <p class="text-sm font-medium text-gray-900">{{ $contact->contact_name }}</p>
-                                        <p class="text-sm text-gray-500">{{ $contact->job_title ?? 'Primary Contact' }}</p>
-                                    </div>
-                                </div>
-                                <span class="inline-flex items-center px-2 py-1 text-xs font-medium text-green-800 bg-green-100 rounded-full">
-                                    Owner
-                                </span>
-                            </div>
-                            @endforeach
-                            @else
-                            <p class="text-sm text-gray-500">No primary contacts assigned</p>
-                            @endif
-                        </div>
-                    </div>
-
-                    <div>
-                        <p class="mb-2 text-sm font-medium text-gray-700">Security Status</p>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="p-3 text-center border border-green-200 rounded-lg bg-green-50">
-                                <i class="mb-2 text-xl text-green-600 fa-solid fa-shield-check"></i>
-                                <p class="text-sm font-medium text-green-800">Verified</p>
-                                <p class="text-xs text-green-600">Account Active</p>
-                            </div>
-                            {{-- <div class="p-3 text-center border border-blue-200 rounded-lg bg-blue-50">
-                            <i class="mb-2 text-xl text-blue-600 fa-solid fa-lock"></i>
-                            <p class="text-sm font-medium text-blue-800">Secure</p>
-                            <p class="text-xs text-blue-600">2FA Enabled</p>
-                        </div> --}}
-                        </div>
-                    </div>
-
-                    {{-- <div>
-                    <p class="mb-2 text-sm font-medium text-gray-700">Last Activity</p>
-                    <div class="flex items-center justify-between text-sm text-gray-600">
-                        <span>Last login</span>
-                        <span>{{ $principal->last_login_at ? $principal->last_login_at->diffForHumans() : 'Never' }}</span>
-                </div>
-            </div> --}}
-            <div>
-                <p class="mb-3 text-sm font-medium text-gray-700">Activity Overview</p>
-                <div class="space-y-3">
-                    <!-- Last Activity -->
-                    <div class="flex items-center justify-between">
-                        <span class="text-sm text-gray-600">Last activity</span>
-                        <span class="text-sm font-medium text-gray-900">
-                            @if($lastActivity)
-                            {{ $lastActivity->created_at->diffForHumans() }}
-                            @else
-                            <span class="text-gray-400">Never</span>
-                            @endif
-                        </span>
-                    </div>
-
-                    <!-- Total Activities -->
-                    <div class="flex items-center justify-between">
-                        <span class="text-sm text-gray-600">Total activities</span>
-                        <span class="text-sm font-medium text-gray-900">
-                            {{ $activities->count() }}
-                        </span>
-                    </div>
-
-                    <!-- Today's Activities -->
-                    <div class="flex items-center justify-between">
-                        <span class="text-sm text-gray-600">Today</span>
-                        <span class="text-sm font-medium text-gray-900">
-                            {{ $activities->where('created_at', '>=', today())->count() }}
-                        </span>
-                    </div>
-
-                    <!-- Pinned Activities -->
-                    <div class="flex items-center justify-between">
-                        <span class="text-sm text-gray-600">Pinned</span>
-                        <span class="text-sm font-medium text-gray-900">
-                            {{ $activities->where('pinned', true)->count() }}
+                        <p class="text-sm font-medium text-slate-700">Account Status</p>
+                        <span class="inline-flex items-center px-2 py-1 mt-1 text-xs font-medium text-green-700 bg-green-100 rounded-full">
+                            <i class="mr-1 fa fa-check-circle"></i> Active & Verified
                         </span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-</div>
-@endsection
-@push('scripts')
-<script>
-    // Global variables
-    let currentEditingNoteId = null;
-    let attachments = []; // Store attachments for the current note
 
-    // Helper function to get CSRF token safely
-    function getCsrfToken() {
-        const metaTag = document.querySelector('meta[name="csrf-token"]');
-        if (metaTag) {
-            return metaTag.content;
-        }
-
-        const formToken = document.querySelector('input[name="_token"]');
-        if (formToken) {
-            return formToken.value;
-        }
-
-        console.warn('CSRF token not found');
-        return '';
-    }
-
-    // Character counter function
-    function updateCharCount(textarea) {
-        const charCount = document.getElementById('charCount');
-        if (charCount && textarea) {
-            charCount.textContent = textarea.value.length;
-        }
-    }
-
-    // Add link to attachments
-    function addLink() {
-        const urlInput = document.getElementById('linkUrl');
-        const titleInput = document.getElementById('linkTitle');
-        const url = urlInput.value.trim();
-        const title = titleInput.value.trim() || 'Link';
-
-        if (!url) {
-            showNotification('Please enter a URL', 'error');
-            return;
-        }
-
-        // Validate URL
-        try {
-            new URL(url);
-        } catch (e) {
-            showNotification('Please enter a valid URL', 'error');
-            return;
-        }
-
-        const link = {
-            type: 'link',
-            url: url,
-            name: title,
-            title: title
-        };
-
-        attachments.push(link);
-        updateAttachmentsPreview();
-
-        // Clear inputs
-        urlInput.value = '';
-        titleInput.value = '';
-
-        showNotification('Link added to attachments', 'success');
-    }
-
-    // Handle file selection
-    function handleFileSelect(event) {
-        const files = Array.from(event.target.files);
-
-        files.forEach(file => {
-            // Check file size (10MB limit)
-            if (file.size > 10 * 1024 * 1024) {
-                showNotification(`File ${file.name} is too large. Max size is 10MB.`, 'error');
-                return;
-            }
-
-            const fileAttachment = {
-                type: 'file',
-                file: file,
-                name: file.name,
-                size: file.size
-            };
-
-            attachments.push(fileAttachment);
-        });
-
-        updateAttachmentsPreview();
-        event.target.value = ''; // Reset file input
-    }
-
-    // Update attachments preview
-    function updateAttachmentsPreview() {
-        const previewContainer = document.getElementById('attachmentsPreview');
-        const attachmentsList = document.getElementById('attachmentsList');
-
-        if (attachments.length === 0) {
-            previewContainer.classList.add('hidden');
-            attachmentsList.innerHTML = '';
-            return;
-        }
-
-        previewContainer.classList.remove('hidden');
-        attachmentsList.innerHTML = '';
-
-        attachments.forEach((attachment, index) => {
-            const attachmentElement = document.createElement('div');
-            attachmentElement.className = 'flex items-center justify-between bg-gray-50 p-3 rounded-lg border border-gray-200';
-
-            if (attachment.type === 'link') {
-                attachmentElement.innerHTML = `
-                <div class="flex items-center flex-1 space-x-3">
-                    <i class="text-blue-500 fa-solid fa-link"></i>
-                    <div class="flex-1 min-w-0">
-                        <p class="text-sm font-medium text-gray-900 truncate">${attachment.name}</p>
-                        <p class="text-xs text-gray-500 truncate">${attachment.url}</p>
+    {{-- Timeline, Notes, Activities --}}
+    <div class="grid gap-6 mt-8 md:grid-cols-3">
+        {{-- Recent Activities --}}
+        <div class="p-6 bg-white border shadow-md border-slate-100 rounded-xl">
+            <h3 class="mb-4 text-xl font-semibold text-slate-700">Recent Activities</h3>
+            @if($activities->count())
+            <div class="space-y-4">
+                @foreach($activities->take(5) as $activity)
+                <div class="flex items-start space-x-3">
+                    <div class="flex-shrink-0 w-8 h-8 mt-1 rounded-full flex items-center justify-center
+                        @if($activity->type == 'note') bg-blue-100 text-blue-600
+                        @elseif($activity->type == 'important') bg-red-100 text-red-600
+                        @elseif($activity->type == 'task') bg-green-100 text-green-600
+                        @else bg-slate-100 text-slate-600 @endif">
+                        <i class="text-sm fa-solid fa-note-sticky"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm text-slate-700">{{ $activity->description }}</p>
+                        <p class="text-xs text-slate-500">{{ $activity->created_at->diffForHumans() }}</p>
                     </div>
                 </div>
-                <button type="button" onclick="removeAttachment(${index})" class="ml-2 text-red-500 hover:text-red-700">
-                    <i class="fa-solid fa-times"></i>
-                </button>
-            `;
-            } else if (attachment.type === 'file') {
-                const size = (attachment.size / 1024 / 1024).toFixed(2);
-                const fileExtension = attachment.name.split('.').pop().toLowerCase();
-                const icon = getFileIcon(fileExtension);
-
-                attachmentElement.innerHTML = `
-                <div class="flex items-center flex-1 space-x-3">
-                    <i class="fa-solid ${icon} text-green-500"></i>
-                    <div class="flex-1 min-w-0">
-                        <p class="text-sm font-medium text-gray-900 truncate">${attachment.name}</p>
-                        <p class="text-xs text-gray-500">${size} MB</p>
-                    </div>
-                </div>
-                <button type="button" onclick="removeAttachment(${index})" class="ml-2 text-red-500 hover:text-red-700">
-                    <i class="fa-solid fa-times"></i>
-                </button>
-            `;
-            }
-
-            attachmentsList.appendChild(attachmentElement);
-        });
-    }
-
-    // Get appropriate file icon
-    function getFileIcon(extension) {
-        const iconMap = {
-            'pdf': 'fa-file-pdf',
-            'doc': 'fa-file-word',
-            'docx': 'fa-file-word',
-            'txt': 'fa-file-text',
-            'jpg': 'fa-file-image',
-            'jpeg': 'fa-file-image',
-            'png': 'fa-file-image',
-            'xls': 'fa-file-excel',
-            'xlsx': 'fa-file-excel',
-            'zip': 'fa-file-archive',
-            'rar': 'fa-file-archive'
-        };
-
-        return iconMap[extension] || 'fa-file';
-    }
-
-    // Remove attachment
-    function removeAttachment(index) {
-        attachments.splice(index, 1);
-        updateAttachmentsPreview();
-        showNotification('Attachment removed', 'info');
-    }
-
-    // Edit Note with improved error handling
-    async function editNote(activityId) {
-        try {
-            // Show loading state
-            const menuButton = document.querySelector(`[data-activity-id="${activityId}"] .fa-ellipsis-vertical`)?.parentElement;
-            if (menuButton) {
-                menuButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
-                menuButton.disabled = true;
-            }
-
-            console.log('Fetching note:', activityId);
-
-            const response = await fetch(`/principal/notes/${activityId}`, {
-                headers: {
-                    'Accept': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            });
-
-            // Check if response is JSON
-            const contentType = response.headers.get('content-type');
-            if (!contentType || !contentType.includes('application/json')) {
-                const text = await response.text();
-                console.error('Non-JSON response:', text.substring(0, 200));
-                throw new Error('Server returned non-JSON response. Please check the console for details.');
-            }
-
-            const result = await response.json();
-
-            if (!response.ok) {
-                throw new Error(result.message || `HTTP error! status: ${response.status}`);
-            }
-
-            if (result.success) {
-                const activity = result.activity;
-                currentEditingNoteId = activityId;
-
-                // Populate the form
-                const noteField = document.querySelector('textarea[name="note"]');
-                if (noteField) {
-                    noteField.value = activity.description || '';
-                    updateCharCount(noteField);
-                }
-
-                // Set note type
-                const typeInputs = document.querySelectorAll('input[name="type"]');
-                typeInputs.forEach(input => {
-                    if (input.value === activity.type) {
-                        input.checked = true;
-                    }
-                });
-
-                // Set pin status
-                const pinInput = document.querySelector('input[name="pin"]');
-                if (pinInput) {
-                    pinInput.checked = !!activity.pinned;
-                }
-
-                // Load existing attachments if any
-                attachments = [];
-                if (activity.metadata && activity.metadata.attachments) {
-                    attachments = activity.metadata.attachments.map(att => ({
-                        type: att.type,
-                        url: att.url,
-                        name: att.name,
-                        size: att.size
-                    }));
-                }
-                updateAttachmentsPreview();
-
-                // Change form to update mode
-                const form = document.getElementById('noteForm');
-                if (form) {
-                    form.setAttribute('data-mode', 'edit');
-                    form.setAttribute('data-activity-id', activityId);
-
-                    const submitButton = form.querySelector('button[type="submit"]');
-                    if (submitButton) {
-                        submitButton.innerHTML = '<i class="mr-2 fa-solid fa-save"></i>Update Note';
-                        submitButton.classList.remove('bg-blue-600', 'hover:bg-blue-700');
-                        submitButton.classList.add('bg-green-600', 'hover:bg-green-700');
-                    }
-                }
-
-                // Show the form if hidden
-                const formContainer = document.getElementById('noteFormContainer');
-                if (formContainer && formContainer.classList.contains('hidden')) {
-                    toggleNoteForm();
-                }
-
-                // Scroll to form
-                if (formContainer) {
-                    formContainer.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-
-                showNotification('Note loaded successfully', 'success');
-
-            } else {
-                throw new Error(result.message || 'Failed to load note');
-            }
-        } catch (error) {
-            console.error('Error loading note:', error);
-            showNotification('Error loading note: ' + error.message, 'error');
-        } finally {
-            // Reset menu button
-            const menuButton = document.querySelector(`[data-activity-id="${activityId}"] .fa-spinner`)?.parentElement;
-            if (menuButton) {
-                menuButton.innerHTML = '<i class="fa-solid fa-ellipsis-vertical"></i>';
-                menuButton.disabled = false;
-            }
-        }
-    }
-
-    // Delete Note
-    async function deleteNote(activityId) {
-        if (!confirm('Are you sure you want to delete this note? This action cannot be undone.')) {
-            return;
-        }
-
-        try {
-            const response = await fetch(`/principal/notes/${activityId}`, {
-                method: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN': getCsrfToken(),
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const result = await response.json();
-
-            if (result.success) {
-                // Remove the note from the DOM with animation
-                const noteElement = document.querySelector(`[data-activity-id="${activityId}"]`);
-                if (noteElement) {
-                    noteElement.style.opacity = '0';
-                    noteElement.style.transform = 'translateX(-100%)';
-                    setTimeout(() => {
-                        noteElement.remove();
-                        updateActivityStats();
-                    }, 300);
-                }
-
-                showNotification('Note deleted successfully!', 'success');
-
-            } else {
-                throw new Error(result.message || 'Failed to delete note');
-            }
-        } catch (error) {
-            console.error('Error deleting note:', error);
-            showNotification('Error deleting note: ' + error.message, 'error');
-        }
-    }
-
-    // Toggle Pin Note
-    async function togglePinNote(activityId) {
-        try {
-            const response = await fetch(`/principal/notes/${activityId}/pin`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': getCsrfToken(),
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const result = await response.json();
-
-            if (result.success) {
-                // Update the note element immediately
-                const noteElement = document.querySelector(`[data-activity-id="${activityId}"]`);
-                if (noteElement) {
-                    const isPinned = result.activity.pinned;
-
-                    // Toggle pinned styles
-                    if (isPinned) {
-                        noteElement.classList.add('bg-yellow-50', 'border-yellow-200');
-                        noteElement.classList.remove('bg-white');
-                    } else {
-                        noteElement.classList.remove('bg-yellow-50', 'border-yellow-200');
-                        noteElement.classList.add('bg-white');
-                    }
-
-                    // Update pinned badge
-                    const pinnedBadge = noteElement.querySelector('.pinned-badge');
-                    if (pinnedBadge) {
-                        if (isPinned) {
-                            pinnedBadge.classList.remove('hidden');
-                        } else {
-                            pinnedBadge.classList.add('hidden');
-                        }
-                    }
-
-                    // Update pin button text in dropdown
-                    const pinButton = noteElement.querySelector('[onclick*="togglePinNote"]');
-                    if (pinButton) {
-                        pinButton.innerHTML = `<i class="mr-2 text-gray-500 fa-solid fa-thumbtack"></i>${isPinned ? 'Unpin' : 'Pin'} Note`;
-                    }
-
-                    // Move pinned notes to top
-                    if (isPinned) {
-                        const activitiesList = document.getElementById('activitiesList');
-                        activitiesList.insertBefore(noteElement, activitiesList.firstChild);
-                    }
-                }
-
-                showNotification(result.message, 'success');
-            } else {
-                throw new Error(result.message || 'Failed to toggle pin');
-            }
-        } catch (error) {
-            console.error('Error toggling pin:', error);
-            showNotification('Error toggling pin: ' + error.message, 'error');
-        }
-    }
-
-    // Update form submission to handle both create and update with file attachments
-    document.addEventListener('DOMContentLoaded', function() {
-        const noteForm = document.getElementById('noteForm');
-        if (noteForm) {
-            // Add input event listener for character count
-            const noteField = noteForm.querySelector('textarea[name="note"]');
-            if (noteField) {
-                noteField.addEventListener('input', function() {
-                    updateCharCount(this);
-                });
-            }
-
-            // Initialize file input event listener
-            const fileInput = document.getElementById('fileInput');
-            if (fileInput) {
-                fileInput.addEventListener('change', handleFileSelect);
-            }
-
-            noteForm.addEventListener('submit', async function(e) {
-                e.preventDefault();
-
-                const mode = this.getAttribute('data-mode');
-                const activityId = this.getAttribute('data-activity-id');
-
-                // Get form values explicitly to ensure they're captured
-                const noteField = this.querySelector('textarea[name="note"]');
-                const noteValue = noteField ? noteField.value.trim() : '';
-                const typeInput = this.querySelector('input[name="type"]:checked');
-                const typeValue = typeInput ? typeInput.value : 'note';
-                const pinInput = this.querySelector('input[name="pin"]');
-                const pinValue = pinInput ? pinInput.checked : false;
-
-                // Validate required fields
-                if (!noteValue) {
-                    showNotification('Please enter a note before saving.', 'error');
-                    if (noteField) noteField.focus();
-                    return;
-                }
-
-                if (!typeValue) {
-                    showNotification('Please select a note type.', 'error');
-                    return;
-                }
-
-                const submitButton = this.querySelector('button[type="submit"]');
-                const originalText = submitButton.innerHTML;
-                const originalClass = submitButton.className;
-
-                // Show loading state
-                submitButton.innerHTML = '<i class="mr-2 fa-solid fa-spinner fa-spin"></i>' +
-                    (mode === 'edit' ? 'Updating...' : 'Saving...');
-                submitButton.disabled = true;
-
-                try {
-                    let url = '/principal/notes';
-                    let method = 'POST';
-
-                    if (mode === 'edit' && activityId) {
-                        url = `/principal/notes/${activityId}`;
-                        method = 'PUT';
-                    }
-
-                    // Create form data properly with explicit values
-                    const formData = new FormData();
-                    formData.append('note', noteValue);
-                    formData.append('type', typeValue);
-                    formData.append('pin', pinValue ? '1' : '0');
-
-                    // Add attachments
-                    if (attachments.length > 0) {
-                        attachments.forEach((attachment, index) => {
-                            if (attachment.type === 'file' && attachment.file) {
-                                formData.append(`attachments[${index}][file]`, attachment.file);
-                                formData.append(`attachments[${index}][type]`, 'file');
-                                formData.append(`attachments[${index}][name]`, attachment.name);
-                            } else if (attachment.type === 'link') {
-                                formData.append(`attachments[${index}][type]`, 'link');
-                                formData.append(`attachments[${index}][url]`, attachment.url);
-                                formData.append(`attachments[${index}][name]`, attachment.name);
-                            }
-                        });
-                    }
-
-                    // For PUT requests, we need to add _method for Laravel to recognize it
-                    if (method === 'PUT') {
-                        formData.append('_method', 'PUT');
-                    }
-
-                    // Add CSRF token
-                    formData.append('_token', getCsrfToken());
-
-                    const response = await fetch(url, {
-                        method: 'POST', // Always use POST when using FormData with _method
-                        body: formData,
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest',
-                            'Accept': 'application/json'
-                        }
-                    });
-
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-
-                    const result = await response.json();
-
-                    if (result.success) {
-                        showNotification(result.message, 'success');
-
-                        // Reset form and hide it
-                        this.reset();
-                        attachments = []; // Clear attachments
-                        updateAttachmentsPreview();
-                        const charCount = document.getElementById('charCount');
-                        if (charCount) charCount.textContent = '0';
-                        toggleNoteForm();
-
-                        // Reset form mode
-                        this.removeAttribute('data-mode');
-                        this.removeAttribute('data-activity-id');
-                        submitButton.innerHTML = '<i class="mr-2 fa-solid fa-save"></i>Save Note';
-                        submitButton.className = originalClass;
-
-                        // Reload the page to show updated activities
-                        setTimeout(() => {
-                            window.location.reload();
-                        }, 1500);
-
-                    } else {
-                        // Show validation errors from server
-                        if (result.errors) {
-                            const errorMessages = Object.values(result.errors).flat().join(', ');
-                            throw new Error(errorMessages);
-                        } else {
-                            throw new Error(result.message || 'Unknown error occurred');
-                        }
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                    showNotification('Error: ' + error.message, 'error');
-                } finally {
-                    // Reset button state
-                    submitButton.innerHTML = originalText;
-                    submitButton.disabled = false;
-                }
-            });
-        }
-    });
-
-    // Update toggleNoteForm to reset form mode when canceling
-    function toggleNoteForm() {
-        const formContainer = document.getElementById('noteFormContainer');
-        const form = document.getElementById('noteForm');
-        const submitButton = form?.querySelector('button[type="submit"]');
-
-        if (formContainer) {
-            formContainer.classList.toggle('hidden');
-
-            if (!formContainer.classList.contains('hidden')) {
-                const noteField = form?.querySelector('textarea[name="note"]');
-                if (noteField) noteField.focus();
-            } else {
-                // Reset form to create mode when hiding
-                if (form) {
-                    form.removeAttribute('data-mode');
-                    form.removeAttribute('data-activity-id');
-                    form.reset();
-                    attachments = []; // Clear attachments
-                    updateAttachmentsPreview();
-
-                    // Reset type to default
-                    const defaultType = form.querySelector('input[name="type"][value="note"]');
-                    if (defaultType) {
-                        defaultType.checked = true;
-                    }
-
-                    // Reset pin to default
-                    const pinInput = form.querySelector('input[name="pin"]');
-                    if (pinInput) {
-                        pinInput.checked = false;
-                    }
-
-                    // Clear link inputs
-                    const linkUrl = document.getElementById('linkUrl');
-                    const linkTitle = document.getElementById('linkTitle');
-                    if (linkUrl) linkUrl.value = '';
-                    if (linkTitle) linkTitle.value = '';
-
-                    if (submitButton) {
-                        submitButton.innerHTML = '<i class="mr-2 fa-solid fa-save"></i>Save Note';
-                        submitButton.classList.remove('bg-green-600', 'hover:bg-green-700');
-                        submitButton.classList.add('bg-blue-600', 'hover:bg-blue-700');
-                    }
-
-                    const charCount = document.getElementById('charCount');
-                    if (charCount) charCount.textContent = '0';
-                }
-            }
-        }
-    }
-
-    // Enhanced notification system
-    function showNotification(message, type = 'info') {
-        // Remove existing notifications
-        const existingNotifications = document.querySelectorAll('.custom-notification');
-        existingNotifications.forEach(notification => notification.remove());
-
-        const notification = document.createElement('div');
-        const bgColor = type === 'success' ? 'bg-green-500' :
-            type === 'error' ? 'bg-red-500' :
-            type === 'warning' ? 'bg-yellow-500' : 'bg-blue-500';
-
-        notification.className = `custom-notification fixed top-4 right-4 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg z-50 transform transition-transform duration-300 translate-x-full`;
-        notification.innerHTML = `
-        <div class="flex items-center space-x-2">
-            <i class="fa-solid ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : type === 'warning' ? 'fa-exclamation-triangle' : 'fa-info-circle'}"></i>
-            <span class="font-medium">${message}</span>
+                @endforeach
+            </div>
+            @else
+            <p class="text-slate-500">No recent activities</p>
+            @endif
         </div>
-    `;
 
-        document.body.appendChild(notification);
+        {{-- Notes Summary --}}
+        <div class="p-6 bg-white border shadow-md border-slate-100 rounded-xl">
+            <h3 class="mb-4 text-xl font-semibold text-slate-700">Notes Notifications</h3>
+            @if($activities->where('type', 'note')->count())
+            <div class="space-y-3">
+                @foreach($activities->where('type', 'note')->take(3) as $note)
+                <div class="p-3 border rounded-lg border-slate-200 hover:bg-slate-50">
+                    <p class="text-sm text-slate-700 line-clamp-2">{{ $note->description }}</p>
+                    <p class="mt-1 text-xs text-slate-500">{{ $note->created_at->diffForHumans() }}</p>
+                </div>
+                @endforeach
+            </div>
+            @else
+            <p class="text-slate-500">No notes yet</p>
+            <button onclick="openModal('noteModal')" class="inline-block px-3 py-1 mt-2 text-sm text-white rounded-lg bg-cyan-600 hover:bg-cyan-700">
+                <i class="mr-1 fa fa-plus"></i> Add Note
+            </button>
+            @endif
+        </div>
+    </div>
 
-        // Animate in
-        setTimeout(() => {
-            notification.classList.remove('translate-x-full');
-        }, 100);
+</div>
 
-        // Auto remove after 5 seconds
-        setTimeout(() => {
-            notification.classList.add('translate-x-full');
-            setTimeout(() => {
-                if (notification.parentNode) {
-                    notification.parentNode.removeChild(notification);
-                }
-            }, 300);
-        }, 5000);
+{{-- Note Modal --}}
+<dialog id="noteModal" class="fixed inset-0 z-50 flex items-center justify-center hidden p-4 bg-black/30">
+    <div class="w-full max-w-lg p-6 bg-white rounded-xl">
+        <h3 class="mb-4 text-xl font-bold text-slate-800">Add Note</h3>
+        <form action="{{ route('principal.notes.store') }}" method="POST">
+            @csrf
+            <textarea name="note" class="w-full p-3 border rounded-md" rows="5" placeholder="Type your note here..." required></textarea>
+            <div class="flex justify-end mt-4 space-x-3">
+                <button type="submit" class="px-4 py-2 text-white rounded-lg bg-cyan-600 hover:bg-cyan-700">Save Note</button>
+                <button type="button" onclick="closeModal('noteModal')" class="px-4 py-2 border rounded-lg border-slate-300 hover:bg-slate-100">Cancel</button>
+            </div>
+        </form>
+    </div>
+</dialog>
 
-        // Click to dismiss
-        notification.addEventListener('click', () => {
-            notification.classList.add('translate-x-full');
-            setTimeout(() => {
-                if (notification.parentNode) {
-                    notification.parentNode.removeChild(notification);
-                }
-            }, 300);
-        });
+@endsection
+
+@section('script')
+<script>
+    // Simple modal functions
+    function openModal(modalId) {
+        document.getElementById(modalId).showModal();
     }
 
-    // Update activity stats
-    function updateActivityStats() {
-        const activityCount = document.querySelectorAll('[data-activity-id]').length;
-        const activityStatsElement = document.querySelector('[data-activity-stats]');
-
-        if (activityStatsElement) {
-            activityStatsElement.textContent = activityCount;
-        }
-
-        // Update last activity if needed
-        const lastActivityElement = document.querySelector('[data-last-activity]');
-        if (lastActivityElement && activityCount === 0) {
-            lastActivityElement.textContent = 'No activities yet';
-        }
+    function closeModal(modalId) {
+        document.getElementById(modalId).close();
     }
 
-    // Close dropdowns when clicking outside
+    // Close modal when clicking outside
     document.addEventListener('click', function(e) {
-        if (!e.target.closest('.group')) {
-            document.querySelectorAll('.dropdown-menu').forEach(dropdown => {
-                dropdown.classList.add('hidden');
-            });
+        if (e.target.tagName === 'DIALOG') {
+            e.target.close();
         }
     });
 
-    // Initialize when page loads
+    // Tab functionality
     document.addEventListener('DOMContentLoaded', function() {
-        updateActivityStats();
+        const tabButtons = document.querySelectorAll('.tab-btn');
 
-        // Initialize character counter
-        const noteField = document.querySelector('textarea[name="note"]');
-        if (noteField) {
-            updateCharCount(noteField);
-        }
+        tabButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const target = this.getAttribute('data-target');
 
-        // Initialize file input
-        const fileInput = document.getElementById('fileInput');
-        if (fileInput) {
-            fileInput.addEventListener('change', handleFileSelect);
+                // Update active tab
+                tabButtons.forEach(btn => {
+                    btn.classList.remove('text-cyan-600', 'border-cyan-600');
+                    btn.classList.add('text-slate-500', 'border-transparent');
+                });
+                this.classList.add('text-cyan-600', 'border-cyan-600');
+                this.classList.remove('text-slate-500', 'border-transparent');
+
+                // Show target content
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.add('hidden');
+                });
+                document.getElementById(target).classList.remove('hidden');
+            });
+        });
+    });
+</script>
+<script>
+    // WeChat Modal Functions
+    function showWechatModal(wechatId) {
+        document.getElementById('wechatId').textContent = wechatId;
+        document.getElementById('wechatModal').showModal();
+    }
+
+    function closeWechatModal() {
+        document.getElementById('wechatModal').close();
+    }
+
+    // Close modal when clicking outside
+    document.addEventListener('click', function(e) {
+        if (e.target.tagName === 'DIALOG') {
+            e.target.close();
         }
     });
-
-    // Simple dropdown toggle function
-    function toggleDropdown(button) {
-        const dropdown = button.nextElementSibling;
-        const allDropdowns = document.querySelectorAll('.dropdown-menu');
-
-        // Close all other dropdowns
-        allDropdowns.forEach(dd => {
-            if (dd !== dropdown) {
-                dd.classList.add('hidden');
-            }
-        });
-
-        // Toggle current dropdown
-        dropdown.classList.toggle('hidden');
-    }
-
-    // Rich text formatting functions (placeholder implementations)
-    function formatText(command) {
-        const textarea = document.getElementById('richNote');
-        if (!textarea) return;
-
-        const start = textarea.selectionStart;
-        const end = textarea.selectionEnd;
-        const selectedText = textarea.value.substring(start, end);
-
-        let formattedText = '';
-        switch (command) {
-            case 'bold':
-                formattedText = `**${selectedText}**`;
-                break;
-            case 'italic':
-                formattedText = `*${selectedText}*`;
-                break;
-            case 'underline':
-                formattedText = `__${selectedText}__`;
-                break;
-            default:
-                formattedText = selectedText;
-        }
-
-        textarea.setRangeText(formattedText, start, end, 'select');
-        textarea.focus();
-    }
-
-    function insertMention() {
-        const textarea = document.getElementById('richNote');
-        if (!textarea) return;
-
-        const start = textarea.selectionStart;
-        textarea.setRangeText('@', start, start, 'end');
-        textarea.focus();
-    }
-
-    function insertLink() {
-        const textarea = document.getElementById('richNote');
-        if (!textarea) return;
-
-        const url = prompt('Enter URL:');
-        if (url) {
-            const title = prompt('Enter link title (optional):') || 'Link';
-            const start = textarea.selectionStart;
-            const end = textarea.selectionEnd;
-            const selectedText = textarea.value.substring(start, end);
-            const linkText = selectedText || title;
-
-            textarea.setRangeText(`[${linkText}](${url})`, start, end, 'select');
-            textarea.focus();
-        }
-    }
-
-    function handleInput(textarea) {
-        updateCharCount(textarea);
-    }
 </script>
-@endpush
+@endsection
