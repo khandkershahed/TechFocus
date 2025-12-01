@@ -364,3 +364,13 @@ Route::post('/destroy-after-rfq', function () {
 })->name('destroy.after.rfq');
 
 
+// In your routes file
+// Route::get('/principal/notes', [PrincipalDashboardController::class, 'notesIndex'])->name('principal.notes.index');
+// Principal Routes
+Route::prefix('principal')->name('principal.')->group(function () {
+    Route::get('/dashboard', [PrincipalDashboardController::class, 'index'])->name('dashboard');
+    // Route::get('/profile', [PrincipalProfileController::class, 'index'])->name('profile.index');
+    // Route::get('/profile/settings', [PrincipalProfileController::class, 'settings'])->name('profile.settings');
+    Route::post('/logout', [PrincipalAuthController::class, 'logout'])->name('logout');
+    Route::get('/notes', [PrincipalDashboardController::class, 'notesIndex'])->name('notes.index');
+});

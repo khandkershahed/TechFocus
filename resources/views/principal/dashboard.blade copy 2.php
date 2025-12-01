@@ -1546,7 +1546,7 @@
                 </div>
             </div>
             <div x-show="tab === 5" x-transition>
-                {{-- <!-- Security & Visibility -->
+                <!-- Security & Visibility -->
                 <div class="p-6 bg-white border border-gray-200 shadow-sm rounded-2xl">
                     <h3 class="mb-4 text-lg font-semibold text-gray-900">Security & Visibility</h3>
 
@@ -1602,7 +1602,7 @@
                                     @endif
                                 </span>
                             </div>
-                        </div> --}}
+                        </div> 
                         
     <!-- Security & Visibility Section -->
     {{-- <div class="p-6 bg-white rounded-lg shadow">

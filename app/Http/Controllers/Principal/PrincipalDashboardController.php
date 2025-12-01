@@ -323,7 +323,19 @@ public function getActivities()
 
     return response()->json($activities);
 }
+    public function notesIndex()
+    {
+        $principal = auth('principal')->user();
 
+        // Get all activities with replies for the notes page
+        $activities = Activity::where('principal_id', $principal->id)
+            ->with(['replies', 'replies.user', 'createdBy'])
+            ->orderBy('pinned', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('principal.notes.index', compact('principal', 'activities'));
+    }
 public function getNote($activityId)
 {
     try {
