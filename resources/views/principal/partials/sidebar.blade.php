@@ -55,7 +55,7 @@
             <!-- Main Dashboard -->
             <div class="menu-item">
                 <a class="menu-link {{ Route::is('principal.dashboard') ? 'active' : '' }}"
-                    href="{{ route('principal.profile.overview') }}">
+                    href="{{ route('principal.dashboard') }}">
                     <span class="menu-icon">
                         <i class="fa-solid fa-house-chimney-window svg-icon svg-icon-2"></i>
                     </span>
