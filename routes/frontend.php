@@ -373,4 +373,14 @@ Route::prefix('principal')->name('principal.')->group(function () {
     // Route::get('/profile/settings', [PrincipalProfileController::class, 'settings'])->name('profile.settings');
     Route::post('/logout', [PrincipalAuthController::class, 'logout'])->name('logout');
     Route::get('/notes', [PrincipalDashboardController::class, 'notesIndex'])->name('notes.index');
-});
+}); 
+Route::prefix('principal')
+    ->name('principal.')
+    ->middleware('auth:principal')
+    ->group(function () {
+        
+        // Separate Dashboard Overview
+        Route::get('/dashboard/overview', [PrincipalDashboardController::class, 'overview'])
+            ->name('dashboard.overview');
+            
+    });
