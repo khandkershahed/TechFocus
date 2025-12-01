@@ -6,7 +6,7 @@
     {{-- Header & Actions --}}
     <div class="flex flex-col items-start justify-between p-6 mb-6 bg-white border shadow-xl border-slate-100 rounded-2xl md:flex-row md:items-center">
         <div>
-                                <h1 class="mb-2 text-3xl font-extrabold text-slate-900 md:text-4xl flex items-center gap-2">
+                                <h1 class="flex items-center gap-2 mb-2 text-3xl font-extrabold text-slate-900 md:text-4xl">
                                     {{ $principal->legal_name ?? $principal->name ?? 'Company Name' }}
                                     @if($principal->country)
                                         @php
@@ -142,7 +142,7 @@
                                     <td class="px-4 py-3">
                                         {{ $contact->contact_name }}
                                         @if($contact->is_primary)
-                                        <span class="ml-2 px-2 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-full">Primary</span>
+                                        <span class="px-2 py-1 ml-2 text-xs font-semibold text-green-700 bg-green-100 rounded-full">Primary</span>
                                         @endif
                                     </td>
                                     <td class="px-4 py-3">{{ $contact->email ?? 'N/A' }}</td>
@@ -165,7 +165,7 @@
                 <div class="p-6 space-y-3 bg-white border shadow-md border-slate-100 rounded-xl">
                     <div class="flex items-center justify-between">
                         <h3 class="text-xl font-semibold text-slate-700"><i class="mr-2 text-cyan-500 fa fa-certificate"></i> Brand Info</h3>
-                        <a href="{{ route('principal.brands.create') }}" class="px-3 py-1 text-sm text-white bg-cyan-600 rounded-lg hover:bg-cyan-700">
+                        <a href="{{ route('principal.brands.create') }}" class="px-3 py-1 text-sm text-white rounded-lg bg-cyan-600 hover:bg-cyan-700">
                             <i class="mr-1 fa fa-plus"></i> Add
                         </a>
                     </div>
@@ -173,7 +173,7 @@
                     @if($brands->count())
                     <div class="space-y-2">
                         @foreach($brands->take(3) as $brand)
-                        <div class="flex items-center justify-between p-3 border border-slate-200 rounded-lg hover:bg-slate-50">
+                        <div class="flex items-center justify-between p-3 border rounded-lg border-slate-200 hover:bg-slate-50">
                             <div>
                                 <p class="font-medium text-slate-800">{{ $brand->name }}</p>
                                 <p class="text-sm text-slate-500">{{ $brand->category ?? 'No category' }}</p>
@@ -197,7 +197,7 @@
                     </div>
                     @else
                     <p class="text-slate-500">No brands added yet</p>
-                    <a href="{{ route('principal.brands.create') }}" class="inline-block px-4 py-2 text-white bg-cyan-600 rounded-lg hover:bg-cyan-700">
+                    <a href="{{ route('principal.brands.create') }}" class="inline-block px-4 py-2 text-white rounded-lg bg-cyan-600 hover:bg-cyan-700">
                         <i class="mr-1 fa fa-plus"></i> Add First Brand
                     </a>
                     @endif
@@ -207,7 +207,7 @@
                 <div class="p-6 space-y-4 bg-white border shadow-md border-slate-100 rounded-xl">
                     <div class="flex items-center justify-between">
                         <h3 class="text-xl font-semibold text-slate-700"><i class="mr-2 text-cyan-500 fa fa-boxes-stacked"></i> Product List</h3>
-                        <a href="{{ route('principal.products.create') }}" class="px-3 py-1 text-sm text-white bg-cyan-600 rounded-lg hover:bg-cyan-700">
+                        <a href="{{ route('principal.products.create') }}" class="px-3 py-1 text-sm text-white rounded-lg bg-cyan-600 hover:bg-cyan-700">
                             <i class="mr-1 fa fa-plus"></i> Add
                         </a>
                     </div>
@@ -261,7 +261,7 @@
                     </div>
                     @else
                     <p class="text-slate-500">No products added yet</p>
-                    <a href="{{ route('principal.products.create') }}" class="inline-block px-4 py-2 text-white bg-cyan-600 rounded-lg hover:bg-cyan-700">
+                    <a href="{{ route('principal.products.create') }}" class="inline-block px-4 py-2 text-white rounded-lg bg-cyan-600 hover:bg-cyan-700">
                         <i class="mr-1 fa fa-plus"></i> Add First Product
                     </a>
                     @endif
@@ -277,7 +277,7 @@
                 @if($principal->addresses->count())
                 <div class="space-y-3">
                     @foreach($principal->addresses as $address)
-                    <div class="p-3 border border-slate-200 rounded-lg hover:bg-slate-50">
+                    <div class="p-3 border rounded-lg border-slate-200 hover:bg-slate-50">
                         <div class="flex items-center justify-between mb-2">
                             <span class="px-2 py-1 text-xs font-semibold text-blue-700 bg-blue-100 rounded-full">
                                 {{ ucfirst($address->type) }}
@@ -309,7 +309,7 @@
     @if($principal->primaryContact || $principal->email)
     <div class="space-y-4">
         <!-- Contact Info -->
-        {{-- <div class="p-3 bg-slate-50 rounded-lg">
+        {{-- <div class="p-3 rounded-lg bg-slate-50">
             <p class="text-sm font-medium text-slate-800">
                 {{ $principal->primaryContact->contact_name ?? 'Contact' }}
             </p>
@@ -357,7 +357,7 @@
             @if($whatsapp)
             <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $whatsapp) }}?text=Hello%20{{ urlencode($principal->primaryContact->contact_name ?? 'there') }}" 
                target="_blank"
-               class="flex flex-col items-center justify-center w-16 h-16 transition duration-200 border rounded-full group border-green-300 hover:bg-green-50 hover:shadow-md"
+               class="flex flex-col items-center justify-center w-16 h-16 transition duration-200 border border-green-300 rounded-full group hover:bg-green-50 hover:shadow-md"
                title="Message on WhatsApp">
                 <i class="mb-1 text-green-600 fa-brands fa-whatsapp group-hover:text-green-700"></i>
                 <span class="text-xs text-green-600">WhatsApp</span>
@@ -367,7 +367,7 @@
             <!-- WeChat - FIXED CSS CLASSES -->
             @if($wechat)
             <button onclick="showWechatModal('{{ $wechat }}')"
-                    class="flex flex-col items-center justify-center w-16 h-16 transition duration-200 border rounded-full group border-green-400 hover:bg-green-50 hover:shadow-md"
+                    class="flex flex-col items-center justify-center w-16 h-16 transition duration-200 border border-green-400 rounded-full group hover:bg-green-50 hover:shadow-md"
                     title="WeChat ID: {{ $wechat }}">
                 <i class="mb-1 text-green-600 fa-brands fa-weixin group-hover:text-green-700"></i>
                 <span class="text-xs text-green-600">WeChat</span>
@@ -377,7 +377,7 @@
             <!-- SMS - FIXED CSS CLASSES -->
             @if($phone)
             <a href="sms:{{ $phone }}?body=Hello%20{{ urlencode($principal->primaryContact->contact_name ?? 'there') }}" 
-               class="flex flex-col items-center justify-center w-16 h-16 transition duration-200 border rounded-full group border-blue-300 hover:bg-blue-50 hover:shadow-md"
+               class="flex flex-col items-center justify-center w-16 h-16 transition duration-200 border border-blue-300 rounded-full group hover:bg-blue-50 hover:shadow-md"
                title="Send SMS">
                 <i class="mb-1 text-blue-600 fa fa-comment group-hover:text-blue-700"></i>
                 <span class="text-xs text-blue-600">SMS</span>
@@ -389,11 +389,11 @@
     </div>
     @else
     <div class="text-center">
-        <div class="inline-flex items-center justify-center w-12 h-12 mb-3 bg-slate-100 rounded-full">
+        <div class="inline-flex items-center justify-center w-12 h-12 mb-3 rounded-full bg-slate-100">
             <i class="text-slate-400 fa fa-user"></i>
         </div>
         <p class="text-slate-500">No contact information available</p>
-        <p class="text-sm text-slate-400 mt-1">Add contact details to enable quick communication</p>
+        <p class="mt-1 text-sm text-slate-400">Add contact details to enable quick communication</p>
     </div>
     @endif
 </div>
@@ -428,7 +428,7 @@
                             </span>
                             @if($principal->visibility_scopes)
                             @foreach($principal->visibility_scopes as $scope)
-                            <span class="px-2 py-1 text-xs font-medium text-slate-700 bg-slate-100 rounded-full">
+                            <span class="px-2 py-1 text-xs font-medium rounded-full text-slate-700 bg-slate-100">
                                 {{ ucfirst($scope) }}
                             </span>
                             @endforeach
@@ -446,7 +446,7 @@
                             </span>
                             @endforeach
                             @if($principal->brands->count() > 3)
-                            <span class="px-2 py-1 text-xs font-medium text-slate-500 bg-slate-100 rounded-full">
+                            <span class="px-2 py-1 text-xs font-medium rounded-full text-slate-500 bg-slate-100">
                                 +{{ $principal->brands->count() - 3 }} more
                             </span>
                             @endif
@@ -501,15 +501,15 @@
             @if($activities->where('type', 'note')->count())
             <div class="space-y-3">
                 @foreach($activities->where('type', 'note')->take(3) as $note)
-                <div class="p-3 border border-slate-200 rounded-lg hover:bg-slate-50">
+                <div class="p-3 border rounded-lg border-slate-200 hover:bg-slate-50">
                     <p class="text-sm text-slate-700 line-clamp-2">{{ $note->description }}</p>
-                    <p class="text-xs text-slate-500 mt-1">{{ $note->created_at->diffForHumans() }}</p>
+                    <p class="mt-1 text-xs text-slate-500">{{ $note->created_at->diffForHumans() }}</p>
                 </div>
                 @endforeach
             </div>
             @else
             <p class="text-slate-500">No notes yet</p>
-            <button onclick="openModal('noteModal')" class="inline-block px-3 py-1 mt-2 text-sm text-white bg-cyan-600 rounded-lg hover:bg-cyan-700">
+            <button onclick="openModal('noteModal')" class="inline-block px-3 py-1 mt-2 text-sm text-white rounded-lg bg-cyan-600 hover:bg-cyan-700">
                 <i class="mr-1 fa fa-plus"></i> Add Note
             </button>
             @endif
