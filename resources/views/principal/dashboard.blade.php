@@ -225,8 +225,8 @@
             <ul class="space-y-3 text-sm text-gray-700">
                 <li class="p-3 border border-red-100 rounded-lg bg-red-50"><span class="font-semibold">Insurance Certificate:</span> Expiring in 30 days</li>
                 <li class="p-3 border border-yellow-100 rounded-lg bg-yellow-50"><span class="font-semibold">ISO Certification:</span> Expiring in 90 days</li>
-                <li class="p-3 border border-green-100 rounded-lg bg-green-50"><span class="font-semibold">Contract Agreement:</span> Active until 2026</li>
-                <li class="p-3 border border-red-100 rounded-lg bg-red-50"><span class="font-semibold">Safety Audit:</span> Expiring in 15 days</li>
+                <li class="p-3 border border-green-100 rounded-lg bg-green-50"><span class="font-semibold"></span>Contract Agreement:</span></span> Active until 2026</li>
+                <li class="p-3 border border-red-100 rounded-lg bg-red-50">Safety Audit: Expiring in 15 days</li>
             </ul>
         </div>
 
@@ -294,23 +294,36 @@
 @endsection
 
 @section('script')
-<script src="//unpkg.com/alpinejs" defer></script>
-    <script>
-      function app() {
-        return {
-          tab: "primary",
-          modals: { noteModal: false, productModal: false },
-          setTab(name) {
-            this.tab = name;
-          },
-          openModal(name) {
-            this.modals[name] = true;
-          },
-          closeModal(name) {
-            this.modals[name] = false;
-          },
-          init() {},
-        };
-      }
-    </script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Tabs
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    tabButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const target = btn.dataset.target;
+
+            btn.closest('ul').querySelectorAll('button').forEach(b => b.classList.remove('text-cyan-600','border-cyan-600','text-slate-700'));
+            btn.classList.add('text-cyan-600','border-cyan-600');
+
+            const parent = btn.closest('div');
+            parent.querySelectorAll('.tab-content').forEach(tc => tc.classList.add('hidden'));
+            document.getElementById(target).classList.remove('hidden');
+        });
+    });
+});
+
+// Modal functions
+window.openModal = function(id) {
+    const modal = document.getElementById(id);
+    if(modal) {
+        modal.showModal ? modal.showModal() : modal.classList.remove('hidden');
+    }
+}
+window.closeModal = function(id) {
+    const modal = document.getElementById(id);
+    if(modal) {
+        modal.close ? modal.close() : modal.classList.add('hidden');
+    }
+}
+</script>
 @endsection
