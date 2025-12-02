@@ -59,7 +59,47 @@ class PrincipalDashboardController extends Controller
     }
     public function overview()
     {
-        return view('principal.profile.overview');
+        $principalId = Auth::guard('principal')->id();
+        $principal = auth('principal')->user();
+
+        // Eager load related tables
+        $principal->load(['contacts', 'addresses', 'links']);
+
+        $brands = Brand::where('principal_id', $principalId)->latest()->get();
+        $products = Product::where('principal_id', $principalId)->latest()->get();
+
+        $stats = [
+            // ... your stats code ...
+        ];
+
+        // Transform links
+        $principal->links->transform(function ($link) {
+            $link->label = is_string($link->label) ? json_decode($link->label, true) : $link->label;
+            $link->url   = is_string($link->url) ? json_decode($link->url, true) : $link->url;
+            $link->type  = is_string($link->type) ? json_decode($link->type, true) : $link->type;
+            return $link;
+        });
+
+        // Get activities WITH replies
+        $activities = Activity::where('principal_id', $principal->id)
+            ->with(['replies', 'replies.user', 'createdBy'])
+            ->orderBy('pinned', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->take(10)
+            ->get();
+
+        $lastActivity = Activity::where('principal_id', $principal->id)
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        return view('principal.profile.overview', compact(
+            'stats',
+            'brands',
+            'products',
+            'principal',
+            'activities',
+            'lastActivity'
+             ));
     }
     public function storeNote(Request $request)
     {

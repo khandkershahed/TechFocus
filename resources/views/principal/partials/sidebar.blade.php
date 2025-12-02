@@ -41,27 +41,31 @@
             <div class="menu menu-column menu-title-gray-800 menu-state-title-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-500"
                 id="#kt_aside_menu" data-kt-menu="true" data-kt-menu-expand="false">
 
-                <!-- Dashboard Overview -->
-                <div class="menu-item">
-                    <a class="menu-link {{ Route::is('principal.dashboard.overview') ? 'active' : '' }}"
-                        href="{{ route('principal.dashboard.overview') }}">
-                        <span class="menu-icon">
-                            <i class="fa-solid fa-chart-pie svg-icon svg-icon-2"></i>
-                        </span>
-                        <span class="menu-title">Dashboard</span>
-                    </a>
-                </div>
 
-                <!-- Main Dashboard -->
-                <div class="menu-item">
-                    <a class="menu-link {{ Route::is('principal.dashboard') ? 'active' : '' }}"
-                        href="{{ route('principal.profile.overview') }}">
-                        <span class="menu-icon">
-                            <i class="fa-solid fa-house-chimney-window svg-icon svg-icon-2"></i>
-                        </span>
-                        <span class="menu-title">Principal Overview</span>
-                    </a>
-                </div>
+
+                       <!-- Main Dashboard -->
+            <div class="menu-item">
+                <a class="menu-link {{ Route::is('principal.dashboard') ? 'active' : '' }}"
+                    href="{{ route('principal.dashboard') }}">
+                    <span class="menu-icon">
+                        <i class="fa-solid fa-house-chimney-window svg-icon svg-icon-2"></i>
+                    </span>
+                    <span class="menu-title">Principal Dashboard</span>
+                </a>
+            </div>
+
+            <!-- Dashboard Overview -->
+            <div class="menu-item">
+                <a class="menu-link {{ Route::is('principal.dashboard.overview') ? 'active' : '' }}"
+                    href="{{ route('principal.dashboard.overview') }}">
+                    <span class="menu-icon">
+                        <i class="fa-solid fa-chart-pie svg-icon svg-icon-2"></i>
+                    </span>
+                    <span class="menu-title">Dashboard Overview</span>
+                </a>
+            </div>
+
+     
 
                 {{-- Brand Management --}}
                 <div data-kt-menu-trigger="click"

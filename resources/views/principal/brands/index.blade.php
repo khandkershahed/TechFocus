@@ -1,110 +1,105 @@
 @extends('principal.layouts.app')
 
 @section('content')
-<div class="flex justify-between items-center mb-6">
-    <h1 class="text-2xl font-bold">My Brands</h1>
-    <a href="{{ route('principal.brands.create') }}" 
-       class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition duration-200">
-        Add New Brand
-    </a>
-</div>
-
-<div class="bg-white rounded-lg shadow overflow-hidden">
-    <div class="px-6 py-4 border-b border-gray-200">
-        <h2 class="text-lg font-semibold">All Submitted Brands</h2>
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2 mb-0">My Brands</h1>
+        <a href="{{ route('principal.brands.create') }}" 
+           class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>Add New Brand
+        </a>
     </div>
-    
-    @if($brands->count() > 0)
-        <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead>
-                    <tr>
-                        <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Brand
-                        </th>
-                        <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Status
-                        </th>
-                        <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Category
-                        </th>
-                        <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Submitted Date
-                        </th>
-                        <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Actions
-                        </th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    @foreach($brands as $brand)
-                    <tr>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="flex items-center">
-                                @if($brand->logo)
-                                <div class="flex-shrink-0 h-10 w-10">
-                                    <img class="h-10 w-10 rounded-full object-cover" 
-                                         src="{{ asset('storage/brand/logo/'.$brand->logo) }}" 
-                                         alt="{{ $brand->title }}">
+
+    <div class="card shadow">
+        <div class="card-header bg-white py-3 border-bottom">
+            <h2 class="h5 mb-0">All Submitted Brands</h2>
+        </div>
+        
+        @if($brands->count() > 0)
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="border-0">Brand</th>
+                            <th class="border-0">Status</th>
+                            <th class="border-0">Category</th>
+                            <th class="border-0">Submitted Date</th>
+                            <th class="border-0">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($brands as $brand)
+                        <tr>
+                            <td class="align-middle">
+                                <div class="d-flex align-items-center">
+                                    @if($brand->logo)
+                                    <div class="flex-shrink-0">
+                                        <img class="rounded-circle" 
+                                             src="{{ asset('storage/brand/logo/'.$brand->logo) }}" 
+                                             alt="{{ $brand->title }}"
+                                             style="width: 40px; height: 40px; object-fit: cover;">
+                                    </div>
+                                    @endif
+                                    <div class="ms-3">
+                                        <div class="fw-medium">
+                                            {{ $brand->title }}
+                                        </div>
+                                        <div class="text-muted small">
+                                            {{ $brand->website_url }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="align-middle">
+                                <span class="badge 
+                                    @if($brand->status == 'approved') bg-success
+                                    @elseif($brand->status == 'pending') bg-warning
+                                    @else bg-danger @endif">
+                                    {{ ucfirst($brand->status) }}
+                                </span>
+                                @if($brand->status == 'rejected' && $brand->rejection_reason)
+                                <div class="small text-danger mt-1">
+                                    Reason: {{ $brand->rejection_reason }}
                                 </div>
                                 @endif
-                                <div class="ml-4">
-                                    <div class="text-sm font-medium text-gray-900">
-                                        {{ $brand->title }}
-                                    </div>
-                                    <div class="text-sm text-gray-500">
-                                        {{ $brand->website_url }}
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                @if($brand->status == 'approved') bg-green-100 text-green-800
-                                @elseif($brand->status == 'pending') bg-yellow-100 text-yellow-800
-                                @else bg-red-100 text-red-800 @endif">
-                                {{ ucfirst($brand->status) }}
-                            </span>
-                            @if($brand->status == 'rejected' && $brand->rejection_reason)
-                            <div class="text-xs text-red-600 mt-1">
-                                Reason: {{ $brand->rejection_reason }}
-                            </div>
-                            @endif
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {{ $brand->category }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {{ $brand->created_at->format('M d, Y') }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <a href="{{ route('principal.brands.edit', $brand->id) }}" 
-                               class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</a>
-                            <form action="{{ route('principal.brands.destroy', $brand->id) }}" method="POST" class="inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" 
-                                        class="text-red-600 hover:text-red-900"
-                                        onclick="return confirm('Are you sure you want to delete this brand?')">
-                                    Delete
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    @else
-        <div class="text-center py-12">
-            <i class="fa-solid fa-store text-5xl text-gray-300 mb-4"></i>
-            <h3 class="text-lg font-medium text-gray-900 mb-2">No brands yet</h3>
-            <p class="text-gray-500 mb-4">Start by adding your first brand.</p>
-            <a href="{{ route('principal.brands.create') }}" 
-               class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150">
-                Add Your First Brand
-            </a>
-        </div>
-    @endif
+                            </td>
+                            <td class="align-middle">
+                                {{ $brand->category }}
+                            </td>
+                            <td class="align-middle">
+                                {{ $brand->created_at->format('M d, Y') }}
+                            </td>
+                            <td class="align-middle">
+                                <a href="{{ route('principal.brands.edit', $brand->id) }}" 
+                                   class="btn btn-sm btn-outline-primary me-2">
+                                    Edit
+                                </a>
+                                <form action="{{ route('principal.brands.destroy', $brand->id) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" 
+                                            class="btn btn-sm btn-outline-danger"
+                                            onclick="return confirm('Are you sure you want to delete this brand?')">
+                                        Delete
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @else
+            <div class="text-center py-5">
+                <i class="fas fa-store fa-3x text-secondary mb-3"></i>
+                <h3 class="h5 mb-2">No brands yet</h3>
+                <p class="text-muted mb-4">Start by adding your first brand.</p>
+                <a href="{{ route('principal.brands.create') }}" 
+                   class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>Add Your First Brand
+                </a>
+            </div>
+        @endif
+    </div>
 </div>
 @endsection
