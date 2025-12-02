@@ -876,5 +876,4 @@
         });
     });
 </script>
-
 @endsection
