@@ -491,7 +491,32 @@
                     </div>
                 </div>
             </div>
-            
+            <div class="mt-2 mb-5 row row-cols-2 row-cols-md-4 g-5">
+                <div class="col">
+                    <div class="p-5 text-center bg-white border border-gray-100 shadow-sm rounded-3">
+                        <p class="mb-3 fs-2 fw-medium">Assigned Manager</p>
+                        <h1 class="mb-0 text-black fw-bold">John Smith</h1>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="p-5 text-center bg-white border border-gray-100 shadow-sm rounded-3">
+                        <p class="mb-3 fs-2 fw-medium">2024 Purchase Total</p>
+                        <h1 class="mb-0 text-black fw-bold">$1.2M USD</h1>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="p-5 text-center bg-white border border-gray-100 shadow-sm rounded-3">
+                        <p class="mb-3 fs-2 fw-medium">Risk Level</p>
+                        <h1 class="mb-0 fw-bold text-danger">High (7/10)</h1>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="p-5 text-center bg-white border border-gray-100 shadow-sm rounded-3">
+                        <p class="mb-3 fs-2 fw-medium">Relationship Since</p>
+                        <h1 class="mb-0 text-black fw-bold">2019</h1>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
