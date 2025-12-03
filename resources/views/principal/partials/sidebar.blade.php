@@ -67,180 +67,180 @@
 
      
 
-            {{-- Brand Management --}}
-            <div data-kt-menu-trigger="click"
-                class="menu-item menu-accordion {{ in_array(Route::current()->getName(), [
+                {{-- Brand Management --}}
+                <div data-kt-menu-trigger="click"
+                    class="menu-item menu-accordion {{ in_array(Route::current()->getName(), [
                         'principal.brands.index',
                         'principal.brands.create',
                         'principal.brands.edit'
                     ]) ? 'here show' : '' }}">
-                <span class="menu-link">
-                    <span class="menu-icon">
-                        <span class="svg-icon svg-icon-2">
-                            <i class="fas fa-certificate side_baricon"></i>
+                    <span class="menu-link">
+                        <span class="menu-icon">
+                            <span class="svg-icon svg-icon-2">
+                                <i class="fas fa-certificate side_baricon"></i>
+                            </span>
                         </span>
+                        <span class="menu-title">Brand Management</span>
+                        <span class="menu-arrow"></span>
                     </span>
-                    <span class="menu-title">Brand Management</span>
-                    <span class="menu-arrow"></span>
-                </span>
-                <div class="menu-sub menu-sub-accordion">
-                    <div class="menu-item">
-                        <a class="menu-link {{ Route::current()->getName() == 'principal.brands.index' ? 'active' : '' }}"
-                            href="{{ route('principal.brands.index') }}">
-                            <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-                            <span class="menu-title">My Brands</span>
-                            <span class="badge bg-primary float-end">{{ Auth::guard('principal')->user()->brands->count() }}</span>
-                        </a>
-                    </div>
-                    <div class="menu-item">
-                        <a class="menu-link {{ Route::current()->getName() == 'principal.brands.create' ? 'active' : '' }}"
-                            href="{{ route('principal.brands.create') }}">
-                            <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-                            <span class="menu-title">Add New Brand</span>
-                        </a>
+                    <div class="menu-sub menu-sub-accordion">
+                        <div class="menu-item">
+                            <a class="menu-link {{ Route::current()->getName() == 'principal.brands.index' ? 'active' : '' }}"
+                                href="{{ route('principal.brands.index') }}">
+                                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                                <span class="menu-title">My Brands</span>
+                                <span class="badge bg-primary float-end">{{ Auth::guard('principal')->user()->brands->count() }}</span>
+                            </a>
+                        </div>
+                        <div class="menu-item">
+                            <a class="menu-link {{ Route::current()->getName() == 'principal.brands.create' ? 'active' : '' }}"
+                                href="{{ route('principal.brands.create') }}">
+                                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                                <span class="menu-title">Add New Brand</span>
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            {{-- Product Management --}}
-            <div data-kt-menu-trigger="click"
-                class="menu-item menu-accordion {{ in_array(Route::current()->getName(), [
+                {{-- Product Management --}}
+                <div data-kt-menu-trigger="click"
+                    class="menu-item menu-accordion {{ in_array(Route::current()->getName(), [
                         'principal.products.index',
                         'principal.products.create',
                         'principal.products.edit'
                     ]) ? 'here show' : '' }}">
-                <span class="menu-link">
-                    <span class="menu-icon">
-                        <span class="svg-icon svg-icon-2">
-                            <i class="fa-solid fa-boxes-stacked"></i>
+                    <span class="menu-link">
+                        <span class="menu-icon">
+                            <span class="svg-icon svg-icon-2">
+                                <i class="fa-solid fa-boxes-stacked"></i>
+                            </span>
                         </span>
+                        <span class="menu-title">Product Management</span>
+                        <span class="menu-arrow"></span>
                     </span>
-                    <span class="menu-title">Product Management</span>
-                    <span class="menu-arrow"></span>
-                </span>
-                <div class="menu-sub menu-sub-accordion">
-                    <div class="menu-item">
-                        <a class="menu-link {{ Route::current()->getName() == 'principal.products.index' ? 'active' : '' }}"
-                            href="{{ route('principal.products.index') }}">
-                            <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-                            <span class="menu-title">My Products</span>
-                            <span class="badge bg-primary float-end">{{ Auth::guard('principal')->user()->products->count() }}</span>
-                        </a>
-                    </div>
-                    <div class="menu-item">
-                        <a class="menu-link {{ Route::current()->getName() == 'principal.products.create' ? 'active' : '' }}"
-                            href="{{ route('principal.products.create') }}">
-                            <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-                            <span class="menu-title">Add New Product</span>
-                        </a>
+                    <div class="menu-sub menu-sub-accordion">
+                        <div class="menu-item">
+                            <a class="menu-link {{ Route::current()->getName() == 'principal.products.index' ? 'active' : '' }}"
+                                href="{{ route('principal.products.index') }}">
+                                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                                <span class="menu-title">My Products</span>
+                                <span class="badge bg-primary float-end">{{ Auth::guard('principal')->user()->products->count() }}</span>
+                            </a>
+                        </div>
+                        <div class="menu-item">
+                            <a class="menu-link {{ Route::current()->getName() == 'principal.products.create' ? 'active' : '' }}"
+                                href="{{ route('principal.products.create') }}">
+                                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                                <span class="menu-title">Add New Product</span>
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            {{-- Notes & Activities --}}
-            <div data-kt-menu-trigger="click"
-                class="menu-item menu-accordion {{ in_array(Route::current()->getName(), [
+                {{-- Notes & Activities --}}
+                <div data-kt-menu-trigger="click"
+                    class="menu-item menu-accordion {{ in_array(Route::current()->getName(), [
                         'principal.notes.index'
                     ]) ? 'here show' : '' }}">
-                <span class="menu-link">
-                    <span class="menu-icon">
-                        <span class="svg-icon svg-icon-2">
-                            <i class="fa-solid fa-sticky-note"></i>
+                    <span class="menu-link">
+                        <span class="menu-icon">
+                            <span class="svg-icon svg-icon-2">
+                                <i class="fa-solid fa-sticky-note"></i>
+                            </span>
                         </span>
+                        <span class="menu-title">Notes & Activities</span>
+                        <span class="menu-arrow"></span>
                     </span>
-                    <span class="menu-title">Notes & Activities</span>
-                    <span class="menu-arrow"></span>
-                </span>
-                <div class="menu-sub menu-sub-accordion">
-                    <div class="menu-item">
-                        <a class="menu-link {{ Route::current()->getName() == 'principal.notes.index' ? 'active' : '' }}"
-                            href="{{ route('principal.notes.index') }}">
-                            <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-                            <span class="menu-title">All Notes</span>
-                            <span class="badge bg-primary float-end">{{ Auth::guard('principal')->user()->activities->count() }}</span>
-                        </a>
+                    <div class="menu-sub menu-sub-accordion">
+                        <div class="menu-item">
+                            <a class="menu-link {{ Route::current()->getName() == 'principal.notes.index' ? 'active' : '' }}"
+                                href="{{ route('principal.notes.index') }}">
+                                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                                <span class="menu-title">All Notes</span>
+                                <span class="badge bg-primary float-end">{{ Auth::guard('principal')->user()->activities->count() }}</span>
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            {{-- Profile Management --}}
-            <div data-kt-menu-trigger="click"
-                class="menu-item menu-accordion {{ in_array(Route::current()->getName(), [
+                {{-- Profile Management --}}
+                <div data-kt-menu-trigger="click"
+                    class="menu-item menu-accordion {{ in_array(Route::current()->getName(), [
                         'principal.profile.index',
                         'principal.profile.edit',
                         'principal.profile.settings'
                     ]) ? 'here show' : '' }}">
-                <span class="menu-link">
-                    <span class="menu-icon">
-                        <span class="svg-icon svg-icon-2">
-                            <i class="fa-solid fa-user-tie"></i>
+                    <span class="menu-link">
+                        <span class="menu-icon">
+                            <span class="svg-icon svg-icon-2">
+                                <i class="fa-solid fa-user-tie"></i>
+                            </span>
                         </span>
+                        <span class="menu-title">Profile & Settings</span>
+                        <span class="menu-arrow"></span>
                     </span>
-                    <span class="menu-title">Profile & Settings</span>
-                    <span class="menu-arrow"></span>
-                </span>
-                <div class="menu-sub menu-sub-accordion">
-                    {{-- <div class="menu-item">
+                    <div class="menu-sub menu-sub-accordion">
+                        {{-- <div class="menu-item">
                             <a class="menu-link {{ Route::current()->getName() == 'principal.profile.index' ? 'active' : '' }}"
-                    href="{{ route('principal.profile.index') }}">
+                        href="{{ route('principal.profile.index') }}">
+                        <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                        <span class="menu-title">My Profile</span>
+                        </a>
+                    </div> --}}
+                    <div class="menu-item">
+                        <a class="menu-link {{ Route::current()->getName() == 'principal.profile.edit' ? 'active' : '' }}"
+                            href="{{ route('principal.profile.edit') }}">
+                            <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                            <span class="menu-title">Edit Profile</span>
+                        </a>
+                    </div>
+                    {{-- <div class="menu-item">
+                            <a class="menu-link {{ Route::current()->getName() == 'principal.profile.settings' ? 'active' : '' }}"
+                    href="{{ route('principal.profile.settings') }}">
                     <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-                    <span class="menu-title">My Profile</span>
+                    <span class="menu-title">Account Settings</span>
                     </a>
                 </div> --}}
-                <div class="menu-item">
-                    <a class="menu-link {{ Route::current()->getName() == 'principal.profile.edit' ? 'active' : '' }}"
-                        href="{{ route('principal.profile.edit') }}">
-                        <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-                        <span class="menu-title">Edit Profile</span>
-                    </a>
-                </div>
-                {{-- <div class="menu-item">
-                            <a class="menu-link {{ Route::current()->getName() == 'principal.profile.settings' ? 'active' : '' }}"
-                href="{{ route('principal.profile.settings') }}">
-                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-                <span class="menu-title">Account Settings</span>
-                </a>
-            </div> --}}
+            </div>
         </div>
-    </div>
 
-    {{-- Quick Links Management --}}
-    <div data-kt-menu-trigger="click"
-        class="menu-item menu-accordion {{ in_array(Route::current()->getName(), [
+        {{-- Quick Links Management --}}
+        <div data-kt-menu-trigger="click"
+            class="menu-item menu-accordion {{ in_array(Route::current()->getName(), [
                         'principal.links.index',
                         'principal.links.create',
                         'principal.links.edit'
                     ]) ? 'here show' : '' }}">
-        <span class="menu-link">
-            <span class="menu-icon">
-                <span class="svg-icon svg-icon-2">
-                    <i class="fa-solid fa-link"></i>
+            <span class="menu-link">
+                <span class="menu-icon">
+                    <span class="svg-icon svg-icon-2">
+                        <i class="fa-solid fa-link"></i>
+                    </span>
                 </span>
+                <span class="menu-title">Quick Links</span>
+                <span class="menu-arrow"></span>
             </span>
-            <span class="menu-title">Quick Links</span>
-            <span class="menu-arrow"></span>
-        </span>
-        <div class="menu-sub menu-sub-accordion">
-            <div class="menu-item">
-                <a class="menu-link {{ Route::current()->getName() == 'principal.links.index' ? 'active' : '' }}"
-                    href="{{ route('principal.links.index') }}">
-                    <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-                    <span class="menu-title">My Links</span>
-                    <span class="badge bg-primary float-end">{{ Auth::guard('principal')->user()->links->count() }}</span>
-                </a>
-            </div>
-            <div class="menu-item">
-                <a class="menu-link {{ Route::current()->getName() == 'principal.links.create' ? 'active' : '' }}"
-                    href="{{ route('principal.links.create') }}">
-                    <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-                    <span class="menu-title">Add New Link</span>
-                </a>
+            <div class="menu-sub menu-sub-accordion">
+                <div class="menu-item">
+                    <a class="menu-link {{ Route::current()->getName() == 'principal.links.index' ? 'active' : '' }}"
+                        href="{{ route('principal.links.index') }}">
+                        <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                        <span class="menu-title">My Links</span>
+                        <span class="badge bg-primary float-end">{{ Auth::guard('principal')->user()->links->count() }}</span>
+                    </a>
+                </div>
+                <div class="menu-item">
+                    <a class="menu-link {{ Route::current()->getName() == 'principal.links.create' ? 'active' : '' }}"
+                        href="{{ route('principal.links.create') }}">
+                        <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                        <span class="menu-title">Add New Link</span>
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
 
-</div>
-<!--end::Menu-->
+    </div>
+    <!--end::Menu-->
 </div>
 <!--end::Aside Menu-->
 </div>
