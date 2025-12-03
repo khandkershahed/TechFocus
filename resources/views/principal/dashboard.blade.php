@@ -1,31 +1,17 @@
 @extends('principal.layouts.app')
 
 @section('content')
-<div class="p-5">
-    <div class="p-5 bg-white">
-   <div class="p-5 bg-white">
-    <!-- HEADER -->
-    <div class="gap-3 mb-4 d-flex flex-column flex-md-row justify-content-between align-items-start">
-        <div>
-            <div class="d-flex align-items-center gap-3 mb-2">
-                <h1 class="mb-0 fw-bold text-primary fs-2">
-                    {{ $principal->legal_name ?? $principal->name ?? 'COMPANY NAME LLC' }}
-                </h1>
-                @if($principal->country)
-                    @php
-                        $iso = \App\Helpers\CountryHelper::isoCode($principal->country->name);
-                    @endphp
-                    @if($iso)
-                        <img src="https://flagsapi.com/{{ $iso }}/flat/32.png" 
-                             class="rounded shadow-sm" width="32" height="24" alt="Flag">
-                    @endif
-                @endif
-            </div>
-            
-            <div class="flex-wrap gap-2 d-flex mb-2">
-                @if($principal->entity_type)
-                    <span class="badge bg-gradient-primary text-dark">
-                        <i class="fa fa-industry me-1"></i>{{ $principal->entity_type }}
+<div class="container mb-10">
+    <div class="card card-flush">
+        <div class="py-4 card-header">
+            <div class="mt-2">
+                <h1 class="mb-3 text-black">COMPANY NAME LLC</h1>
+                <div>
+                    <span class="badge badge-light-success fs-10px">
+                        Supplier Type: Manufacturer
+                    </span>
+                    <span class="badge badge-light-info fs-10px">
+                        Supplier ID: SUP-00123
                     </span>
                     <span class="badge badge-light-warning fs-10px">
                         Active
@@ -35,84 +21,42 @@
                     </span>
                 </div>
             </div>
-            
-            <p class="text-muted mb-0">
-                <small>
-                    Created on <strong>{{ $principal->created_at->format('d M, Y') }}</strong> • 
-                    By: <strong>{{ $principal->created_by ?? $principal->creator->name ?? 'System' }}</strong>
-                </small>
-            </p>
-        </div>
-            <div class="flex-wrap gap-2 mt-2 d-flex mt-md-0">
-                <a href="{{ route('principal.profile.edit', $principal) }}" class="btn btn-primary">
+            <div class="gap-2 d-flex align-items-center gap-lg-3">
+                <a href="#" class="btn btn-sm fw-bold btn-secondary" data-bs-toggle="modal" data-bs-target="#kt_modal_create_app">
                     <i class="fa fa-pen me-1"></i> Edit
                 </a>
-                <a href="{{ route('principal.links.index', $principal) }}" class="btn btn-success">
-                    <i class="fa fa-share-nodes me-1"></i> Share
+                <a href="#" class="btn btn-sm fw-bold btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_new_target">
+                    <i class="fa fa-sticky-note me-1"></i> Add Note
                 </a>
-                   
-                   <a href="{{ route('principal.notes.index') }}"
-   class="btn btn-primary d-flex align-items-center px-4 py-2 fw-bold">
-    <i class="fa fa-sticky-note me-2 fa-lg"></i> ADD NOTE
-</a>
-                </div>
+            </div>
         </div>
+        <div class="pt-2 card-body">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="px-5 border rounded shadow-sm border-light card card-flush">
+                        <div class="p-3 card-header">
+                            <h3 class="text-black card-title fw-bold">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="building" class="w-5 h-5 lucide lucide-building text-accent">
+                                    <path d="M12 10h.01"></path>
+                                    <path d="M12 14h.01"></path>
+                                    <path d="M12 6h.01"></path>
+                                    <path d="M16 10h.01"></path>
+                                    <path d="M16 14h.01"></path>
+                                    <path d="M16 6h.01"></path>
+                                    <path d="M8 10h.01"></path>
+                                    <path d="M8 14h.01"></path>
+                                    <path d="M8 6h.01"></path>
+                                    <path d="M9 22v-3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"></path>
+                                    <rect x="4" y="2" width="16" height="20" rx="2"></rect>
+                                </svg>
+                                Company Info
+                            </h3>
 
-        <!-- SECTION 1 — Company & Contact -->
-        <div class="row g-4">
-            <!-- Left Column -->
-            <div class="gap-4 col-md-6 d-flex flex-column">
-                <!-- Company Info -->
-                <div class="p-4 bg-white border shadow-sm rounded-4 h-100" style="background: linear-gradient(145deg, #ffffff, #e9f0ff);">
-                    <h2 class="mb-3 fs-5 fw-bold text-primary">Company Info</h2>
-                    <p><strong>Company_Name:</strong> {{ $principal->name ?? 'N/A' }}</p>
-                
-                    <p><strong>Website:</strong> 
-                        @if($principal->website_url)
-                            <a href="{{ $principal->website_url }}" target="_blank" class="text-primary">{{ $principal->website_url }}</a>
-                        @else
-                            N/A
-                        @endif
-                    </p>
-                    <p><strong>Country:</strong> {{ $principal->country->name ?? 'N/A' }}</p>
-                    
-                </div>
-
-                <!-- Contacts -->
-                <div class="p-4 bg-white border shadow-sm rounded-4 h-100" style="background: linear-gradient(145deg, #ffffff, #f2f9ff);">
-                    <h2 class="mb-3 fs-5 fw-bold text-primary">Contacts</h2>
-                    <ul class="mb-3 nav nav-tabs" id="contactTabs" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#primary" type="button">Primary</button>
-                        </li>
-                        @if($principal->contacts->where('is_primary', false)->count() > 0)
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#other" type="button">Other Contacts</button>
-                        </li>
-                        @endif
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#social" type="button">Social</button>
-                        </li>
-                    </ul>
-                    <div class="tab-content">
-                        <!-- Primary -->
-                        <div class="tab-pane fade show active" id="primary">
-                            @if($principal->primaryContact)
-                            <div class="row g-3">
-                                <div class="col-6">
-                                    <p><strong>Name:</strong> {{ $principal->primaryContact->contact_name ?? 'N/A' }}</p>
-                                    <p><strong>Designation:</strong> {{ $principal->primaryContact->job_title ?? 'N/A' }}</p>
-                                </div>
-                                <div class="col-6">
-                                    <p><strong>Email:</strong> 
-                                        @if($principal->primaryContact->email)
-                                            <a href="mailto:{{ $principal->primaryContact->email }}" class="text-primary">{{ $principal->primaryContact->email }}</a>
-                                        @else
-                                            N/A
-                                        @endif
-                                    </p>
-                                    <p><strong>Phone:</strong> {{ $principal->primaryContact->phone_e164 ?? $principal->primaryContact->phone ?? 'N/A' }}</p>
-                                </div>
+                            <div class="card-toolbar">
+                                <button
+                                    class="border btn btn-icon btn-sm rounded-circle btn-light btn-active-color-primary justify-content-center">
+                                    <i class="text-gray-500 fas fa-pen"></i>
+                                </button>
                             </div>
                         </div>
 
@@ -330,62 +274,34 @@
                                         </div>
                                     </div>
                                 </div>
-                            </td>
-                            <td>
-                                <span class="badge 
-                                    @if($brand->status == 'approved') bg-success
-                                    @elseif($brand->status == 'pending') bg-warning text-dark
-                                    @elseif($brand->status == 'rejected') bg-danger
-                                    @else bg-secondary @endif">
-                                    {{ ucfirst($brand->status) }}
-                                </span>
-                            </td>
-                            <td>{{ $brand->category ?? 'No category' }}</td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="3" class="text-center text-muted py-4">No brands added yet</td>
-                        </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <!-- Brand List -->
-    <div class="gap-4 col-md-7 d-flex flex-column">
-        <div class="p-4 bg-white border shadow-sm rounded-4 h-100" style="background: linear-gradient(145deg, #ffffff, #f9f9ff);">
-            <h3 class="mb-3 fs-5 fw-bold text-primary">Products by Brand</h3>
-            <div class="table-responsive">
-                <table class="table text-center align-middle table-hover table-bordered">
-                    <thead class="table-light">
-                        <tr>
-                            <th class="text-start ps-4">Brand Image</th>
-                            <th>Brand Name</th>
-                            <th>Status</th>
-                            <th>Created Time</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($brands->take(5) as $brand)
-                        <tr style="cursor:pointer;" onclick="window.location.href='{{ route('principal.brands.edit', $brand) }}';">
-                            <td class="text-start">
-                                @if($brand->logo)
-                                    <img src="{{ asset('storage/brand/logo/' . $brand->logo) }}" 
-                                         class="rounded-2" 
-                                         style="width:50px;height:50px;object-fit:cover;border:2px solid #dee2e6;"
-                                         alt="{{ $brand->title }}"
-                                         onerror="this.onerror=null; this.src='https://via.placeholder.com/50?text=No+Logo';">
-                                @elseif($brand->image)
-                                    <img src="{{ asset('storage/brand/image/' . $brand->image) }}" 
-                                         class="rounded-2" 
-                                         style="width:50px;height:50px;object-fit:cover;border:2px solid #dee2e6;"
-                                         alt="{{ $brand->title }}"
-                                         onerror="this.onerror=null; this.src='https://via.placeholder.com/50?text=No+Image';">
-                                @else
-                                    <div class="rounded-2 bg-light d-flex align-items-center justify-content-center" style="width:50px;height:50px;">
-                                        <i class="fa fa-certificate text-muted"></i>
+                            </div>
+                            <!-- Secondary -->
+                            <div class="tab-pane fade" id="secondaryContact">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p class="mb-1"><strong>Contact Type:</strong> Support</p>
+                                        <p class="mb-1"><strong>Name:</strong> John Support</p>
+                                        <p class="mb-1"><strong>Designation:</strong> Customer Support</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p class="mb-1"><strong>Email:</strong> support@company.com</p>
+                                        <p class="mb-1"><strong>Phone:</strong> +1 555 111 4444</p>
+                                        <p class="mb-1"><strong>Social:</strong> Telegram</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Other -->
+                            <div class="tab-pane fade" id="otherContact">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p class="mb-1"><strong>Contact Type:</strong> Finance</p>
+                                        <p class="mb-1"><strong>Name:</strong> Diana Accounts</p>
+                                        <p class="mb-1"><strong>Designation:</strong> Finance Manager</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p class="mb-1"><strong>Email:</strong> finance@company.com</p>
+                                        <p class="mb-1"><strong>Phone:</strong> +1 555 333 7777</p>
+                                        <p class="mb-1"><strong>Social:</strong> LinkedIn</p>
                                     </div>
                                 </div>
                             </div>
