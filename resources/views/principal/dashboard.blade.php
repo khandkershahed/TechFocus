@@ -5,7 +5,7 @@
     <div class="p-5 bg-white">
    <div class="p-5 bg-white">
     <!-- HEADER -->
-    <div class="gap-3 mb-4 d-flex flex-column flex-md-row justify-content-between align-items-start">
+  <div class="gap-3 mb-4 d-flex flex-column flex-md-row justify-content-between align-items-start">
         <div>
             <div class="d-flex align-items-center gap-3 mb-2">
                 <h1 class="mb-0 fw-bold text-primary fs-2">
@@ -45,8 +45,8 @@
             </div>
             
             <p class="text-muted mb-0">
-                <small>
-                    Created on <strong>{{ $principal->created_at->format('d M, Y') }}</strong> • 
+             <small>
+                 Created on <strong>{{ $principal->created_at->format('d M, Y') }}</strong> • 
                     By: <strong>{{ $principal->created_by ?? $principal->creator->name ?? 'System' }}</strong>
                 </small>
             </p>
@@ -60,12 +60,12 @@
                 </a>
                    
                    <a href="{{ route('principal.notes.index') }}"
-   class="btn btn-primary d-flex align-items-center px-4 py-2 fw-bold">
-    <i class="fa fa-sticky-note me-2 fa-lg"></i> ADD NOTE
-</a>
+                        class="btn btn-primary d-flex align-items-center px-4 py-2 fw-bold">
+                            <i class="fa fa-sticky-note me-2 fa-lg"></i> ADD NOTE
+                        </a>
                 </div>
         </div>
-
+        
         <!-- SECTION 1 — Company & Contact -->
         <div class="row g-4">
             <!-- Left Column -->
@@ -467,7 +467,7 @@
     <!-- Brand List -->
     <div class="gap-4 col-md-7 d-flex flex-column">
         <div class="p-4 bg-white border shadow-sm rounded-4 h-100" style="background: linear-gradient(145deg, #ffffff, #f9f9ff);">
-            <h3 class="mb-3 fs-5 fw-bold text-primary">Products by Brand</h3>
+            <h3 class="mb-3 fs-5 fw-bold text-primary">Brand List</h3>
             <div class="table-responsive">
                 <table class="table text-center align-middle table-hover table-bordered">
                     <thead class="table-light">
