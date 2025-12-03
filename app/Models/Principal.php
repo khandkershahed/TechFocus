@@ -253,4 +253,19 @@ public function primaryContact()
     return $this->hasOne(PrincipalContact::class)->where('is_primary', true);
 }
 
+
+public function secondaryContacts()
+{
+    return $this->hasMany(PrincipalContact::class)
+                ->where('is_primary', false)
+                ->where('preferred_channel', '!=', 'Other');
+}
+
+public function otherContacts()
+{
+    return $this->hasMany(PrincipalContact::class)
+                ->where('preferred_channel', 'Other');
+}
+
+
 }

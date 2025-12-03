@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers\Principal;
 
-use App\Models\Admin\Brand;
-use Illuminate\Support\Facades\Storage;
-use App\Models\NoteReply;
 use App\Models\Activity;
+use App\Models\NoteReply;
+use App\Models\Admin\Brand;
 use Illuminate\Http\Request;
 use App\Models\Admin\Product;
+use App\Models\PrincipalLink;
+use App\Models\Admin\Category;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class PrincipalDashboardController extends Controller
 {
@@ -48,13 +50,50 @@ class PrincipalDashboardController extends Controller
             ->orderBy('created_at', 'desc')
             ->first();
 
-        return view('principal.dashboard', compact(
-            'stats',
-            'brands',
-            'products',
-            'principal',
-            'activities',
-            'lastActivity'
+$latestBrand = Brand::where('principal_id', $principalId)
+    ->where('status', 'Approved')  // only approved brands
+    ->orderByDesc('created_at')
+    ->first();
+
+      $products = Product::where('principal_id', $principalId)
+        ->latest()
+        ->take(5) // Top 5 products
+        ->get();
+
+         // Get latest 5 links for dashboard display
+    $links = PrincipalLink::where('principal_id', $principalId)
+                ->latest()
+                ->take(5)
+                ->get();
+
+// Get all products for this principal
+$products = Product::with(['brand', 'category'])
+    ->where('principal_id', $principalId)
+    ->get();
+
+// Get unique category names
+$categories = $products->pluck('category.name')->unique()->implode(', ') ?: 'N/A';
+
+// Get unique brand names
+$brands = $products->pluck('brand.title')->unique()->implode(', ') ?: 'N/A';
+
+// Count approved products
+$approvedProductsCount = $products->where('submission_status', 'approved')->count();
+
+
+return view('principal.dashboard', compact(
+            
+    'stats',
+    'brands',
+    'products',
+    'principal',
+    'activities',
+    'latestBrand',
+    'links',
+    'categories',
+    'approvedProductsCount',
+    'lastActivity'
+
         ));
     }
     public function overview()
