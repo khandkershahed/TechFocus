@@ -25,6 +25,7 @@ class PrincipalProfileController extends Controller
         $principal = Auth::guard('principal')->user();
 
         $validated = $request->validate([
+            'name' => 'required|string|max:255',
             'legal_name' => 'required|string|max:255',
             'trading_name' => 'nullable|string|max:255',
             'entity_type' => 'nullable|string',

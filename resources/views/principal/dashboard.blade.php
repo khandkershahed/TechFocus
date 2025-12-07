@@ -32,7 +32,7 @@
                     <i class="fa fa-sticky-note me-1"></i> Add Note
                 </a>
             </div>
-        </div>
+     </div>
         <div class="pt-2 card-body">
             <div class="row">
                 <div class="col-lg-4">
@@ -105,9 +105,7 @@
                         </div>
                     </div>
                 </div>
-
-
-                
+              
                 <div class="col-lg-8">
                     <div class="border rounded shadow-sm border-light card card-flush">
                         <div class="p-3 card-header d-flex justify-content-between align-items-center">
@@ -551,67 +549,67 @@
                     </div>
                 </div>
                <div class="col-lg-4">
-    <div class="p-4 border rounded shadow-sm border-light card card-flush h-100">
-        <h2 class="text-black card-title fw-bold ps-3">
-            <i class="fa fa-link text-info"></i> Useful Links &amp; Notes
-        </h2>
-        <ul class="mt-4 mb-0 list-unstyled">
-            @forelse($links as $link)
-                @php
-                    // Handle label and URL in case they are stored as arrays
-                    $labels = is_array($link->label) ? $link->label : [$link->label];
-                    $urls = is_array($link->url) ? $link->url : [$link->url];
-                @endphp
+                            <div class="p-4 border rounded shadow-sm border-light card card-flush h-100">
+                                <h2 class="text-black card-title fw-bold ps-3">
+                                    <i class="fa fa-link text-info"></i> Useful Links &amp; Notes
+                                </h2>
+                                <ul class="mt-4 mb-0 list-unstyled">
+                                    @forelse($links as $link)
+                                        @php
+                                            // Handle label and URL in case they are stored as arrays
+                                            $labels = is_array($link->label) ? $link->label : [$link->label];
+                                            $urls = is_array($link->url) ? $link->url : [$link->url];
+                                        @endphp
 
-                @foreach($labels as $index => $label)
-                    <li class="mb-3">
-                        <a href="{{ $urls[$index] ?? '#' }}" target="_blank"
-                           class="text-info fw-semibold text-decoration-none hover:text-info-emphasis">
-                            <i class="fa fa-sign-in-alt me-1"></i> {{ $label }}
-                        </a>
-                    </li>
-                @endforeach
-            @empty
-                <li class="text-muted">No links available.</li>
-            @endforelse
-        </ul>
-    </div>
-</div>
+                                        @foreach($labels as $index => $label)
+                                            <li class="mb-3">
+                                                <a href="{{ $urls[$index] ?? '#' }}" target="_blank"
+                                                class="text-info fw-semibold text-decoration-none hover:text-info-emphasis">
+                                                    <i class="fa fa-sign-in-alt me-1"></i> {{ $label }}
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    @empty
+                                        <li class="text-muted">No links available.</li>
+                                    @endforelse
+                                </ul>
+                            </div>
+                        </div>
 
-              <div class="col-lg-4">
-    <div class="p-4 mb-4 border rounded shadow-sm border-light card card-flush h-100">
-        <h2 class="text-black card-title fw-bold ps-3">
-            <i class="fa fa-box-open text-info"></i> Product Line
-        </h2>
+                                    <div class="col-lg-4">
+                            <div class="p-4 mb-4 border rounded shadow-sm border-light card card-flush h-100">
+                                <h2 class="text-black card-title fw-bold ps-3">
+                                    <i class="fa fa-box-open text-info"></i> Product Line
+                                </h2>
 
-      <p class="mt-3 fw-medium">
-                <span class="fw-bold">Product Categories:</span> <br>
-                <span class="pt-2">{{ $categories }}</span>
-            </p>
+                            <p class="mt-3 fw-medium">
+                                        <span class="fw-bold">Product Categories:</span> <br>
+                                        <span class="pt-2">{{ $categories }}</span>
+                                    </p>
 
-            <p class="mt-1 fw-medium">
-                <span class="fw-bold">Product Brands:</span> <br>
-                <span class="pt-2">{{ $brands }}</span>
-            </p>
+                                    <p class="mt-1 fw-medium">
+                                        <span class="fw-bold">Product Brands:</span> <br>
+                                        <span class="pt-2">{{ $brands }}</span>
+                                    </p>
 
 
-        <div class="pt-3 d-flex justify-content-between align-items-center border-top">
-            <span class="fw-bold">{{ $approvedProductsCount }} Active Products</span>
-            <a href="{{ route('principal.products.index') }}" class="p-0 text-black btn btn-link fw-semibold text-decoration-none">
-                Full List <i class="fa fa-arrow-right ms-1"></i>
-            </a>
-        </div>
-    </div>
-</div>
+                                <div class="pt-3 d-flex justify-content-between align-items-center border-top">
+                                    <span class="fw-bold">{{ $approvedProductsCount }} Active Products</span>
+                                    <a href="{{ route('principal.products.index') }}" class="p-0 text-black btn btn-link fw-semibold text-decoration-none">
+                                        Full List <i class="fa fa-arrow-right ms-1"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
 
-        <div class="col">
-    <div class="p-5 text-center bg-white border border-gray-100 shadow-sm rounded-3">
-        <p class="mb-3 fs-2 fw-medium">Assigned Manager</p>
-        <h1 class="mb-0 text-black fw-bold">
-            {{ $principal->legal_name ?? 'N/A' }}
-        </h1>
-    </div>
-</div>
+                                <div class="col">
+                            <div class="p-5 text-center bg-white border border-gray-100 shadow-sm rounded-3">
+                                <p class="mb-3 fs-2 fw-medium">Assigned Manager</p>
+                                <h1 class="mb-0 text-black fw-bold">
+                                    {{ $principal->legal_name ?? 'N/A' }}
+                                </h1>
+                            </div>
+                        </div>
                 <div class="col">
                     <div class="p-5 text-center bg-white border border-gray-100 shadow-sm rounded-3">
                         <p class="mb-3 fs-2 fw-medium">2024 Purchase Total</p>
