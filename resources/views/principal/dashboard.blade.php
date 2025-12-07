@@ -139,12 +139,10 @@
                                         <div>
                                             <h5 class="pb-2 fw-bold">Main Office</h5>
                                             @if($mainOffice)
-                                                        <p class="mb-1">
-                                                            <i class="fas fa-location-dot me-2"></i>
-                                                            {{ $mainOffice->line1 }}
-                                                        </p>
+                                                
                                                         <p class="mb-1 ps-5">
-                                                            {{ $mainOffice->line2 ? $mainOffice->line2 . ', ' : '' }}
+                                                               <i class="fas fa-location-dot me-2"></i>
+                                                            {{ $mainOffice->state ? $mainOffice->state . ', ' : '' }}
                                                             {{ $mainOffice->city }},
                                                             {{ $mainOffice->country_iso }}
                                                         </p>
@@ -152,43 +150,23 @@
                                                         <p class="text-muted">No office address added</p>
                                                     @endif
                                         </div>
-                                          @php
-                                                $factoryOffice = $principal->addresses->where('type', 'Shipping')->first();
-                                            @endphp
+                                        
                                         <div>
                                             <h5 class="pb-2 fw-bold">Factory Office</h5>
-                                           @if($factoryOffice)
-                                                    <p class="mb-1">
-                                                        <i class="fas fa-location-dot me-2"></i>
-                                                        {{ $factoryOffice->line1 }}
-                                                    </p>
+                                          
+                                                
                                                     <p class="mb-1 ps-5">
-                                                        {{ $factoryOffice->line2 ? $factoryOffice->line2 . ', ' : '' }}
-                                                        {{ $factoryOffice->city }},
-                                                        {{ $factoryOffice->country_iso }}
-                                                    </p>
-                                                @else
-                                                    <p class="text-muted">No factory address added</p>
-                                                @endif
+                                                          {{ $mainOffice->line1 ? $mainOffice->line1. ', ' : '' }}
+                                                    </p>       
                                         </div>
-                                           @php
-                                                $warehouse = $principal->addresses->where('type', 'Billing')->first();
-                                            @endphp
+                                      
                                         <div>
                                             <h5 class="pb-2 fw-bold">Warehouse</h5>
-                                             @if($warehouse)
+                                       
                                                         <p class="mb-1">
                                                             <i class="fas fa-location-dot me-2"></i>
-                                                            {{ $warehouse->line1 }}
-                                                        </p>
-                                                        <p class="mb-1 ps-5">
-                                                            {{ $warehouse->line2 ? $warehouse->line2 . ', ' : '' }}
-                                                            {{ $warehouse->city }},
-                                                            {{ $warehouse->country_iso }}
-                                                        </p>
-                                                    @else
-                                                        <p class="text-muted">No warehouse address added</p>
-                                                    @endif
+                                                              {{ $mainOffice->line2 ? $mainOffice->line2 . ', ' : '' }}
+                                                        </p>   
                                         </div>
 
                                         <div>

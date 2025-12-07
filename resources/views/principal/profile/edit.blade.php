@@ -276,14 +276,14 @@
                                 </div>
 
                                 <div class="col-md-12 mb-3">
-                                    <label class="form-label">Address Line 1 <span class="text-danger">*</span></label>
+                                    <label class="form-label">Factory Office<span class="text-danger">*</span></label>
                                     <input type="text" name="addresses[{{ $index }}][line1]" 
                                            value="{{ old("addresses.$index.line1", $address->line1) }}" 
                                            class="form-control" required>
                                 </div>
 
                                 <div class="col-md-12 mb-3">
-                                    <label class="form-label">Address Line 2</label>
+                                    <label class="form-label">Warehouse</label>
                                     <input type="text" name="addresses[{{ $index }}][line2]" 
                                            value="{{ old("addresses.$index.line2", $address->line2) }}" 
                                            class="form-control">
