@@ -159,7 +159,7 @@
                 <div class="{{ !empty($product->overview) ? 'col-lg-6' : 'col-lg-12' }} ps-0">
                     <div class="text-justify bg-white shadow-sm" style="font-size: 16px">
                         <h2 class="description-title">Specification</h2>
-                        <div class="specification-areas-brand">
+                        <div class="specification-areas-brand ps-4">
                             <div class="">
                                 <p>{!! $product->specification !!}</p>
                             </div>
