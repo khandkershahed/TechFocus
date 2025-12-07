@@ -45,6 +45,13 @@
                         <input type="text" name="trading_name" value="{{ old('trading_name', $principal->trading_name) }}" 
                                class="form-control">
                     </div>
+                    <div class="col-md-6 mb-3">
+                            <label class="form-label">Company Name <span class="text-danger">*</span></label>
+                            <input type="text" name="name" 
+                                value="{{ old('name', $principal->name) }}" 
+                                class="form-control" required>
+                        </div>
+
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Entity Type</label>
