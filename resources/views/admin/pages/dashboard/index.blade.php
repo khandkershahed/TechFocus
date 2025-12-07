@@ -12,7 +12,32 @@
                     </h1>
                 </div>
                 <div class="d-flex align-items-center gap-2 gap-lg-3">
-
+                    <!-- Add this card to your dashboard -->
+                                <div class="col-md-4 mb-4">
+                                    <div class="card border-left-warning shadow h-100 py-2">
+                                        <div class="card-body">
+                                            <div class="row no-gutters align-items-center">
+                                                <div class="col mr-2">
+                                                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                        Pending Edit Requests
+                                                    </div>
+                                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                        {{ $pendingEditRequests }}
+                                                    </div>
+                                                    <div class="mt-2">
+                                                        <a href="{{ route('admin.movement.edit-requests') }}" 
+                                                        class="btn btn-sm btn-warning">
+                                                            <i class="bi bi-pencil-square"></i> Manage Requests
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <i class="bi bi-pencil-square fa-2x text-gray-300"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                 </div>
                 {{-- <div class="d-flex align-items-center gap-2 gap-lg-3">
 

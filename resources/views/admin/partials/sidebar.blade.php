@@ -1152,7 +1152,68 @@
 
     </div>
 </div>
+<div data-kt-menu-trigger="click"
+    class="menu-item menu-accordion {{ in_array(Route::current()->getName(), [
+        'admin.movement.index',
+        'admin.movement.create',
+        'admin.movement.show',
+        'admin.movement.edit'
+    ]) ? 'here show' : '' }}">
+    
+    <span class="menu-link">
+        <span class="menu-icon">
+            <span class="svg-icon svg-icon-2">
+                <i class="fas fa-map-marker-alt side_baricon"></i>
+            </span>
+        </span>
+        <span class="menu-title">Movement Records</span>
+        <span class="menu-arrow"></span>
+    </span>
 
+    <div class="menu-sub menu-sub-accordion">
+        
+        <!-- All Movement Records -->
+        <div class="menu-item">
+            <a class="menu-link {{ Route::current()->getName() == 'admin.movement.index' ? 'active' : '' }}"
+                href="{{ route('admin.movement.index') }}">
+                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                <span class="menu-title">All Records</span>
+            </a>
+        </div>
+
+        <!-- Add New Movement -->
+        <div class="menu-item">
+            <a class="menu-link {{ Route::current()->getName() == 'admin.movement.create' ? 'active' : '' }}"
+                href="{{ route('admin.movement.create') }}">
+                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                <span class="menu-title">Add New Record</span>
+            </a>
+        </div>
+
+    </div>
+</div>
+    
+
+<div class="sidebar">
+    <div class="logo">HR ADMIN</div>
+    
+    <div class="menu">
+        <!-- Main Dashboard -->
+        <a href="{{ route('admin.dashboard') }}" 
+           class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+            <i class="fas fa-tachometer-alt"></i> Main Dashboard
+        </a>
+         <div class="menu-section">HR Movements</div>
+           <!-- HR Dashboard -->
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('admin.movement.hr-dashboard') ? 'active' : '' }}" 
+                       href="{{ route('admin.movement.hr-dashboard') }}">
+                        <i class="fas fa-chart-line"></i> HR Dashboard
+                    </a>
+                </li>
+    </div>
+    </div>
+</div>
                                             {{-- <div class="menu-item">
                     <div class="menu-content pt-8 pb-0">
                         <span class="menu-section text-muted text-uppercase fs-8 ls-1">Layout</span>

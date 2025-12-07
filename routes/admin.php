@@ -6,7 +6,6 @@ use App\Http\Controllers\Rfq\RfqController;
 use App\Http\Controllers\Rfq\DealController;
 use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\RowController;
-use App\Http\Controllers\Admin\ShareLinkController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\HR\HolidayController;
@@ -33,6 +32,7 @@ use App\Http\Controllers\Admin\HomePageController;
 use App\Http\Controllers\Admin\HrPolicyController;
 use App\Http\Controllers\Admin\IndustryController;
 use App\Http\Controllers\Admin\UserRoleController;
+use App\Http\Controllers\Admin\MovementRecordController;
 use App\Http\Controllers\Rfq\RfqProductController;
 use App\Http\Controllers\Admin\AboutPageController;
 use App\Http\Controllers\Admin\AttributeController;
@@ -40,6 +40,7 @@ use App\Http\Controllers\Admin\BioMetricController;
 use App\Http\Controllers\Admin\BrandPageController;
 use App\Http\Controllers\Admin\NewsTrendController;
 use App\Http\Controllers\Admin\PrincipalController;
+use App\Http\Controllers\Admin\ShareLinkController;
 use App\Http\Controllers\Admin\VatAndTaxController;
 use App\Http\Controllers\HR\EmployeeTaskController;
 use App\Http\Controllers\Admin\AdminScopeController;
@@ -227,6 +228,7 @@ Route::prefix('administrator')->name('admin.')->group(static function () {
                 'attendance'            => AttendanceController::class, //not my work
                 'accounts-document'     => AccountsDocumentController::class,
                 'currency'              => CurrencyController::class,
+                // 'movement'              => MovementRecordController::class, 
             ],
             ['except' => ['create', 'show', 'edit'],]
         );
@@ -754,6 +756,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('/permissions/{permission}', [PermissionController::class, 'update'])->name('permissions.update');
         Route::delete('/permissions/{permission}', [PermissionController::class, 'destroy'])->name('permissions.destroy');
         
+        
     });
 });
 
@@ -807,3 +810,77 @@ Route::get('/admin/accounts-receivables/{id}/download-invoice', [App\Http\Contro
 Route::post('/admin/principals/{principal}/notes/{activity}/reply', [PrincipalController::class, 'storeReply'])->name('admin.principals.notes.reply');
 Route::post('/admin/principals/{principal}/notes/{activity}/pin', [PrincipalController::class, 'togglePin'])->name('admin.principals.notes.pin');
 Route::delete('/admin/principals/{principal}/notes/{activity}', [PrincipalController::class, 'deleteNote'])->name('admin.principals.notes.delete');
+
+
+// Route::resource('movement', \App\Http\Controllers\Admin\MovementRecordController::class)->names([
+//     'index' => 'admin.movement.index',
+//     'create' => 'admin.movement.create',
+//     'store' => 'admin.movement.store',
+//     'show' => 'admin.movement.show',
+//     'edit' => 'admin.movement.edit',
+//     'update' => 'admin.movement.update',
+//     'destroy' => 'admin.movement.destroy',
+// ]);
+// In your routes file
+Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
+    
+    // Movement routes
+    Route::prefix('movement')->name('admin.movement.')->group(function () {
+        Route::get('/edit-requests', [MovementRecordController::class, 'editRequests'])
+            ->name('edit-requests');
+        
+        Route::post('/{id}/approve-edit', [MovementRecordController::class, 'approveEdit'])
+            ->name('approve-edit');
+        
+        Route::post('/{id}/reject-edit', [MovementRecordController::class, 'rejectEdit'])
+            ->name('reject-edit');
+        
+        // Your existing CRUD routes
+        Route::get('/', [MovementRecordController::class, 'index'])->name('index');
+        Route::get('/create', [MovementRecordController::class, 'create'])->name('create');
+        Route::post('/', [MovementRecordController::class, 'store'])->name('store');
+        Route::get('/{id}/edit', [MovementRecordController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [MovementRecordController::class, 'update'])->name('update');
+        Route::delete('/{id}', [MovementRecordController::class, 'destroy'])->name('destroy');
+        Route::get('/{id}', [MovementRecordController::class, 'show'])->name('show');
+         Route::get('/hr-dashboard', [MovementRecordController::class, 'hrDashboard'])->name('hr-dashboard');
+    });
+});
+
+// // routes/web.php or routes/admin.php
+// Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
+    
+//     // Movement routes
+//     Route::prefix('movement')->group(function () {
+//         Route::get('/edit-requests', [MovementRecordController::class, 'editRequests'])
+//             ->name('admin.movement.edit-requests');
+        
+//         Route::post('/{id}/approve-edit', [MovementRecordController::class, 'approveEdit'])
+//             ->name('admin.movement.approve-edit');
+        
+//         Route::post('/{id}/reject-edit', [MovementRecordController::class, 'rejectEdit'])
+//             ->name('admin.movement.reject-edit');
+       
+//     });
+// });
+
+Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
+    
+    // Movement routes
+    Route::prefix('movement')->name('admin.movement.')->group(function () {
+        // HR Dashboard Route (ADD THIS)
+        Route::get('/hr-dashboard', [MovementRecordController::class, 'hrDashboard'])
+            ->name('hr-dashboard');
+        
+        // Edit Requests Routes
+        Route::get('/edit-requests', [MovementRecordController::class, 'editRequests'])
+            ->name('edit-requests');
+        
+        Route::post('/{id}/approve-edit', [MovementRecordController::class, 'approveEdit'])
+            ->name('approve-edit');
+        
+        Route::post('/{id}/reject-edit', [MovementRecordController::class, 'rejectEdit'])
+            ->name('reject-edit');
+
+    });
+});

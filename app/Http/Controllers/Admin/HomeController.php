@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\Admin\Event;
 use Rats\Zkteco\Lib\ZKTeco;
 use Illuminate\Http\Request;
+use App\Models\MovementRecord;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
@@ -263,6 +264,8 @@ class HomeController extends Controller
 
     $attendanceLastMonth = [];
     $lateCounts = [];
+    $pendingEditRequests = MovementRecord::where('edit_status', 'pending')->count();
+
 
     // Default IP for display only
     $deviceip = session('dip', '203.17.65.230');
@@ -273,6 +276,7 @@ class HomeController extends Controller
         'lateCounts'           => $lateCounts,
         'attendanceLastMonths' => $attendanceLastMonth,
         'deviceip'             => $deviceip,
+         'pendingEditRequests' => $pendingEditRequests,
     ]);
 }
 
