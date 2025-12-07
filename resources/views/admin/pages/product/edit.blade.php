@@ -486,56 +486,64 @@
                                                             </div>
                                                         </div>
                                                     </div> --}}
-                                                    <div class="col-lg-6 mb-3">
-                                                            <div class="fv-row mb-3">
-                                                                <label class="form-label">Parent Products</label>
-                                                                <select class="form-select form-select-solid form-select-sm"
-                                                                        name="parent_id[]" id="parent_id" multiple data-control="select2"
-                                                                        multiselect-search="true" multiselect-select-all="true"
-                                                                        multiselect-max-items="2">
+                                                   <div class="col-lg-6 mb-3">
+                                                                <div class="fv-row mb-3">
+                                                                    <label class="form-label">Parent Products</label>
+                                                                    <select class="form-select form-select-solid form-select-sm"
+                                                                            name="parent_id[]" id="parent_id" multiple data-control="select2"
+                                                                            multiselect-search="true" multiselect-select-all="true"
+                                                                            multiselect-max-items="2">
 
-                                                                    @php
-                                                                        $parentIds = !empty($product->parent_id)
-                                                                            ? (is_string($product->parent_id) ? json_decode($product->parent_id, true) : $product->parent_id)
-                                                                            : [];
-                                                                        $parents = App\Models\Admin\Product::pluck('name', 'id')->toArray();
-                                                                    @endphp
+                                                                        @php
+                                                                            // CORRECTED: Define parent IDs and parents array
+                                                                            $parentIds = [];
+                                                                            if (!empty($product->parent_id)) {
+                                                                                $parentIds = is_string($product->parent_id) 
+                                                                                    ? json_decode($product->parent_id, true) 
+                                                                                    : $product->parent_id;
+                                                                                $parentIds = is_array($parentIds) ? $parentIds : [];
+                                                                            }
+                                                                            $parents = App\Models\Admin\Product::pluck('name', 'id')->toArray();
+                                                                        @endphp
 
-                                                                    @foreach ($parents as $id => $name)
-                                                                        <option value="{{ $id }}" {{ in_array($id, $parentIds) ? 'selected' : '' }}>
-                                                                            {{ $name }}
-                                                                        </option>
-                                                                    @endforeach
-                                                                </select>
-                                                                <div class="invalid-feedback"> Please Enter Parent Product. </div>
+                                                                        @foreach ($parents as $id => $name)
+                                                                            <option value="{{ $id }}" {{ !empty($parentIds) && is_array($parentIds) && in_array($id, $parentIds) ? 'selected' : '' }}>
+                                                                                {{ $name }}
+                                                                            </option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                    <div class="invalid-feedback"> Please Enter Parent Product. </div>
+                                                                </div>
                                                             </div>
-                                                        </div>
 
-                                                        <div class="col-lg-6 mb-3">
-                                                            <div class="fv-row mb-3">
-                                                                <label class="form-label">Child Products</label>
-                                                                <select class="form-select form-select-solid form-select-sm"
-                                                                        name="child_id[]" id="child_id" multiple data-control="select2"
-                                                                        multiselect-search="true" multiselect-select-all="true"
-                                                                        multiselect-max-items="2">
+                                                            <div class="col-lg-6 mb-3">
+                                                                <div class="fv-row mb-3">
+                                                                    <label class="form-label">Child Products</label>
+                                                                    <select class="form-select form-select-solid form-select-sm"
+                                                                            name="child_id[]" id="child_id" multiple data-control="select2"
+                                                                            multiselect-search="true" multiselect-select-all="true"
+                                                                            multiselect-max-items="2">
 
-                                                                    @php
-                                                                        $childIds = !empty($product->child_id)
-                                                                            ? (is_string($product->child_id) ? json_decode($product->child_id, true) : $product->child_id)
-                                                                            : [];
-                                                                        $childs = App\Models\Admin\Product::pluck('name', 'id')->toArray();
-                                                                    @endphp
+                                                                        @php
+                                                                            $childIds = [];
+                                                                            if (!empty($product->child_id)) {
+                                                                                $childIds = is_string($product->child_id) 
+                                                                                    ? json_decode($product->child_id, true) 
+                                                                                    : $product->child_id;
+                                                                                $childIds = is_array($childIds) ? $childIds : [];
+                                                                            }
+                                                                            $childs = App\Models\Admin\Product::pluck('name', 'id')->toArray();
+                                                                        @endphp
 
-                                                                    @foreach ($childs as $id => $name)
-                                                                        <option value="{{ $id }}" {{ in_array($id, $childIds) ? 'selected' : '' }}>
-                                                                            {{ $name }}
-                                                                        </option>
-                                                                    @endforeach
-                                                                </select>
-                                                                <div class="invalid-feedback"> Please Enter Child Products. </div>
+                                                                        @foreach ($childs as $id => $name)
+                                                                            <option value="{{ $id }}" {{ !empty($childIds) && is_array($childIds) && in_array($id, $childIds) ? 'selected' : '' }}>
+                                                                                {{ $name }}
+                                                                            </option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                    <div class="invalid-feedback"> Please Enter Child Products. </div>
+                                                                </div>
                                                             </div>
-                                                        </div>
-
                                                     <div class="col-lg-3 mb-3">
                                                         <div class="fv-row mb-3">
                                                             <label class="form-label">Currency</label>
