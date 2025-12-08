@@ -36,7 +36,10 @@
             "Database\\Seeders\\": "database/seeders/"
         },
            "files": [
-        "app/Helpers/CountryHelper.php"
+        "app/Helpers/CountryHelper.php",
+         "app/Helpers/helpers.php"
+
+        
     ]
         
     },

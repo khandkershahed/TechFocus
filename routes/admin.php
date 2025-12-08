@@ -81,6 +81,7 @@ use App\Http\Controllers\Admin\AccountsReceivableController;
 use App\Http\Controllers\Admin\EmployeeDepartmentController;
 use App\Http\Controllers\Accounts\AccountsDocumentController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\StaffMeetingController;
 use App\Http\Controllers\Admin\PolicyAcknowledgmentController;
 use App\Http\Controllers\Admin\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
@@ -858,3 +859,38 @@ Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
 });
         Route::get('/staff-dashboard', [MovementRecordController::class, 'staffDashboard'])
     ->name('staff.dashboard');
+
+// Admin Routes Group
+Route::prefix('admin')->name('admin.')->middleware(['auth:admin'])->group(function () {
+    
+    // Staff Meetings Routes
+    Route::prefix('staff-meetings')->name('staff-meetings.')->group(function () {
+        Route::get('/', [StaffMeetingController::class, 'index'])->name('index');
+        Route::get('/create', [StaffMeetingController::class, 'create'])->name('create');
+        Route::post('/', [StaffMeetingController::class, 'store'])->name('store');
+        Route::get('/{staffMeeting}', [StaffMeetingController::class, 'show'])->name('show');
+        Route::get('/{staffMeeting}/edit', [StaffMeetingController::class, 'edit'])->name('edit');
+        Route::put('/{staffMeeting}', [StaffMeetingController::class, 'update'])->name('update');
+        Route::delete('/{staffMeeting}', [StaffMeetingController::class, 'destroy'])->name('destroy');
+        
+        // Additional routes
+        Route::post('/{staffMeeting}/status', [StaffMeetingController::class, 'updateStatus'])->name('update-status');
+        Route::get('/export', [StaffMeetingController::class, 'export'])->name('export');
+        
+        // Filter routes
+        Route::get('/status/{status}', [StaffMeetingController::class, 'filterByStatus'])->name('filter.status');
+        Route::get('/upcoming', [StaffMeetingController::class, 'upcoming'])->name('upcoming');
+        Route::get('/today', [StaffMeetingController::class, 'today'])->name('today');
+        Route::get('/month/{month?}', [StaffMeetingController::class, 'byMonth'])->name('by-month');
+        Route::get('/department/{department}', [StaffMeetingController::class, 'byDepartment'])->name('by-department');
+    });
+    
+});
+
+Route::get('/calendar', [StaffMeetingController::class, 'calendar'])->name('admin.staff-meetings.calendar');
+ Route::get('/calendar-data', [StaffMeetingController::class, 'calendarData'])->name('admin.staff-meetings.calendar.data');
+ 
+
+
+   
+        
