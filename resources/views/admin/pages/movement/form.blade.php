@@ -471,11 +471,21 @@
 
                 <!-- Location Section -->
                 <div class="col-md-3 mb-3">
-                    <label class="mini-label">Area / Location</label>
+                    <label class="mini-label">Area</label>
                     <input type="text" class="form-control" name="area" 
                            value="{{ old('area', $record->area ?? '') }}"
                            {{ $isPendingApproval ?? false ? 'readonly' : '' }}>
                 </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="mini-label">Location</label>
+                            <select name="location" class="form-control" {{ $isPendingApproval ?? false ? 'readonly' : '' }}>
+                                <option value="">Select Location</option>
+                                <option value="Office" {{ (old('location', $record->location ?? '') == 'Office') ? 'selected' : '' }}>Office</option>
+                                <option value="Client" {{ (old('location', $record->location ?? '') == 'Client') ? 'selected' : '' }}>Client</option>
+                                <option value="Site" {{ (old('location', $record->location ?? '') == 'Site') ? 'selected' : '' }}>Site</option>
+                                <option value="Vendor" {{ (old('location', $record->location ?? '') == 'Vendor') ? 'selected' : '' }}>Vendor</option>
+                            </select>
+                        </div>
 
                 <div class="col-md-3 mb-3">
                     <label class="mini-label">Transport</label>

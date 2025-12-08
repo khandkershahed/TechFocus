@@ -197,6 +197,7 @@ public function create()
             'end_time' => 'nullable',
             'duration' => 'nullable',
             'area' => 'nullable|string',
+            'location' => 'nullable|string|max:255',
             'transport' => 'nullable|string',
             'cost' => 'nullable|numeric|min:0',
             'meeting_type' => 'nullable|string',
@@ -331,12 +332,12 @@ public function show($id)
             'contact_number' => 'nullable|string|max:20',
             'purpose' => 'required|string',
             'area' => 'nullable|string|max:255',
+             'location' => 'nullable|string|max:255',
             'transport' => 'nullable|in:car,train,bus,flight,taxi,walking',
             'cost' => 'nullable|numeric|min:0',
             'value' => 'nullable|numeric|min:0',
             'value_status' => 'nullable|in:pending,negotiating,closed,lost',
             'employee_department_id' => 'nullable|exists:employee_departments,id',
-
             'comments' => 'nullable|string',
         ]);
         
