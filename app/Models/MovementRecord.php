@@ -12,10 +12,11 @@ class MovementRecord extends Model
     use HasFactory;
 
     protected $fillable = [
-          'admin_id',
+        'admin_id',
         'country_id',
         'date',
         'status',
+        
         'start_time',
         'end_time',
         'duration',
@@ -131,4 +132,17 @@ class MovementRecord extends Model
     //     return $this->belongsTo(Country::class);
     // }
     
+    /**
+ * Get the employee department through admin.
+ */
+
+/**
+ * Alias for employeeDepartment relationship.
+ */
+// App\Models\Admin.php
+public function department()
+{
+    return $this->belongsTo(EmployeeDepartment::class, 'employee_department_id');
+}
+
 }

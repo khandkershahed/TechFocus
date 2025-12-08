@@ -233,57 +233,72 @@
         @endif --}}
 
         <!-- Popup Card -->
-        <div class="popup-card d-none" id="popupBox">
-            <div class="popup-title mb-2">
-                <i class="bi bi-exclamation-circle-fill text-primary"></i>
-                Request Manual Edit
-            </div>
+            <div class="popup-card d-none" id="popupBox">
+                <div class="popup-title mb-2">
+                    <i class="bi bi-exclamation-circle-fill text-primary"></i>
+                    Request Manual Edit
+                </div>
 
-            <div class="d-flex align-items-start gap-3 mb-2">
-                <i class="bi bi-person-circle popup-icon"></i>
-                <div>
-                    <div class="fw-semibold">Admin Approval</div>
-                    <small class="text-muted">Required</small>
+                <div class="d-flex align-items-start gap-3 mb-2">
+                    <i class="bi bi-person-circle popup-icon"></i>
+                    <div>
+                        <div class="fw-semibold">Admin Approval</div>
+                        <small class="text-muted">Required</small>
+                    </div>
+                </div>
+
+                <p class="text-muted small">Do you want to request permission?</p>
+
+                <div class="d-flex gap-2 mt-3">
+                    <button type="button" class="btn btn-purple w-100" onclick="submitManualEditRequest()">Send Request</button>
+                    <button type="button" class="btn btn-outline-secondary w-100" onclick="hidePopup()">Cancel</button>
                 </div>
             </div>
 
-            <p class="text-muted small">Do you want to request permission?</p>
+            <!-- FORM -->
+            <form action="{{ isset($record) ? route('admin.movement.update', $record->id) : route('admin.movement.store') }}" method="POST" id="movementForm">
+                @csrf
+                @if(isset($record))
+                    @method('PUT')
+                @endif
 
-            <div class="d-flex gap-2 mt-3">
-                <button type="button" class="btn btn-purple w-100" onclick="submitManualEditRequest()">Send Request</button>
-                <button type="button" class="btn btn-outline-secondary w-100" onclick="hidePopup()">Cancel</button>
-            </div>
-        </div>
+                <!-- Hidden field for manual edit request -->
+                <input type="hidden" name="request_manual_edit" id="requestManualEdit" value="0">
+                <input type="hidden" name="edit_reason" id="editReason" value="">
 
-        <!-- FORM -->
-        <form action="{{ isset($record) ? route('admin.movement.update', $record->id) : route('admin.movement.store') }}" method="POST" id="movementForm">
-            @csrf
-            @if(isset($record))
-                @method('PUT')
-            @endif
+                <div class="row">
 
-            <!-- Hidden field for manual edit request -->
-            <input type="hidden" name="request_manual_edit" id="requestManualEdit" value="0">
-            <input type="hidden" name="edit_reason" id="editReason" value="">
+                    <!-- Admin Information -->
+                    <div class="col-md-3 mb-3">
+                        <label class="mini-label">Staff *</label>
+                        <input type="text" class="form-control" value="{{ $currentAdmin->name }}" readonly>
+                        <input type="hidden" name="admin_id" value="{{ $currentAdmin->id }}">
+                    </div>
 
-            <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <label class="mini-label">Employee ID</label>
+                        <input type="text" class="form-control" value="{{ $currentAdmin->employee_id ?? 'N/A' }}" readonly>
+                    </div>
 
-                <!-- Admin Information -->
-                <div class="col-md-3 mb-3">
-                    <label class="mini-label">Staff *</label>
-                    <input type="text" class="form-control" value="{{ $currentAdmin->name }}" readonly>
-                    <input type="hidden" name="admin_id" value="{{ $currentAdmin->id }}">
-                </div>
-
-                <div class="col-md-3 mb-3">
-                    <label class="mini-label">Employee ID</label>
-                    <input type="text" class="form-control" value="{{ $currentAdmin->employee_id ?? 'N/A' }}" readonly>
-                </div>
+                    <div class="col-md-3 mb-3">
+                        <label class="mini-label">Designation</label>
+                        <input type="text" class="form-control" value="{{ $currentAdmin->designation ?? 'N/A' }}" readonly>
+                    </div>
 
                 <div class="col-md-3 mb-3">
-                    <label class="mini-label">Designation</label>
-                    <input type="text" class="form-control" value="{{ $currentAdmin->designation ?? 'N/A' }}" readonly>
-                </div>
+        <label class="mini-label">Department</label>
+        @php
+            $dept = $currentAdmin->department;
+            // Convert JSON string → array (if necessary)
+            if(is_string($dept)){
+                $dept = json_decode($dept, true);
+            }
+            // Convert array → comma separated text
+            $dept = is_array($dept) ? implode(', ', $dept) : $dept;
+        @endphp
+
+        <input type="text" class="form-control" value="{{ $dept ?? 'N/A' }}" readonly>
+    </div>
 
                 <!-- Country/Territory Dropdown with Manual Edit Button -->
                 <div class="col-md-3 mb-3">

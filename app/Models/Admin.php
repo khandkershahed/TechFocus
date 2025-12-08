@@ -117,6 +117,12 @@ class Admin extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(NoteReply::class, 'user_id')
             ->where('user_type', self::class);
     }
+ public function department()
+{
+    return $this->belongsTo(\App\Models\Admin\EmployeeDepartment::class, 'employee_department_id');
+}
+
+
 
     
 }

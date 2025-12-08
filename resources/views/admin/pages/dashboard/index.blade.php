@@ -11,34 +11,11 @@
                         Dashboard
                     </h1>
                 </div>
+                  
                 <div class="d-flex align-items-center gap-2 gap-lg-3">
                     <!-- Add this card to your dashboard -->
-                                <div class="col-md-4 mb-4">
-                                    <div class="card border-left-warning shadow h-100 py-2">
-                                        <div class="card-body">
-                                            <div class="row no-gutters align-items-center">
-                                                <div class="col mr-2">
-                                                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                                        Pending Edit Requests
-                                                    </div>
-                                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                                        {{ $pendingEditRequests }}
-                                                    </div>
-                                                    <div class="mt-2">
-                                                        <a href="{{ route('admin.movement.edit-requests') }}" 
-                                                        class="btn btn-sm btn-warning">
-                                                            <i class="bi bi-pencil-square"></i> Manage Requests
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                                <div class="col-auto">
-                                                    <i class="bi bi-pencil-square fa-2x text-gray-300"></i>
-                                                </div>
-                                            </div>
+                              
                                         </div>
-                                    </div>
-                                </div>
-                </div>
                 {{-- <div class="d-flex align-items-center gap-2 gap-lg-3">
 
                     <a href="../../demo1/dist/.html" class="btn btn-sm btn-primary" data-bs-toggle="modal"
@@ -1205,6 +1182,7 @@
                                             </table>
                                         </div>
                                     </div>
+
                                     <div class="tab-pane fade" id="kt_table_widget_5_tab_2">
                                         <div class="table-responsive">
                                             <table
@@ -1513,8 +1491,27 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-xl-4 col-md-6 mb-4">
+                                                   <div class="card shadow-sm h-100">
+                                                       <div class="card-body">
+                                                           <div class="d-flex justify-content-between">
+                                                               <div>
+                                                                   <h6 class="text-warning text-uppercase mb-1">Pending Edit Requests</h6>
+                                                                   <h3 class="fw-bold text-gray-800">{{ $pendingEditRequests }}</h3>
+                   
+                                                                   <a href="{{ route('admin.movement.edit-requests') }}" class="btn btn-sm btn-warning mt-2">
+                                                                       <i class="bi bi-pencil-square"></i> Manage Movement Edit  Requests
+                                                                   </a>
+                                                               </div>
+                   
+                                                               <div class="mt-1">
+                                                                   <i class="bi bi-pencil-square fs-1 text-gray-300"></i>
+                                                               </div>
+                                                           </div>
+                                                       </div>
+                                                   </div>
+                                               </div>
                 </div>
-
                 <div class="modal fade" id="kt_modal_add_event" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered mw-650px">
                         <div class="modal-content">
