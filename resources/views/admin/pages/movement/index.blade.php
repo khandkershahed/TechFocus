@@ -1,126 +1,238 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Movement Records</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-    <style>
-        .action-btns .btn {
-            margin-right: 5px;
-        }
-        .table-container {
-            margin-top: 20px;
-        }
-        .status-badge {
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 0.8em;
-        }
-        .status-completed { background: #d4edda; color: #155724; }
-        .status-pending { background: #fff3cd; color: #856404; }
-        .status-cancelled { background: #f8d7da; color: #721c24; }
-    </style>
-</head>
-<body>
-    <div class="container mt-4">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1>Movement Records</h1>
-            <a href="{{ route('admin.movement.create') }}" class="btn btn-primary">
-                <i class="bi bi-plus-circle"></i> Add New Record
-            </a>
+@extends('admin.master')
+@section('content')
+
+<style>
+body{background:#f8fafc;}
+
+/* ===== HEADER ===== */
+.dashboard-title{
+    text-align:center;
+    font-size:22px;
+    font-weight:700;
+    color:red;
+    margin-bottom:25px;
+}
+
+/* ===== SUMMARY BOXES ===== */
+.summary-container{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+    margin-bottom:30px;
+}
+.summary-card{
+    background:#fff;
+    padding:18px;
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    gap:15px;
+    box-shadow:0 2px 6px rgba(0,0,0,0.05);
+}
+.summary-icon{
+    font-size:28px;
+    background:#eef6ff;
+    padding:14px;
+    border-radius:50%;
+    color:#0056d6;
+}
+.summary-info h3{font-size:22px;margin:0;font-weight:700;color:#111;}
+.summary-info span{font-size:14px;color:#666;}
+
+/* ===== FILTER BAR ===== */
+.filter-row{
+    display:grid;
+    grid-template-columns:repeat(5,1fr) auto;
+    gap:10px;
+    background:#fff;
+    padding:15px;
+    border-radius:10px;
+    margin-bottom:15px;
+    box-shadow:0 2px 6px rgba(0,0,0,0.05);
+}
+.filter-row select,input{
+    padding:8px;
+    border-radius:6px;
+    border:1px solid #ccc;
+}
+.add-btn{
+    background:#1c54d1;
+    color:#fff;
+    padding:8px 15px;
+    font-weight:600;
+    border-radius:6px;
+    border:none;
+}
+
+/* ===== TABLE ===== */
+.table-wrapper{
+    background:#fff;
+    border-radius:10px;
+    padding:0;
+    box-shadow:0 2px 6px rgba(0,0,0,0.05);
+}
+table thead{
+    background:#f1f5f9;
+}
+table th,table td{
+    font-size:14px;
+    padding:9px 10px;
+    border-bottom:1px solid #e8e8e8 !important;
+}
+.status-badge{
+    background:#d4f8d4;
+    color:#0d8a25;
+    padding:5px 10px;
+    font-size:12px;
+    border-radius:5px;
+    font-weight:600;
+}
+</style>
+
+
+
+<div class="container-fluid mt-3">
+
+    <h3 class="dashboard-title">HR ADMIN Dashboard</h3>
+
+    <!-- Summary Boxes -->
+    <div class="summary-container">
+
+        <div class="summary-card">
+            <div class="summary-icon"><i class="bi bi-people"></i></div>
+            <div class="summary-info">
+                <span>Total Movements</span>
+                <h3>{{ $totalVisits }}</h3>
+            </div>
         </div>
 
-        @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <div class="summary-card">
+            <div class="summary-icon"><i class="bi bi-currency-dollar"></i></div>
+            <div class="summary-info">
+                <span>Sales</span>
+                <h3>{{ $highestValue }}</h3>
             </div>
-        @endif
+        </div>
 
-        <div class="card table-container">
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Date</th>
-                                <th>Admin</th>
-                                <th>Company</th>
-                                <th>Contact Person</th>
-                                <th>Area</th>
-                                <th>Status</th>
-                                <th>Cost</th>
-                                <th>Value</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse($records as $record)
-                                <tr>
-                                    <td>{{ $record->id }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($record->date)->format('d M Y') }}</td>
-                                    <td>
-                                        @if($record->admin)
-                                            <div class="admin-info">
-                                                <strong>{{ $record->admin->name }}</strong>
-                                                @if($record->admin->designation)
-                                                    <br><small class="text-muted">{{ $record->admin->designation }}</small>
-                                                @endif
-                                                @if($record->admin->employee_id)
-                                                    <br><small class="text-muted">ID: {{ $record->admin->employee_id }}</small>
-                                                @endif
-                                            </div>
-                                        @else
-                                            <span class="text-muted">N/A</span>
-                                        @endif
-                                    </td>
-                                    <td>{{ $record->company ?? 'N/A' }}</td>
-                                    <td>{{ $record->contact_person ?? 'N/A' }}</td>
-                                    <td>{{ $record->area ?? 'N/A' }}</td>
-                                    <td>
-                                        <span class="status-badge status-{{ strtolower($record->status ?? 'pending') }}">
-                                            {{ $record->status ?? 'Pending' }}
-                                        </span>
-                                    </td>
-                                    <td>${{ number_format($record->cost ?? 0, 2) }}</td>
-                                    <td>${{ number_format($record->value ?? 0, 2) }}</td>
-                                    <td class="action-btns">
-                                        <a href="{{ route('admin.movement.show', $record->id) }}" class="btn btn-sm btn-info" title="View">
-                                            <i class="bi bi-eye"></i>
-                                        </a>
-                                        <a href="{{ route('admin.movement.edit', $record->id) }}" class="btn btn-sm btn-warning" title="Edit">
-                                            <i class="bi bi-pencil"></i>
-                                        </a>
-                                        <form action="{{ route('admin.movement.destroy', $record->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this record?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger" title="Delete">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="10" class="text-center">No movement records found.</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-                
-                @if($records->hasPages())
-                    <div class="mt-3">
-                        {{ $records->links() }}
-                    </div>
-                @endif
+        <div class="summary-card">
+            <div class="summary-icon"><i class="bi bi-building"></i></div>
+            <div class="summary-info">
+                <span>General</span>
+                <h3>{{ $totalCompanies }}</h3>
+            </div>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-icon"><i class="bi bi-telephone"></i></div>
+            <div class="summary-info">
+                <span>Calls</span>
+                <h3>{{ $totalDays }}</h3>
             </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+
+ <!-- Filters -->
+<form method="GET" action="{{ route('admin.movement.index') }}" class="filter-row">
+    <select name="staff">
+        <option value="">Staff</option>
+        @foreach($allStaff as $staff)
+            <option value="{{ $staff->id }}" {{ request('staff') == $staff->id ? 'selected' : '' }}>
+                {{ $staff->name }}
+            </option>
+        @endforeach
+    </select>
+
+    {{-- <select name="department">
+        <option value="">Department</option>
+        @foreach($departments as $dept)
+            <option value="{{ $dept }}" {{ request('department') == $dept ? 'selected' : '' }}>
+                {{ $dept }}
+            </option>
+        @endforeach
+    </select> --}}
+
+    <select name="movement_type">
+        <option value="">Movement Type</option>
+        @foreach($movementTypes as $type)
+            <option value="{{ $type }}" {{ request('movement_type') == $type ? 'selected' : '' }}>
+                {{ $type }}
+            </option>
+        @endforeach
+    </select>
+
+    <input type="date" name="date" value="{{ request('date') }}">
+
+    <select name="status">
+        <option value="">Status</option>
+        @foreach($statuses as $status)
+            <option value="{{ $status }}" {{ request('status') == $status ? 'selected' : '' }}>
+                {{ $status }}
+            </option>
+        @endforeach
+    </select>
+
+    <button type="submit" class="add-btn">Filter</button>
+
+    <a href="{{ route('admin.movement.create') }}" class="add-btn">+ Add Movement</a>
+</form>
+
+
+    <!-- Table -->
+    <div class="table-wrapper">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>SL</th><th>Date</th><th>Staff</th><th>Department</th><th>Movement Type</th>
+                <th>Location</th><th>Time</th><th>Duration</th><th>Status</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            @foreach($records as $key=>$record)
+                   <tr>
+                        <td>{{ $loop->iteration }}</td>
+                        <td>{{ date('d M Y', strtotime($record->date)) }}</td>
+                        <td>{{ $record->admin->name ?? 'N/A' }}</td>
+                        <td>{{ $record->department ?? '-' }}</td>
+                        <td>{{ $record->meeting_type ?? '-' }}</td>
+                        <td>{{ $record->area ?? '-' }}</td>
+
+                       <td>
+                                    {{ $record->created_at ? $record->created_at->format('h:i A') : '-' }}
+                                    -
+                                    {{ $record->updated_at ? $record->updated_at->format('h:i A') : '-' }}
+                                </td>
+
+
+                             <td>
+                                @if($record->duration)
+                                    @php
+                                        $duration = \Carbon\Carbon::parse($record->duration);
+                                        $hours = $duration->format('H');
+                                        $minutes = $duration->format('i');
+                                    @endphp
+                                    
+                                    {{ $hours }}h {{ $minutes }}m
+                                @else
+                                    -
+                                @endif
+                            </td>
+
+                        {{-- Status Badge color dynamic --}}
+                        <td>
+                            <span class="status-badge"
+                                style="background:{{ $record->status=='Completed'?'#d4f8d4':'#ffe9b3' }};
+                                        color:{{ $record->status=='Completed'?'#107b22':'#b36b00' }};">
+                                {{ $record->status }}
+                            </span>
+                        </td>
+                    </tr>
+
+            @endforeach
+            </tbody>
+        </table>
+    </div>
+
+</div>
+@endsection

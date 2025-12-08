@@ -1,13 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ isset($record) ? 'Edit' : 'Create' }} Movement Record</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+@extends('admin.master')
+@section('content')
     <style>
         body {
             background: #f6f7fb;
@@ -349,7 +341,7 @@
                     </select>
                 </div>
 
-                <!-- Time Management -->
+                {{-- <!-- Time Management -->
                 <div class="col-md-3 mb-3">
                     <label class="mini-label">Time</label>
                     <div class="time-input-group">
@@ -379,7 +371,41 @@
                     <input type="time" class="form-control" id="end_time" name="end_time" 
                            value="{{ old('end_time', $record->end_time ?? '') }}"
                            {{ $isPendingApproval ?? false ? 'readonly' : '' }}>
-                </div>
+                </div> --}}
+                <!-- Time Management Buttons -->
+<div class="col-md-3 mb-3">
+    <label class="mini-label">Time</label>
+    <div class="time-input-group">
+        <button type="button" class="btn-start" 
+                onclick="setCurrentTime('start_time')"
+                {{ $isPendingApproval ?? false ? 'disabled' : '' }}>
+            Start
+        </button>
+        <button type="button" class="btn-finish"
+                onclick="setCurrentTime('end_time')"
+                {{ $isPendingApproval ?? false ? 'disabled' : '' }}>
+            Finish
+        </button>
+    </div>
+</div>
+
+<!-- Time Inputs (readonly for new records) -->
+<div class="col-md-3 mb-3">
+    <label class="mini-label">Start Time</label>
+    <input type="time" class="form-control" id="start_time" name="start_time" 
+           value="{{ old('start_time', $record->start_time ?? '') }}"
+           {{ isset($record) ? '' : 'readonly' }}
+           {{ $isPendingApproval ?? false ? 'readonly' : '' }}>
+</div>
+
+<div class="col-md-3 mb-3">
+    <label class="mini-label">End Time</label>
+    <input type="time" class="form-control" id="end_time" name="end_time" 
+           value="{{ old('end_time', $record->end_time ?? '') }}"
+           {{ isset($record) ? '' : 'readonly' }}
+           {{ $isPendingApproval ?? false ? 'readonly' : '' }}>
+</div>
+
 
                 <div class="col-md-3 mb-3">
                     <label class="mini-label">Duration</label>
@@ -389,7 +415,7 @@
 
                 <!-- Meeting Type -->
                 <div class="col-md-4 mb-3">
-                    <label class="mini-label">Meeting Type *</label>
+                    <label class="mini-label">Movement Type *</label>
                     <select class="form-select" name="meeting_type"
                             {{ $isPendingApproval ?? false ? 'disabled' : '' }}>
                         <option value="">Select Type</option>
@@ -599,5 +625,4 @@
         document.getElementById('movementForm').submit();
     }
 </script>
-</body>
-</html>
+@endsection

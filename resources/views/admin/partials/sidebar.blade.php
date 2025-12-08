@@ -1177,7 +1177,7 @@
             <a class="menu-link {{ Route::current()->getName() == 'admin.movement.index' ? 'active' : '' }}"
                 href="{{ route('admin.movement.index') }}">
                 <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-                <span class="menu-title">All Records</span>
+                <span class="menu-title">HR Admin Dashboard</span>
             </a>
         </div>
 
@@ -1190,31 +1190,20 @@
             </a>
         </div>
 
-    </div>
-</div>
-    
+        <div class="menu-item">
+            <a class="menu-link {{ Route::is('staff.dashboard') ? 'active' : '' }}"
+            href="{{ route('staff.dashboard') }}">
+                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                <span class="menu-title">Staff Dashboard</span>
+            </a>
+        </div>
 
-<div class="sidebar">
-    <div class="logo">HR ADMIN</div>
-    
-    <div class="menu">
-        <!-- Main Dashboard -->
-        <a href="{{ route('admin.dashboard') }}" 
-           class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-            <i class="fas fa-tachometer-alt"></i> Main Dashboard
-        </a>
-         <div class="menu-section">HR Movements</div>
-           <!-- HR Dashboard -->
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('admin.movement.hr-dashboard') ? 'active' : '' }}" 
-                       href="{{ route('admin.movement.hr-dashboard') }}">
-                        <i class="fas fa-chart-line"></i> HR Dashboard
-                    </a>
-                </li>
-    </div>
+
+
     </div>
 </div>
-                                            {{-- <div class="menu-item">
+
+                               {{-- <div class="menu-item">
                     <div class="menu-content pt-8 pb-0">
                         <span class="menu-section text-muted text-uppercase fs-8 ls-1">Layout</span>
                     </div>

@@ -590,40 +590,9 @@ Route::prefix('admin/principals/{principal}/links')->name('admin.principals.link
 
 
 
-// Route::prefix('admin')->name('admin.')->group(function () {
-//     // Role scopes management
-//     Route::get('roles/{role}/scopes', [AdminScopeController::class, 'edit'])
-//          ->name('role-scopes.edit');
-//     Route::put('roles/{role}/scopes', [AdminScopeController::class, 'update'])
-//          ->name('role-scopes.update');
-
-//     // Principals with scoped access
-//     Route::resource('principals', PrincipalController::class)->middleware([
-//         'auth', 
-//         'scoped.access:principal'
-//     ]);
-
-//     // Share links management
-//     Route::prefix('principals/{principal}/links')->name('principals.links.')->group(function () {
-//         Route::get('create', [ShareLinkController::class, 'create'])->name('create');
-//         Route::post('/', [ShareLinkController::class, 'store'])->name('store');
-//         Route::delete('/{link}', [ShareLinkController::class, 'destroy'])->name('destroy');
-//     });
-// });
-
-// // Public share links
-// Route::prefix('share')->name('share.links.')->group(function () {
-//     Route::get('/{token}', [ShareLinkController::class, 'show'])
-//          ->middleware('share.link')
-//          ->name('show');
-// });
-
 
 Route::prefix('admin')->name('admin.')->group(function () {
-    // Admin authentication routes (if you have separate admin login)
-    // Route::get('login', [AdminAuthController::class, 'showLoginForm'])->name('login');
-    // Route::post('login', [AdminAuthController::class, 'login']);
-    // Route::post('logout', [AdminAuthController::class, 'logout'])->name('logout');
+
 
     // Admin middleware group - requires admin authentication
     Route::middleware(['auth:admin'])->group(function () {
@@ -843,7 +812,7 @@ Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
         Route::put('/{id}', [MovementRecordController::class, 'update'])->name('update');
         Route::delete('/{id}', [MovementRecordController::class, 'destroy'])->name('destroy');
         Route::get('/{id}', [MovementRecordController::class, 'show'])->name('show');
-         Route::get('/hr-dashboard', [MovementRecordController::class, 'hrDashboard'])->name('hr-dashboard');
+
     });
 });
 
@@ -866,13 +835,15 @@ Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
 
 Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
     
-    // Movement routes
+    // Movement routes - HR Dashboard FIRST
     Route::prefix('movement')->name('admin.movement.')->group(function () {
-        // HR Dashboard Route (ADD THIS)
-        Route::get('/hr-dashboard', [MovementRecordController::class, 'hrDashboard'])
-            ->name('hr-dashboard');
-        
-        // Edit Requests Routes
+        // HR Dashboard Route
+        // Route::get('/hr-dashboard', [MovementRecordController::class, 'hrDashboard'])
+        //     ->name('hr-dashboard');
+    });
+    
+    // Movement routes - Edit Requests
+    Route::prefix('movement')->name('admin.movement.')->group(function () {
         Route::get('/edit-requests', [MovementRecordController::class, 'editRequests'])
             ->name('edit-requests');
         
@@ -881,6 +852,9 @@ Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
         
         Route::post('/{id}/reject-edit', [MovementRecordController::class, 'rejectEdit'])
             ->name('reject-edit');
-
     });
+    
+ 
 });
+        Route::get('/staff-dashboard', [MovementRecordController::class, 'staffDashboard'])
+    ->name('staff.dashboard');

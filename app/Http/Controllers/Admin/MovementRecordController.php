@@ -12,14 +12,73 @@ use App\Models\Admin\EmployeeDepartment;
 
 class MovementRecordController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        $records = MovementRecord::with('admin')->orderBy('date', 'desc')->paginate(10);
-        return view('admin.pages.movement.index', compact('records'));
+   
+public function index(Request $request)
+{
+    $query = MovementRecord::with('admin');
+
+    // Filter by staff
+    if ($request->staff) {
+        $query->where('admin_id', $request->staff);
     }
+
+    // Filter by department
+    if ($request->department) {
+        $query->where('department', $request->department);
+    }
+
+    // Filter by movement type
+    if ($request->movement_type) {
+        $query->where('meeting_type', $request->movement_type);
+    }
+
+    // Filter by status
+    if ($request->status) {
+        $query->where('status', $request->status);
+    }
+
+    // Filter by date
+    if ($request->date) {
+        $query->whereDate('date', $request->date);
+    }
+
+    $records = $query->latest()->paginate(10)->withQueryString();
+
+    // Summary calculations
+    $totalDays = $records->pluck('date')->unique()->count();
+    $totalCompanies = $records->pluck('company')->unique()->count();
+    $totalVisits = $records->where('meeting_type', '!=', null)->count();
+    $totalAreas = $records->pluck('area')->unique()->count();
+    $highestValue = $records->max('value');
+    $lowestValue = $records->min('value');
+    $transportCost = $records->sum('cost');
+    $salesTarget = 3000000; // dynamic later
+    $companies = $records->pluck('company')->unique();
+
+    // For filter dropdowns
+    $allStaff = Admin::all();
+    // $departments = MovementRecord::select('department')->distinct()->pluck('department');
+    $movementTypes = MovementRecord::select('meeting_type')->distinct()->pluck('meeting_type');
+    $statuses = MovementRecord::select('status')->distinct()->pluck('status');
+
+    return view('admin.pages.movement.index', compact(
+        'records',
+        'totalDays',
+        'totalCompanies',
+        'totalVisits',
+        'totalAreas',
+        'highestValue',
+        'lowestValue',
+        'transportCost',
+        'salesTarget',
+        'companies',
+        'allStaff',
+        // 'departments',
+        'movementTypes',
+        'statuses'
+    ));
+}
+
 
     /**
      * Show the form for creating a new resource.
@@ -74,21 +133,30 @@ class MovementRecordController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
-    {
-        $record = MovementRecord::with('admin')->findOrFail($id);
-        return view('admin.pages.movement.show', compact('record'));
-    }
+public function show($id)
+{
+    $record = MovementRecord::where('id', $id)
+        ->where('admin_id', auth('admin')->id())
+        ->with('admin')
+        ->firstOrFail();
+
+    return view('admin.pages.movement.show', compact('record'));
+}
+
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
-    {
-        $record = MovementRecord::with('admin')->findOrFail($id);
-        $currentAdmin = auth('admin')->user();
-        return view('admin.pages.movement.form', compact('record', 'currentAdmin'));
-    }
+  public function edit($id)
+{
+    $record = MovementRecord::where('id', $id)
+        ->where('admin_id', auth('admin')->id())
+        ->firstOrFail();
+
+    $currentAdmin = auth('admin')->user();
+    return view('admin.pages.movement.form', compact('record', 'currentAdmin'));
+}
+
 
     /**
      * Update the specified resource in storage.
@@ -198,14 +266,17 @@ class MovementRecordController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
-    {
-        $movementRecord = MovementRecord::findOrFail($id);
-        $movementRecord->delete();
+  public function destroy($id)
+{
+    $movementRecord = MovementRecord::where('id', $id)
+        ->where('admin_id', auth('admin')->id())
+        ->firstOrFail();
 
-        return redirect()->route('admin.movement.index')
-            ->with('success', 'Movement record deleted successfully.');
-    }
+    $movementRecord->delete();
+
+    return redirect()->route('admin.movement.index')
+        ->with('success', 'Movement record deleted successfully.');
+}
 
 
 
@@ -250,98 +321,37 @@ public function rejectEdit(Request $request, $id)
     return redirect()->route('admin.movement.edit-requests')
         ->with('success', 'Edit request rejected successfully!');
 }
-//   public function hrDashboard()
-// {
-//     $today = today()->toDateString();
-    
-//     $totalMovements = MovementRecord::whereDate('date', $today)->count();
-    
-//     $movements = MovementRecord::with(['admin', 'employeeDepartment'])
-//         ->whereDate('date', $today)
-//         ->orderBy('time_start', 'asc')
-//         ->get();
-    
-//     // If you need to get all admins (users with admin role)
-//     $admins = User::where('role', 'admin')->get();
-    
-//     // If you need all employee departments
-//     $employeeDepartments = EmployeeDepartment::all();
-    
-//     return view('admin.pages.movement.hr-dashboard', compact(
-//         'totalMovements', 
-//         'movements', 
-//         'admins',
-//         'employeeDepartments'
-//     ));
-// }
-  public function hrDashboard(Request $request)
-    {
-        // Get filter parameters with defaults
-        $date = $request->input('date', today()->toDateString());
-        $adminId = $request->input('admin_id');
-        $departmentId = $request->input('employee_department_id');
-        $movementType = $request->input('movement_type');
-        $status = $request->input('status');
-        
-        // Start query
-        $query = MovementRecord::with(['admin', 'employeeDepartment'])
-            ->whereDate('date', $date);
-        
-        // Apply filters if provided
-        if ($adminId) {
-            $query->where('admin_id', $adminId);
-        }
-        
-        if ($departmentId) {
-            $query->where('employee_department_id', $departmentId);
-        }
-        
-        if ($movementType) {
-            $query->where('movement_type', $movementType);
-        }
-        
-        if ($status) {
-            $query->where('status', $status);
-        }
-        
-        // Get total movements for stats
-        $totalMovements = $query->count();
-        
-        // Get movements with pagination
-        $movements = $query->orderBy('time_start', 'asc')
-            ->paginate(15)
-            ->appends($request->except('page'));
-        
-        // Get statistics for all movements on this date (without filters)
-        $statsQuery = MovementRecord::whereDate('date', $date);
-        $stats = [
-            'completed' => $statsQuery->where('status', 'completed')->count(),
-            'pending' => $statsQuery->where('status', 'pending')->count(),
-            'cancelled' => $statsQuery->where('status', 'cancelled')->count(),
-        ];
-        
-        // Get filter options
-        $admins = User::where(function($q) {
-                $q->where('role', 'admin')
-                  ->orWhere('role', 'super_admin');
-            })
-            ->select('id', 'name', 'email')
-            ->orderBy('name')
-            ->get();
-        
-        $employeeDepartments = EmployeeDepartment::orderBy('name')->get();
-        
-        return view('admin.pages.movement.hr-dashboard', compact(
-            'totalMovements', 
-            'movements', 
-            'admins',
-            'employeeDepartments',
-            'date',
-            'adminId',
-            'departmentId',
-            'movementType',
-            'status',
-            'stats'
-        ));
-    }
+
+public function staffDashboard()
+{
+    $records = MovementRecord::where('admin_id', auth('admin')->id())
+        ->latest()
+        ->paginate(10);
+
+    // Calculate summary values dynamically
+    $totalDays = $records->pluck('date')->unique()->count();
+    $totalCompanies = $records->pluck('company')->unique()->count();
+    $totalVisits = $records->where('meeting_type', '!=', null)->count();
+    $totalAreas = $records->pluck('area')->unique()->count();
+    $highestValue = $records->max('value');
+    $lowestValue = $records->min('value');
+    $transportCost = $records->sum('cost');
+    $salesTarget = 3000000; // dynamic later
+    $companies = $records->pluck('company')->unique();
+
+    return view('admin.pages.movement.staff-dashboard', compact(
+        'records',
+        'totalDays',
+        'totalCompanies',
+        'totalVisits',
+        'totalAreas',
+        'highestValue',
+        'lowestValue',
+        'transportCost',
+        'companies',
+        'salesTarget'
+    ));
+}
+
+
 }
