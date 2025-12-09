@@ -161,10 +161,17 @@ function autoSubmit(){
                     <td>{{ $record->meeting_type??'-' }}</td>
                     <td>{{ $record->area??'-' }}</td>
 
-                    <td>
-                        {{ $record->created_at? $record->created_at->format('h:i A'):'-' }} -
-                        {{ $record->updated_at? $record->updated_at->format('h:i A'):'-' }}
-                    </td>
+                 <td>
+                            @if($record->start_time && $record->end_time)
+                                {{ \Carbon\Carbon::parse($record->start_time)->format('h:i A') }} -
+                                {{ \Carbon\Carbon::parse($record->end_time)->format('h:i A') }}
+                            @elseif($record->start_time)
+                                {{ \Carbon\Carbon::parse($record->start_time)->format('h:i A') }} -
+                                {{ $record->duration ? 'N/A' : 'N/A' }}
+                            @else
+                                -
+                            @endif
+                        </td>
 
                     <td>{{ $record->duration? gmdate('H\h i\m',strtotime($record->duration)):'-' }}</td>
 
