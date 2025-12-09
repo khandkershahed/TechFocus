@@ -8,6 +8,7 @@ use App\Http\Requests\StoreStaffMeetingRequest;
 use App\Http\Requests\UpdateStaffMeetingRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 
 class StaffMeetingController extends Controller
@@ -36,19 +37,75 @@ class StaffMeetingController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $meetings = StaffMeeting::with(['admin', 'leader', 'organizer'])
-            ->orderBy('date', 'desc')
+        $query = StaffMeeting::with(['admin', 'leader', 'organizer']);
+        
+        // Apply filters if they exist
+        if ($request->filled('month')) {
+            $query->whereMonth('date', $request->month);
+        }
+        
+        if ($request->filled('year')) {
+            $query->whereYear('date', $request->year);
+        }
+        
+        if ($request->filled('department')) {
+            $query->where('department', $request->department);
+        }
+        
+        if ($request->filled('organizer')) {
+            $query->where('organizer_id', $request->organizer);
+        }
+        
+        if ($request->filled('meeting_type')) {
+            $query->where('type', $request->meeting_type);
+        }
+        
+        if ($request->filled('category')) {
+            $query->where('category', $request->category);
+        }
+        
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+        
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('title', 'LIKE', "%{$search}%")
+                  ->orWhere('agenda', 'LIKE', "%{$search}%")
+                  ->orWhere('department', 'LIKE', "%{$search}%");
+            });
+        }
+        
+        $meetings = $query->orderBy('date', 'desc')
             ->orderBy('start_time', 'desc')
             ->paginate(20);
         
         $stats = $this->getMeetingStats();
         
-        return view('admin.pages.staff-meetings.index', compact('meetings', 'stats'))
+        // Add this line - get all admins for the organizer filter dropdown
+        $admins = Admin::all();
+        
+        return view('admin.pages.staff-meetings.index', compact('meetings', 'stats', 'admins'))
             ->with('categories', $this->categories)
             ->with('platforms', $this->platforms)
             ->with('departments', $this->departments);
+    }
+
+    /**
+     * Display calendar view.
+     */
+    public function calendar()
+    {
+        $admins = Admin::all(); // Get admins for filter dropdown
+        
+        return view('admin.pages.staff-meetings.calendar')
+            ->with('categories', $this->categories)
+            ->with('platforms', $this->platforms)
+            ->with('departments', $this->departments)
+            ->with('admins', $admins);
     }
 
     /**
@@ -67,104 +124,70 @@ class StaffMeetingController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    // public function store(StoreStaffMeetingRequest $request)
-    // {
-    //     $data = $request->validated();
-        
-    //     // Combine date with start_time and end_time
-    //     $data['start_time'] = $data['date'] . ' ' . $data['start_time'] . ':00';
-    //     $data['end_time'] = $data['date'] . ' ' . $data['end_time'] . ':00';
-        
-    //     // Handle participants
-    //     if ($request->has('participants')) {
-    //         $data['participants'] = json_encode($request->participants);
-    //     }
-        
-    //     // Handle attachments
-    //     if ($request->hasFile('attachments')) {
-    //         $attachments = [];
-    //         foreach ($request->file('attachments') as $file) {
-    //             $path = $file->store('meetings/attachments', 'public');
-    //             $attachments[] = [
-    //                 'name' => $file->getClientOriginalName(),
-    //                 'path' => $path,
-    //                 'size' => $file->getSize(),
-    //             ];
-    //         }
-    //         $data['attachments'] = json_encode($attachments);
-    //     }
-        
-    //     StaffMeeting::create($data);
-        
-    //     return redirect()->route('admin.staff-meetings.index')
-    //         ->with('success', 'Meeting scheduled successfully.');
-    // }
-public function store(Request $request) // Change from StoreStaffMeetingRequest to Request
-{
-    try {
-        $data = $request->all();
-        
-        // Combine date with start_time and end_time
-        $data['start_time'] = $data['date'] . ' ' . $data['start_time'] . ':00';
-        $data['end_time'] = $data['date'] . ' ' . $data['end_time'] . ':00';
-        
-        // Handle participants
-        if ($request->has('participants')) {
-            $data['participants'] = json_encode($request->participants);
-        } else {
-            $data['participants'] = json_encode([]);
-        }
-        
-        // Handle attachments
-        if ($request->hasFile('attachments')) {
-            $attachments = [];
-            foreach ($request->file('attachments') as $file) {
-                $path = $file->store('meetings/attachments', 'public');
-                $attachments[] = [
-                    'name' => $file->getClientOriginalName(),
-                    'path' => $path,
-                    'size' => $file->getSize(),
-                ];
-            }
-            $data['attachments'] = json_encode($attachments);
-        }
-        
-        StaffMeeting::create($data);
-        
-        return redirect()->route('admin.staff-meetings.index')
-            ->with('success', 'Meeting scheduled successfully.');
+    public function store(Request $request)
+    {
+        try {
+            $data = $request->all();
             
-    } catch (\Exception $e) {
-        return back()->withInput()
-            ->with('error', 'Error: ' . $e->getMessage());
+            // Combine date with start_time and end_time
+            $data['start_time'] = $data['date'] . ' ' . $data['start_time'] . ':00';
+            $data['end_time'] = $data['date'] . ' ' . $data['end_time'] . ':00';
+            
+            // Handle participants
+            if ($request->has('participants')) {
+                $data['participants'] = json_encode($request->participants);
+            } else {
+                $data['participants'] = json_encode([]);
+            }
+            
+            // Handle attachments
+            if ($request->hasFile('attachments')) {
+                $attachments = [];
+                foreach ($request->file('attachments') as $file) {
+                    $path = $file->store('meetings/attachments', 'public');
+                    $attachments[] = [
+                        'name' => $file->getClientOriginalName(),
+                        'path' => $path,
+                        'size' => $file->getSize(),
+                    ];
+                }
+                $data['attachments'] = json_encode($attachments);
+            }
+            
+            StaffMeeting::create($data);
+            
+            return redirect()->route('admin.staff-meetings.index')
+                ->with('success', 'Meeting scheduled successfully.');
+                
+        } catch (\Exception $e) {
+            return back()->withInput()
+                ->with('error', 'Error: ' . $e->getMessage());
+        }
     }
-}
+
     /**
      * Display the specified resource.
      */
-  /**
- * Display the specified resource.
- */
-public function show(StaffMeeting $staffMeeting)
-{
-    $staffMeeting->load(['admin', 'leader', 'organizer']);
-    
-    // Get participants details
-    $participants = [];
-    
-    // Safely decode participants JSON
-    if ($staffMeeting->participants) {
-        $participantIds = json_decode($staffMeeting->participants, true);
+    public function show(StaffMeeting $staffMeeting)
+    {
+        $staffMeeting->load(['admin', 'leader', 'organizer']);
         
-        if (is_array($participantIds) && count($participantIds) > 0) {
-            $participants = Admin::whereIn('id', $participantIds)->get();
+        // Get participants details
+        $participants = [];
+        
+        // Safely decode participants JSON
+        if ($staffMeeting->participants) {
+            $participantIds = json_decode($staffMeeting->participants, true);
+            
+            if (is_array($participantIds) && count($participantIds) > 0) {
+                $participants = Admin::whereIn('id', $participantIds)->get();
+            }
         }
+        
+        return view('admin.pages.staff-meetings.show', compact('staffMeeting', 'participants'))
+            ->with('categories', $this->categories)
+            ->with('platforms', $this->platforms);
     }
-    
-    return view('admin.pages.staff-meetings.show', compact('staffMeeting', 'participants'))
-        ->with('categories', $this->categories)
-        ->with('platforms', $this->platforms);
-}
 
     /**
      * Show the form for editing the specified resource.
@@ -251,67 +274,102 @@ public function show(StaffMeeting $staffMeeting)
         return back()->with('success', 'Meeting status updated successfully.');
     }
 
-    // public function calendar()
-    // {
-    //     $meetings = StaffMeeting::with(['organizer'])
-    //         ->where('status', '!=', 'cancelled')
-    //         ->get()
-    //         ->map(function($meeting) {
-    //             return [
-    //                 'id' => $meeting->id,
-    //                 'title' => $meeting->title,
-    //                 'start' => $meeting->start_time,
-    //                 'end' => $meeting->end_time,
-    //                 'status' => $meeting->status,
-    //                 'category' => $meeting->category,
-    //                 'department' => $meeting->department,
-    //             ];
-    //         });
+    /**
+     * Get calendar data for AJAX requests.
+     */
+    public function calendarData(Request $request)
+    {
+        // Debug: Check what's being requested
+        Log::info('Calendar Data Request:', $request->all());
         
-    //     return view('admin.pages.staff-meetings.calendar', compact('meetings'));
-    // }
-public function calendar()
-{
-    // Just return the view without data
-    return view('admin.pages.staff-meetings.calendar');
-}
-
-// Add this method for calendar data
-public function calendarData()
-{
-    $meetings = StaffMeeting::with(['organizer'])
-        ->where('status', '!=', 'cancelled')
-        ->get()
-        ->map(function($meeting) {
+        $query = StaffMeeting::with(['organizer'])
+            ->where('status', '!=', 'cancelled');
+        
+        // Debug: Check total meetings
+        $totalMeetings = StaffMeeting::count();
+        Log::info('Total meetings in database: ' . $totalMeetings);
+        
+        // Apply filters if provided
+        if ($request->filled('department')) {
+            $query->where('department', $request->department);
+        }
+        
+        if ($request->filled('organizer')) {
+            $query->where('organizer_id', $request->organizer);
+        }
+        
+        if ($request->filled('category')) {
+            $query->where('category', $request->category);
+        }
+        
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+        
+        // Date range filter
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $query->whereBetween('date', [$request->start_date, $request->end_date]);
+        } else {
+            // Default to current month if no date range provided
+            $currentMonth = date('m');
+            $currentYear = date('Y');
+            $query->whereMonth('date', $currentMonth)
+                  ->whereYear('date', $currentYear);
+        }
+        
+        // Debug: Check the SQL query
+        Log::info('Calendar Query: ' . $query->toSql());
+        
+        $meetings = $query->get();
+        
+        // Debug: Check how many meetings were found
+        Log::info('Meetings found: ' . $meetings->count());
+        
+        $formattedMeetings = $meetings->map(function($meeting) {
+            // Debug each meeting
+            Log::info('Meeting found:', [
+                'id' => $meeting->id,
+                'title' => $meeting->title,
+                'date' => $meeting->date,
+                'start_time' => $meeting->start_time,
+                'status' => $meeting->status
+            ]);
+            
             return [
                 'id' => $meeting->id,
-                'title' => $meeting->title . ' - ' . $meeting->category,
-                'start' => $meeting->start_time->format('Y-m-d\TH:i:s'),
-                'end' => $meeting->end_time->format('Y-m-d\TH:i:s'),
-                'description' => $meeting->agenda ?? 'No agenda',
+                'title' => $meeting->title . ' - ' . ($meeting->department ?? 'General'),
+                'start' => $meeting->date->format('Y-m-d') . 'T' . $meeting->start_time->format('H:i:s'),
+                'end' => $meeting->date->format('Y-m-d') . 'T' . $meeting->end_time->format('H:i:s'),
+                'description' => 
+                    'Organizer: ' . ($meeting->organizer->name ?? 'N/A') . '\n' .
+                    'Category: ' . ucfirst(str_replace('_', ' ', $meeting->category)) . '\n' .
+                    'Type: ' . ucfirst($meeting->type) . '\n' .
+                    'Agenda: ' . ($meeting->agenda ?? 'No agenda'),
                 'status' => $meeting->status,
                 'category' => $meeting->category,
                 'department' => $meeting->department,
                 'organizer' => $meeting->organizer->name ?? 'N/A',
                 'url' => route('admin.staff-meetings.show', $meeting),
                 'color' => $this->getEventColor($meeting->status),
+                'extendedProps' => [
+                    'department' => $meeting->department,
+                    'category' => $meeting->category,
+                    'status' => $meeting->status,
+                    'organizer' => $meeting->organizer->name ?? 'N/A',
+                    'description' => $meeting->agenda ?? 'No agenda'
+                ]
             ];
         });
-    
-    return response()->json($meetings);
-}
-
-// Add this helper method for event colors
-private function getEventColor($status)
-{
-    switch($status) {
-        case 'scheduled': return '#28a745'; // Green
-        case 'cancelled': return '#dc3545'; // Red
-        case 'completed': return '#17a2b8'; // Blue
-        case 'rescheduled': return '#ffc107'; // Yellow
-        default: return '#007bff'; // Primary blue
+        
+        // Debug: Check formatted data
+        Log::info('Formatted meetings count: ' . $formattedMeetings->count());
+        
+        return response()->json($formattedMeetings);
     }
-}
+
+    /**
+     * Filter meetings by status.
+     */
     public function filterByStatus($status)
     {
         $meetings = StaffMeeting::with(['admin', 'leader', 'organizer'])
@@ -321,14 +379,18 @@ private function getEventColor($status)
             ->paginate(20);
         
         $stats = $this->getMeetingStats();
+        $admins = Admin::all();
         
-        return view('admin.pages.staff-meetings.index', compact('meetings', 'stats'))
+        return view('admin.pages.staff-meetings.index', compact('meetings', 'stats', 'admins'))
             ->with('categories', $this->categories)
             ->with('platforms', $this->platforms)
             ->with('departments', $this->departments)
             ->with('currentStatus', $status);
     }
 
+    /**
+     * Display upcoming meetings.
+     */
     public function upcoming()
     {
         $meetings = StaffMeeting::with(['admin', 'leader', 'organizer'])
@@ -339,14 +401,18 @@ private function getEventColor($status)
             ->paginate(20);
         
         $stats = $this->getMeetingStats();
+        $admins = Admin::all();
         
-        return view('admin.pages.staff-meetings.index', compact('meetings', 'stats'))
+        return view('admin.pages.staff-meetings.index', compact('meetings', 'stats', 'admins'))
             ->with('categories', $this->categories)
             ->with('platforms', $this->platforms)
             ->with('departments', $this->departments)
             ->with('title', 'Upcoming Meetings');
     }
 
+    /**
+     * Export meetings to CSV.
+     */
     public function export(Request $request)
     {
         $meetings = StaffMeeting::with(['admin', 'leader', 'organizer'])
@@ -391,6 +457,60 @@ private function getEventColor($status)
     }
 
     /**
+     * Filter meetings via AJAX.
+     */
+    public function filterAjax(Request $request)
+    {
+        $query = StaffMeeting::with(['admin', 'leader', 'organizer']);
+        
+        // Apply filters if they exist
+        if ($request->filled('month')) {
+            $query->whereMonth('date', $request->month);
+        }
+        
+        if ($request->filled('year')) {
+            $query->whereYear('date', $request->year);
+        }
+        
+        if ($request->filled('department')) {
+            $query->where('department', $request->department);
+        }
+        
+        if ($request->filled('organizer')) {
+            $query->where('organizer_id', $request->organizer);
+        }
+        
+        if ($request->filled('meeting_type')) {
+            $query->where('type', $request->meeting_type);
+        }
+        
+        if ($request->filled('category')) {
+            $query->where('category', $request->category);
+        }
+        
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+        
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('title', 'LIKE', "%{$search}%")
+                  ->orWhere('agenda', 'LIKE', "%{$search}%")
+                  ->orWhere('department', 'LIKE', "%{$search}%");
+            });
+        }
+        
+        $meetings = $query->orderBy('date', 'desc')
+            ->orderBy('start_time', 'desc')
+            ->paginate(20)
+            ->appends($request->except('page'));
+        
+        // Return partial view for AJAX
+        return view('admin.pages.staff-meetings.partials.meetings-table', compact('meetings'));
+    }
+
+    /**
      * Get meeting statistics.
      */
     private function getMeetingStats()
@@ -408,6 +528,20 @@ private function getEventColor($status)
             'this_month' => StaffMeeting::whereMonth('date', Carbon::now()->month)
                 ->whereYear('date', Carbon::now()->year)->count(),
         ];
+    }
+
+    /**
+     * Helper method for event colors.
+     */
+    private function getEventColor($status)
+    {
+        switch($status) {
+            case 'scheduled': return '#28a745'; // Green
+            case 'completed': return '#17a2b8'; // Blue
+            case 'cancelled': return '#dc3545'; // Red
+            case 'rescheduled': return '#ffc107'; // Yellow
+            default: return '#007bff'; // Primary blue
+        }
     }
 
     /**

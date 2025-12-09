@@ -17,7 +17,7 @@ class AttendanceController extends Controller
      */
     public function index()
     {
-        return view('admin.pages.attendance.index', [
+        return view('admin.attendance.index', [
             'attendances' => Attendance::get(),
             'employees'   => Admin::get(),
             'companies'   => Company::get(),

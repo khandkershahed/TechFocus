@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Schema;
 use App\Models\Admin\Role;
 use App\Traits\HasAdminAccess;
 use App\Models\Admin\Permission;
@@ -122,7 +123,17 @@ class Admin extends Authenticatable implements MustVerifyEmail
     return $this->belongsTo(\App\Models\Admin\EmployeeDepartment::class, 'employee_department_id');
 }
 
-
+public function scopeActive($query)
+{
+    // Check what columns exist in your table
+    if (\Schema::hasColumn('admins', 'status')) {
+        return $query->where('status', 'active');
+    } elseif (Schema::hasColumn('admins', 'is_active')) {
+        return $query->where('is_active', 1);
+    } else {
+        return $query; // Return all if no active column
+    }
+}
 
     
 }

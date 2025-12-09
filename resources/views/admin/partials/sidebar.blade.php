@@ -1238,160 +1238,127 @@
                 </span>
                 @endif
             </a>
-        </div>
-
-        <!-- Schedule New Meeting -->
-        <div class="menu-item">
-            <a class="menu-link {{ Route::current()->getName() == 'admin.staff-meetings.create' ? 'active' : '' }}"
-                href="{{ route('admin.staff-meetings.create') }}">
-                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-                <span class="menu-title">Schedule Meeting</span>
-            </a>
-        </div>
-
-        <!-- Calendar View -->
-        <div class="menu-item">
-            <a class="menu-link {{ Route::current()->getName() == 'admin.staff-meetings.calendar' ? 'active' : '' }}"
-                href="{{ route('admin.staff-meetings.calendar') }}">
-                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-                <span class="menu-title">Calendar View</span>
-            </a>
-        </div>
-
-        <!-- Upcoming Meetings -->
-        <div class="menu-item">
-            <a class="menu-link {{ Route::current()->getName() == 'admin.staff-meetings.upcoming' ? 'active' : '' }}"
-                href="{{ route('admin.staff-meetings.upcoming') }}">
-                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-                <span class="menu-title">Upcoming Meetings</span>
-                @php
-                    $upcomingCount = \App\Models\StaffMeeting::where('date', '>=', now()->toDateString())
-                        ->where('status', 'scheduled')
-                        ->count();
-                @endphp
-                @if($upcomingCount > 0)
-                <span class="menu-badge">
-                    <span class="badge badge-light-primary fw-bold">{{ $upcomingCount }}</span>
-                </span>
-                @endif
-            </a>
-        </div>
-
-        <!-- Today's Meetings -->
-        <div class="menu-item">
-            <a class="menu-link {{ Route::current()->getName() == 'admin.staff-meetings.today' ? 'active' : '' }}"
-                href="{{ route('admin.staff-meetings.today') }}">
-                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-                <span class="menu-title">Today's Meetings</span>
-                @php
-                    $todayCount = \App\Models\StaffMeeting::whereDate('date', now()->toDateString())
-                        ->where('status', 'scheduled')
-                        ->count();
-                @endphp
-                @if($todayCount > 0)
-                <span class="menu-badge">
-                    <span class="badge badge-light-danger fw-bold">{{ $todayCount }}</span>
-                </span>
-                @endif
-            </a>
-        </div>
-
-        <!-- Meeting Categories -->
-        <div class="menu-item">
-            <div class="menu-content pt-3 pb-2">
-                <span class="menu-section text-muted text-uppercase fs-8 ls-1">Categories</span>
-            </div>
-        </div>
-
-        <!-- Meeting by Category Sub-Menu -->
-        <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-            <span class="menu-link">
-                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-                <span class="menu-title">By Category</span>
-                <span class="menu-arrow"></span>
-            </span>
-            <div class="menu-sub menu-sub-accordion">
-                @php
-                    $categories = [
-                        'management' => 'Management',
-                        'departmental' => 'Departmental',
-                        'training' => 'Training',
-                        'hr_policy_compliance' => 'HR Policy',
-                        'client_review' => 'Client Review',
-                        'project_review' => 'Project Review',
-                        'weekly_coordination' => 'Weekly Coordination',
-                        'emergency_meeting' => 'Emergency',
-                    ];
-                @endphp
-                @foreach($categories as $key => $category)
-                @php
-                    $categoryCount = \App\Models\StaffMeeting::where('category', $key)->count();
-                @endphp
-                <div class="menu-item">
-                    <a class="menu-link" href="{{ route('admin.staff-meetings.index', ['category' => $key]) }}">
-                        <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-                        <span class="menu-title">{{ $category }}</span>
-                        @if($categoryCount > 0)
-                        <span class="menu-badge">
-                            <span class="badge badge-light-info fw-bold">{{ $categoryCount }}</span>
-                        </span>
-                        @endif
-                    </a>
-                </div>
-                @endforeach
-            </div>
-        </div>
-
-        <!-- Meeting by Status -->
-        <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-            <span class="menu-link">
-                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-                <span class="menu-title">By Status</span>
-                <span class="menu-arrow"></span>
-            </span>
-            <div class="menu-sub menu-sub-accordion">
-                @php
-                    $statuses = [
-                        'scheduled' => ['label' => 'Scheduled', 'color' => 'success'],
-                        'completed' => ['label' => 'Completed', 'color' => 'info'],
-                        'cancelled' => ['label' => 'Cancelled', 'color' => 'danger'],
-                        'rescheduled' => ['label' => 'Rescheduled', 'color' => 'warning'],
-                    ];
-                @endphp
-                @foreach($statuses as $key => $status)
-                @php
-                    $statusCount = \App\Models\StaffMeeting::where('status', $key)->count();
-                @endphp
-                <div class="menu-item">
-                    <a class="menu-link" href="{{ route('admin.staff-meetings.filter.status', $key) }}">
-                        <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-                        <span class="menu-title">{{ $status['label'] }}</span>
-                        @if($statusCount > 0)
-                        <span class="menu-badge">
-                            <span class="badge badge-light-{{ $status['color'] }} fw-bold">{{ $statusCount }}</span>
-                        </span>
-                        @endif
-                    </a>
-                </div>
-                @endforeach
-            </div>
-        </div>
-
-        <!-- Export Meetings -->
-        <div class="menu-item">
-            <a class="menu-link" href="{{ route('admin.staff-meetings.export') }}">
-                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-                <span class="menu-title">Export Meetings</span>
-                <span class="menu-badge">
-                    <span class="badge badge-light">
-                        <i class="fas fa-file-export fs-7"></i>
-                    </span>
-                </span>
-            </a>
-        </div>
+        </div>   
 
     </div>
 </div>
+<!-- Staff Meeting Attendance Menu Item -->
+<div data-kt-menu-trigger="click"
+    class="menu-item menu-accordion {{ in_array(Route::current()->getName(), [
+        'admin.attendance.index',
+        'admin.attendance.create',
+        'admin.attendance.show',
+        'admin.attendance.edit',
+        'admin.attendance.dashboard',
+        'admin.attendance.export',
+        'admin.attendance.approve',
+        'admin.attendance.bulk.update'
+    ]) ? 'here show' : '' }}">
+    
+    <span class="menu-link">
+        <span class="menu-icon">
+            <span class="svg-icon svg-icon-2">
+                <i class="fas fa-clipboard-check side_baricon"></i>
+            </span>
+        </span>
+        <span class="menu-title">Meeting Attendance</span>
+        <span class="menu-arrow"></span>
+    </span>
+
+    <div class="menu-sub menu-sub-accordion">
+        
+        <!-- Attendance Dashboard -->
+        <div class="menu-item">
+            <a class="menu-link {{ Route::current()->getName() == 'admin.attendance.dashboard' ? 'active' : '' }}"
+                href="{{ route('admin.attendance.dashboard') }}">
+                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                <span class="menu-title">Attendance Dashboard</span>
+                @php
+                    $pendingApprovals = \App\Models\StaffMeetingAttendance::where('requires_approval', true)
+                        ->where('is_approved', false)
+                        ->count();
+                @endphp
+                @if($pendingApprovals > 0)
+                <span class="menu-badge">
+                    <span class="badge badge-light-warning fw-bold">{{ $pendingApprovals }}</span>
+                </span>
+                @endif
+            </a>
+        </div>
+
+        <!-- All Attendance Records -->
+        <div class="menu-item">
+            <a class="menu-link {{ Route::current()->getName() == 'admin.attendance.index' ? 'active' : '' }}"
+                href="{{ route('admin.attendance.index') }}">
+                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                <span class="menu-title">All Records</span>
+                @php
+                    $totalRecords = \App\Models\StaffMeetingAttendance::count();
+                @endphp
+                @if($totalRecords > 0)
+                <span class="menu-badge">
+                    <span class="badge badge-light-primary fw-bold">{{ $totalRecords }}</span>
+                </span>
+                @endif
+            </a>
+        </div>
+
+        <!-- Add New Attendance -->
+        <div class="menu-item">
+            <a class="menu-link {{ Route::current()->getName() == 'admin.attendance.create' ? 'active' : '' }}"
+                href="{{ route('admin.attendance.create') }}">
+                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                <span class="menu-title">Add New Record</span>
+            </a>
+        </div>
+    </div>
+</div>
+<!-- Add these inside the attendance menu-sub-accordion -->
+
+<!-- Monthly Summary -->
+<div class="menu-item">
+    <a class="menu-link {{ Route::current()->getName() == 'admin.attendance.monthly-summary' ? 'active' : '' }}"
+        href="{{ route('admin.attendance.monthly-summary') }}">
+        <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+        <span class="menu-title">Monthly Summary</span>
+    </a>
+</div>
+
+<!-- Heatmap -->
+<div class="menu-item">
+    <a class="menu-link {{ Route::current()->getName() == 'admin.attendance.heatmap' ? 'active' : '' }}"
+        href="{{ route('admin.attendance.heatmap') }}">
+        <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+        <span class="menu-title">Attendance Heatmap</span>
+    </a>
+</div>
+
+<!-- Top Performers -->
+<div class="menu-item">
+    <a class="menu-link {{ Route::current()->getName() == 'admin.attendance.top-performers' ? 'active' : '' }}"
+        href="{{ route('admin.attendance.top-performers') }}">
+        <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+        <span class="menu-title">Top Performers</span>
+    </a>
+</div>
+
+{{-- <!-- Warning List -->
+<div class="menu-item">
+    <a class="menu-link {{ Route::current()->getName() == 'admin.attendance.warning-list' ? 'active' : '' }}"
+        href="{{ route('admin.attendance.warning-list') }}">
+        <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+        <span class="menu-title">Warning List</span>
+        @php
+            $warningCount = \App\Models\StaffMeetingAttendance::getWarningCount();
+        @endphp
+        @if($warningCount > 0)
+        <span class="menu-badge">
+            <span class="badge badge-light-danger fw-bold">{{ $warningCount }}</span>
+        </span>
+        @endif
+    </a>
+</div> --}}
+
 
                                {{-- <div class="menu-item">
                     <div class="menu-content pt-8 pb-0">

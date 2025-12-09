@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HR\HRController;
 use App\Http\Controllers\HR\TaskController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\IncomeController;
 use App\Http\Controllers\Content\BlogController;
+use App\Http\Controllers\StaffMeetingController;
 use App\Http\Controllers\Admin\AccountController;
 use App\Http\Controllers\Admin\AddressController;
 use App\Http\Controllers\Admin\BankingController;
@@ -32,7 +34,6 @@ use App\Http\Controllers\Admin\HomePageController;
 use App\Http\Controllers\Admin\HrPolicyController;
 use App\Http\Controllers\Admin\IndustryController;
 use App\Http\Controllers\Admin\UserRoleController;
-use App\Http\Controllers\Admin\MovementRecordController;
 use App\Http\Controllers\Rfq\RfqProductController;
 use App\Http\Controllers\Admin\AboutPageController;
 use App\Http\Controllers\Admin\AttributeController;
@@ -60,13 +61,16 @@ use App\Http\Controllers\Content\ClientStoryController;
 use App\Http\Controllers\Content\TechContentController;
 use App\Http\Controllers\HR\LeaveApplicationController;
 use App\Http\Controllers\Admin\AttributeValueController;
+use App\Http\Controllers\Admin\MovementRecordController;
 use App\Http\Controllers\Admin\RolePermissionController;
+use App\Http\Controllers\Admin\StaffMeetingHRController;
 use App\Http\Controllers\Admin\TermsAndPolicyController;
 use App\Http\Controllers\Admin\UserPermissionController;
 use App\Http\Controllers\Admin\AccountsPayableController;
 use App\Http\Controllers\Admin\DynamicCategoryController;
 use App\Http\Controllers\Admin\ExpenseCategoryController;
 use App\Http\Controllers\Admin\SolutionDetailsController;
+use App\Http\Controllers\Admin\StaffAttendanceController;
 use App\Http\Controllers\Sales\SalesTeamTargetController;
 use App\Http\Controllers\Sales\SalesYearTargetController;
 use App\Http\Controllers\Admin\Auth\NewPasswordController;
@@ -77,15 +81,18 @@ use App\Http\Controllers\Admin\PrincipalContactController;
 use App\Http\Controllers\Admin\ProductAttributeController;
 use App\Http\Controllers\Admin\AccountComparisonController;
 use App\Http\Controllers\Admin\AccountProfitLossController;
+use App\Http\Controllers\Admin\AttendanceHeatmapController;
 use App\Http\Controllers\Admin\AccountsReceivableController;
 use App\Http\Controllers\Admin\EmployeeDepartmentController;
 use App\Http\Controllers\Accounts\AccountsDocumentController;
+use App\Http\Controllers\Admin\AttendanceDashboardController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\StaffMeetingController;
 use App\Http\Controllers\Admin\PolicyAcknowledgmentController;
 use App\Http\Controllers\Admin\Auth\PasswordResetLinkController;
+use App\Http\Controllers\Admin\StaffMeetingAttendanceController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
-
+use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 /*
 |--------------------------------------------------------------------------
 | Admin Routes
@@ -890,7 +897,111 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:admin'])->group(functi
 Route::get('/calendar', [StaffMeetingController::class, 'calendar'])->name('admin.staff-meetings.calendar');
  Route::get('/calendar-data', [StaffMeetingController::class, 'calendarData'])->name('admin.staff-meetings.calendar.data');
  
-
-
-   
+Route::get('/staff-meetings/filter/ajax', [StaffMeetingController::class, 'filterAjax'])->name('admin.staff-meetings.filter.ajax');
+Route::get('/staff-meetings/calendar/monthly', [StaffMeetingController::class, 'monthlyCalendar'])->name('admin.staff-meetings.calendar.monthly');
+// Admin Routes Group
+Route::prefix('admin')->name('admin.')->middleware(['auth:admin'])->group(function () {
+    
+    // Staff Meetings Routes
+    Route::prefix('staff-meetings')->name('staff-meetings.')->group(function () {
         
+        // HR Features
+        Route::post('/{staffMeeting}/send-email-reminder', [StaffMeetingHRController::class, 'sendEmailReminder'])->name('send-email-reminder');
+        Route::post('/{staffMeeting}/send-whatsapp-reminder', [StaffMeetingHRController::class, 'sendWhatsAppReminder'])->name('send-whatsapp-reminder');
+        Route::post('/{staffMeeting}/generate-link', [StaffMeetingHRController::class, 'generateMeetingLink'])->name('generate-link');
+        Route::post('/{staffMeeting}/generate-qr', [StaffMeetingHRController::class, 'generateAttendanceQR'])->name('generate-qr');
+        Route::get('/{staffMeeting}/view-qr', [StaffMeetingHRController::class, 'viewAttendanceQR'])->name('view-qr');
+        
+        // Minutes routes
+        Route::post('/{staffMeeting}/upload-minutes', [StaffMeetingHRController::class, 'uploadMinutes'])->name('upload-minutes');
+        Route::post('/{staffMeeting}/approve-minutes', [StaffMeetingHRController::class, 'approveMinutes'])->name('approve-minutes');
+        Route::post('/{staffMeeting}/reject-minutes', [StaffMeetingHRController::class, 'rejectMinutes'])->name('reject-minutes');
+    });
+    
+});
+
+// Public attendance route (outside admin auth)
+Route::get('/meeting/attendance/{id}/{token}', [StaffMeetingHRController::class, 'markAttendance'])->name('admin.meeting.attendance');
+Route::post('/meeting/attendance/{id}/{token}', [StaffMeetingHRController::class, 'submitAttendance'])->name('admin.submit.attendance');
+
+Route::get('/meeting/attendance/{meeting}/{hash}', [StaffMeetingHRController::class, 'showAttendanceQR'])
+    ->name('meeting.attendance.qr');
+
+Route::prefix('admin')->name('admin.')->group(function () {
+    // ... existing routes ...
+    
+    // Attendance routes
+    Route::resource('attendance', StaffMeetingAttendanceController::class);
+    
+    // Add these custom routes:
+    Route::get('attendance-dashboard', [AttendanceDashboardController::class, 'dashboard'])
+        ->name('attendance.dashboard');
+    Route::get('attendance/export', [AttendanceDashboardController::class, 'export'])
+        ->name('attendance.export');
+    
+    // ADD THIS LINE FOR BULK UPDATE:
+    Route::post('attendance/bulk-update', [StaffMeetingAttendanceController::class, 'bulkUpdate'])
+        ->name('attendance.bulk.update');
+    
+    // Also add the approve route if not already there:
+    Route::post('attendance/{attendance}/approve', [StaffMeetingAttendanceController::class, 'approveAttendance'])
+        ->name('attendance.approve');
+});  
+
+    
+    // Basic Attendance Routes
+    Route::resource('attendance', StaffMeetingAttendanceController::class);
+    
+    // Custom Attendance Routes
+    Route::get('attendance-dashboard', [AttendanceDashboardController::class, 'dashboard'])
+        ->name('attendance.dashboard');
+    Route::get('attendance/export', [AttendanceDashboardController::class, 'export'])
+        ->name('attendance.export');
+    Route::post('attendance/bulk-update', [StaffMeetingAttendanceController::class, 'bulkUpdate'])
+        ->name('attendance.bulk.update');
+    Route::post('attendance/{attendance}/approve', [StaffMeetingAttendanceController::class, 'approveAttendance'])
+        ->name('attendance.approve');
+        
+    // QR Code Attendance
+    Route::post('attendance/mark-via-qr/{meetingId}/{hash}', [StaffMeetingAttendanceController::class, 'markViaQR'])
+        ->name('attendance.mark.via.qr');
+    
+    // Advanced Features
+Route::prefix('admin')->name('admin.')->group(function () {
+    // Monthly Summary Routes
+    Route::get('attendance/monthly-summary', [StaffAttendanceController::class, 'monthlySummary'])
+        ->name('attendance.monthly-summary');
+    Route::get('attendance/staff/{staff}', [StaffAttendanceController::class, 'staffDetail'])
+        ->name('attendance.staff-detail');
+    Route::get('attendance/staff/{staff}/export', [StaffAttendanceController::class, 'exportStaffReport'])
+        ->name('attendance.export-staff-report');
+});
+    // Heatmap
+    Route::get('attendance/heatmap', [AttendanceHeatmapController::class, 'index'])
+        ->name('admin.attendance.heatmap');
+    
+    // Top/Low Performers
+    Route::get('attendance/top-performers', [AttendanceDashboardController::class, 'topPerformers'])
+        ->name('admin.attendance.top-performers');
+    Route::get('attendance/warning-list', [AttendanceDashboardController::class, 'warningList'])
+        ->name('admin.attendance.warning-list');
+    
+    // Export Routes
+    Route::get('attendance/export/excel', function(Request $request) {
+        $filters = $request->all();
+        return (new \App\Exports\AttendanceExport($filters))->download('admin.attendance-export-' . date('Y-m-d') . '.xlsx');
+    })->name('attendance.export.excel');
+    
+    Route::get('attendance/export/pdf', function(Request $request) {
+        $filters = $request->all();
+        $attendances = \App\Models\StaffMeetingAttendance::with(['meeting', 'staff', 'approver'])
+            ->filter($filters)
+            ->get();
+            
+        $pdf = Pdf::loadView('admin.attendance.exports.pdf', [
+            'attendances' => $attendances,
+            'filters' => $filters
+        ]);
+        
+        return $pdf->download('attendance-report-' . date('Y-m-d') . '.pdf');
+    })->name('admin.attendance.export.pdf');

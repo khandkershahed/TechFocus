@@ -30,6 +30,14 @@ class Kernel extends ConsoleKernel
 {
     // Run every hour
     $schedule->command('rfq:send-reminders')->hourly();
+     // Send meeting reminders every minute
+    $schedule->command('meetings:send-reminders')->everyMinute();
+    
+    // Auto-complete past meetings daily at midnight
+    $schedule->command('meetings:auto-complete')->daily();
+    
+    // Send daily meeting digest at 8 AM
+    $schedule->command('meetings:send-daily-digest')->dailyAt('08:00');
 }
 
 }
