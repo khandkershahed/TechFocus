@@ -92,28 +92,30 @@
                                 @enderror
                             </div>
                             
-                            <!-- Approval Settings -->
-                            <div class="col-md-6 mb-3">
-                                <div class="form-check mt-4">
-                                    <input type="checkbox" name="requires_approval" value="1" 
-                                           class="form-check-input @error('requires_approval') is-invalid @enderror"
-                                           id="requires_approval" {{ old('requires_approval', $attendance->requires_approval) ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="requires_approval">
-                                        Requires Approval
-                                    </label>
-                                </div>
-                                
-                                @if(auth()->user()->hasRole(['hr', 'management']))
-                                <div class="form-check mt-2">
-                                    <input type="checkbox" name="is_approved" value="1" 
-                                           class="form-check-input @error('is_approved') is-invalid @enderror"
-                                           id="is_approved" {{ old('is_approved', $attendance->is_approved) ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="is_approved">
-                                        Mark as Approved
-                                    </label>
-                                </div>
-                                @endif
-                            </div>
+                           <!-- Approval Settings -->
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-check mt-4">
+                                            <input type="checkbox" name="requires_approval" value="1" 
+                                                class="form-check-input @error('requires_approval') is-invalid @enderror"
+                                                id="requires_approval" {{ old('requires_approval', $attendance->requires_approval) ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="requires_approval">
+                                                Requires Approval
+                                            </label>
+                                        </div>
+                                        
+                                        @auth
+                                            @if(auth()->user()->hasRole(['hr', 'management']))
+                                            <div class="form-check mt-2">
+                                                <input type="checkbox" name="is_approved" value="1" 
+                                                    class="form-check-input @error('is_approved') is-invalid @enderror"
+                                                    id="is_approved" {{ old('is_approved', $attendance->is_approved) ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="is_approved">
+                                                    Mark as Approved
+                                                </label>
+                                            </div>
+                                            @endif
+                                        @endauth
+                                    </div>
                             
                             <!-- Notes -->
                             <div class="col-12 mb-3">
