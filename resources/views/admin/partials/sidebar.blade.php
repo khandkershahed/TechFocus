@@ -1242,129 +1242,77 @@
 
     </div>
 </div>
-<!-- Staff Meeting Attendance Menu Item -->
-<div data-kt-menu-trigger="click"
-    class="menu-item menu-accordion {{ in_array(Route::current()->getName(), [
-        'admin.attendance.index',
-        'admin.attendance.create',
-        'admin.attendance.show',
-        'admin.attendance.edit',
-        'admin.attendance.dashboard',
-        'admin.attendance.export',
-        'admin.attendance.approve',
-        'admin.attendance.bulk.update'
-    ]) ? 'here show' : '' }}">
-    
-    <span class="menu-link">
-        <span class="menu-icon">
-            <span class="svg-icon svg-icon-2">
-                <i class="fas fa-clipboard-check side_baricon"></i>
-            </span>
-        </span>
-        <span class="menu-title">Meeting Attendance</span>
-        <span class="menu-arrow"></span>
-    </span>
+                                        <!-- Staff Meeting Attendance Menu Item -->
+                                        <div data-kt-menu-trigger="click"
+                                            class="menu-item menu-accordion {{ in_array(Route::current()->getName(), [
+                                                'admin.attendance.index',
+                                                'admin.attendance.create',
+                                                'admin.attendance.show',
+                                                'admin.attendance.edit',
+                                                'admin.attendance.dashboard',
+                                                'admin.attendance.export',
+                                                'admin.attendance.approve',
+                                                'admin.attendance.bulk.update'
+                                            ]) ? 'here show' : '' }}">
+                                            
+                                            <span class="menu-link">
+                                                <span class="menu-icon">
+                                                    <span class="svg-icon svg-icon-2">
+                                                        <i class="fas fa-clipboard-check side_baricon"></i>
+                                                    </span>
+                                                </span>
+                                                <span class="menu-title">Meeting Attendance</span>
+                                                <span class="menu-arrow"></span>
+                                            </span>
 
-    <div class="menu-sub menu-sub-accordion">
-        
-        <!-- Attendance Dashboard -->
-        <div class="menu-item">
-            <a class="menu-link {{ Route::current()->getName() == 'admin.attendance.dashboard' ? 'active' : '' }}"
-                href="{{ route('admin.attendance.dashboard') }}">
-                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-                <span class="menu-title">Attendance Dashboard</span>
-                @php
-                    $pendingApprovals = \App\Models\StaffMeetingAttendance::where('requires_approval', true)
-                        ->where('is_approved', false)
-                        ->count();
-                @endphp
-                @if($pendingApprovals > 0)
-                <span class="menu-badge">
-                    <span class="badge badge-light-warning fw-bold">{{ $pendingApprovals }}</span>
-                </span>
-                @endif
-            </a>
-        </div>
+                                            <div class="menu-sub menu-sub-accordion">
+                                                
+                                                <!-- Attendance Dashboard -->
+                                                <div class="menu-item">
+                                                    <a class="menu-link {{ Route::current()->getName() == 'admin.attendance.dashboard' ? 'active' : '' }}"
+                                                        href="{{ route('admin.attendance.dashboard') }}">
+                                                        <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                                                        <span class="menu-title">Attendance Dashboard</span>
+                                                        @php
+                                                            $pendingApprovals = \App\Models\StaffMeetingAttendance::where('requires_approval', true)
+                                                                ->where('is_approved', false)
+                                                                ->count();
+                                                        @endphp
+                                                        @if($pendingApprovals > 0)
+                                                        <span class="menu-badge">
+                                                            <span class="badge badge-light-warning fw-bold">{{ $pendingApprovals }}</span>
+                                                        </span>
+                                                        @endif
+                                                    </a>
+                                                </div>
 
-        <!-- All Attendance Records -->
-        <div class="menu-item">
-            <a class="menu-link {{ Route::current()->getName() == 'admin.attendance.index' ? 'active' : '' }}"
-                href="{{ route('admin.attendance.index') }}">
-                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-                <span class="menu-title">All Records</span>
-                @php
-                    $totalRecords = \App\Models\StaffMeetingAttendance::count();
-                @endphp
-                @if($totalRecords > 0)
-                <span class="menu-badge">
-                    <span class="badge badge-light-primary fw-bold">{{ $totalRecords }}</span>
-                </span>
-                @endif
-            </a>
-        </div>
+                                                <!-- All Attendance Records -->
+                                                <div class="menu-item">
+                                                    <a class="menu-link {{ Route::current()->getName() == 'admin.attendance.index' ? 'active' : '' }}"
+                                                        href="{{ route('admin.attendance.index') }}">
+                                                        <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                                                        <span class="menu-title">All Records</span>
+                                                        @php
+                                                            $totalRecords = \App\Models\StaffMeetingAttendance::count();
+                                                        @endphp
+                                                        @if($totalRecords > 0)
+                                                        <span class="menu-badge">
+                                                            <span class="badge badge-light-primary fw-bold">{{ $totalRecords }}</span>
+                                                        </span>
+                                                        @endif
+                                                    </a>
+                                                </div>
 
-        <!-- Add New Attendance -->
-        <div class="menu-item">
-            <a class="menu-link {{ Route::current()->getName() == 'admin.attendance.create' ? 'active' : '' }}"
-                href="{{ route('admin.attendance.create') }}">
-                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-                <span class="menu-title">Add New Record</span>
-            </a>
-        </div>
-    </div>
-</div>
-<!-- Add these inside the attendance menu-sub-accordion -->
-
-<!-- Monthly Summary -->
-<div class="menu-item">
-    <a class="menu-link {{ Route::current()->getName() == 'admin.attendance.monthly-summary' ? 'active' : '' }}"
-        href="{{ route('admin.attendance.monthly-summary') }}">
-        <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-        <span class="menu-title">Monthly Summary</span>
-    </a>
-</div>
-
-<!-- Heatmap -->
-<div class="menu-item">
-    <a class="menu-link {{ Route::current()->getName() == 'admin.attendance.heatmap' ? 'active' : '' }}"
-        href="{{ route('admin.attendance.heatmap') }}">
-        <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-        <span class="menu-title">Attendance Heatmap</span>
-    </a>
-</div>
-
-<!-- Top Performers -->
-<div class="menu-item">
-    <a class="menu-link {{ Route::current()->getName() == 'admin.attendance.top-performers' ? 'active' : '' }}"
-        href="{{ route('admin.attendance.top-performers') }}">
-        <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-        <span class="menu-title">Top Performers</span>
-    </a>
-</div>
-
-{{-- <!-- Warning List -->
-<div class="menu-item">
-    <a class="menu-link {{ Route::current()->getName() == 'admin.attendance.warning-list' ? 'active' : '' }}"
-        href="{{ route('admin.attendance.warning-list') }}">
-        <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-        <span class="menu-title">Warning List</span>
-        @php
-            $warningCount = \App\Models\StaffMeetingAttendance::getWarningCount();
-        @endphp
-        @if($warningCount > 0)
-        <span class="menu-badge">
-            <span class="badge badge-light-danger fw-bold">{{ $warningCount }}</span>
-        </span>
-        @endif
-    </a>
-</div> --}}
-
-
-                               {{-- <div class="menu-item">
-                    <div class="menu-content pt-8 pb-0">
-                        <span class="menu-section text-muted text-uppercase fs-8 ls-1">Layout</span>
+                        <!-- Add New Attendance -->
+                        <div class="menu-item">
+                            <a class="menu-link {{ Route::current()->getName() == 'admin.attendance.create' ? 'active' : '' }}"
+                                href="{{ route('admin.attendance.create') }}">
+                                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                                <span class="menu-title">Add New Record</span>
+                            </a>
+                        </div>
                     </div>
-                </div> --}}
+                </div>
 
             </div>
             <!--end::Menu-->
