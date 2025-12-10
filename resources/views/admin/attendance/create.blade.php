@@ -44,13 +44,15 @@
                             <!-- Staff Selection -->
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Staff Member *</label>
-                                <select name="staff_id" class="form-control @error('staff_id') is-invalid @enderror" required>
+                                <select name="staff_id" class="form-control @error('staff_id') is-invalid @enderror" required id="staffSelect">
                                     <option value="">Select Staff</option>
                                     @php
                                         $staffList = \App\Models\Admin::active()->get();
                                     @endphp
                                     @foreach($staffList as $staff)
-                                        <option value="{{ $staff->id }}" {{ old('staff_id') == $staff->id ? 'selected' : '' }}>
+                                        <option value="{{ $staff->id }}" 
+                                                data-department="{{ $staff->department ?? '' }}"
+                                                {{ old('staff_id') == $staff->id ? 'selected' : '' }}>
                                             {{ $staff->name }} ({{ $staff->email }})
                                         </option>
                                     @endforeach
@@ -109,16 +111,20 @@
                                 @enderror
                             </div>
                             
-                            <!-- Department -->
+                            <!-- Department (Auto-filled from staff selection) -->
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Department</label>
+                                <label class="form-label">Department *</label>
                                 <input type="text" name="department" 
+                                       id="departmentField"
                                        value="{{ old('department') }}" 
                                        class="form-control @error('department') is-invalid @enderror"
-                                       placeholder="Enter department">
+                                       placeholder="Auto-filled from staff selection"
+                                       required
+                                       readonly>
                                 @error('department')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
+                                <small class="text-muted">Auto-filled based on selected staff</small>
                             </div>
                             
                             <!-- Manual Time Adjustment -->
@@ -144,34 +150,7 @@
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
-                            
-                            <!-- QR Code Option -->
-                            {{-- <div class="col-12 mb-3">
-                                <div class="card border-info">
-                                    <div class="card-header bg-info text-white py-2">
-                                        <h6 class="mb-0">
-                                            <i class="fas fa-qrcode me-2"></i>QR Code Attendance
-                                        </h6>
-                                    </div>
-                                    <div class="card-body">
-                                        <p class="mb-2">Alternatively, you can mark attendance via QR code:</p>
-                                        <div class="d-flex">
-                                            <select id="qrMeetingSelect" class="form-control me-2">
-                                                <option value="">Select Meeting for QR</option>
-                                                @foreach($meetings as $meeting)
-                                                    @if($meeting->attendance_qr_code)
-                                                        <option value="{{ $meeting->id }}">{{ $meeting->title }}</option>
-                                                    @endif
-                                                @endforeach
-                                            </select>
-                                            <button type="button" class="btn btn-warning" onclick="showQRCode()">
-                                                <i class="fas fa-qrcode me-2"></i>Show QR Code
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div> 
-                            </div>
-                        </div>--}}
+                        </div>
                         
                         <div class="d-flex justify-content-between mt-4">
                             <button type="reset" class="btn btn-secondary">
@@ -187,38 +166,40 @@
         </div>
     </div>
 </div>
-
-{{-- <!-- QR Code Modal -->
-<div class="modal fade" id="qrModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Scan QR Code for Attendance</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body text-center">
-                <div id="qrCodeDisplay"></div>
-                <p class="mt-3 text-muted">Scan this QR code with staff device to mark attendance</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="downloadQR()">
-                    <i class="fas fa-download me-2"></i>Download QR
-                </button>
-            </div>
-        </div>
-    </div>
-</div> --}}
 @endsection
 
 @push('scripts')
 <script>
+    // Auto-fill department when staff is selected
+    document.getElementById('staffSelect').addEventListener('change', function() {
+        const selectedOption = this.options[this.selectedIndex];
+        const departmentField = document.getElementById('departmentField');
+        
+        if (selectedOption.value) {
+            // Get department from data attribute
+            const department = selectedOption.getAttribute('data-department');
+            departmentField.value = department || 'Not specified';
+        } else {
+            departmentField.value = '';
+        }
+    });
+
+    // Trigger on page load if there's a pre-selected staff
+    document.addEventListener('DOMContentLoaded', function() {
+        const staffSelect = document.getElementById('staffSelect');
+        if (staffSelect.value) {
+            staffSelect.dispatchEvent(new Event('change'));
+        }
+    });
+
+    // Set current time function
     function setCurrentTime(fieldId) {
         const now = new Date();
         const localDateTime = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
         document.querySelector(`[name="${fieldId}"]`).value = localDateTime;
     }
     
+    // QR Code functions (if needed in the future)
     function showQRCode() {
         const meetingId = document.getElementById('qrMeetingSelect').value;
         if (!meetingId) {
@@ -256,19 +237,5 @@
             document.body.removeChild(link);
         }
     }
-    
-    // Auto-fill department when staff is selected
-    document.querySelector('[name="staff_id"]').addEventListener('change', function() {
-        const staffId = this.value;
-        if (staffId) {
-            fetch(`/api/staff/${staffId}/department`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.department) {
-                        document.querySelector('[name="department"]').value = data.department;
-                    }
-                });
-        }
-    });
 </script>
 @endpush

@@ -1,86 +1,147 @@
 @extends('admin.master')
 
-@section('title', $staff->name . ' - Attendance Details')
+@section('title', 'Staff Attendance Details')
 
 @section('content')
 <div class="container-fluid">
     <!-- Page Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h3 mb-0 text-gray-800">
-            <i class="fas fa-user me-2"></i>{{ $staff->name }} - Attendance Details
+            <i class="fas fa-user me-2"></i>Attendance Details: {{ $staffMember->name }}
         </h1>
         <div>
-            <a href="{{ route('admin.attendance.monthly-summary', ['year' => $year, 'month' => $month]) }}" 
-               class="btn btn-secondary me-2">
+            <a href="{{ route('admin.attendance.index') }}?view=monthly&monthly_year={{ $year }}&monthly_month={{ $month }}" 
+               class="btn btn-info me-2">
                 <i class="fas fa-arrow-left me-2"></i>Back to Summary
             </a>
-            <a href="{{ route('admin.attendance.export-staff-report', ['staff' => $staff->id, 'year' => $year, 'month' => $month]) }}" 
+            {{-- <a href="{{ route('admin.attendance.export-staff-report', ['staff' => $staffMember->id, 'year' => $year, 'month' => $month]) }}" 
                class="btn btn-success">
                 <i class="fas fa-download me-2"></i>Export PDF
-            </a>
+            </a> --}}
         </div>
     </div>
 
-    <!-- Staff Info Card -->
-    <div class="row mb-4">
-        <div class="col-lg-4">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">
-                        <i class="fas fa-id-card me-2"></i>Staff Information
-                    </h6>
-                </div>
-                <div class="card-body text-center">
-                    <div class="mb-3">
-                        <i class="fas fa-user-circle fa-4x text-primary"></i>
+    <!-- Filters -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">
+                <i class="fas fa-filter me-2"></i>Select Period
+            </h6>
+        </div>
+        <div class="card-body">
+            <form action="{{ route('admin.attendance.staff-detail', $staffMember->id) }}" method="GET">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Year</label>
+                        <select name="year" class="form-control">
+                            @foreach($years as $yr)
+                                <option value="{{ $yr }}" {{ $year == $yr ? 'selected' : '' }}>
+                                    {{ $yr }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
-                    <h4>{{ $staff->name }}</h4>
-                    <p class="text-muted">{{ $staff->email }}</p>
-                    <p><strong>Department:</strong> {{ $staff->department ?? 'N/A' }}</p>
-                    <p><strong>Employee ID:</strong> {{ $staff->id }}</p>
+                    
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Month</label>
+                        <select name="month" class="form-control">
+                            @foreach($months as $key => $monthName)
+                                <option value="{{ $key }}" {{ $month == $key ? 'selected' : '' }}>
+                                    {{ $monthName }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    
+                    <div class="col-md-4 mb-3 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-search me-2"></i>View Report
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Summary Stats -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card border-left-primary shadow h-100">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Total Meetings
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                {{ $totalMeetings }}
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-calendar-alt fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         
-        <div class="col-lg-8">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">
-                        <i class="fas fa-chart-pie me-2"></i>Attendance Overview - {{ \Carbon\Carbon::create()->month($month)->format('F') }} {{ $year }}
-                    </h6>
-                </div>
+        <div class="col-md-3 mb-3">
+            <div class="card border-left-success shadow h-100">
                 <div class="card-body">
-                    <div class="row text-center">
-                        <div class="col-md-3">
-                            <div class="border rounded p-3 mb-3">
-                                <h2 class="text-primary">{{ $totalMeetings }}</h2>
-                                <p class="mb-0 text-muted">Total Meetings</p>
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Present
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                {{ $presentCount }}
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="border rounded p-3 mb-3 bg-success text-white">
-                                <h2>{{ $presentCount }}</h2>
-                                <p class="mb-0">Present</p>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="border rounded p-3 mb-3 bg-warning text-white">
-                                <h2>{{ $lateCount }}</h2>
-                                <p class="mb-0">Late</p>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="border rounded p-3 mb-3 bg-danger text-white">
-                                <h2>{{ $absentCount }}</h2>
-                                <p class="mb-0">Absent</p>
-                            </div>
+                        <div class="col-auto">
+                            <i class="fas fa-check-circle fa-2x text-gray-300"></i>
                         </div>
                     </div>
-                    
-                    <div class="text-center mt-3">
-                        <div class="d-inline-block">
-                            <h3 class="mb-0">{{ $attendancePercentage }}%</h3>
-                            <p class="text-muted">Attendance Rate</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3 mb-3">
+            <div class="card border-left-warning shadow h-100">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Late
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                {{ $lateCount }}
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-clock fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3 mb-3">
+            <div class="card border-left-{{ $attendancePercentage >= 80 ? 'success' : ($attendancePercentage >= 60 ? 'warning' : 'danger') }} shadow h-100">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-uppercase mb-1">
+                                Attendance %
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                {{ $attendancePercentage }}%
+                            </div>
+                            <div class="mt-2 text-xs">
+                                <span class="text-muted">{{ $presentCount + $lateCount }}/{{ $totalMeetings }} attended</span>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-chart-line fa-2x text-gray-300"></i>
                         </div>
                     </div>
                 </div>
@@ -88,67 +149,46 @@
         </div>
     </div>
 
-    <!-- Monthly Breakdown -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="card shadow">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">
-                        <i class="fas fa-calendar me-2"></i>Monthly Breakdown
-                    </h6>
+    <!-- Staff Information -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">
+                <i class="fas fa-id-card me-2"></i>Staff Information
+            </h6>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <p><strong>Name:</strong> {{ $staffMember->name }}</p>
+                    <p><strong>Staff ID:</strong> {{ $staffMember->id }}</p>
                 </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-hover">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Year</th>
-                                    <th>Month</th>
-                                    <th>Total Meetings</th>
-                                    <th>Present</th>
-                                    <th>Late</th>
-                                    <th>Absent</th>
-                                    <th>Attendance %</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($monthlyData as $data)
-                                <tr>
-                                    <td>{{ $data->year }}</td>
-                                    <td>{{ \Carbon\Carbon::create()->month($data->month)->format('F') }}</td>
-                                    <td class="text-center">{{ $data->total_meetings }}</td>
-                                    <td class="text-center text-success">{{ $data->present }}</td>
-                                    <td class="text-center text-warning">{{ $data->late }}</td>
-                                    <td class="text-center text-danger">{{ $data->absent }}</td>
-                                    <td class="text-center">
-                                        <div class="progress" style="height: 20px;">
-                                            <div class="progress-bar {{ $data->percentage >= 80 ? 'bg-success' : ($data->percentage >= 60 ? 'bg-warning' : 'bg-danger') }}" 
-                                                 role="progressbar" 
-                                                 style="width: {{ min($data->percentage, 100) }}%">
-                                                {{ $data->percentage }}%
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="col-md-4">
+                    @php
+    $departments = is_string($staffMember->department) ? json_decode($staffMember->department, true) : $staffMember->department;
+@endphp
+
+<p><strong>Department:</strong> {{ implode(', ', $departments) }}</p>
+
+             <p><strong>Position:</strong> {{ $staffMember->designation ?? 'N/A' }}</p>
+                </div>
+                <div class="col-md-4">
+                    <p><strong>Email:</strong> {{ $staffMember->email ?? 'N/A' }}</p>
+                    <p><strong>Phone:</strong> {{ $staffMember->phone ?? 'N/A' }}</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Current Month Details -->
+    <!-- Attendance Records -->
     <div class="card shadow">
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
             <h6 class="m-0 font-weight-bold text-primary">
-                <i class="fas fa-list me-2"></i>Meeting Details - {{ \Carbon\Carbon::create()->month($month)->format('F') }} {{ $year }}
+                <i class="fas fa-table me-2"></i>Attendance Records - {{ \Carbon\Carbon::create()->month((int) $month)->format('F') }} {{ $year }}
             </h6>
-            <span class="badge bg-primary">{{ $currentMonthDetails->count() }} meetings</span>
+            <span class="badge bg-primary">{{ $attendances->count() }} records</span>
         </div>
         <div class="card-body">
-            @if($currentMonthDetails->count() > 0)
+            @if($attendances->count() > 0)
             <div class="table-responsive">
                 <table class="table table-bordered table-hover">
                     <thead class="table-light">
@@ -158,21 +198,21 @@
                             <th>Status</th>
                             <th>Join Time</th>
                             <th>Leave Time</th>
-                            <th>Duration</th>
+                            <th>Notes</th>
                             <th>Approval</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($currentMonthDetails as $attendance)
+                        @foreach($attendances as $attendance)
                         <tr>
                             <td>{{ $attendance->created_at->format('M d, Y') }}</td>
                             <td>
                                 @if($attendance->meeting)
-                                    <a href="{{ route('admin.staff-meetings.show', $attendance->meeting) }}">
-                                        {{ $attendance->meeting->title }}
-                                    </a>
+                                    {{ $attendance->meeting->title }}
+                                    <br>
+                                    <small class="text-muted">{{ $attendance->meeting->date->format('h:i A') }}</small>
                                 @else
-                                    <span class="text-muted">Meeting Deleted</span>
+                                    <span class="text-danger">Meeting Deleted</span>
                                 @endif
                             </td>
                             <td>
@@ -194,22 +234,16 @@
                                     <span class="text-muted">N/A</span>
                                 @endif
                             </td>
-                            <td>
-                                @if($attendance->join_time && $attendance->leave_time)
-                                    {{ $attendance->durationInMinutes() }} mins
-                                @else
-                                    <span class="text-muted">N/A</span>
-                                @endif
-                            </td>
-                            <td>
+                            <td>{{ $attendance->notes ?? '-' }}</td>
+                            <td class="text-center">
                                 @if($attendance->requires_approval)
                                     @if($attendance->is_approved)
-                                        <span class="badge bg-success">
-                                            <i class="fas fa-check me-1"></i>Approved
+                                        <span class="badge bg-success" title="Approved">
+                                            <i class="fas fa-check"></i>
                                         </span>
                                     @else
-                                        <span class="badge bg-warning">
-                                            <i class="fas fa-clock me-1"></i>Pending
+                                        <span class="badge bg-warning" title="Pending">
+                                            <i class="fas fa-clock"></i>
                                         </span>
                                     @endif
                                 @else
@@ -222,9 +256,10 @@
                 </table>
             </div>
             @else
-            <div class="text-center py-4">
+            <div class="text-center py-5">
                 <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
-                <p class="text-muted">No attendance records found for this month</p>
+                <h4 class="text-muted">No attendance records found</h4>
+                <p class="text-muted">No attendance data available for the selected period.</p>
             </div>
             @endif
         </div>
