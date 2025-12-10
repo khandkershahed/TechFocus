@@ -14,75 +14,7 @@ use App\Models\Admin\EmployeeDepartment;
 class MovementRecordController extends Controller
 {
    
-// public function index(Request $request)
-// {
-//     $query = MovementRecord::with('admin','department');
 
-//     // Filter by staff
-//     if ($request->staff) {
-//         $query->where('admin_id', $request->staff);
-//     }
-
-//     // Filter by department
-//     if ($request->department) {
-//         $query->where('department', $request->department);
-//     }
-
-//     // Filter by movement type
-//     if ($request->movement_type) {
-//         $query->where('meeting_type', $request->movement_type);
-//     }
-
-//     // Filter by status
-//     if ($request->status) {
-//         $query->where('status', $request->status);
-//     }
-
-//     // Filter by date
-//     if ($request->date) {
-//         $query->whereDate('date', $request->date);
-//     }
-//     $records = MovementRecord::where('admin_id', auth('admin')->id())
-//     ->with('department')
-//     ->latest()
-//     ->paginate(10);
-
-//     $records = $query->latest()->paginate(10)->withQueryString();
-
-//     // Summary calculations
-//     $totalDays = $records->pluck('date')->unique()->count();
-//     $totalCompanies = $records->pluck('company')->unique()->count();
-//     $totalVisits = $records->where('meeting_type', '!=', null)->count();
-//     $totalAreas = $records->pluck('area')->unique()->count();
-//     $highestValue = $records->max('value');
-//     $lowestValue = $records->min('value');
-//     $transportCost = $records->sum('cost');
-//     $salesTarget = 3000000; // dynamic later
-//     $companies = $records->pluck('company')->unique();
-
-//     // For filter dropdowns
-//     $allStaff = Admin::all();
-//     // $departments = MovementRecord::select('department')->distinct()->pluck('department');
-//     $movementTypes = MovementRecord::select('meeting_type')->distinct()->pluck('meeting_type');
-//     $statuses = MovementRecord::select('status')->distinct()->pluck('status');
-
-//     return view('admin.pages.movement.index', compact(
-//         'records',
-//         'totalDays',
-//         'totalCompanies',
-//         'totalVisits',
-//         'totalAreas',
-//         'highestValue',
-//         'lowestValue',
-//         'transportCost',
-//         'salesTarget',
-//         'companies',
-//         'allStaff',
-//          'departments',
-//         'movementTypes',
-//         'statuses'
-//     ));
-// }
 public function index(Request $request)
 {
     // ==========================================
@@ -157,7 +89,7 @@ public function index(Request $request)
         ->sort()
         ->values();
 
-    $movementTypes = MovementRecord::select('meeting_type')->distinct()->pluck('meeting_type');
+    $movementTypes = MovementRecord::whereNotNull('meeting_type')->where('meeting_type', '!=', '')->whereRaw("TRIM(meeting_type) != ''")->distinct()->pluck('meeting_type');
     $statuses      = MovementRecord::select('status')->distinct()->pluck('status');
 
     return view('admin.pages.movement.index', compact(
@@ -168,17 +100,6 @@ public function index(Request $request)
 }
 
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    // public function create()
-    // {
-    //     // Get current logged-in admin
-    //     $currentAdmin = auth('admin')->user();
-    //     $currentAdmin = auth('admin')->user()->load('department');
-
-    //     return view('admin.pages.movement.form', compact('currentAdmin'));
-    // }
 public function create()
 {
     $currentAdmin = auth('admin')->user()->load('department');
