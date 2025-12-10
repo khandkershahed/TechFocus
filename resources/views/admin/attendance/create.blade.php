@@ -146,7 +146,7 @@
                             </div>
                             
                             <!-- QR Code Option -->
-                            <div class="col-12 mb-3">
+                            {{-- <div class="col-12 mb-3">
                                 <div class="card border-info">
                                     <div class="card-header bg-info text-white py-2">
                                         <h6 class="mb-0">
@@ -169,9 +169,9 @@
                                             </button>
                                         </div>
                                     </div>
-                                </div>
+                                </div> 
                             </div>
-                        </div>
+                        </div>--}}
                         
                         <div class="d-flex justify-content-between mt-4">
                             <button type="reset" class="btn btn-secondary">
@@ -188,7 +188,7 @@
     </div>
 </div>
 
-<!-- QR Code Modal -->
+{{-- <!-- QR Code Modal -->
 <div class="modal fade" id="qrModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -208,7 +208,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> --}}
 @endsection
 
 @push('scripts')

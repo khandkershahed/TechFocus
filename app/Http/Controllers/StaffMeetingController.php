@@ -189,23 +189,34 @@ class StaffMeetingController extends Controller
             ->with('platforms', $this->platforms);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(StaffMeeting $staffMeeting)
-    {
-        $admins = Admin::all();
-        
-        // Format times for form input
-        $staffMeeting->form_start_time = $staffMeeting->start_time ? $staffMeeting->start_time->format('H:i') : '';
-        $staffMeeting->form_end_time = $staffMeeting->end_time ? $staffMeeting->end_time->format('H:i') : '';
-        
-        return view('admin.pages.staff-meetings.edit', compact('staffMeeting', 'admins'))
-            ->with('categories', $this->categories)
-            ->with('platforms', $this->platforms)
-            ->with('departments', $this->departments);
-    }
 
+public function edit(StaffMeeting $staffMeeting)
+{
+    $admins = Admin::all();
+    
+    // Format times for form input
+    $staffMeeting->form_start_time = $staffMeeting->start_time ? $staffMeeting->start_time->format('H:i') : '';
+    $staffMeeting->form_end_time = $staffMeeting->end_time ? $staffMeeting->end_time->format('H:i') : '';
+    
+    return view('admin.pages.staff-meetings.edit', compact('staffMeeting', 'admins'))
+        ->with('categories', [
+            'management' => 'Management',
+            'departmental' => 'Departmental',
+            'training' => 'Training',
+            'hr_policy_compliance' => 'HR Policy/Compliance',
+            'client_review' => 'Client Review',
+            'project_review' => 'Project Review',
+            'weekly_coordination' => 'Weekly Coordination',
+            'emergency_meeting' => 'Emergency Meeting',
+        ])
+        ->with('platforms', [
+            'office' => 'Office',
+            'online' => 'Online',
+            'client_office' => 'Client Office',
+            'training_center' => 'Training Center',
+        ])
+        ->with('departments', ['HR', 'IT', 'Sales', 'Marketing', 'Finance', 'Operations', 'Admin']);
+}
     /**
      * Update the specified resource in storage.
      */

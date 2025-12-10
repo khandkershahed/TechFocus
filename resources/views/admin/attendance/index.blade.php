@@ -127,10 +127,6 @@
                 <button type="button" class="btn btn-success btn-sm me-2" data-bs-toggle="modal" data-bs-target="#bulkUpdateModal">
                     <i class="fas fa-edit me-1"></i>Bulk Update
                 </button>
-                <a href="{{ route('admin.attendance.export') . '?' . http_build_query(request()->query()) }}" 
-                   class="btn btn-warning btn-sm">
-                    <i class="fas fa-file-export me-1"></i>Export
-                </a>
             </div>
         </div>
         <div class="card-body">

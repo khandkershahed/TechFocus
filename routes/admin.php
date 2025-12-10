@@ -986,27 +986,34 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('attendance/warning-list', [AttendanceDashboardController::class, 'warningList'])
         ->name('admin.attendance.warning-list');
     
-    // Export Routes
-    Route::get('attendance/export/excel', function(Request $request) {
-        $filters = $request->all();
-        return (new \App\Exports\AttendanceExport($filters))->download('admin.attendance-export-' . date('Y-m-d') . '.xlsx');
-    })->name('attendance.export.excel');
+    // // Export Routes
+    // Route::get('attendance/export/excel', function(Request $request) {
+    //     $filters = $request->all();
+    //     return (new \App\Exports\AttendanceExport($filters))->download('admin.attendance-export-' . date('Y-m-d') . '.xlsx');
+    // })->name('attendance.export.excel');
     
-    Route::get('attendance/export/pdf', function(Request $request) {
-        $filters = $request->all();
-        $attendances = \App\Models\StaffMeetingAttendance::with(['meeting', 'staff', 'approver'])
-            ->filter($filters)
-            ->get();
+    // Route::get('attendance/export/pdf', function(Request $request) {
+    //     $filters = $request->all();
+    //     $attendances = \App\Models\StaffMeetingAttendance::with(['meeting', 'staff', 'approver'])
+    //         ->filter($filters)
+    //         ->get();
             
-        $pdf = Pdf::loadView('admin.attendance.exports.pdf', [
-            'attendances' => $attendances,
-            'filters' => $filters
-        ]);
+    //     $pdf = Pdf::loadView('admin.attendance.exports.pdf', [
+    //         'attendances' => $attendances,
+    //         'filters' => $filters
+    //     ]);
         
-        return $pdf->download('attendance-report-' . date('Y-m-d') . '.pdf');
-    })->name('admin.attendance.export.pdf');
+    //     return $pdf->download('attendance-report-' . date('Y-m-d') . '.pdf');
+    // })->name('admin.attendance.export.pdf');
 
 Route::get('/admin/staff-meetings/{id}/qr-info', [StaffMeetingHRController::class, 'getQRCodeInfo'])
     ->name('admin.staff-meetings.qr-info');
+
+    // QR Code Attendance Routes
+Route::get('/meeting/attendance/{meetingId}/{token}', [\App\Http\Controllers\Admin\AttendanceController::class, 'scanQRAttendance'])
+    ->name('attendance.scan.qr');
+
+Route::post('/meeting/attendance/{meetingId}/{token}/submit', [\App\Http\Controllers\Admin\AttendanceController::class, 'submitQRAttendance'])
+    ->name('attendance.submit.qr');
 
     

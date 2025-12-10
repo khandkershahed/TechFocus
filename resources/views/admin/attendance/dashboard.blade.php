@@ -20,9 +20,10 @@
                 </div>
             </form>
             
-            <a href="{{ route('admin.attendance.export') }}" class="btn btn-success me-2">
-                <i class="fas fa-file-export me-2"></i>Export
-            </a>
+         <button type="button" id="exportBtn" class="btn btn-success me-2" onclick="exportTableToCSV()">
+    <i class="fas fa-file-export me-2"></i>Export
+</button>
+            
             <a href="{{ route('admin.attendance.index') }}" class="btn btn-primary">
                 <i class="fas fa-list me-2"></i>View All Records
             </a>
@@ -163,7 +164,7 @@
         </div>
     </div>
 
-    <!-- Recent Attendance -->
+    <!-- Recent Attendance - This will be our data source for export -->
     <div class="row">
         <div class="col-12">
             <div class="card shadow">
@@ -177,7 +178,7 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-hover">
+                        <table class="table table-hover" id="attendanceTable">
                             <thead>
                                 <tr>
                                     <th>Staff</th>
@@ -304,4 +305,86 @@
     .stat-card.late { border-left-color: #ffc107; }
     .stat-card.total { border-left-color: #007bff; }
 </style>
+@endpush
+
+@push('scripts')
+<script>
+function exportTableToCSV() {
+    // Get the table
+    const table = document.getElementById('attendanceTable');
+    if (!table) {
+        alert('No data to export!');
+        return;
+    }
+    
+    // Show loading state
+    const exportBtn = document.getElementById('exportBtn');
+    const originalHtml = exportBtn.innerHTML;
+    exportBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Exporting...';
+    exportBtn.disabled = true;
+    
+    // Get date for filename
+    const dateInput = document.querySelector('input[name="date"]');
+    const dateValue = dateInput ? dateInput.value : '{{ $date }}';
+    const filename = 'attendance_' + dateValue + '.csv';
+    
+    // Build CSV content
+    let csv = '';
+    
+    // Add headers (skip last column - Actions)
+    const headers = [];
+    table.querySelectorAll('th').forEach((th, index) => {
+        // Skip the last column (Actions)
+        if (index < table.querySelectorAll('th').length - 1) {
+            headers.push('"' + th.innerText.replace(/"/g, '""') + '"');
+        }
+    });
+    csv += headers.join(',') + '\n';
+    
+    // Add data rows (skip last column - Actions)
+    table.querySelectorAll('tbody tr').forEach(row => {
+        const rowData = [];
+        row.querySelectorAll('td').forEach((td, index) => {
+            // Skip the last column (Actions)
+            if (index < row.querySelectorAll('td').length - 1) {
+                const text = td.innerText
+                    .replace(/(\r\n|\n|\r)/gm, ' ')  // Remove line breaks
+                    .replace(/\s+/g, ' ')             // Replace multiple spaces with single space
+                    .trim()                           // Trim whitespace
+                    .replace(/"/g, '""');             // Escape double quotes
+                rowData.push('"' + text + '"');
+            }
+        });
+        csv += rowData.join(',') + '\n';
+    });
+    
+    // Create and download CSV
+    try {
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        
+        link.href = url;
+        link.download = filename;
+        link.style.display = 'none';
+        
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        // Clean up
+        setTimeout(() => {
+            URL.revokeObjectURL(url);
+            exportBtn.innerHTML = originalHtml;
+            exportBtn.disabled = false;
+        }, 1000);
+        
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error exporting data. Please try again.');
+        exportBtn.innerHTML = originalHtml;
+        exportBtn.disabled = false;
+    }
+}
+</script>
 @endpush

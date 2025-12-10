@@ -109,47 +109,50 @@
                                 @enderror
                             </div>
                             
-                            <!-- Meeting Type -->
+                         <!-- Meeting Type -->
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Meeting Type *</label>
                                 <select name="type" class="form-control @error('type') is-invalid @enderror" required>
-                                    <option value="physical" {{ old('type', $staffMeeting->type) == 'physical' ? 'selected' : '' }}>Physical</option>
-                                    <option value="online" {{ old('type', $staffMeeting->type) == 'online' ? 'selected' : '' }}>Online</option>
-                                    <option value="hybrid" {{ old('type', $staffMeeting->type) == 'hybrid' ? 'selected' : '' }}>Hybrid</option>
+                                    <option value="">Select Type</option>
+                                    <option value="office" {{ old('type', $staffMeeting->type) == 'office' ? 'selected' : '' }}>Office</option>
+                                    <option value="out_of_office" {{ old('type', $staffMeeting->type) == 'out_of_office' ? 'selected' : '' }}>Out of Office</option>
                                 </select>
                                 @error('type')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
-                            
                             <!-- Platform -->
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Platform *</label>
-                                <select name="platform" class="form-control @error('platform') is-invalid @enderror" required>
-                                    <option value="">Select Platform</option>
-                                    @foreach($platforms as $key => $value)
-                                        <option value="{{ $key }}" {{ old('platform', $staffMeeting->platform) == $key ? 'selected' : '' }}>
-                                            {{ $value }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('platform')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            
-                            <!-- Online Platform (if platform is online) -->
-                            <div class="col-md-6 mb-3" id="onlinePlatformField" style="{{ $staffMeeting->platform == 'online' ? '' : 'display: none;' }}">
-                                <label class="form-label">Online Platform</label>
-                                <input type="text" name="online_platform" 
-                                       value="{{ old('online_platform', $staffMeeting->online_platform) }}" 
-                                       class="form-control @error('online_platform') is-invalid @enderror" 
-                                       placeholder="e.g., Zoom, Google Meet, Teams">
-                                @error('online_platform')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Platform *</label>
+                                        <select name="platform" class="form-control @error('platform') is-invalid @enderror" required id="platformSelect">
+                                            <option value="">Select Platform</option>
+                                            @foreach($platforms as $key => $value)
+                                                <option value="{{ $key }}" {{ old('platform', $staffMeeting->platform) == $key ? 'selected' : '' }}>
+                                                    {{ $value }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        @error('platform')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <!-- Online Platform (if platform is online) -->
+                                    <div class="col-md-6 mb-3 online-platform-field" style="{{ old('platform', $staffMeeting->platform) == 'online' ? '' : 'display: none;' }}">
+                                        <label class="form-label">Online Platform <span class="text-danger">*</span></label>
+                                        <select name="online_platform" 
+                                                class="form-control @error('online_platform') is-invalid @enderror"
+                                                id="onlinePlatformSelect">
+                                            <option value="">Select Online Platform</option>
+                                            <option value="zoom" {{ old('online_platform', $staffMeeting->online_platform) == 'zoom' ? 'selected' : '' }}>Zoom</option>
+                                            <option value="google_meet" {{ old('online_platform', $staffMeeting->online_platform) == 'google_meet' ? 'selected' : '' }}>Google Meet</option>
+                                            <option value="teams" {{ old('online_platform', $staffMeeting->online_platform) == 'teams' ? 'selected' : '' }}>Microsoft Teams</option>
+                                        </select>
+                                        @error('online_platform')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                                                
                             <!-- Organizer -->
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Organizer *</label>
@@ -275,6 +278,26 @@
                                         </ul>
                                     </div>
                                 @endif
+                            </div>
+                        </div>
+
+                          <!-- Status -->
+                            <div class="col-md-12 mb-4 mt-2">
+                                <h5 class="border-bottom pb-2"><i class="fas fa-tasks me-2"></i>Status</h5>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="status" class="form-label">Status *</label>
+                                <select class="form-control @error('status') is-invalid @enderror" 
+                                        id="status" name="status" required>
+                                    <option value="scheduled" {{ old('status') == 'scheduled' ? 'selected' : 'selected' }}>Scheduled</option>
+                                    <option value="rescheduled" {{ old('status') == 'rescheduled' ? 'selected' : '' }}>Rescheduled</option>
+                                    <option value="cancelled" {{ old('status') == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                                    <option value="completed" {{ old('status') == 'completed' ? 'selected' : '' }}>Completed</option>
+                                </select>
+                                @error('status')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
                         
