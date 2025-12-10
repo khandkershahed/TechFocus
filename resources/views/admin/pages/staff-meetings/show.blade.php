@@ -168,30 +168,41 @@
                 </div>
             </div>
             
-            <!-- Attachments Card -->
-            @if($staffMeeting->attachments && count($staffMeeting->attachments) > 0)
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h5><i class="fas fa-paperclip me-2"></i>Attachments</h5>
-                </div>
-                <div class="card-body">
-                    <div class="list-group">
-                        @foreach($staffMeeting->attachments as $attachment)
-                            <a href="{{ asset('storage/' . $attachment['path']) }}" 
-                               target="_blank" 
-                               class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                                <div>
-                                    <i class="fas fa-file me-2 text-primary"></i>
-                                    {{ $attachment['name'] }}
-                                </div>
-                                <span class="badge bg-light text-dark">{{ formatFileSize($attachment['size']) }}</span>
-                            </a>
-                        @endforeach
+          <!-- Attachments Card -->
+@php
+    $attachments = [];
+    if ($staffMeeting->attachments) {
+        // Check if it's a JSON string or already an array
+        if (is_string($staffMeeting->attachments)) {
+            $attachments = json_decode($staffMeeting->attachments, true) ?: [];
+        } elseif (is_array($staffMeeting->attachments)) {
+            $attachments = $staffMeeting->attachments;
+        }
+    }
+@endphp
+
+@if(count($attachments) > 0)
+<div class="card mb-4">
+    <div class="card-header">
+        <h5><i class="fas fa-paperclip me-2"></i>Attachments</h5>
+    </div>
+    <div class="card-body">
+        <div class="list-group">
+            @foreach($attachments as $attachment)
+                <a href="{{ asset('storage/' . $attachment['path']) }}" 
+                   target="_blank" 
+                   class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                    <div>
+                        <i class="fas fa-file me-2 text-primary"></i>
+                        {{ $attachment['name'] }}
                     </div>
-                </div>
-            </div>
-            @endif
-            
+                    <span class="badge bg-light text-dark">{{ formatFileSize($attachment['size']) }}</span>
+                </a>
+            @endforeach
+        </div>
+    </div>
+</div>
+@endif
             <!-- HR Actions Card -->
             <div class="card mb-4">
                 <div class="card-header">
