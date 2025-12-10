@@ -217,15 +217,15 @@
                         <button type="button" class="btn btn-outline-warning" onclick="generateQRCode({{ $staffMeeting->id }})">
                             <i class="fas fa-qrcode me-2"></i>Generate Attendance QR
                         </button>
-                        
-                        <!-- View QR Code -->
+                  <!-- View QR Code -->
                         @if($staffMeeting->attendance_qr_code)
-                       <a href="{{ asset('storage/' . str_replace('public/', '', $staffMeeting->attendance_qr_code)) }}" 
-                                    target="_blank" 
-                                    class="btn btn-outline-success">
-                                        <i class="fas fa-eye me-2"></i>View QR Code
-                                    </a>
-                               @endif
+                            <button type="button" 
+                                    class="btn btn-outline-success" 
+                                    onclick="handleViewQRCode({{ $staffMeeting->id }}, '{{ asset('storage/' . str_replace('public/', '', $staffMeeting->attendance_qr_code)) }}')">
+                                <i class="fas fa-eye me-2"></i>View QR Code
+                            </button>
+                        @endif
+                     
                     </div>
                 </div>
             </div>
@@ -560,6 +560,10 @@
                 if (data.success) {
                     // Show QR code in modal
                     showQRCodeModal(data.qr_code_url, data.message);
+                    // Reload page after 2 seconds to show updated QR code
+                    setTimeout(() => {
+                        location.reload();
+                    }, 2000);
                 } else {
                     alert('Error: ' + data.message);
                 }
@@ -573,7 +577,16 @@
 
     // Function to show QR code in modal
     function showQRCodeModal(qrCodeUrl, message) {
-        // Create modal HTML
+        // Check if QR code is an image or text file
+        const isImage = qrCodeUrl.toLowerCase().match(/\.(png|jpg|jpeg|gif|bmp|svg|webp)$/);
+        
+        if (!isImage) {
+            // If it's not an image file, show info modal
+            showQRCodeInfoModal(qrCodeUrl, message);
+            return;
+        }
+        
+        // Create modal HTML for image QR code
         const modalHtml = `
             <div class="modal fade" id="qrCodeModal" tabindex="-1" aria-labelledby="qrCodeModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
@@ -619,6 +632,67 @@
         modal.show();
     }
 
+    // Function to show QR code info for text files
+    function showQRCodeInfoModal(qrCodeUrl, message) {
+        const modalHtml = `
+            <div class="modal fade" id="qrCodeInfoModal" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">QR Code Information</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="alert alert-warning">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                QR code was generated but not as an image file. You can:
+                            </div>
+                            <ol class="mb-3">
+                                <li>Click "Generate Attendance QR" again to create an image</li>
+                                <li>Use the attendance link below manually</li>
+                            </ol>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Attendance URL:</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" value="${qrCodeUrl}" readonly id="qrInfoLink">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="copyQRCodeLink('${qrCodeUrl}')">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>
+                                To generate an image QR code, make sure the <code>simple-qrcode</code> package is installed:
+                                <code>composer require simplesoftwareio/simple-qrcode</code>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" onclick="generateQRCodeAgain(${meetingId})">
+                                <i class="fas fa-redo me-1"></i> Try Again
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.getElementById('qrCodeModalContainer').innerHTML = modalHtml;
+        const modal = new bootstrap.Modal(document.getElementById('qrCodeInfoModal'));
+        modal.show();
+    }
+
+    // Function to try generating QR code again
+    function generateQRCodeAgain(meetingId) {
+        const modal = bootstrap.Modal.getInstance(document.getElementById('qrCodeInfoModal'));
+        if (modal) {
+            modal.hide();
+        }
+        generateQRCode(meetingId);
+    }
+
     // Function to copy QR code link
     function copyQRCodeLink(url) {
         navigator.clipboard.writeText(url)
@@ -627,19 +701,97 @@
                 const copyBtn = event.target;
                 const originalText = copyBtn.innerHTML;
                 copyBtn.innerHTML = '<i class="fas fa-check me-1"></i>Copied!';
-                copyBtn.classList.remove('btn-success');
+                copyBtn.classList.remove('btn-success', 'btn-outline-secondary');
                 copyBtn.classList.add('btn-info');
                 
                 setTimeout(() => {
                     copyBtn.innerHTML = originalText;
                     copyBtn.classList.remove('btn-info');
-                    copyBtn.classList.add('btn-success');
+                    if (copyBtn.classList.contains('btn-outline-secondary')) {
+                        copyBtn.classList.add('btn-outline-secondary');
+                    } else {
+                        copyBtn.classList.add('btn-success');
+                    }
                 }, 2000);
             })
             .catch(err => {
                 console.error('Failed to copy: ', err);
                 alert('Failed to copy link to clipboard');
             });
+    }
+
+    // Function to view existing QR code
+    function viewQRCode(meetingId, qrCodeUrl) {
+        fetch(`/admin/staff-meetings/${meetingId}/qr-info`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    if (data.is_image) {
+                        // Show image QR code
+                        const modalHtml = `
+                            <div class="modal fade" id="viewQRModal" tabindex="-1">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">View QR Code</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body text-center">
+                                            <img src="${data.qr_code_url || qrCodeUrl}" 
+                                                 alt="QR Code" 
+                                                 class="img-fluid mb-3" 
+                                                 style="max-width: 300px; max-height: 300px;">
+                                            <p class="text-muted small">Scan this QR code to mark attendance</p>
+                                            <div class="mt-3">
+                                                <a href="${data.qr_code_url || qrCodeUrl}" 
+                                                   class="btn btn-primary btn-sm me-2" 
+                                                   download="meeting_qr_code.png" 
+                                                   target="_blank">
+                                                    <i class="fas fa-download me-1"></i> Download
+                                                </a>
+                                                <button type="button" 
+                                                        class="btn btn-success btn-sm" 
+                                                        onclick="copyQRCodeLink('${data.qr_code_url || qrCodeUrl}')">
+                                                    <i class="fas fa-copy me-1"></i> Copy Link
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        
+                        document.getElementById('qrCodeModalContainer').innerHTML = modalHtml;
+                        const modal = new bootstrap.Modal(document.getElementById('viewQRModal'));
+                        modal.show();
+                    } else {
+                        // Show text QR code info
+                        showQRCodeInfoModal(data.attendance_url || qrCodeUrl, 'QR Code Information');
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching QR info:', error);
+                // Fallback: Just open the URL in new tab
+                window.open(qrCodeUrl, '_blank');
+            });
+    }
+
+    // Function to check QR code type and handle view button click
+    function handleViewQRCode(meetingId, qrCodeUrl) {
+        // Check if URL ends with image extension
+        const isImage = qrCodeUrl.toLowerCase().match(/\.(png|jpg|jpeg|gif|bmp|svg|webp)$/);
+        
+        if (isImage) {
+            // Open image in new tab
+            window.open(qrCodeUrl, '_blank');
+        } else {
+            // Show info modal for non-image files
+            viewQRCode(meetingId, qrCodeUrl);
+        }
     }
 </script>
 @endpush

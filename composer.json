@@ -8,6 +8,7 @@
         "php": "^8.2",
         "barryvdh/laravel-dompdf": "^3.1",
         "browner12/helpers": "^3.5",
+        "chillerlan/php-qrcode": "^5.0",
         "guzzlehttp/guzzle": "^7.2",
         "intervention/image": "^2.7",
         "laravel/framework": "^11.0",
@@ -16,6 +17,7 @@
         "maatwebsite/excel": "^3.1",
         "php-flasher/flasher-laravel": "^2.1",
         "rats/zkteco": "^002.0",
+        "simplesoftwareio/simple-qrcode": "^4.2",
         "spatie/laravel-permission": "^6.23",
         "wildside/userstamps": "^2.3",
         "yajra/laravel-datatables-oracle": "^11.0"

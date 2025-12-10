@@ -81,18 +81,12 @@
                                                     <div class="col-lg-6 pt-1">
                                                         <div class="mb-1">
                                                             <label class="p-0 text-start text-black">Depertment Name</label>
-                                                            <select name="department_id"
-                                                                class="form-select form-select-sm form-select-solid"
-                                                                data-control="select2" data-placeholder="Select an option"
-                                                                data-allow-clear="true">
-                                                                <option></option>
-                                                                <!-- Blank option for placeholder -->
-                                                                @foreach ($employeeDepartments as $employeeDepartment)
-                                                            <option value="{{ $employeeDepartment->id }}">
-                                                                {{ $employeeDepartment->name }}
-                                                            </option>
-                                                            @endforeach
-                                                            </select>
+                                                            <select name="department">
+                                                                    <option value="[]">Select Department</option>
+                                                                    @foreach ($employeeDepartments as $employeeDepartment)
+                                                                        <option value='["{{ $employeeDepartment->id }}"]'>{{ $employeeDepartment->name }}</option>
+                                                                    @endforeach
+                                                                </select>
                                                             <div class="invalid-feedback"> Please Enter Name.</div>
                                                         </div>
                                                     </div>

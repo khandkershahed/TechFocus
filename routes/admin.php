@@ -1005,3 +1005,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
         
         return $pdf->download('attendance-report-' . date('Y-m-d') . '.pdf');
     })->name('admin.attendance.export.pdf');
+
+Route::get('/admin/staff-meetings/{id}/qr-info', [StaffMeetingHRController::class, 'getQRCodeInfo'])
+    ->name('admin.staff-meetings.qr-info');
+
+    

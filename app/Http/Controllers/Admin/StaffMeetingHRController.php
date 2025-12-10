@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\MeetingReminderMail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
-
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 class StaffMeetingHRController extends Controller
 {
     /**
@@ -179,37 +179,101 @@ class StaffMeetingHRController extends Controller
     /**
      * Generate attendance QR code
      */
-    public function generateAttendanceQR(Request $request, $id)
-    {
-        Log::info('generateAttendanceQR called for meeting ID: ' . $id);
+  public function generateAttendanceQR(Request $request, $id)
+{
+    Log::info('generateAttendanceQR called for meeting ID: ' . $id);
+    
+    try {
+        $meeting = StaffMeeting::findOrFail($id);
         
-        try {
-            $meeting = StaffMeeting::findOrFail($id);
-            
-            // Generate QR code for attendance
-            $qrCodePath = $this->generateQRCode($meeting);
-            
-            $meeting->update(['attendance_qr_code' => $qrCodePath]);
-            
-            $qrCodeUrl = Storage::url($qrCodePath);
-            Log::info('QR code generated at: ' . $qrCodePath);
-            
-            return response()->json([
-                'success' => true,
-                'message' => 'Attendance QR code generated successfully.',
-                'qr_code_url' => $qrCodeUrl
-            ]);
-            
-        } catch (\Exception $e) {
-            Log::error('Error in generateAttendanceQR: ' . $e->getMessage() . ' - ' . $e->getTraceAsString());
-            
-            return response()->json([
-                'success' => false,
-                'message' => 'Server error: ' . $e->getMessage()
-            ], 500);
-        }
+        // Generate QR code for attendance
+        $qrCodePath = $this->generateQRCode($meeting);
+        
+        // Store the path
+        $meeting->update(['attendance_qr_code' => $qrCodePath]);
+        
+        // Generate URL for the QR code image
+        $qrCodeUrl = Storage::url($qrCodePath);
+        Log::info('QR code generated at: ' . $qrCodePath . ', URL: ' . $qrCodeUrl);
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Attendance QR code generated successfully.',
+            'qr_code_url' => $qrCodeUrl,
+            'qr_code_path' => $qrCodePath
+        ]);
+        
+    } catch (\Exception $e) {
+        Log::error('Error in generateAttendanceQR: ' . $e->getMessage() . ' - ' . $e->getTraceAsString());
+        
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to generate QR code: ' . $e->getMessage()
+        ], 500);
     }
+}
 
+
+/**
+ * Check if file is an image
+ */
+private function isImageFile($path)
+{
+    $extension = pathinfo($path, PATHINFO_EXTENSION);
+    $imageExtensions = ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'svg', 'webp'];
+    return in_array(strtolower($extension), $imageExtensions);
+}
+
+/**
+ * Get QR code image URL
+ */
+private function getQRCodeImageUrl($path)
+{
+    if (!$path) {
+        return null;
+    }
+    
+    // If it's an image file, return the storage URL
+    if ($this->isImageFile($path)) {
+        return Storage::url($path);
+    }
+    
+    // If it's a text file, return a placeholder
+    return asset('images/qr-placeholder.png');
+}
+/**
+ * Get QR code information
+ */
+public function getQRCodeInfo($id)
+{
+    $meeting = StaffMeeting::findOrFail($id);
+    
+    if (!$meeting->attendance_qr_code) {
+        return response()->json([
+            'success' => false,
+            'message' => 'No QR code generated yet.'
+        ], 404);
+    }
+    
+    // Check if it's an image file
+    $extension = pathinfo($meeting->attendance_qr_code, PATHINFO_EXTENSION);
+    $imageExtensions = ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'svg', 'webp'];
+    $isImage = in_array(strtolower($extension), $imageExtensions);
+    
+    $response = [
+        'success' => true,
+        'qr_code_url' => Storage::url($meeting->attendance_qr_code),
+        'is_image' => $isImage,
+        'extension' => $extension
+    ];
+    
+    // If it's a text file, read its content
+    if (!$isImage && Storage::exists($meeting->attendance_qr_code)) {
+        $response['attendance_url'] = Storage::get($meeting->attendance_qr_code);
+    }
+    
+    return response()->json($response);
+}
     /**
      * View attendance QR code
      */
@@ -415,41 +479,69 @@ class StaffMeetingHRController extends Controller
         }
     }
 
-    /**
-     * Helper: Generate QR code
-     */
-    private function generateQRCode($meeting)
-    {
+/**
+ * Generate QR code for attendance
+ */
+private function generateQRCode($meeting)
+{
+    try {
+        // Generate attendance URL with token
+        $token = md5($meeting->id . config('app.key'));
+        $attendanceUrl = url('/meeting/attendance/' . $meeting->id . '/' . $token);
+        
+        Log::info('Generating QR code for URL: ' . $attendanceUrl);
+        
+        // Create directory if it doesn't exist
+        $directory = 'public/qr_codes';
+        if (!Storage::exists($directory)) {
+            Storage::makeDirectory($directory);
+        }
+        
+        // Generate unique filename
+        $fileName = 'qr_codes/meeting_' . $meeting->id . '_' . time() . '.png';
+        $fullPath = 'public/' . $fileName;
+        $storagePath = storage_path('app/' . $fullPath);
+        
+        // Make sure directory exists
+        $dir = dirname($storagePath);
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755, true);
+        }
+        
+        // For chillerlan/php-qrcode 5.0.5
+        $options = new \chillerlan\QRCode\QROptions([
+            'version' => 5,
+            'outputType' => 'png',
+            'scale' => 10,
+            'imageBase64' => false,
+            'imageTransparent' => false,
+        ]);
+        
+        $qrcode = new \chillerlan\QRCode\QRCode($options);
+        $qrcode->render($attendanceUrl, $storagePath);
+        
+        Log::info('QR code image created at: ' . $fullPath);
+        
+        return $fileName;
+        
+    } catch (\Exception $e) {
+        Log::error('Error in generateQRCode: ' . $e->getMessage() . ' - ' . $e->getTraceAsString());
+        
+        // Fallback to online API
         try {
-            // Generate attendance URL with token
-            $token = md5($meeting->id . config('app.key'));
-            $attendanceUrl = url('/meeting/attendance/' . $meeting->id . '/' . $token);
+            return $this->generateQRCodeWithOnlineAPI($meeting, $attendanceUrl);
+        } catch (\Exception $fallbackError) {
+            Log::error('Fallback also failed: ' . $fallbackError->getMessage());
             
-            Log::info('Generating QR code for URL: ' . $attendanceUrl);
-            
-            // Create directory if it doesn't exist
-            $directory = 'public/qr_codes';
-            if (!Storage::exists($directory)) {
-                Storage::makeDirectory($directory);
-            }
-            
-            // Generate QR code content (simplified version)
-            // In production, you might want to use a QR code library
-            // For now, create a simple text file with the URL
+            // Ultimate fallback: text file
             $fileName = 'qr_codes/meeting_' . $meeting->id . '_' . time() . '.txt';
             $fullPath = 'public/' . $fileName;
-            
             Storage::put($fullPath, $attendanceUrl);
             
-            Log::info('QR code file created at: ' . $fullPath);
-            
             return $fileName;
-            
-        } catch (\Exception $e) {
-            Log::error('Error in generateQRCode helper: ' . $e->getMessage() . ' - ' . $e->getTraceAsString());
-            throw $e;
         }
     }
+}
     public function showAttendanceQR($meetingId, $hash)
 {
     $meeting = StaffMeeting::findOrFail($meetingId);
