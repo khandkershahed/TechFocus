@@ -62,41 +62,40 @@
                             </div>
                             
                             <!-- Date and Time Section -->
-                                    <div class="col-md-12 mb-4 mt-2">
-                                        <h5 class="border-bottom pb-2"><i class="fas fa-clock me-2"></i>Date & Time</h5>
-                                    </div>
+                            <div class="col-md-12 mb-4 mt-2">
+                                <h5 class="border-bottom pb-2"><i class="fas fa-clock me-2"></i>Date & Time</h5>
+                            </div>
 
-                                    <!-- Meeting Date -->
-                                    <div class="col-md-4 mb-3">
-                                        <label for="date" class="form-label">Meeting Date *</label>
-                                        <input type="date" class="form-control @error('date') is-invalid @enderror" 
-                                            id="date" name="date" value="{{ old('date', date('Y-m-d')) }}" required>
-                                        @error('date')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
+                            <!-- Meeting Date -->
+                            <div class="col-md-4 mb-3">
+                                <label for="date" class="form-label">Meeting Date *</label>
+                                <input type="date" class="form-control @error('date') is-invalid @enderror" 
+                                       id="date" name="date" value="{{ old('date', date('Y-m-d')) }}" required>
+                                @error('date')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
 
-                                    <!-- Start Time -->
-                                    <div class="col-md-4 mb-3">
-                                        <label for="start_time" class="form-label">Start Time *</label>
-                                        <input type="time" class="form-control @error('start_time') is-invalid @enderror" 
-                                            id="start_time" name="start_time" value="{{ old('start_time', '09:00') }}" required>
-                                        @error('start_time')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
+                            <!-- Start Time -->
+                            <div class="col-md-4 mb-3">
+                                <label for="start_time" class="form-label">Start Time *</label>
+                                <input type="time" class="form-control @error('start_time') is-invalid @enderror" 
+                                       id="start_time" name="start_time" value="{{ old('start_time', '09:00') }}" required>
+                                @error('start_time')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
 
-                                    <!-- End Time -->
-                                    <div class="col-md-4 mb-3">
-                                        <label for="end_time" class="form-label">End Time *</label>
-                                        <input type="time" class="form-control @error('end_time') is-invalid @enderror" 
-                                            id="end_time" name="end_time" value="{{ old('end_time', '10:00') }}" required>
-                                        @error('end_time')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                            
-                           
+                            <!-- End Time -->
+                            <div class="col-md-4 mb-3">
+                                <label for="end_time" class="form-label">End Time *</label>
+                                <input type="time" class="form-control @error('end_time') is-invalid @enderror" 
+                                       id="end_time" name="end_time" value="{{ old('end_time', '10:00') }}" required>
+                                @error('end_time')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                                                       
                             <!-- Location & Platform -->
                             <div class="col-md-12 mb-4 mt-2">
                                 <h5 class="border-bottom pb-2"><i class="fas fa-map-marker-alt me-2"></i>Location & Platform</h5>
@@ -310,29 +309,36 @@
         var today = new Date().toISOString().split('T')[0];
         $('#date').attr('min', today);
         
-        // Date and time pickers
-        flatpickr("#start_time", {
-            enableTime: true,
-            dateFormat: "Y-m-d H:i",
-            minDate: "today"
-        });
+        // REMOVED the flatpickr initialization for time fields
+        // These were causing issues because time fields don't need flatpickr
         
-        flatpickr("#end_time", {
-            enableTime: true,
-            dateFormat: "Y-m-d H:i",
-            minDate: "today"
-        });
-        
-        // Validate end time is after start time
+        // Validate end time is after start time (with date consideration)
         $('form').submit(function(e) {
-            var startTime = new Date($('#start_time').val());
-            var endTime = new Date($('#end_time').val());
+            var date = $('#date').val();
+            var startTime = $('#start_time').val();
+            var endTime = $('#end_time').val();
             
-            if (endTime <= startTime) {
+            // Combine date and time for comparison
+            var startDateTime = new Date(date + 'T' + startTime + ':00');
+            var endDateTime = new Date(date + 'T' + endTime + ':00');
+            
+            if (endDateTime <= startDateTime) {
                 alert('End time must be after start time');
                 e.preventDefault();
                 return false;
             }
+            
+            // Also validate that meeting date is not in the past
+            var selectedDate = new Date(date);
+            var today = new Date();
+            today.setHours(0, 0, 0, 0); // Set to beginning of day
+            
+            if (selectedDate < today) {
+                alert('Meeting date cannot be in the past');
+                e.preventDefault();
+                return false;
+            }
+            
             return true;
         });
     });
