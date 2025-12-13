@@ -109,7 +109,47 @@ public function create()
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    // public function store(Request $request)
+    // {
+    //     $validated = $request->validate([
+    //         'status' => 'nullable|string',
+    //         'date' => 'nullable|date',
+    //         'start_time' => 'nullable',
+    //         'end_time' => 'nullable',
+    //         'duration' => 'nullable',
+    //         'area' => 'nullable|string',
+    //         'location' => 'nullable|string|max:255',
+    //         'transport' => 'nullable|string',
+    //         'cost' => 'nullable|numeric|min:0',
+    //         'meeting_type' => 'nullable|string',
+    //         'company' => 'nullable|string',
+    //         'contact_person' => 'nullable|string',
+    //         'contact_number' => 'nullable|string',
+    //         'value' => 'nullable|numeric|min:0',
+    //         'value_status' => 'nullable|string',
+    //         'purpose' => 'nullable|string',
+    //         'employee_department_id' => 'nullable|exists:employee_departments,id',
+    //         'comments' => 'nullable|string',
+    //     ]);
+
+    //     // Auto-calculate duration if start_time and end_time are provided
+    //     if ($request->start_time && $request->end_time) {
+    //         $start = \Carbon\Carbon::parse($request->start_time);
+    //         $end = \Carbon\Carbon::parse($request->end_time);
+    //         $validated['duration'] = $start->diff($end)->format('%H:%I:%S');
+    //     }
+
+    //     // Set admin_id from authenticated admin
+    //     $validated['admin_id'] = auth('admin')->id();
+    //     $validated['employee_department_id']
+    // = auth('admin')->user()->employee_department_id;
+
+    //     MovementRecord::create($validated);
+
+    //    return redirect()->route('admin.movement.index')
+    //  ->with('success', 'Movement record created successfully.');
+    // }
+ public function store(Request $request)
     {
         $validated = $request->validate([
             'status' => 'nullable|string',
@@ -141,13 +181,21 @@ public function create()
 
         // Set admin_id from authenticated admin
         $validated['admin_id'] = auth('admin')->id();
-        $validated['employee_department_id']
-    = auth('admin')->user()->employee_department_id;
+        $validated['employee_department_id'] = auth('admin')->user()->employee_department_id;
 
         MovementRecord::create($validated);
 
-       return redirect()->route('admin.movement.index')
-     ->with('success', 'Movement record created successfully.');
+        // Check if request came from modal (AJAX or normal)
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Movement record created successfully.'
+            ]);
+        }
+
+        return redirect()->route('staff.dashboard')
+            ->with('success', 'Movement record created successfully.')
+            ->with('modal_success', true); // Add flag for modal close
     }
 
     /**

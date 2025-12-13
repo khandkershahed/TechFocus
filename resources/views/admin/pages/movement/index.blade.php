@@ -129,9 +129,9 @@ function autoSubmit(){
 }
 </script>
 
-    <div class="text-end mb-2">
+    {{-- <div class="text-end mb-2">
         <a href="{{ route('admin.movement.create') }}" class="add-btn">+ Add Movement</a>
-    </div>
+    </div> --}}
 
     <!-- TABLE -->
     <div class="table-wrapper">

@@ -1,5 +1,4 @@
 <?php
-// app/Helpers/helpers.php
 
 if (!function_exists('formatFileSize')) {
     function formatFileSize($bytes, $precision = 2) {

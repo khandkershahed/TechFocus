@@ -257,7 +257,30 @@
                                 @enderror
                                 <small class="text-muted">You can upload multiple files (max 5MB each)</small>
                                 
-                              <!-- Existing Attachments -->
+                                {{-- <!-- Existing Attachments -->
+                                @if($staffMeeting->attachments && count($staffMeeting->attachments) > 0)
+                                    <div class="mt-3">
+                                        <h6 class="mb-2">Current Attachments:</h6>
+                                        <ul class="list-group">
+                                            @foreach($staffMeeting->attachments as $attachment)
+                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        <i class="fas fa-file me-2 text-primary"></i>
+                                                        {{ $attachment['name'] }}
+                                                    </div>
+                                                    <a href="{{ Storage::url($attachment['path']) }}" 
+                                                       target="_blank" 
+                                                       class="btn btn-sm btn-info">
+                                                        <i class="fas fa-download"></i>
+                                                    </a>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                @endif
+                            </div>
+                        </div> --}}
+<!-- Existing Attachments -->
 @php
     $existingAttachments = [];
     if ($staffMeeting->attachments) {
@@ -289,7 +312,6 @@
         </ul>
     </div>
 @endif
-
                           <!-- Status -->
                             <div class="col-md-12 mb-4 mt-2">
                                 <h5 class="border-bottom pb-2"><i class="fas fa-tasks me-2"></i>Status</h5>
