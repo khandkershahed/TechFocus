@@ -263,17 +263,17 @@
                                 </select>
                             </div>
 
-                            <!-- Company Section with Modal -->
-                            <div class="col-md-8 mb-3">
-                                <label class="form-label">Company *</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" name="company" id="companyInput" readonly required>
-                                    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#companyDetailsModal">
-                                        <i class="bi bi-building"></i> Add Company Details
-                                    </button>
-                                </div>
-                                <small class="text-muted">Click the button to add company details</small>
+                          <!-- Company Section with Modal -->
+                        <div class="col-md-8 mb-3">
+                            <label class="form-label">Company *</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="company" id="companyInput" required>
+                                <button type="button" class="btn btn-secondary w-25 py-2" data-bs-toggle="modal" data-bs-target="#companyDetailsModal">
+                                    <i class="bi bi-building"></i> Add Details
+                                </button>
                             </div>
+                            <small class="text-muted">Type company name or click button for full details</small>
+                        </div>
 
                             <!-- Hidden fields for company details -->
                             <input type="hidden" name="contact_person" id="contactPersonField">
@@ -346,10 +346,10 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-12 mb-3">
+                        {{-- <div class="col-md-12 mb-3">
                             <label class="form-label">Company Name *</label>
                             <input type="text" class="form-control" id="companyName" placeholder="Enter company name" required>
-                        </div>
+                        </div> --}}
 
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Contact Person *</label>
