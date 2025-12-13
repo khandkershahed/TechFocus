@@ -221,14 +221,6 @@
                                 </select>
                             </div>
 
-                              <!-- Company Section with Modal -->
-
-    <div class="input-group">
-        <button type="button" class="btn btn-secondary w-25 py-2" data-bs-toggle="modal" data-bs-target="#companyDetailsModal">
-            <i class="bi bi-building"></i> Company
-        </button>
-    </div>
-
                             <!-- Time Management -->
                             <div class="col-md-3 mb-3">
                                 <label class="form-label">Time</label>
@@ -272,8 +264,17 @@
                             </div>
 
                             <!-- Company Section with Modal -->
-                
-                               
+                            <div class="col-md-8 mb-3">
+                                <label class="form-label">Company *</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="company" id="companyInput" readonly required>
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#companyDetailsModal">
+                                        <i class="bi bi-building"></i> Add Company Details
+                                    </button>
+                                </div>
+                                <small class="text-muted">Click the button to add company details</small>
+                            </div>
+
                             <!-- Hidden fields for company details -->
                             <input type="hidden" name="contact_person" id="contactPersonField">
                             <input type="hidden" name="contact_number" id="contactNumberField">
