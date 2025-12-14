@@ -623,12 +623,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('/{link}', [ShareLinkController::class, 'destroy'])->name('destroy');
         });
 
-        // // Admin dashboard
-        // Route::get('/dashboard', function () {
-        //     return view('admin.dashboard');
-        // })->name('dashboard');
-
-        // Add other admin routes here...
     });
 });
 
@@ -639,10 +633,7 @@ Route::prefix('share')->name('share.links.')->group(function () {
          ->name('show');
 });
 
-// // Optional: Redirect root to admin dashboard if needed
-// // Route::get('/', function () {
-// //     return redirect()->route('admin.dashboard');
-// });
+
 
 Route::prefix('admin')->name('admin.')->group(function () {
     // Admin middleware group
@@ -673,10 +664,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('/{link}', [ShareLinkController::class, 'destroy'])->name('destroy');
         });
 
-        // // Admin dashboard
-        // Route::get('/dashboard', function () {
-        //     return view('admin.dashboard');
-        // })->name('dashboard');
     });
 });
 
@@ -717,8 +704,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/{userId}/edit', [UserPermissionController::class, 'edit'])->name('edit');
             Route::delete('/{userId}/{permissionId}', [UserPermissionController::class, 'destroy'])->name('destroy');
         });
-        
-        // Your existing routes...
+     
     });
 });
 
@@ -737,9 +723,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
     });
 });
 
-//acount modeul 
-
-
 // Admin Routes Group
 Route::prefix('admin')->name('admin.')->group(function () {
  // Resource Routes
@@ -752,24 +735,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('account-profit-losses', AccountProfitLossController::class);
     Route::resource('accounts-payables', AccountsPayableController::class);
     Route::get('/account-dashboard', [AccountController::class, 'dashboard'])->name('account.dashboard');
-
-    // Additional route for dynamic dropdown
-    // Route::get('/expense-types-by-category/{categoryId}', [ExpenseController::class, 'getTypesByCategory'])->name('expense-types.by-category');
-        // Additional route for dynamic expense type dropdown
   Route::get('/expense-types-by-category/{categoryId}', [ExpenseController::class, 'getTypesByCategory'])
     ->name('expenses.types.by-category');
    
 });
  Route::get('/account-comparison', [AccountComparisonController::class, 'comparison'])->name('account.comparison');
-// Add this inside the admin prefix group
-
-// Admin routes for share links
-// Route::prefix('admin/principals/{principal}/share-links')->name('admin.principals.share-links.')->group(function () {
-//     Route::get('/', [ShareLinkController::class, 'index'])->name('index');
-//     Route::get('/create', [ShareLinkController::class, 'create'])->name('create');
-//     Route::post('/', [ShareLinkController::class, 'store'])->name('store');
-//     Route::delete('/{shareLink}', [ShareLinkController::class, 'destroy'])->name('destroy');
-// });
 
 Route::prefix('admin/principals/{principal}/share-links')->name('admin.principals.share-links.')->group(function () {
     Route::get('/', [ShareLinkController::class, 'index'])->name('index');
@@ -788,17 +758,6 @@ Route::post('/admin/principals/{principal}/notes/{activity}/reply', [PrincipalCo
 Route::post('/admin/principals/{principal}/notes/{activity}/pin', [PrincipalController::class, 'togglePin'])->name('admin.principals.notes.pin');
 Route::delete('/admin/principals/{principal}/notes/{activity}', [PrincipalController::class, 'deleteNote'])->name('admin.principals.notes.delete');
 
-
-// Route::resource('movement', \App\Http\Controllers\Admin\MovementRecordController::class)->names([
-//     'index' => 'admin.movement.index',
-//     'create' => 'admin.movement.create',
-//     'store' => 'admin.movement.store',
-//     'show' => 'admin.movement.show',
-//     'edit' => 'admin.movement.edit',
-//     'update' => 'admin.movement.update',
-//     'destroy' => 'admin.movement.destroy',
-// ]);
-// In your routes file
 Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
     
     // Movement routes
@@ -823,23 +782,6 @@ Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
 
     });
 });
-
-// // routes/web.php or routes/admin.php
-// Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
-    
-//     // Movement routes
-//     Route::prefix('movement')->group(function () {
-//         Route::get('/edit-requests', [MovementRecordController::class, 'editRequests'])
-//             ->name('admin.movement.edit-requests');
-        
-//         Route::post('/{id}/approve-edit', [MovementRecordController::class, 'approveEdit'])
-//             ->name('admin.movement.approve-edit');
-        
-//         Route::post('/{id}/reject-edit', [MovementRecordController::class, 'rejectEdit'])
-//             ->name('admin.movement.reject-edit');
-       
-//     });
-// });
 
 Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
     
@@ -989,8 +931,8 @@ Route::get('/admin/staff-meetings/{id}/qr-info', [StaffMeetingHRController::clas
     ->name('admin.staff-meetings.qr-info');
 
     // QR Code Attendance Routes
-Route::get('/meeting/attendance/{meetingId}/{token}', [\App\Http\Controllers\Admin\AttendanceController::class, 'scanQRAttendance'])
+Route::get('/meeting/attendance/{meetingId}/{token}', [AttendanceController::class, 'scanQRAttendance'])
     ->name('attendance.scan.qr');
 
-Route::post('/meeting/attendance/{meetingId}/{token}/submit', [\App\Http\Controllers\Admin\AttendanceController::class, 'submitQRAttendance'])
+Route::post('/meeting/attendance/{meetingId}/{token}/submit', [AttendanceController::class, 'submitQRAttendance'])
     ->name('attendance.submit.qr');

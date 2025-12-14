@@ -4,147 +4,143 @@
 @section('content')
 @include('frontend.pages.brandPage.partials.page_header')
 
-    <!-- content start -->
-    <div class="container">
-        <!-- Product Details -->
-        <div class="row align-items-center">
-            <div class="px-0 col-lg-12 col-sm-12">
-                <div class="p-5 border-0 card rounded-0">
-                    <div class="row">
-                        <div class="col-lg-6 col-sm-12">
-                            <div class="xzoom-container w-100">
-                                <!-- Main Image Default Show -->
-                                <a data-fancybox-trigger="gallery" href="javascript:;">
-                                    <img class="xzoom" id="xzoom-default" src="{{ asset($product->thumbnail) }}"
-                                        xoriginal="{{ asset($product->thumbnail) }}" width="100%" height="100%" />
-                                </a>
-                                <!-- Main Image Default Show End-->
-                                @if ($product->multiImages->isNotEmpty())
-                                    <div class="xzoom-thumbs">
-                                        @foreach ($product->multiImages as $multi_image)
-                                            <a class="popup" data-fancybox="gallery"
-                                                href="{{ asset($multi_image->photo) }}"><img class="xzoom-gallery"
-                                                    src="{{ asset($multi_image->photo) }}"
-                                                    xpreview="{{ asset($multi_image->photo) }}" width="80"
-                                                    height="80" />
-                                            </a>
-                                        @endforeach
-                                    </div>
-                                @endif
-                            </div>
+<!-- content start -->
+<div class="container">
+    <!-- Product Details -->
+    <div class="row align-items-center">
+        <div class="px-0 col-lg-12 col-sm-12">
+            <div class="p-5 border-0 card rounded-0">
+                <div class="row">
+                    <div class="col-lg-6 col-sm-12">
+                        <div class="xzoom-container w-100">
+                            <a data-fancybox-trigger="gallery" href="javascript:;">
+                                <img class="xzoom" id="xzoom-default" src="{{ asset($product->thumbnail) }}"
+                                    xoriginal="{{ asset($product->thumbnail) }}" width="100%" height="100%" />
+                            </a>
+                            @if ($product->multiImages->isNotEmpty())
+                                <div class="xzoom-thumbs">
+                                    @foreach ($product->multiImages as $multi_image)
+                                        <a class="popup" data-fancybox="gallery"
+                                            href="{{ asset($multi_image->photo) }}"><img class="xzoom-gallery"
+                                                src="{{ asset($multi_image->photo) }}"
+                                                xpreview="{{ asset($multi_image->photo) }}" width="80"
+                                                height="80" />
+                                        </a>
+                                    @endforeach
+                                </div>
+                            @endif
                         </div>
-                        <div class="col-lg-6 col-sm-12">
-                            <div>
-                                <div class="px-2 row gx-0">
-                                    <h4>{{ $product->name }}</h4>
-                                    <ul class="p-1 d-flex align-items-center">
-                                        @if (!empty($product->sku_code))
-                                            <li class="me-2">
-                                                <p class="p-0 m-0" style="color: rgb(134, 134, 134);font-size: 13px;"><i
-                                                        class="fa-solid fa-tag me-1 single-bp-tag"></i><strong>NG #
-                                                    </strong>{{ $product->sku_code }}</p>
-                                            </li>
-                                        @endif
-                                        @if (!empty($product->mf_code))
-                                            <li class="me-2">
-                                                <p class="p-0 m-0" style="color: rgb(134, 134, 134);font-size: 13px;"><i
-                                                        class="fa-solid fa-tag me-1 single-bp-tag"></i><strong>MF #
-                                                    </strong>{{ $product->mf_code }}</p>
-                                            </li>
-                                        @endif
-                                        @if (!empty($product->product_code))
-                                            <li class="me-1">
-                                                <p class="p-0 m-0" style="color: rgb(134, 134, 134);font-size: 13px;"><i
-                                                        class="fa-solid fa-tag me-1 single-bp-tag"></i><strong>SKU #
-                                                    </strong>{{ $product->product_code }}
-                                                </p>
-                                            </li>
-                                        @endif
-                                    </ul>
-                                </div>
-                                <p class="pt-3">Manufactured by:</p>
-                                <div class="d-flex align-items-center fw-bold">
-                                    <h2 class="font-monospace">{{ $product->brand->name }}</h2>
-                                </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-12">
+                        <div>
+                            <div class="px-2 row gx-0">
+                                <h4>{{ $product->name }}</h4>
+                                <ul class="p-1 d-flex align-items-center">
+                                    @if (!empty($product->sku_code))
+                                        <li class="me-2">
+                                            <p class="p-0 m-0 text-muted small">
+                                                <i class="fa-solid fa-tag me-1 single-bp-tag"></i><strong>NG #</strong>
+                                                {{ $product->sku_code }}
+                                            </p>
+                                        </li>
+                                    @endif
+                                    @if (!empty($product->mf_code))
+                                        <li class="me-2">
+                                            <p class="p-0 m-0 text-muted small">
+                                                <i class="fa-solid fa-tag me-1 single-bp-tag"></i><strong>MF #</strong>
+                                                {{ $product->mf_code }}
+                                            </p>
+                                        </li>
+                                    @endif
+                                    @if (!empty($product->product_code))
+                                        <li class="me-1">
+                                            <p class="p-0 m-0 text-muted small">
+                                                <i class="fa-solid fa-tag me-1 single-bp-tag"></i><strong>SKU #</strong>
+                                                {{ $product->product_code }}
+                                            </p>
+                                        </li>
+                                    @endif
+                                </ul>
+                            </div>
+                            <p class="pt-3">Manufactured by:</p>
+                            <div class="d-flex align-items-center fw-bold">
+                                <h2 class="font-monospace">{{ $product->brand->name }}</h2>
+                            </div>
 
-                                <!-- Seller Info -->
-                                <div class="pt-2">
-                                    <span><i class="fa-regular main-color fa-clock"></i> This
-                                        seller generally responds in under 48 hours</span>
-                                </div>
+                            <!-- Seller Info -->
+                            <div class="pt-2">
+                                <span><i class="fa-regular main-color fa-clock"></i> This seller generally responds in under 48 hours</span>
+                            </div>
 
-                                <!-- Button Area -->
-                                <div class="mt-5">
-                                    <button class="btn btn-outline-danger rounded-0 add-to-cart-btn" 
-                                            data-product-id="{{ $product->id }}"
-                                            data-product-name="{{ $product->name }}"
-                                            data-product-sku="{{ $product->sku_code ?? '' }}"
-                                            data-product-brand="{{ $product->brand->name ?? '' }}"
-                                            data-product-thumbnail="{{ asset($product->thumbnail) }}">
-                                        <i class="fas fa-shopping-cart me-2"></i> $ Request Price Options
-                                    </button> 
-
-                                    <button class="w-auto btn signin rounded-0 add-to-cart-and-rfq"
-                                        data-product-id="{{ $product->id }}" data-product-name="{{ $product->name }}"
+                            <!-- Button Area -->
+                            <div class="mt-5">
+                                <!-- Both buttons will now redirect to RFQ page -->
+                                <button class="btn btn-outline-danger rounded-0 add-to-rfq-btn" 
+                                        data-product-id="{{ $product->id }}"
+                                        data-product-name="{{ $product->name }}"
                                         data-product-sku="{{ $product->sku_code ?? '' }}"
                                         data-product-brand="{{ $product->brand->name ?? '' }}"
                                         data-product-thumbnail="{{ asset($product->thumbnail) }}">
-                                        <i class="fas fa-shopping-cart me-2"></i>
-                                        Get Quote
-                                    </button>
-                                </div>
+                                    <i class="fas fa-shopping-cart me-2"></i> $ Request Price Options
+                                </button> 
 
-                                <!-- Product Short Desc -->
-                                <div class="mt-3">
-                                    <p class="text-justify">
-                                        {!! $product->short_desc !!}
-                                    </p>
-                                </div>
+                                <button class="w-auto btn signin rounded-0 add-to-rfq-btn"
+                                    data-product-id="{{ $product->id }}" data-product-name="{{ $product->name }}"
+                                    data-product-sku="{{ $product->sku_code ?? '' }}"
+                                    data-product-brand="{{ $product->brand->name ?? '' }}"
+                                    data-product-thumbnail="{{ asset($product->thumbnail) }}">
+                                    <i class="fas fa-shopping-cart me-2"></i>
+                                    Get Quote
+                                </button>
+                            </div>
 
-                                <!-- Others Button -->
-                                <div class="mt-4 d-flex main-color align-items-center">
-                                    @auth
-                                        <form action="{{ route('favorites.store', $product->id) }}" method="POST"
-                                            class="me-2">
-                                            @csrf
-                                            <button type="submit" class="p-0 btn btn-link text-decoration-none main-color">
-                                                <i class="fa-solid fa-heart me-1"></i>
-                                                @if (Auth::user()->favourites->contains('product_id', $product->id))
-                                                    Added to Favorites
-                                                @else
-                                                    Add to Favorites
-                                                @endif
-                                            </button>
-                                        </form>
-                                    @else
-                                        <div class="dropdown me-2">
-                                            <a class="p-0 btn btn-link dropdown-toggle text-decoration-none main-color"
-                                                href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <i class="fa-solid fa-heart me-1"></i> Add to Favorites
-                                            </a>
-                                            <ul class="dropdown-menu">
-                                                <li>
-                                                    <a class="dropdown-item"
-                                                        href="{{ route('login', ['type' => 'client', 'redirect_to' => url()->current(), 'product_id' => $product->id]) }}">
-                                                        Login as Client
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item"
-                                                        href="{{ route('partner.login', ['type' => 'partner', 'redirect_to' => url()->current(), 'product_id' => $product->id]) }}">
-                                                        Login as Partner
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    @endauth
+                            <!-- Product Short Desc -->
+                            <div class="mt-3">
+                                <p class="text-justify">{!! $product->short_desc !!}</p>
+                            </div>
 
-                                    <div class="d-flex main-color">
-                                        <a href="{{ route('products.compare.add', $product->id) }}"
-                                            class="text-decoration-none main-color me-2">
-                                            <i class="fa-solid fa-table-columns me-1"></i> Compare this product
+                            <!-- Others Button -->
+                            <div class="mt-4 d-flex main-color align-items-center">
+                                @auth
+                                    <form action="{{ route('favorites.store', $product->id) }}" method="POST" class="me-2">
+                                        @csrf
+                                        <button type="submit" class="p-0 btn btn-link text-decoration-none main-color">
+                                            <i class="fa-solid fa-heart me-1"></i>
+                                            @if (Auth::user()->favourites->contains('product_id', $product->id))
+                                                Added to Favorites
+                                            @else
+                                                Add to Favorites
+                                            @endif
+                                        </button>
+                                    </form>
+                                @else
+                                    <div class="dropdown me-2">
+                                        <a class="p-0 btn btn-link dropdown-toggle text-decoration-none main-color"
+                                            href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="fa-solid fa-heart me-1"></i> Add to Favorites
                                         </a>
+                                        <ul class="dropdown-menu">
+                                            <li>
+                                                <a class="dropdown-item"
+                                                    href="{{ route('login', ['type' => 'client', 'redirect_to' => url()->current(), 'product_id' => $product->id]) }}">
+                                                    Login as Client
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item"
+                                                    href="{{ route('partner.login', ['type' => 'partner', 'redirect_to' => url()->current(), 'product_id' => $product->id]) }}">
+                                                    Login as Partner
+                                                </a>
+                                            </li>
+                                        </ul>
                                     </div>
+                                @endauth
+
+                                <div class="d-flex main-color">
+                                    <a href="{{ route('products.compare.add', $product->id) }}"
+                                        class="text-decoration-none main-color me-2">
+                                        <i class="fa-solid fa-table-columns me-1"></i> Compare this product
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -160,9 +156,7 @@
                     <div class="text-justify bg-white shadow-sm" style="font-size: 16px">
                         <h2 class="description-title">Specification</h2>
                         <div class="specification-areas-brand ps-4">
-                            <div class="">
-                                <p>{!! $product->specification !!}</p>
-                            </div>
+                            <p>{!! $product->specification !!}</p>
                         </div>
                     </div>
                 </div>
@@ -171,105 +165,40 @@
                 <div class="{{ !empty($product->specification) ? 'col-lg-6' : 'col-lg-12' }} pe-0">
                     <div class="text-justify bg-white shadow-sm" style="font-size: 16px; line-height: 1.5">
                         <h2 class="description-title">Description</h2>
-                        <div class="specification-areas-brand">
-                            <div class="px-4">
-                                <p>{!! $product->overview !!}</p>
-                            </div>
+                        <div class="specification-areas-brand px-4">
+                            <p>{!! $product->overview !!}</p>
                         </div>
                     </div>
                 </div>
             @endif
         </div>
     </div>
+</div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    <script>
-        $(document).ready(function() {
-            console.log('Cart system initialized');
-
-            // Test the debug endpoint first
-            function testCartSystem() {
-                console.log('Testing cart system...');
-                $.get('{{ route('cart.debug') }}', function(response) {
-                    console.log('Debug test result:', response);
-                }).fail(function(xhr) {
-                    console.error('Debug test failed:', xhr);
-                });
-            }
-        });
-
-       
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
 $(document).ready(function() {
-    console.log('%c[Cart + RFQ System Initialized]', 'color: green; font-weight: bold;');
 
-    /** ============================
-     *  ✅ CART: Add Product (Request Price)
-     * ============================ */
-    $('.add-to-cart-btn').off('click').on('click', function(e) {
+    console.log('%c[RFQ System Initialized]', 'color: green; font-weight: bold;');
+
+    function handleAjaxError(xhr) {
+        let message = 'Something went wrong. Please try again.';
+        if (xhr.status === 419) {
+            message = 'Session expired. Reloading...';
+            Swal.fire({ icon: 'warning', title: 'Session Expired', text: message, showConfirmButton: false, timer: 1500, willClose: () => location.reload() });
+            return;
+        }
+        if (xhr.status === 500) message = 'Server error occurred.';
+        else if (xhr.responseJSON?.message) message = xhr.responseJSON.message;
+        Swal.fire({ icon: 'error', title: 'Error', text: message });
+    }
+
+    // Add to RFQ for both buttons
+    $('.add-to-rfq-btn').off('click').on('click', function(e) {
         e.preventDefault();
-
-        const button = $(this);
-        const productId = button.data('product-id');
-        const productName = button.data('product-name');
-        const originalHtml = button.html();
-
-        console.log('[Cart] Adding product:', { id: productId, name: productName });
-
-        button.html('<i class="fa fa-spinner fa-spin"></i> Adding...').prop('disabled', true);
-
-        $.ajax({
-            url: '{{ route('cart.add') }}',
-            method: 'POST',
-            data: {
-                _token: '{{ csrf_token() }}',
-                product_id: productId,
-                quantity: 1 // Always 1 item only
-            },
-            success: function(response) {
-                console.log('[Cart] Success:', response);
-
-                if (response.success) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Added to Cart!',
-                        text: response.message || `${productName} added to your cart.`,
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-
-                    // Update cart count
-                    if (response.cart_count !== undefined) {
-                        $('.cart-count, #cart-count').text(response.cart_count);
-                        console.log('[Cart] Updated count:', response.cart_count);
-                    }
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: response.message || 'Could not add product to cart.'
-                    });
-                }
-            },
-            error: function(xhr) {
-                console.error('[Cart] AJAX Error:', xhr);
-                handleAjaxError(xhr, 'cart');
-            },
-            complete: function() {
-                button.html(originalHtml).prop('disabled', false);
-            }
-        });
-    });
-
-    /** ============================
-     *  ✅ RFQ: Add Product + Redirect
-     * ============================ */
-    $('.add-to-cart-and-rfq').off('click').on('click', function(e) {
-        e.preventDefault();
-
         const button = $(this);
         const productId = button.data('product-id');
         const productName = button.data('product-name');
@@ -277,208 +206,45 @@ $(document).ready(function() {
         const productBrand = button.data('product-brand');
         const originalHtml = button.html();
 
-        console.log('[RFQ] Adding product to RFQ:', { id: productId, name: productName });
-
         button.html('<i class="fa fa-spinner fa-spin"></i> Processing...').prop('disabled', true);
 
         $.ajax({
-            url: '{{ route('cart.add') }}',
+            url: '{{ route("cart.add") }}',
             method: 'POST',
-            data: {
-                _token: '{{ csrf_token() }}',
-                product_id: productId,
-                quantity: 1,
-                is_rfq: true
-            },
-            success: function(response) {
-                console.log('[RFQ] Success:', response);
-
-                if (response.success) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Added to RFQ!',
-                        text: 'Redirecting to quotation form...',
-                        showConfirmButton: false,
-                        timer: 1200,
-                        willClose: () => {
-                            // ✅ Use redirect_url from controller response
-                            if(response.redirect_url) {
-                                window.location.href = response.redirect_url;
-                            } else {
-                                window.location.href = '{{ route('rfq') }}?source=session';
-                            }
-                        }
-                    });
-
-                    // Update RFQ count dynamically
-                    if(response.rfq_count !== undefined) {
-                        $('.rfq-count, #rfq-count').text(response.rfq_count);
-                        console.log('[RFQ] Updated count:', response.rfq_count);
+            data: { _token: '{{ csrf_token() }}', product_id: productId, quantity: 1, is_rfq: true },
+            success: function(res) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Added to RFQ!',
+                    text: 'Redirecting to quotation form...',
+                    showConfirmButton: false,
+                    timer: 1200,
+                    willClose: () => {
+                        window.location.href = res.redirect_url || '{{ route("rfq") }}';
                     }
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: response.message || 'Could not add product to RFQ.'
-                    });
-                }
+                });
             },
             error: function(xhr) {
-                console.error('[RFQ] AJAX Error:', xhr);
-
-                // Fallback redirect if session RFQ fails
-                const rfqUrl = '{{ route('rfq') }}' +
+                const rfqUrl = '{{ route("rfq") }}' +
                     '?product_id=' + productId +
                     '&product_name=' + encodeURIComponent(productName) +
                     '&product_sku=' + encodeURIComponent(productSku) +
                     '&product_brand=' + encodeURIComponent(productBrand) +
                     '&source=product_page&direct=true';
-
                 Swal.fire({
                     icon: 'warning',
                     title: 'Redirecting to RFQ',
                     text: 'Session unavailable — redirecting directly...',
                     showConfirmButton: false,
                     timer: 1500,
-                    willClose: () => {
-                        window.location.href = rfqUrl;
-                    }
+                    willClose: () => window.location.href = rfqUrl
                 });
             },
-            complete: function() {
-                button.html(originalHtml).prop('disabled', false);
-            }
+            complete: function() { button.html(originalHtml).prop('disabled', false); }
         });
     });
 
-    /** ============================
-     *  ⚙️ Helper: Update Counts
-     * ============================ */
-    function updateCartCount() {
-        $.get('{{ route('cart.count') }}', function(response) {
-            if (response.success) $('.cart-count, #cart-count').text(response.count);
-        });
-    }
-
-    function updateRfqCount() {
-        $.get('{{ route('cart.rfq-count') }}', function(response) {
-            if (response.success) $('.rfq-count, #rfq-count').text(response.count);
-        });
-    }
-
-    /** ============================
- *  ✅ Ask Price / Add to RFQ
- * ============================ */
-$('.add-to-cart-btn').off('click').on('click', function(e) {
-    e.preventDefault();
-
-    const button = $(this);
-    const productId = button.data('product-id');
-    const productName = button.data('product-name');
-    const productSku = button.data('product-sku');
-    const productBrand = button.data('product-brand');
-    const originalHtml = button.html();
-
-    button.html('<i class="fa fa-spinner fa-spin"></i> Processing...').prop('disabled', true);
-
-    $.ajax({
-        url: '{{ route('cart.add') }}',
-        method: 'POST',
-        data: {
-            _token: '{{ csrf_token() }}',
-            product_id: productId,
-            quantity: 1,
-            is_rfq: true // 🔑 Important: mark as RFQ
-        },
-        success: function(response) {
-            if (response.success) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Added to Cart!',
-                    text: 'Redirecting to quotation form...',
-                    showConfirmButton: false,
-                    timer: 1200,
-                    willClose: () => {
-                        // 🔑 Use redirect_url from controller
-                        if(response.redirect_url){
-                            window.location.href = response.redirect_url;
-                        } else {
-                            window.location.href = '{{ route('rfq') }}?source=session';
-                        }
-                    }
-                });
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: response.message || 'Could not add product to RFQ.'
-                });
-            }
-        },
-        error: function(xhr) {
-            // Fallback direct redirect
-            const rfqUrl = '{{ route('rfq') }}' +
-                '?product_id=' + productId +
-                '&product_name=' + encodeURIComponent(productName) +
-                '&product_sku=' + encodeURIComponent(productSku) +
-                '&product_brand=' + encodeURIComponent(productBrand) +
-                '&source=product_page&direct=true';
-
-            Swal.fire({
-                icon: 'warning',
-                title: 'Redirecting to RFQ',
-                text: 'Session unavailable — redirecting directly...',
-                showConfirmButton: false,
-                timer: 1500,
-                willClose: () => window.location.href = rfqUrl
-            });
-        },
-        complete: function() {
-            button.html(originalHtml).prop('disabled', false);
-        }
-    });
-});
-
-
-    /** ============================
-     *  ⚙️ Helper: Handle AJAX Errors
-     * ============================ */
-    function handleAjaxError(xhr, context) {
-        let message = 'Something went wrong. Please try again.';
-
-        if (xhr.status === 419) {
-            message = 'Session expired. Reloading...';
-            Swal.fire({
-                icon: 'warning',
-                title: 'Session Expired',
-                text: message,
-                showConfirmButton: false,
-                timer: 1500,
-                willClose: () => location.reload()
-            });
-            return;
-        }
-
-        if (xhr.status === 500) {
-            message = 'Server error occurred. Check console for details.';
-        } else if (xhr.responseJSON?.message) {
-            message = xhr.responseJSON.message;
-        }
-
-        Swal.fire({
-            icon: 'error',
-            title: context === 'cart' ? 'Cart Error' : 'RFQ Error',
-            text: message
-        });
-    }
-
-    /** ============================
-     *  Initialize counts on page load
-     * ============================ */
-    updateCartCount();
-    updateRfqCount();
 });
 </script>
- 
 
 @endsection

@@ -17,16 +17,58 @@ class RfqProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        return view('admin.pages.rfqProduct.index', [
-            'rfqProducts' => RfqProduct::with(['rfq', 'product'])->paginate(10), // Added pagination
-            'rfqs'        => Rfq::all(),
-            'products'    => Product::all(),
-            'brands'      => Brand::all(),
-        ]);
+    // public function index()
+    // {
+    //     return view('admin.pages.rfqProduct.index', [
+    //         'rfqProducts' => RfqProduct::with(['rfq', 'product'])->paginate(10), // Added pagination
+    //         'rfqs'        => Rfq::all(),
+    //         'products'    => Product::all(),
+    //         'brands'      => Brand::all(),
+    //     ]);
+    // }
+public function index()
+{
+    $totalRfq = Rfq::count();
+
+    $thisMonthCount = Rfq::whereMonth('created_at', now()->month)
+        ->whereYear('created_at', now()->year)
+        ->count();
+
+    $lastMonthCount = Rfq::whereMonth('created_at', now()->subMonth()->month)
+        ->whereYear('created_at', now()->subMonth()->year)
+        ->count();
+
+    // Growth percentage
+    if ($lastMonthCount > 0) {
+        $growth = (($thisMonthCount - $lastMonthCount) / $lastMonthCount) * 100;
+    } else {
+        $growth = $thisMonthCount > 0 ? 100 : 0;
     }
 
+   $pendingCount = Rfq::where('status', 'pending')->count();
+    $quotedCount  = Rfq::where('status', 'quoted')->count();
+    $lostCount    = Rfq::where('status', 'lost')->count();
+
+    return view('admin.pages.rfqProduct.index', [
+        // existing data
+        'rfqProducts'   => RfqProduct::with(['rfq', 'product'])->paginate(10),
+        'rfqs'          => Rfq::all(),
+        'products'      => Product::all(),
+        'brands'        => Brand::all(),
+
+        // dashboard cards
+        'totalRfq'      => $totalRfq,
+        'thisMonthRfq'  => $thisMonthCount,
+        'lastMonthRfq'  => $lastMonthCount,
+        'growthPercent' => round($growth, 1),
+        'todayDate'     => now()->format('d M, Y'),
+
+        // 🔥 status counts
+        'pendingCount'  => $pendingCount,
+        'quotedCount'   => $quotedCount,
+        'lostCount'     => $lostCount,
+    ]);
+}
     /**
      * Show the form for creating a new resource.
      */

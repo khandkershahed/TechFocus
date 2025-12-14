@@ -37,7 +37,7 @@ Route::get('about-us', [SiteController::class, 'about'])->name('about');
 // Route::get('services', [SiteController::class, 'service'])->name('service');
 Route::get('subscription', [SiteController::class, 'subscription'])->name('subscription');
 Route::get('brand/list', [SiteController::class, 'brandList'])->name('brand.list');
-Route::get('/brands/search', [App\Http\Controllers\Frontend\SiteController::class, 'brandSearch'])
+Route::get('/brands/search', [SiteController::class, 'brandSearch'])
     ->name('brand.search');
 
 
@@ -135,17 +135,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
   Route::get('/partner/dashboard', [DashboardController::class, 'index'])->name('partner.dashboard');
 });
 
-
-
-// Route::prefix('partner')->middleware(['auth'])->group(function () {
-//     Route::get('/dashboard', [DashboardController::class, 'index'])->name('partner.dashboard');
-//     Route::post('/dashboard/update', [DashboardController::class, 'updateProfile'])->name('partner.profile.update');
-//     Route::post('/logout', [DashboardController::class, 'logout'])->name('partner.logout');
-// });
-
-
-
-
 // Client Dashboard
 Route::middleware(['auth', 'verified'])->group(function () {
 
@@ -166,12 +155,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 //add favourite 
-
-
-
-
-
-
 Route::middleware(['auth'])->group(function () {
     Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');
     Route::post('/favorites/{product}', [FavoriteController::class, 'store'])->name('favorites.store');
@@ -334,7 +317,7 @@ Route::prefix('principal')
 
 
 // Public contact route (for frontend users)
-Route::post('/contact', [App\Http\Controllers\ContactController::class, 'store'])->name('contact.store');
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
 // Admin contact routes (separate - requires admin auth)
 Route::prefix('administrator')->name('admin.')->middleware(['auth:admin', 'verified'])->group(function () {
@@ -381,6 +364,5 @@ Route::prefix('principal')
         
         // Separate Dashboard Overview
         Route::get('/dashboard/overview', [PrincipalDashboardController::class, 'overview'])
-            ->name('dashboard.overview');
-            
+            ->name('dashboard.overview');        
     });

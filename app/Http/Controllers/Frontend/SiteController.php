@@ -34,70 +34,7 @@ use App\Models\Country;
 
 class SiteController extends Controller
 {
-    /**
-     * Home Page
-     */
-    //     public function homePage()
-    //     {
-    //         $banners = PageBanner::where('page_name', 'home')->get();
-    // // dd($banner);
-    //         $data = [
-    //             'banners'        => $banners,
-    //             'categories'    => Category::with('children.children.children.children.children.children.children.children.children.children')
-    //                                 ->where('is_parent', '1')
-    //                                 ->get(['id', 'parent_id', 'name', 'slug']),
-    //             'products'      => Product::with('brand')
-    //                                 ->where('status', 'active')
-    //                                 ->inRandomOrder()
-    //                                 ->limit(5)
-    //                                 ->get(),
-    //             'news_trends'   => NewsTrend::where('type', 'trends')->limit(4)->get(),
-    //             'solutions'     => SolutionDetail::latest()->limit(4)->get(),
-    //         ];
-
-    //         return view('frontend.pages.home.index', $data);
-    //     }
-
-
-    // public function homePage()
-    // {
-    //     $banners = PageBanner::where('page_name', 'home')->get();
-
-    //     // Get dynamic homepage data
-    //     $homePage = HomePage::with(['country'])->first();
-
-    //     // Get featured products for section two if homepage data exists
-    //     $featuredProducts = collect();
-    //     if ($homePage && $homePage->section_two_products) {
-    //         $featuredProducts = Product::whereIn('id', $homePage->section_two_products)->get();
-    //     }
-
-    //     // Get news trends for section four if homepage data exists
-    //     $sectionFourNews = collect();
-    //     if ($homePage && $homePage->section_four_contents) {
-    //         $sectionFourNews = NewsTrend::whereIn('id', $homePage->section_four_contents)->get();
-    //     }
-
-    //     $data = [
-    //         'banners'        => $banners,
-    //         'categories'    => Category::with('children.children.children.children.children.children.children.children.children.children')
-    //             ->where('is_parent', '1')
-    //             ->get(['id', 'parent_id', 'name', 'slug']),
-    //         'products'      => Product::with('brand')
-    //             ->where('status', 'active')
-    //             ->inRandomOrder()
-    //             ->limit(5)
-    //             ->get(),
-    //         'news_trends'   => NewsTrend::where('type', 'trends')->limit(4)->get(),
-    //         'solutions'     => SolutionDetail::latest()->limit(4)->get(),
-    //         // Add dynamic homepage data
-    //         'homePage' => $homePage,
-    //         'featuredProducts' => $featuredProducts,
-    //         'sectionFourNews' => $sectionFourNews,
-    //     ];
-
-    //     return view('frontend.pages.home.index', $data);
-    // }
+   
 public function homePage()
 {
     $banners = PageBanner::where('page_name', 'home')->get();
@@ -559,60 +496,6 @@ public function brandList()
         }
     }
 
-    // public function ProductSearch(Request $request)
-    // {
-    //     $searchTerm = $request->input('q');
-
-    //     // Get products with brand and solutions
-    //     $products = Product::with(['brand', 'solutions'])
-    //         ->where('name', 'LIKE', '%' . $searchTerm . '%')
-    //         ->where('status', 'active')
-    //         ->paginate(12);
-
-    //     // Collect dynamic categories
-
-    //     $allCategoryIds = [];
-    //     foreach ($products as $product) {
-    //         if (is_array($product->category_id)) {
-    //             $allCategoryIds = array_merge($allCategoryIds, $product->category_id);
-    //         } elseif (is_string($product->category_id)) {
-    //             $decoded = json_decode($product->category_id, true);
-    //             if (is_array($decoded)) {
-    //                 $allCategoryIds = array_merge($allCategoryIds, $decoded);
-    //             }
-    //         }
-    //     }
-    //     $categories = Category::whereIn('id', array_unique($allCategoryIds))
-    //         ->get(['id', 'name', 'slug']);
-
-    //     // Collect dynamic solutions
-
-    //     $solutions = collect();
-    //     foreach ($products as $product) {
-    //         $solutions = $solutions->merge($product->solutions);
-    //     }
-    //     $solutions = $solutions->unique('id');
-
-    //     // Collect dynamic news & trends by product IDs
-
-    //     $productIds = $products->pluck('id')->toArray();
-    //     $news_trends = NewsTrend::where('type', 'trends')
-    //         ->whereIn('product_id', $productIds) 
-    //         ->get();
-
-
-
-
-    //         // Return to search view
-
-    //     return view('frontend.pages.search.index', compact(
-    //         'products',
-    //         'searchTerm',
-    //         'categories',
-    //         'solutions',
-    //         'news_trends'
-    //     ));
-    // }
     public function ProductSearch(Request $request)
 {
     $searchTerm = $request->input('q');

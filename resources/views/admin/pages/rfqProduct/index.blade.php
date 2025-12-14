@@ -67,34 +67,40 @@
           <div class="p-5 row align-items-center">
             <div class="col-8">
               <h1 class="mb-1 text-white fw-bold">Total RFQ</h1>
-              <p class="mb-3 opacity-75 fs-6">14 Dec, 2025</p>
+                        <p class="mb-3 opacity-75 fs-6">{{ $todayDate }}</p>
 
-              <div class="pt-5">
-                <span class="mb-1 d-block fs-6 fw-medium">
-                  This Month: <strong>13</strong>
-                  <span class="text-success ms-2 fw-bold">▲ 44.4%</span>
-                </span>
-                <span class="d-block fs-6 fw-medium">
-                  Last Month: <strong>9</strong>
-                </span>
-              </div>
-            </div>
+                        <div class="pt-5">
+                          <span class="mb-1 d-block fs-6 fw-medium">
+                            This Month:
+                            <strong>{{ $thisMonthRfq }}</strong>
 
-            <div class="col-4 text-end">
-              <div
-                class="mx-auto bg-white rfq-amount text-primary rounded-circle d-flex align-items-center justify-content-center"
-                style="
-                  width: 70px;
-                  height: 70px;
-                  font-size: 3rem;
-                  font-weight: 700;
-                  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-                "
-              >
-                74
-              </div>
-            </div>
-          </div>
+                            <span class="{{ $growthPercent >= 0 ? 'text-success' : 'text-danger' }} ms-2 fw-bold">
+                              {{ $growthPercent >= 0 ? '▲' : '▼' }} {{ abs($growthPercent) }}%
+                            </span>
+                          </span>
+
+                          <span class="d-block fs-6 fw-medium">
+                            Last Month: <strong>{{ $lastMonthRfq }}</strong>
+                          </span>
+                        </div>
+
+                                    </div>
+
+                                    <div class="col-4 text-end">
+                              <div
+                                        class="mx-auto bg-white rfq-amount text-primary rounded-circle d-flex align-items-center justify-content-center"
+                                        style="
+                                          width: 70px;
+                                          height: 70px;
+                                          font-size: 3rem;
+                                          font-weight: 700;
+                                          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+                                        "
+                                      >
+                                        {{ $totalRfq }}
+                                      </div>
+                                    </div>
+                                     </div>
 
           <!-- Decorative Circle -->
           <div class="top-0 mt-3 opacity-25 position-absolute end-0 me-3">
@@ -146,7 +152,10 @@
                     "
                   >
                     <span>Pending</span>
-                    <span class="badge bg-primary rounded-pill">74</span>
+                   <span class="badge bg-primary rounded-pill">
+                      {{ $pendingCount }}
+                    </span>
+
                   </a>
                 </li>
                 <li class="mb-2 nav-item w-100">
@@ -162,7 +171,9 @@
                     "
                   >
                     <span>Quoted</span>
-                    <span class="badge bg-success rounded-pill">2</span>
+                  <span class="badge bg-success rounded-pill">
+                  {{ $quotedCount }}
+                </span>
                   </a>
                 </li>
                 <li class="nav-item w-100">
@@ -178,7 +189,10 @@
                     "
                   >
                     <span>Lost</span>
-                    <span class="badge bg-danger rounded-pill">0</span>
+                    <span class="badge bg-danger rounded-pill">
+                      {{ $lostCount }}
+                    </span>
+
                   </a>
                 </li>
               </ul>
