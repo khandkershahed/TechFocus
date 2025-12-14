@@ -936,3 +936,7 @@ Route::get('/meeting/attendance/{meetingId}/{token}', [AttendanceController::cla
 
 Route::post('/meeting/attendance/{meetingId}/{token}/submit', [AttendanceController::class, 'submitQRAttendance'])
     ->name('attendance.submit.qr');
+// Add these routes
+Route::get('/rfqProducts-filter', [RfqProductController::class, 'filter'])->name('rfqProducts.filter');
+Route::get('/rfqProducts-details/{id}', [RfqProductController::class, 'getRfqDetails'])->name('rfqProducts.details');
+

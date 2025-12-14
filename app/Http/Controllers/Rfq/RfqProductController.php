@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Rfq;
 
 use Storage;
 use App\Models\Rfq;
+use App\Models\User;
 use App\Models\Admin\Brand;
 use App\Models\Admin\Product;
 use Illuminate\Http\Request; 
 use App\Models\Admin\Category;
 use App\Models\Rfq\RfqProduct;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RfqProductRequest;
 
@@ -26,7 +28,7 @@ class RfqProductController extends Controller
     //         'brands'      => Brand::all(),
     //     ]);
     // }
-public function index()
+public function index(Request $request)
 {
     $totalRfq = Rfq::count();
 
@@ -45,28 +47,256 @@ public function index()
         $growth = $thisMonthCount > 0 ? 100 : 0;
     }
 
-   $pendingCount = Rfq::where('status', 'pending')->count();
+    // Update these to include null status as pending
+    $pendingCount = Rfq::where(function($query) {
+        $query->where('status', 'pending')
+              ->orWhereNull('status');
+    })->count();
+    
     $quotedCount  = Rfq::where('status', 'quoted')->count();
     $lostCount    = Rfq::where('status', 'lost')->count();
 
-    return view('admin.pages.rfqProduct.index', [
-        // existing data
-        'rfqProducts'   => RfqProduct::with(['rfq', 'product'])->paginate(10),
-        'rfqs'          => Rfq::all(),
-        'products'      => Product::all(),
-        'brands'        => Brand::all(),
+    $rfqByCountry = Rfq::select(
+        DB::raw('COALESCE(country, "Unknown") as country'),
+        DB::raw('COUNT(*) as total')
+    )
+    ->groupBy('country')
+    ->orderByDesc('total')
+    ->get();
 
-        // dashboard cards
+    // Filter section 
+    // Countries from RFQs
+    $countries = Rfq::whereNotNull('country')
+        ->distinct()
+        ->orderBy('country')
+        ->pluck('country');
+
+    // Salesmen (adjust model if needed)
+    $salesmen = User::whereIn('id', function ($q) {
+            $q->select('user_id')->from('rfqs')->whereNotNull('user_id');
+        })
+        ->orderBy('name')
+        ->pluck('name');
+
+    // Companies from RFQs
+    $companies = Rfq::whereNotNull('company_name')
+        ->distinct()
+        ->orderBy('company_name')
+        ->pluck('company_name');
+
+    // Years from RFQ created_at
+    $years = Rfq::selectRaw('YEAR(created_at) as year')
+        ->distinct()
+        ->orderByDesc('year')
+        ->pluck('year');
+
+    // Months (fixed list, but auto-select current month)
+    $months = [
+        1  => 'January',
+        2  => 'February',
+        3  => 'March',
+        4  => 'April',
+        5  => 'May',
+        6  => 'June',
+        7  => 'July',
+        8  => 'August',
+        9  => 'September',
+        10 => 'October',
+        11 => 'November',
+        12 => 'December',
+    ];
+
+    $currentYear  = now()->year;
+    $currentMonth = now()->month;
+
+    // Get filter parameters from request
+    $country = $request->get('country');
+    $salesman = $request->get('salesman');
+    $company = $request->get('company');
+    $search = $request->get('search');
+    $status = $request->get('status', 'pending'); // Default to pending tab
+
+    // Base query for RFQs
+    $rfqQuery = Rfq::query();
+
+    // Apply filters if provided
+    if ($country) {
+        $rfqQuery->where('country', $country);
+    }
+
+    if ($salesman) {
+        // Assuming salesman is stored in user relationship
+        // First, get user ID from name
+        $salesmanUser = User::where('name', $salesman)->first();
+        if ($salesmanUser) {
+            $rfqQuery->where('user_id', $salesmanUser->id);
+        }
+    }
+
+    if ($company) {
+        $rfqQuery->where('company_name', $company);
+    }
+
+    if ($search) {
+        $rfqQuery->where(function($q) use ($search) {
+            $q->where('rfq_code', 'like', "%{$search}%")
+              ->orWhere('deal_code', 'like', "%{$search}%")
+              ->orWhere('company_name', 'like', "%{$search}%")
+              ->orWhere('name', 'like', "%{$search}%")
+              ->orWhere('email', 'like', "%{$search}%");
+        });
+    }
+    
+    // GET RFQs based on status with filters applied
+    $pendingRfqs = (clone $rfqQuery)->with([
+            'rfqProducts' => function($query) {
+                $query->with('product');
+            },
+            'user'
+        ])
+        ->where(function($query) {
+            $query->where('status', 'pending')
+                  ->orWhereNull('status');
+        })
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+    // Also get quoted and lost RFQs for their respective tabs
+    $quotedRfqs = (clone $rfqQuery)->with(['rfqProducts', 'user'])
+        ->where('status', 'quoted')
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+    $lostRfqs = (clone $rfqQuery)->with(['rfqProducts', 'user'])
+        ->where('status', 'lost')
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+    return view('admin.pages.rfqProduct.index', [
+        // Dashboard counts (unfiltered - for dashboard display)
         'totalRfq'      => $totalRfq,
         'thisMonthRfq'  => $thisMonthCount,
         'lastMonthRfq'  => $lastMonthCount,
         'growthPercent' => round($growth, 1),
         'todayDate'     => now()->format('d M, Y'),
+        
+        // Archive 
+        'years'        => $years,
+        'months'       => $months,
+        'currentYear'  => $currentYear,
+        'currentMonth' => $currentMonth,
+        
+        // Status counts (filtered)
+        'pendingCount'  => $pendingRfqs->count(),
+        'quotedCount'   => $quotedRfqs->count(),
+        'lostCount'     => $lostRfqs->count(),
+        
+        // Filter options
+        'countries' => $countries,
+        'salesmen'  => $salesmen,
+        'companies' => $companies,
+        
+        // RFQ by country (filtered - update this too)
+        'rfqByCountry'  => $rfqByCountry,
+        
+        // RFQ Lists (filtered)
+        'pendingRfqs' => $pendingRfqs,
+        'quotedRfqs'  => $quotedRfqs,
+        'lostRfqs'    => $lostRfqs,
+        
+        // Original variables (keep if needed elsewhere)
+        'rfqProducts'   => RfqProduct::with(['rfq', 'product'])->paginate(10),
+        'rfqs'          => Rfq::all(),
+        'products'      => Product::all(),
+        'brands'        => Brand::all(),
+        
+        // Current filter values (for UI)
+        'currentCountry' => $country,
+        'currentSalesman' => $salesman,
+        'currentCompany' => $company,
+        'currentSearch' => $search,
+    ]);
+}
 
-        // 🔥 status counts
-        'pendingCount'  => $pendingCount,
-        'quotedCount'   => $quotedCount,
-        'lostCount'     => $lostCount,
+public function filter(Request $request)
+{
+    $status = $request->get('status', 'pending');
+    
+    $query = Rfq::query();
+    
+    // Apply filters
+    if ($country = $request->get('country')) {
+        $query->where('country', $country);
+    }
+    
+    if ($salesman = $request->get('salesman')) {
+        $salesmanUser = User::where('name', $salesman)->first();
+        if ($salesmanUser) {
+            $query->where('user_id', $salesmanUser->id);
+        }
+    }
+    
+    if ($company = $request->get('company')) {
+        $query->where('company_name', 'like', "%{$company}%");
+    }
+    
+    if ($search = $request->get('search')) {
+        $query->where(function($q) use ($search) {
+            $q->where('rfq_code', 'like', "%{$search}%")
+              ->orWhere('deal_code', 'like', "%{$search}%")
+              ->orWhere('company_name', 'like', "%{$search}%")
+              ->orWhere('name', 'like', "%{$search}%")
+              ->orWhere('email', 'like', "%{$search}%");
+        });
+    }
+    
+    // Apply year and month filters
+    if ($year = $request->get('year')) {
+        $query->whereYear('created_at', $year);
+        
+        if ($month = $request->get('month')) {
+            $query->whereMonth('created_at', $month);
+        }
+    }
+    
+    // Get RFQs based on status
+    if ($status === 'pending') {
+        $rfqs = $query->with(['rfqProducts.product', 'user'])
+            ->where(function($q) {
+                $q->where('status', 'pending')
+                  ->orWhereNull('status');
+            })
+            ->orderBy('created_at', 'desc')
+            ->get();
+    } else {
+        $rfqs = $query->with(['rfqProducts.product', 'user'])
+            ->where('status', $status)
+            ->orderBy('created_at', 'desc')
+            ->get();
+    }
+    
+    // Get counts for all statuses (using the same filters)
+    $baseQuery = clone $query;
+    $pendingCount = (clone $baseQuery)->where(function($q) {
+        $q->where('status', 'pending')->orWhereNull('status');
+    })->count();
+    
+    $quotedCount = (clone $baseQuery)->where('status', 'quoted')->count();
+    
+    $lostCount = (clone $baseQuery)->where('status', 'lost')->count();
+    
+    // Return JSON response
+    $html = view('admin.pages.rfqProduct.partials.rfq-list', [
+        'rfqs' => $rfqs,
+        'status' => $status
+    ])->render();
+    
+    return response()->json([
+        'success' => true,
+        'html' => $html,
+        'pendingCount' => $pendingCount,
+        'quotedCount' => $quotedCount,
+        'lostCount' => $lostCount
     ]);
 }
     /**
@@ -223,4 +453,24 @@ public function index()
         
         return redirect()->route('rfqProducts.index')->with('success', 'RFQ Product deleted successfully.');
     }
+
+public function getRfqDetails($id)
+{
+    $rfq = Rfq::with(['rfqProducts.product', 'user'])->findOrFail($id);
+    
+    // Calculate progress based on status
+    $progress = 0;
+    if ($rfq->status === 'pending') {
+        $progress = 20;
+    } elseif ($rfq->status === 'assigned') {
+        $progress = 50;
+    } elseif ($rfq->status === 'quoted') {
+        $progress = 80;
+    } elseif ($rfq->status === 'closed') {
+        $progress = 100;
+    }
+    
+    // Return the details view for a single RFQ
+    return view('admin.pages.rfqProduct.partials.rfq-list', compact('rfq', 'progress'));
+}
 }
