@@ -134,22 +134,22 @@
             </div>
             <div class="col-6">
               <ul class="border-0 nav nav-tabs flex-column rfq-tabs w-100">
-                {{-- <li class="mb-2 nav-item w-100">
+                 <li class="mb-2 nav-item w-100">
                   <a class="px-3 py-2 rounded nav-link {{ $activeTab == 'all' ? 'active' : '' }} rfq-all d-flex justify-content-between align-items-center"
                     href="{{ request()->fullUrlWithQuery(['status' => 'all']) }}"
-                    style="background: #f8f9fa; color: #495057; font-weight: 600;">
-                    <span>All RFQs</span>
-                    <span class="badge bg-secondary rounded-pill">{{ $totalRfq }}</span>
+                   style="background: #f0f4ff; color: #1a3fc0; font-weight: 600;">
+                    <span>Pending</span>
+                     <span class="badge bg-primary rounded-pill pending-count">{{ $totalRfq }}</span>
                   </a>
-                </li> --}}
-                <li class="mb-2 nav-item w-100">
+                </li> 
+                {{-- <li class="mb-2 nav-item w-100">
                   <a class="px-3 py-2 rounded nav-link {{ $activeTab == 'pending' ? 'active' : '' }} rfq-pending d-flex justify-content-between align-items-center"
                     href="{{ request()->fullUrlWithQuery(['status' => 'pending']) }}"
                     style="background: #f0f4ff; color: #1a3fc0; font-weight: 600;">
                     <span>Pending</span>
                     <span class="badge bg-primary rounded-pill pending-count">{{ $pendingCount }}</span>
                   </a>
-                </li>
+                </li> --}}
                 <li class="mb-2 nav-item w-100">
                   <a class="px-3 py-2 rounded nav-link {{ $activeTab == 'quoted' ? 'active' : '' }} rfq-quoted d-flex justify-content-between align-items-center"
                     href="{{ request()->fullUrlWithQuery(['status' => 'quoted']) }}"
