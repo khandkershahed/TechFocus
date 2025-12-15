@@ -172,4 +172,6 @@ class RfqProduct extends Model
     {
         return number_format($this->effective_price, 2);
     }
+
+    
 }

@@ -35,6 +35,7 @@ use App\Http\Controllers\Admin\HrPolicyController;
 use App\Http\Controllers\Admin\IndustryController;
 use App\Http\Controllers\Admin\UserRoleController;
 use App\Http\Controllers\Rfq\RfqProductController;
+
 use App\Http\Controllers\Admin\AboutPageController;
 use App\Http\Controllers\Admin\AttributeController;
 use App\Http\Controllers\Admin\BioMetricController;
@@ -936,7 +937,9 @@ Route::get('/meeting/attendance/{meetingId}/{token}', [AttendanceController::cla
 
 Route::post('/meeting/attendance/{meetingId}/{token}/submit', [AttendanceController::class, 'submitQRAttendance'])
     ->name('attendance.submit.qr');
-// Add these routes
-Route::get('/rfqProducts-filter', [RfqProductController::class, 'filter'])->name('rfqProducts.filter');
-Route::get('/rfqProducts-details/{id}', [RfqProductController::class, 'getRfqDetails'])->name('rfqProducts.details');
 
+
+Route::post('rfq-products/filter', [RfqProductController::class, 'filter'])->name('rfqProducts.filter');
+
+Route::post('/admin/rfq-products/create-missing', [RfqProductController::class, 'createMissingProducts'])
+    ->name('rfqProducts.createMissing');

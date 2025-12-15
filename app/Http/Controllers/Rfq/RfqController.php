@@ -29,6 +29,13 @@ use Illuminate\Support\Facades\Notification;
 class RfqController extends Controller
 {
 
+    
+public function index()
+{
+    $rfqs = Rfq::with('user', 'rfqProducts')->paginate(10);
+    return view('admin.pages.rfq.index', compact('rfqs'));
+}
+
 
     private function getRfqRecipients(): array
     {

@@ -172,6 +172,7 @@ public function index(Request $request)
         ->orderBy('created_at', 'desc')
         ->get();
 
+        
     return view('admin.pages.rfqProduct.index', [
         // Dashboard counts (unfiltered - for dashboard display)
         'totalRfq'      => $totalRfq,
