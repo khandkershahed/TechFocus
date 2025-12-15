@@ -11,23 +11,13 @@ use Illuminate\Http\Request;
 use App\Models\Admin\Category;
 use App\Models\Rfq\RfqProduct;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RfqProductRequest;
 
 class RfqProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    // public function index()
-    // {
-    //     return view('admin.pages.rfqProduct.index', [
-    //         'rfqProducts' => RfqProduct::with(['rfq', 'product'])->paginate(10), // Added pagination
-    //         'rfqs'        => Rfq::all(),
-    //         'products'    => Product::all(),
-    //         'brands'      => Brand::all(),
-    //     ]);
-    // }
+   
 public function index(Request $request)
 {
     $totalRfq = Rfq::count();
@@ -147,6 +137,16 @@ public function index(Request $request)
         });
     }
     
+    // Get ALL RFQs for the "All" view
+    $allRfqs = (clone $rfqQuery)->with([
+            'rfqProducts' => function($query) {
+                $query->with('product');
+            },
+            'user'
+        ])
+        ->orderBy('created_at', 'desc')
+        ->get();
+    
     // GET RFQs based on status with filters applied
     $pendingRfqs = (clone $rfqQuery)->with([
             'rfqProducts' => function($query) {
@@ -172,6 +172,20 @@ public function index(Request $request)
         ->orderBy('created_at', 'desc')
         ->get();
 
+    // Determine which RFQs to display based on status parameter
+    $displayRfqs = $allRfqs; // Default to all
+    $activeTab = 'all'; // Default active tab
+    
+    if ($status === 'pending') {
+        $displayRfqs = $pendingRfqs;
+        $activeTab = 'pending';
+    } elseif ($status === 'quoted') {
+        $displayRfqs = $quotedRfqs;
+        $activeTab = 'quoted';
+    } elseif ($status === 'lost') {
+        $displayRfqs = $lostRfqs;
+        $activeTab = 'failed'; // Note: tab ID is 'failed' but status is 'lost'
+    }
         
     return view('admin.pages.rfqProduct.index', [
         // Dashboard counts (unfiltered - for dashboard display)
@@ -200,10 +214,16 @@ public function index(Request $request)
         // RFQ by country (filtered - update this too)
         'rfqByCountry'  => $rfqByCountry,
         
-        // RFQ Lists (filtered)
+        // RFQ Lists
+        'allRfqs'     => $allRfqs,
         'pendingRfqs' => $pendingRfqs,
         'quotedRfqs'  => $quotedRfqs,
         'lostRfqs'    => $lostRfqs,
+        'displayRfqs' => $displayRfqs, // RFQs to display based on active tab
+        
+        // Active tab
+        'activeTab' => $activeTab,
+        'currentStatus' => $status,
         
         // Original variables (keep if needed elsewhere)
         'rfqProducts'   => RfqProduct::with(['rfq', 'product'])->paginate(10),
@@ -378,7 +398,88 @@ public function filter(Request $request)
             'brands'     => Brand::all(),
         ]);
     }
+/**
+ * Update RFQ status.
+ */
+/**
+ * Update RFQ status.
+ */
+public function updateStatus(Request $request, $id)
+{
+    try {
+        $request->validate([
+            'status' => 'required|in:pending,assigned,quoted,closed,lost',
+            'status_notes' => 'nullable|string|max:500',
+            'follow_up_date' => 'nullable|date'
+        ]);
+        
+        $rfq = Rfq::findOrFail($id);
+        
+        $oldStatus = $rfq->status;
+        $newStatus = $request->status;
+        
+        $updateData = [
+            'status' => $newStatus,
+            'status_notes' => $request->status_notes,
+            'follow_up_date' => $request->follow_up_date
+        ];
+        
+        // Add timestamps based on status
+        if ($newStatus === 'assigned' && $oldStatus !== 'assigned') {
+            $updateData['assigned_at'] = now();
+        }
+        
+        if ($newStatus === 'quoted' && $oldStatus !== 'quoted') {
+            $updateData['quoted_at'] = now();
+        }
+        
+        if ($newStatus === 'closed' && $oldStatus !== 'closed') {
+            $updateData['closed_at'] = now();
+        }
+        
+        if ($newStatus === 'lost' && $oldStatus !== 'lost') {
+            $updateData['lost_at'] = now();
+        }
+        
+        $rfq->update($updateData);
+        
+        // Log the status change
+        Log::info('RFQ status updated', [
+            'rfq_id' => $id,
+            'rfq_code' => $rfq->rfq_code,
+            'old_status' => $oldStatus,
+            'new_status' => $newStatus,
+            'updated_by' => auth()->id() ?? 'system'
+        ]);
+        
+        // Always redirect back with success message
+        return redirect()->back()->with('success', 'Status updated successfully!');
+        
+    } catch (\Exception $e) {
+        Log::error('Failed to update RFQ status', [
+            'rfq_id' => $id,
+            'error' => $e->getMessage()
+        ]);
+        
+        return redirect()->back()->with('error', 'Failed to update status: ' . $e->getMessage());
+    }
+}
 
+/**
+ * Calculate progress percentage based on status.
+ */
+private function calculateProgress($status)
+{
+    $progressMap = [
+        'pending' => 20,
+        'assigned' => 50,
+        'quoted' => 80,
+        'closed' => 100,
+        'lost' => 100
+    ];
+    
+    return $progressMap[$status] ?? 20;
+}
     /**
      * Update the specified resource in storage.
      */

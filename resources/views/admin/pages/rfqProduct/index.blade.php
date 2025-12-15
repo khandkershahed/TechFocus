@@ -51,7 +51,29 @@
     white-space: nowrap;
     margin-top: 5px;
   }
+  
+  /* Status badge colors */
+  .badge-status-pending { background-color: #ffc107; color: #fff7f7; }
+  .badge-status-assigned { background-color: #17a2b8; color: #fff; }
+  .badge-status-quoted { background-color: #007bff; color: #fff; }
+  .badge-status-closed { background-color: #28a745; color: #fff; }
+  .badge-status-lost { background-color: #dc3545; color: #fff; }
 </style>
+
+<!-- Display success/error messages -->
+@if(session('success'))
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{ session('success') }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endif
+
+@if(session('error'))
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    {{ session('error') }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endif 
 
 <div class="py-4 container-fluid">
   <div class="mb-5 row">
@@ -112,25 +134,33 @@
             </div>
             <div class="col-6">
               <ul class="border-0 nav nav-tabs flex-column rfq-tabs w-100">
+                {{-- <li class="mb-2 nav-item w-100">
+                  <a class="px-3 py-2 rounded nav-link {{ $activeTab == 'all' ? 'active' : '' }} rfq-all d-flex justify-content-between align-items-center"
+                    href="{{ request()->fullUrlWithQuery(['status' => 'all']) }}"
+                    style="background: #f8f9fa; color: #495057; font-weight: 600;">
+                    <span>All RFQs</span>
+                    <span class="badge bg-secondary rounded-pill">{{ $totalRfq }}</span>
+                  </a>
+                </li> --}}
                 <li class="mb-2 nav-item w-100">
-                  <a class="px-3 py-2 rounded nav-link active rfq-pending d-flex justify-content-between align-items-center"
-                    data-bs-toggle="tab" href="#pending" data-status="pending"
+                  <a class="px-3 py-2 rounded nav-link {{ $activeTab == 'pending' ? 'active' : '' }} rfq-pending d-flex justify-content-between align-items-center"
+                    href="{{ request()->fullUrlWithQuery(['status' => 'pending']) }}"
                     style="background: #f0f4ff; color: #1a3fc0; font-weight: 600;">
                     <span>Pending</span>
                     <span class="badge bg-primary rounded-pill pending-count">{{ $pendingCount }}</span>
                   </a>
                 </li>
                 <li class="mb-2 nav-item w-100">
-                  <a class="px-3 py-2 rounded nav-link rfq-quoted d-flex justify-content-between align-items-center"
-                    data-bs-toggle="tab" href="#quoted" data-status="quoted"
+                  <a class="px-3 py-2 rounded nav-link {{ $activeTab == 'quoted' ? 'active' : '' }} rfq-quoted d-flex justify-content-between align-items-center"
+                    href="{{ request()->fullUrlWithQuery(['status' => 'quoted']) }}"
                     style="background: #e9f7ef; color: #2f8f4d; font-weight: 600;">
                     <span>Quoted</span>
                     <span class="badge bg-success rounded-pill quoted-count">{{ $quotedCount }}</span>
                   </a>
                 </li>
                 <li class="nav-item w-100">
-                  <a class="px-3 py-2 rounded nav-link rfq-failed d-flex justify-content-between align-items-center"
-                    data-bs-toggle="tab" href="#failed" data-status="lost"
+                  <a class="px-3 py-2 rounded nav-link {{ $activeTab == 'failed' ? 'active' : '' }} rfq-failed d-flex justify-content-between align-items-center"
+                    href="{{ request()->fullUrlWithQuery(['status' => 'lost']) }}"
                     style="background: #fff5f5; color: #d93025; font-weight: 600;">
                     <span>Lost</span>
                     <span class="badge bg-danger rounded-pill lost-count">{{ $lostCount }}</span>
@@ -181,7 +211,17 @@
             <div class="mb-3 text-center col-lg-3 text-lg-start mb-lg-0">
               <a href="#allRFQ" class="text-decoration-none">
                 <span class="d-block fw-bold fs-5">RFQ Filtered</span>
-                <span class="small text-muted">All RFQ history here</span>
+                <span class="small text-muted">
+                  @if($activeTab == 'all')
+                    All RFQs ({{ $totalRfq }})
+                  @elseif($activeTab == 'pending')
+                    Pending RFQs ({{ $pendingCount }})
+                  @elseif($activeTab == 'quoted')
+                    Quoted RFQs ({{ $quotedCount }})
+                  @elseif($activeTab == 'failed')
+                    Lost RFQs ({{ $lostCount }})
+                  @endif
+                </span>
               </a>
             </div>
             <div class="col-lg-9">
@@ -264,18 +304,17 @@
     </div>
   </div>
 
-  <!-- RFQ Tab Content -->
-  <div class="tab-content" id="myTabContent">
-    <!-- Pending Tab -->
-    <div class="tab-pane fade active show" id="pending" role="tabpanel">
-      @if($pendingRfqs->count() > 0)
+  <!-- RFQ Content -->
+  <div class="card">
+    <div class="card-body">
+      @if($displayRfqs->count() > 0)
       <div class="row">
         <div class="col-lg-5 ps-3 ps-lg-0">
           <div class="shadow-none card mb-lg-0">
             <div class="px-5 pt-3 card-body rounded-2">
               <div class="rfq-scroll" style="height: 630px; overflow-y: scroll">
-                <ul class="border-0 nav nav-pills flex-column" id="pending-list">
-                  @foreach($pendingRfqs as $index => $rfq)
+                <ul class="border-0 nav nav-pills flex-column" id="rfq-list">
+                  @foreach($displayRfqs as $index => $rfq)
                   @php
                   $createdAt = \Carbon\Carbon::parse($rfq->created_at);
                   $now = \Carbon\Carbon::now();
@@ -288,7 +327,7 @@
                   @endphp
                   <li class="mt-2 nav-item w-100 mb-md-2">
                     <a class="p-3 border nav-link btn btn-flex btn-outline-primary btn-active-primary w-100 {{ $index === 0 ? 'active' : '' }}"
-                      data-bs-toggle="tab" href="#pending_rfq_{{ $rfq->id }}">
+                      data-bs-toggle="tab" href="#rfq_{{ $rfq->id }}">
                       <div class="row w-100 align-items-center rfq-content-triger">
                         <div class="col-md-6 col-12 d-flex align-items-center">
                           <i class="text-white fa-regular fa-file fs-2 pe-3"></i>
@@ -302,10 +341,11 @@
                         </div>
                         <div class="col-md-6 col-12 text-end pe-0">
                           @if($isUrgent)
-                          <div class="mb-1 d-flex align-items-center justify-content-end fs-7 notif-yellow">
-                            <i class="fas fa-bell fa-shake me-1 notif-yellow"></i>
-                            {{ $daysDiff }} Day{{ $daysDiff > 1 ? 's' : '' }}
-                          </div>
+                         <div class="mb-1 d-flex align-items-center justify-content-end fs-7 notif-yellow">
+    <i class="fas fa-bell fa-shake me-1 notif-yellow"></i>
+    {{ sprintf('%02d', $daysDiff) }} Day{{ $daysDiff > 1 ? 's' : '' }}
+</div>
+
                           @else
                           <div class="mb-1 d-flex align-items-center justify-content-end fs-7 text-success">
                             <i class="fas fa-clock me-1"></i>
@@ -321,6 +361,13 @@
                             <button class="btn btn-sm btn-primary" style="background-color: #296088">
                               Quote
                             </button>
+                            {{-- <!-- Status Update Button - SIMPLIFIED -->
+                            <button type="button" class="btn btn-sm btn-warning" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#statusUpdateModal"
+                                onclick="document.getElementById('modalRfqId').value = '{{ $rfq->id }}'; document.getElementById('status').value = '{{ $rfq->status ?? 'pending' }}'; document.getElementById('statusUpdateForm').action = '/rfq-products/{{ $rfq->id }}/status';">
+                                <i class="fas fa-sync-alt me-1"></i> Status
+                            </button> --}}
                           </div>
                         </div>
                       </div>
@@ -336,18 +383,20 @@
         <div class="col-lg-7 pe-3 pe-lg-0">
           <div class="border-0 card">
             <div class="p-5 card-body">
-              <div class="border-0 rounded tab-content" style="height: 630px; overflow-y: auto" id="pending-details">
-                @foreach($pendingRfqs as $index => $rfq)
+              <div class="border-0 rounded tab-content" style="height: 630px; overflow-y: auto" id="rfq-details">
+                @foreach($displayRfqs as $index => $rfq)
                 @php
                 $progress = 0;
                 if ($rfq->status === 'pending') {
-                $progress = 20;
+                  $progress = 20;
                 } elseif ($rfq->status === 'assigned') {
-                $progress = 50;
+                  $progress = 50;
                 } elseif ($rfq->status === 'quoted') {
-                $progress = 80;
+                  $progress = 80;
                 } elseif ($rfq->status === 'closed') {
-                $progress = 100;
+                  $progress = 100;
+                } elseif ($rfq->status === 'lost') {
+                  $progress = 100;
                 }
                 $assignedTo = $rfq->user ?? null;
                 $rfqNumber = $rfq->rfq_code ?? 'RFQ#' . $rfq->id;
@@ -355,13 +404,17 @@
                 $country = $rfq->country ?? 'N/A';
                 @endphp
                 <div class="tab-pane fade {{ $index === 0 ? 'show active' : '' }}"
-                  id="pending_rfq_{{ $rfq->id }}" role="tabpanel">
+                  id="rfq_{{ $rfq->id }}" role="tabpanel">
                   <div class="border-0 shadow-none card">
                     <div class="py-3 bg-white card-header border-bottom d-flex justify-content-between align-items-center">
                       <div>
                         <span>
                           <span class="fs-3">{{ $rfqNumber }}</span> 
                           <span class="text-muted">| {{ $rfq->company_name ?? 'Unknown Company' }} | {{ $country }}</span>
+                          <!-- Status badge -->
+                          <span class="ms-2 badge badge-status-{{ $rfq->status ?? 'pending' }}">
+                            {{ ucfirst($rfq->status ?? 'pending') }}
+                          </span>
                         </span>
                         <p> @if($dealCode)
                           <small class="text-primary">Deal Code: {{ $dealCode }}</small>
@@ -376,7 +429,49 @@
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="actionsDropdown{{ $rfq->id }}">
                           <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#assignRfqModal-{{ $rfq->id }}">Assign RFQ</a></li>
                           <li><a class="dropdown-item" href="#">Send Quote</a></li>
-                          <li><a class="dropdown-item" href="#">Close RFQ</a></li>
+                          <!-- Quick status update links -->
+                          <li><hr class="dropdown-divider"></li>
+                          <li><h6 class="dropdown-header">Quick Status Update</h6></li>
+                          <li>
+                            <form method="POST" action="/rfq-products/{{ $rfq->id }}/status" style="display: inline;">
+                              @csrf
+                              @method('PUT')
+                              <input type="hidden" name="status" value="pending">
+                              <button type="submit" class="dropdown-item" onclick="return confirm('Mark as Pending?')">
+                                <i class="fas fa-clock text-warning me-2"></i> Mark as Pending
+                              </button>
+                            </form>
+                          </li>
+                          <li>
+                            <form method="POST" action="/rfq-products/{{ $rfq->id }}/status" style="display: inline;">
+                              @csrf
+                              @method('PUT')
+                              <input type="hidden" name="status" value="quoted">
+                              <button type="submit" class="dropdown-item" onclick="return confirm('Mark as Quoted?')">
+                                <i class="fas fa-file-invoice-dollar text-info me-2"></i> Mark as Quoted
+                              </button>
+                            </form>
+                          </li>
+                          <li>
+                            <form method="POST" action="/rfq-products/{{ $rfq->id }}/status" style="display: inline;">
+                              @csrf
+                              @method('PUT')
+                              <input type="hidden" name="status" value="closed">
+                              <button type="submit" class="dropdown-item" onclick="return confirm('Mark as Closed?')">
+                                <i class="fas fa-check-circle text-success me-2"></i> Mark as Closed
+                              </button>
+                            </form>
+                          </li>
+                          <li>
+                            <form method="POST" action="/rfq-products/{{ $rfq->id }}/status" style="display: inline;">
+                              @csrf
+                              @method('PUT')
+                              <input type="hidden" name="status" value="lost">
+                              <button type="submit" class="dropdown-item" onclick="return confirm('Mark as Lost?')">
+                                <i class="fas fa-times-circle text-danger me-2"></i> Mark as Lost
+                              </button>
+                            </form>
+                          </li>
                         </ul>
                       </div>
                     </div>
@@ -459,11 +554,11 @@
                           @php
                           $productName = 'N/A';
                           if(isset($rfqProduct->product) && !empty($rfqProduct->product)) {
-                          $productName = $rfqProduct->product->name ?? 'Product #' . $rfqProduct->product_id;
+                            $productName = $rfqProduct->product->name ?? 'Product #' . $rfqProduct->product_id;
                           } elseif(!empty($rfqProduct->additional_product_name)) {
-                          $productName = $rfqProduct->additional_product_name;
+                            $productName = $rfqProduct->additional_product_name;
                           } elseif(!empty($rfqProduct->product_name)) {
-                          $productName = $rfqProduct->product_name;
+                            $productName = $rfqProduct->product_name;
                           }
                           $skuNo = $rfqProduct->sku_no ?? null;
                           $productDes = $rfqProduct->product_des ?? null;
@@ -497,73 +592,118 @@
       <div class="shadow-none card">
         <div class="py-5 text-center card-body">
           <i class="mb-3 fa-regular fa-file fa-4x text-muted"></i>
-          <h4 class="text-muted">No Pending RFQs</h4>
-          <p class="mb-4 text-muted">There are no pending RFQs to display.</p>
+          <h4 class="text-muted">
+            @if($activeTab == 'all')
+              No RFQs Found
+            @elseif($activeTab == 'pending')
+              No Pending RFQs
+            @elseif($activeTab == 'quoted')
+              No Quoted RFQs
+            @elseif($activeTab == 'failed')
+              No Lost RFQs
+            @endif
+          </h4>
+          <p class="mb-4 text-muted">
+            @if($activeTab == 'all')
+              There are no RFQs to display with the current filters.
+            @elseif($activeTab == 'pending')
+              There are no pending RFQs to display.
+            @elseif($activeTab == 'quoted')
+              There are no quoted RFQs to display.
+            @elseif($activeTab == 'failed')
+              There are no lost RFQs to display.
+            @endif
+          </p>
         </div>
       </div>
       @endif
     </div>
-
-    <!-- Quoted Tab -->
-    <div class="tab-pane fade" id="quoted" role="tabpanel">
-      <div class="shadow-none card">
-        <div class="text-center card-body">
-          @if($quotedRfqs->count() > 0)
-          <p class="mb-3">Found {{ $quotedRfqs->count() }} quoted RFQ(s)</p>
-          @else
-          <i class="mb-3 fas fa-file-invoice-dollar fa-3x text-muted"></i>
-          <h4 class="text-muted">No Quoted RFQs</h4>
-          <p class="text-muted">There are no quoted RFQs to display.</p>
-          @endif
-        </div>
-      </div>
-    </div>
-
-    <!-- Failed/Lost Tab -->
-    <div class="tab-pane fade" id="failed" role="tabpanel">
-      <div class="shadow-none card">
-        <div class="text-center card-body">
-          @if($lostRfqs->count() > 0)
-          <div class="mb-0 alert alert-warning">
-            <i class="fas fa-exclamation-triangle me-2"></i>
-            <strong>Found {{ $lostRfqs->count() }} lost RFQ(s)</strong>
-          </div>
-          @else
-          <div class="mb-0 alert alert-info">
-            <i class="fas fa-check-circle me-2"></i>
-            <strong>No RFQs have been lost yet.</strong>
-          </div>
-          @endif
-        </div>
-      </div>
-    </div>
   </div>
 </div>
 
+@push('modals')
+<!-- Status Update Modal -->
+<div class="modal fade" id="statusUpdateModal" tabindex="-1" aria-labelledby="statusUpdateModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="statusUpdateForm" method="POST" action="">
+                @csrf
+                @method('PUT')
+                <div class="modal-header">
+                    <h5 class="modal-title" id="statusUpdateModalLabel">Update RFQ Status</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="rfq_id" id="modalRfqId">
+                    
+                    <div class="mb-3">
+                        <label for="status" class="form-label">Status *</label>
+                        <select name="status" id="status" class="form-select" required>
+                            <option value="pending">Pending</option>
+                            <option value="assigned">Assigned</option>
+                            <option value="quoted">Quoted</option>
+                            <option value="closed">Closed</option>
+                            <option value="lost">Lost</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="status_notes" class="form-label">Notes (Optional)</label>
+                        <textarea name="status_notes" id="status_notes" class="form-control" rows="3" placeholder="Add any notes about this status change..."></textarea>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="follow_up_date" class="form-label">Follow-up Date (Optional)</label>
+                        <input type="date" name="follow_up_date" id="follow_up_date" class="form-control">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update Status</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endpush
+
 @push('scripts')
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
+// Simple function for modal - inline onclick handles most of it
+function setModalValues(rfqId, currentStatus) {
+    document.getElementById('modalRfqId').value = rfqId;
+    document.getElementById('status').value = currentStatus || 'pending';
+    document.getElementById('statusUpdateForm').action = '/rfq-products/' + rfqId + '/status';
+}
+
+// Keep only the filter functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Original filter functionality only
     const searchInput = document.getElementById('searchCountryQuery');
     const countryList = document.getElementById('countryList');
     const noResults = document.getElementById('noResults');
 
     // Country search filter
-    searchInput?.addEventListener('keyup', function() {
-      const query = this.value.toLowerCase().trim();
-      let visibleCount = 0;
+    if (searchInput && countryList) {
+        searchInput.addEventListener('keyup', function() {
+            const query = this.value.toLowerCase().trim();
+            let visibleCount = 0;
 
-      countryList.querySelectorAll('.country-wrapper').forEach(item => {
-        const countryName = item.querySelector('.country-item h6')?.innerText.toLowerCase() || '';
-        if (countryName.includes(query)) {
-          item.style.display = '';
-          visibleCount++;
-        } else {
-          item.style.display = 'none';
-        }
-      });
+            countryList.querySelectorAll('.country-wrapper').forEach(item => {
+                const countryName = item.querySelector('.country-item h6')?.innerText.toLowerCase() || '';
+                if (countryName.includes(query)) {
+                    item.style.display = '';
+                    visibleCount++;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
 
-      noResults?.classList.toggle('d-none', visibleCount > 0);
-    });
+            if (noResults) {
+                noResults.classList.toggle('d-none', visibleCount > 0);
+            }
+        });
+    }
 
     // Filter elements
     const filterCountry = document.getElementById('filterCountry');
@@ -576,98 +716,77 @@
 
     // Update filters
     function updateFilters() {
-      const filters = {
-        country: filterCountry?.value || '',
-        salesman: filterSalesman?.value || '',
-        company: filterCompany?.value || '',
-        search: filterSearch?.value || '',
-        year: filterYear?.value || '',
-        month: filterMonth?.value || ''
-      };
+        // Get current status from URL or default to 'all'
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentStatus = urlParams.get('status') || 'all';
+        
+        const filters = {
+            status: currentStatus,
+            country: filterCountry?.value || '',
+            salesman: filterSalesman?.value || '',
+            company: filterCompany?.value || '',
+            search: filterSearch?.value || '',
+            year: filterYear?.value || '',
+            month: filterMonth?.value || ''
+        };
 
-      // Remove empty filters
-      Object.keys(filters).forEach(key => {
-        if (!filters[key]) delete filters[key];
-      });
-
-      showLoading();
-
-      fetch('{{ route("rfqProducts.filter") }}', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-          },
-          body: JSON.stringify(filters)
-        })
-        .then(response => response.json())
-        .then(data => {
-          if (data.success) {
-            const tabContent = document.getElementById('myTabContent');
-            if (tabContent) {
-              tabContent.innerHTML = data.html;
-              updateCounts(data);
-            }
-          } else {
-            console.error('Filter failed:', data.message);
-            alert('Failed to apply filters: ' + (data.message || 'Unknown error'));
-          }
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          alert('Failed to apply filters. Please try again.');
-        })
-        .finally(() => {
-          hideLoading();
+        // Remove empty filters
+        Object.keys(filters).forEach(key => {
+            if (!filters[key]) delete filters[key];
         });
-    }
 
-    // Update counts (if needed)
-    function updateCounts(data) {
-      const pendingCount = document.querySelector('.pending-count');
-      const quotedCount = document.querySelector('.quoted-count');
-      const lostCount = document.querySelector('.lost-count');
+        showLoading();
 
-      if (pendingCount && data.pendingCount !== undefined) pendingCount.textContent = data.pendingCount;
-      if (quotedCount && data.quotedCount !== undefined) quotedCount.textContent = data.quotedCount;
-      if (lostCount && data.lostCount !== undefined) lostCount.textContent = data.lostCount;
+        // Submit form with filters
+        const form = document.createElement('form');
+        form.method = 'GET';
+        form.action = window.location.pathname;
+        
+        Object.keys(filters).forEach(key => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = key;
+            input.value = filters[key];
+            form.appendChild(input);
+        });
+        
+        document.body.appendChild(form);
+        form.submit();
     }
 
     // Loading indicator
     function showLoading() {
-      const tabContent = document.getElementById('myTabContent');
-      if (tabContent) {
-        tabContent.innerHTML = `<div class="py-5 text-center">
-                <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-                <p class="mt-2">Applying filters...</p>
-            </div>`;
-      }
+        const mainContent = document.querySelector('.container-fluid');
+        if (mainContent) {
+            mainContent.innerHTML = `<div class="py-5 text-center">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2">Applying filters...</p>
+                </div>`;
+        }
     }
 
-    function hideLoading() {}
-
-    // Attach change events
+    // Attach change events to filters
     [filterCountry, filterSalesman, filterCompany, filterYear, filterMonth].forEach(el => {
-      if (el) el.addEventListener('change', updateFilters);
+        if (el) el.addEventListener('change', updateFilters);
     });
 
     if (filterSearch) {
-      let searchTimeout;
-      filterSearch.addEventListener('input', function() {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(updateFilters, 500);
-      });
+        let searchTimeout;
+        filterSearch.addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(updateFilters, 500);
+        });
     }
 
     if (clearSearchBtn) {
-      clearSearchBtn.addEventListener('click', function() {
-        if (filterSearch) filterSearch.value = '';
-        updateFilters();
-      });
+        clearSearchBtn.addEventListener('click', function() {
+            if (filterSearch) filterSearch.value = '';
+            updateFilters();
+        });
     }
-  });
+});
 </script>
 @endpush
 @endsection

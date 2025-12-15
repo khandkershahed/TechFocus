@@ -399,9 +399,18 @@
                                                 3</span></span>
                                     </a>
                                 </div> --}}
+                                    <div class="menu-item">
+                                    <a class="menu-link {{ Route::current()->getName() == 'admin.rfq.index' ? 'active' : '' }}"
+                                        href="{{ route('rfqProducts.index') }}">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                        <span class="menu-title">RFQs Dashboard</span>
+                                    </a>
+                                </div>  
 
-
-                                {{-- <div class="menu-item">
+                                <div class="menu-item">
                                     <a class="menu-link {{ Route::current()->getName() == 'admin.rfq.index' ? 'active' : '' }}"
                                         href="{{ route('admin.rfq.index') }}">
                                         <span class="menu-bullet">
@@ -410,7 +419,8 @@
                                         </span>
                                         <span class="menu-title">Client RFQs</span>
                                     </a>
-                                </div>  --}}
+                                </div>  
+
                                 <div class="menu-item">
                                     <a class="menu-link {{ Route::current()->getName() == 'admin.deal.index' ? 'active' : '' }}"
                                         href="{{ route('admin.deal.index') }}">

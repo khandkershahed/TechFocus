@@ -943,3 +943,6 @@ Route::post('rfq-products/filter', [RfqProductController::class, 'filter'])->nam
 
 Route::post('/admin/rfq-products/create-missing', [RfqProductController::class, 'createMissingProducts'])
     ->name('rfqProducts.createMissing');
+
+Route::put('/rfq-products/{id}/status', [RfqProductController::class, 'updateStatus'])
+    ->name('rfqProducts.updateStatus');
