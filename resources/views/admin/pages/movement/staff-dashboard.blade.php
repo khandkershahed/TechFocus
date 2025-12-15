@@ -1,167 +1,224 @@
 @extends('admin.master')
 
 @section('content')
-<div class="container-fluid py-4">
 
-    <!-- Header -->
-    <div class="bg-primary text-white rounded shadow p-3 text-center mb-4">
-        <h2 class="h5 fw-bold text-uppercase">SALES - MOVEMENT STATISTICS</h2>
+{{-- ================== EXTRA UI STYLES ================== --}}
+<style>
+    .dashboard-card {
+        border-radius: 14px;
+        transition: all 0.25s ease;
+    }
+
+    .dashboard-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 25px rgba(0, 0, 0, 0.08);
+    }
+
+    .dashboard-title {
+        font-size: 12px;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+        color: #6c757d;
+    }
+
+    .dashboard-value {
+        font-size: 26px;
+        font-weight: 700;
+    }
+
+    .table thead th {
+        white-space: nowrap;
+        vertical-align: middle;
+    }
+
+    .table tbody tr:hover {
+        background-color: #eef2ff !important;
+    }
+
+    .modal-content {
+        border-radius: 16px;
+    }
+
+    .btn {
+        border-radius: 8px;
+    }
+</style>
+
+<div class="py-4 container-fluid">
+
+    {{-- ================== HEADER ================== --}}
+    <div class="p-4 mb-4 rounded d-flex justify-content-between align-items-center bg-primary">
+        <h2 class="mb-1 text-white fw-bold text-uppercase">
+            Sales Movement Dashboard
+        </h2>
+        <p class="mb-0 text-white small">
+            Overview of visits, performance, cost & sales activity
+        </p>
     </div>
 
-    <div class="row g-4 mb-4">
-        <!-- Card 1: #Days / Companies / Visits / Areas -->
-        <div class="col-12 col-md-3">
-            <div class="card border-0 shadow-sm rounded-4">
+    {{-- ================== STATS CARDS ================== --}}
+    <div class="mb-4 row g-4">
+
+        {{-- Card 1 --}}
+        <div class="col-md-3">
+            <div class="border-0 shadow-sm card dashboard-card h-100">
                 <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h6 class="text-uppercase text-muted mb-0"># of Days</h6>
-                        <h3 class="fw-bold mb-0">{{ $totalDays }}</h3>
+                    <div class="mb-3 d-flex justify-content-between">
+                        <div class="dashboard-title">Total Days</div>
+                        <div class="dashboard-value">{{ $totalDays }}</div>
                     </div>
-
-                    <hr class="my-2">
-
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h6 class="text-uppercase text-muted mb-0"># of Companies</h6>
-                        <h3 class="fw-bold mb-0">{{ $totalCompanies }}</h3>
+                    <hr>
+                    <div class="mb-3 d-flex justify-content-between">
+                        <div class="dashboard-title">Companies</div>
+                        <div class="dashboard-value">{{ $totalCompanies }}</div>
                     </div>
-
-                    <hr class="my-2">
-
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h6 class="text-uppercase text-muted mb-0"># of Visits</h6>
-                        <h3 class="fw-bold mb-0">{{ $totalVisits }}</h3>
+                    <hr>
+                    <div class="mb-3 d-flex justify-content-between">
+                        <div class="dashboard-title">Visits</div>
+                        <div class="dashboard-value">{{ $totalVisits }}</div>
                     </div>
-
-                    <hr class="my-2">
-
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h6 class="text-uppercase text-muted mb-0"># of Areas</h6>
-                        <h3 class="fw-bold mb-0">{{ $totalAreas }}</h3>
+                    <hr>
+                    <div class="d-flex justify-content-between">
+                        <div class="dashboard-title">Areas</div>
+                        <div class="dashboard-value">{{ $totalAreas }}</div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Card 2: Highest / Lowest / Companies / Frequent -->
-        <div class="col-12 col-md-3">
-            <div class="card border-0 shadow-sm rounded-4">
+        {{-- Card 2 --}}
+        <div class="col-md-3">
+            <div class="border-0 shadow-sm card dashboard-card h-100">
                 <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h6 class="text-uppercase text-muted mb-0">Highest Value & Company</h6>
-                        <h3 class="fw-bold mb-0">{{ number_format($highestValue ?? 0) }} Tk</h3>
+                    <div class="mb-3 align-items-center d-flex justify-content-between">
+                        <div class="dashboard-title">Highest Value</div>
+                        <div class="dashboard-value text-success">
+                            Tk {{ number_format($highestValue ?? 0) }}
+                        </div>
                     </div>
-
-                    <hr class="my-2">
-
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h6 class="text-uppercase text-muted mb-0">Lowest Value & Company</h6>
-                        <h3 class="fw-bold mb-0">{{ number_format($lowestValue ?? 0) }} Tk</h3>
+                    <hr>
+                    <div class="mb-3 align-items-center d-flex justify-content-between">
+                        <div class="dashboard-title">Lowest Value</div>
+                        <div class="dashboard-value text-danger">
+                            Tk {{ number_format($lowestValue ?? 0) }}
+                        </div>
                     </div>
-
-                    <hr class="my-2">
-
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h6 class="text-uppercase text-muted mb-0">Frequent Visits</h6>
-                        <h3 class="fw-bold mb-0">0</h3>
+                    <hr>
+                    <div class="mb-3 align-items-center d-flex justify-content-between">
+                        <div class="dashboard-title">Frequent Visits</div>
+                        <div class="dashboard-value">0</div>
                     </div>
-
-                    <hr class="my-2">
-
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h6 class="text-uppercase text-muted mb-0">Name Of those Companies</h6>
-                        <h3 class="fw-bold mb-0">{{ $companies->implode(', ') }}</h3>
+                    <hr>
+                    <div class="mb-3 align-items-center d-flex justify-content-between">
+                        <div class="dashboard-title">Companies</div>
+                        <div class="small fw-semibold">
+                            {{ $companies->implode(', ') }}
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Card 3: Working / Closed / Lost / Transport -->
-        <div class="col-12 col-md-3">
-            <div class="card border-0 shadow-sm rounded-4">
+        {{-- Card 3 --}}
+        <div class="col-md-3">
+            <div class="border-0 shadow-sm card dashboard-card h-100">
                 <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h6 class="text-uppercase text-muted mb-0">Working Value</h6>
-                        <h3 class="fw-bold mb-0">Tk. 0</h3>
+                    <div class="mb-3 align-items-center d-flex justify-content-between">
+                        <div class="dashboard-title">Working Value</div>
+                        <div class="dashboard-value">Tk 0</div>
                     </div>
-
-                    <hr class="my-2">
-
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h6 class="text-uppercase text-muted mb-0">Closed Value</h6>
-                        <h3 class="fw-bold mb-0">Tk. 0</h3>
+                    <hr>
+                    <div class="mb-3 align-items-center d-flex justify-content-between">
+                        <div class="dashboard-title">Closed Value</div>
+                        <div class="dashboard-value">Tk 0</div>
                     </div>
-
-                    <hr class="my-2">
-
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h6 class="text-uppercase text-muted mb-0">Lost Value</h6>
-                        <h3 class="fw-bold mb-0">Tk. 0</h3>
+                    <hr>
+                    <div class="mb-3 align-items-center d-flex justify-content-between">
+                        <div class="dashboard-title">Lost Value</div>
+                        <div class="dashboard-value">Tk 0</div>
                     </div>
-
-                    <hr class="my-2">
-
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h6 class="text-uppercase text-muted mb-0">Transport Cost</h6>
-                        <h3 class="fw-bold mb-0">Tk. {{ number_format($transportCost) }}</h3>
+                    <hr>
+                    <div class="mb-3 align-items-center d-flex justify-content-between">
+                        <div class="dashboard-title">Transport Cost</div>
+                        <div class="dashboard-value text-warning">
+                            Tk {{ number_format($transportCost) }}
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Card 4: Sales Target / Achieved / Cost Ratio -->
-        <div class="col-12 col-md-3">
-            <div class="card border-0 shadow-sm rounded-4 text-center" style="background: linear-gradient(135deg, #0d6efd, #6610f2); color:white;">
+        {{-- Card 4 --}}
+        <div class="col-md-3">
+            <div class="text-white border-0 shadow-sm card dashboard-card h-100"
+                style="background:linear-gradient(135deg,#0d6efd,#6610f2)">
                 <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h6 class="text-uppercase text-light mb-0">Sales Target</h6>
-                        <h3 class="fw-bold mb-0">Tk. {{ number_format($salesTarget) }}</h3>
-                    </div>
-
-                    <hr class="my-2" style="border-color: rgba(255,255,255,0.3);">
-
                     @php
-                        $achievedPercent = $salesTarget > 0 ? ($records->sum('value') / $salesTarget) * 100 : 0;
-                        $costRatio = $records->sum('cost') > 0 && $records->sum('value') > 0 ? ($records->sum('cost') / $records->sum('value') * 100) : 0;
+                    $achievedPercent = $salesTarget > 0
+                    ? ($records->sum('value') / $salesTarget) * 100 : 0;
+
+                    $costRatio = $records->sum('value') > 0
+                    ? ($records->sum('cost') / $records->sum('value')) * 100 : 0;
                     @endphp
 
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h6 class="text-uppercase text-light mb-0">Achieved %</h6>
-                        <h3 class="fw-bold mb-0">{{ number_format($achievedPercent, 2) }}%</h3>
+                    <div class="mb-3 align-items-center d-flex justify-content-between">
+                        <div class="dashboard-title text-light">Sales Target</div>
+                        <div class="dashboard-value">
+                            Tk {{ number_format($salesTarget) }}
+                        </div>
                     </div>
-
-                    <hr class="my-2" style="border-color: rgba(255,255,255,0.3);">
-
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h6 class="text-uppercase text-light mb-0">Cost Ratio</h6>
-                        <h3 class="fw-bold mb-0">{{ number_format($costRatio, 2) }}%</h3>
+                    <hr style="border-color:rgba(255,255,255,.3)">
+                    <div class="mb-3 align-items-center d-flex justify-content-between">
+                        <div class="dashboard-title text-light">Achieved</div>
+                        <div class="dashboard-value">
+                            {{ number_format($achievedPercent,2) }}%
+                        </div>
+                    </div>
+                    <hr style="border-color:rgba(255,255,255,.3)">
+                    <div class="mb-3 align-items-center d-flex justify-content-between">
+                        <div class="dashboard-title text-light">Cost Ratio</div>
+                        <div class="dashboard-value">
+                            {{ number_format($costRatio,2) }}%
+                        </div>
+                    </div>
+                    <hr style="border-color:rgba(255,255,255,.3)">
+                    <div class="mb-3 align-items-center d-flex justify-content-between">
+                        <div class="dashboard-title text-light">Others Cost</div>
+                        <div class="dashboard-value">
+                            {{ number_format($costRatio,2) }}%
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
     </div>
-    
-    <!-- Add Movement Button -->
-    <div class="text-end mb-2">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addMovementModal">
-            + Add Movement
+
+    {{-- ================== TABLE HEADER ================== --}}
+    <div class="mb-3 d-flex justify-content-between align-items-center">
+        <h5 class="mb-0 fw-semibold">Movement Records</h5>
+        <button class="px-4 btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#addMovementModal">
+            <i class="bi bi-plus-circle me-1"></i> Add Movement
         </button>
     </div>
 
-    <!-- Table -->
-    <div class="table-responsive shadow rounded p-3 bg-light">
-        <table class="table table-bordered table-hover mb-0 align-middle" style="border-color: #dee2e6; min-width: 1200px;">
-            <thead style="background: linear-gradient(135deg, #0d6efd, #6610f2); color:white;">
+    {{-- ================== TABLE ================== --}}
+    <div class="p-2 bg-white rounded shadow-sm table-responsive">
+        <table class="table mb-0 align-middle table-bordered table-hover" style="min-width:1200px">
+            <thead style="background:linear-gradient(135deg,#0d6efd,#6610f2);color:white">
                 <tr>
-                    @foreach(['Status','Date','Start','Finish','Duration','Area','Transport','Cost','Movementyy Type','Company','Contact','Number','Value','Status','Purpose'] as $header)
-                        <th class="text-center small fw-bold">{{ $header }}</th>
+                    @foreach(['Status','Date','Start','Finish','Duration','Area','Transport','Cost','Type','Company','Contact','Number','Value','Status','Purpose'] as $h)
+                    <th class="text-center small fw-semibold">{{ $h }}</th>
                     @endforeach
-                    <th class="text-center small fw-bold">Action</th>
+                    <th class="text-center small fw-semibold">Action</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach($records as $index => $record)
-                <tr class="clickable-row" data-href="{{ route('admin.movement.show', $record->id) }}" 
-                    style="background-color: {{ $index % 2 === 0 ? '#f8f9fa' : '#ffffff' }};">
+                @foreach($records as $record)
+                <tr class="clickable-row"
+                    data-href="{{ route('admin.movement.show',$record->id) }}">
                     <td class="text-center">{{ ucfirst($record->status) }}</td>
                     <td class="text-center">{{ \Carbon\Carbon::parse($record->date)->format('d-M-Y') }}</td>
                     <td class="text-center">{{ date('h:i A', strtotime($record->start_time)) }}</td>
@@ -169,16 +226,19 @@
                     <td class="text-center">{{ $record->duration }}</td>
                     <td class="text-center">{{ $record->area }}</td>
                     <td class="text-center">{{ $record->transport }}</td>
-                    <td class="text-end">Tk. {{ number_format($record->cost) }}</td>
+                    <td class="text-end">Tk {{ number_format($record->cost) }}</td>
                     <td class="text-center">{{ $record->meeting_type }}</td>
-                    <td class="text-start">{{ $record->company }}</td>
-                    <td class="text-start">{{ $record->contact_person }}</td>
+                    <td>{{ $record->company }}</td>
+                    <td>{{ $record->contact_person }}</td>
                     <td class="text-center">{{ $record->contact_number }}</td>
-                    <td class="text-end">Tk. {{ number_format($record->value) }}</td>
+                    <td class="text-end">Tk {{ number_format($record->value) }}</td>
                     <td class="text-center">{{ $record->status }}</td>
-                    <td class="text-start">{{ $record->purpose }}</td>
+                    <td>{{ $record->purpose }}</td>
                     <td class="text-center">
-                        <a href="{{ route('admin.movement.show', $record->id) }}" class="btn btn-sm btn-primary">View</a>
+                        <a href="{{ route('admin.movement.show',$record->id) }}"
+                            class="btn btn-sm btn-outline-primary">
+                            View
+                        </a>
                     </td>
                 </tr>
                 @endforeach
@@ -194,24 +254,26 @@
     <div class="modal fade" id="addMovementModal" tabindex="-1" aria-labelledby="addMovementModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addMovementModalLabel">Add Movement Record</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="py-3 modal-header" style="background:linear-gradient(135deg,#0d6efd,#6610f2); color:white !important">
+                    <h5 class="text-white modal-title" id="addMovementModalLabel">Add Movement Record</h5>
+                    <button type="button" class="text-white btn" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="fas fa-xmark"></i>
+                    </button>
                 </div>
                 <div class="modal-body">
                     <!-- Include the form content here -->
                     <form action="{{ route('admin.movement.store') }}" method="POST" id="movementForm">
                         @csrf
-                        
+
                         <div class="row">
                             <!-- Movement Details -->
-                            <div class="col-md-3 mb-3">
+                            <div class="mb-3 col-md-3">
                                 <label class="form-label">Movement Date *</label>
-                                <input type="date" class="form-control" name="date" 
-                                       value="{{ date('Y-m-d') }}" required>
-                            </div> 
+                                <input type="date" class="rounded form-control" name="date"
+                                    value="{{ date('Y-m-d') }}" required>
+                            </div>
 
-                            <div class="col-md-3 mb-3">
+                            <div class="mb-3 col-md-3">
                                 <label class="form-label">Status *</label>
                                 <select class="form-select" name="status" required>
                                     <option value="">Select Status</option>
@@ -221,39 +283,31 @@
                                 </select>
                             </div>
 
-                            <!-- Time Management -->
-                            <div class="col-md-3 mb-3">
-                                <label class="form-label">Time</label>
-                                <div class="d-flex gap-2">
-                                    <button type="button" class="btn btn-outline-primary" onclick="setCurrentTime('start_time')">
-                                        Start
-                                    </button>
-                                    <button type="button" class="btn btn-outline-danger" onclick="setCurrentTime('end_time')">
-                                        Finish
-                                    </button>
+                            <div class="col-lg-3">
+                                <label class="form-label">Start Time</label>
+                                <div class="mb-3 input-group">
+                                    <button class="btn btn-secondary" type="button" id="button-addon1" onclick="setCurrentTime('start_time')">Start</button>
+                                    <input type="datetime" class="rounded form-control" id="start_time" name="start_time" aria-describedby="button-addon1">
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <label class="form-label">End Time</label>
+                                <div class="mb-3 input-group">
+                                    <button class="btn btn-secondary" type="button" id="button-addon2" onclick="setCurrentTime('end_time')">Finish</button>
+                                    <input type="datetime" class="rounded form-control" id="end_time" name="end_time" aria-describedby="button-addon2">
                                 </div>
                             </div>
 
-                            <div class="col-md-3 mb-3">
-                                <label class="form-label">Start Time</label>
-                                <input type="time" class="form-control" id="start_time" name="start_time">
-                            </div>
-
-                            <div class="col-md-3 mb-3">
-                                <label class="form-label">End Time</label>
-                                <input type="time" class="form-control" id="end_time" name="end_time">
-                            </div>
-
-                            <div class="col-md-3 mb-3">
+                            <div class="mb-3 col-md-4">
                                 <label class="form-label">Duration</label>
-                                <input type="text" class="form-control" id="duration_display" readonly>
+                                <input type="text" class="rounded form-control" id="duration_display" readonly>
                                 <input type="hidden" name="duration" id="duration">
                             </div>
 
                             <!-- Meeting Type -->
-                            <div class="col-md-4 mb-3">
+                            <div class="mb-3 col-md-4">
                                 <label class="form-label">Movement Type</label>
-                                <select class="form-select" name="meeting_type">
+                                <select class="form-select" name="meeting_type" data-control="select2">
                                     <option value="">Select Type</option>
                                     <option value="follow-up">Follow-up Call</option>
                                     <option value="meeting">Meeting</option>
@@ -264,15 +318,14 @@
                             </div>
 
                             <!-- Company Section with Modal -->
-                            <div class="col-md-8 mb-3">
+                            <div class="mb-3 col-md-4">
                                 <label class="form-label">Company *</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" name="company" id="companyInput" readonly required>
+                                    <input type="text" class="rounded form-control" name="company" id="companyInput" readonly required>
                                     <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#companyDetailsModal">
-                                        <i class="bi bi-building"></i> Add Company Details
+                                        + Company Details
                                     </button>
                                 </div>
-                                <small class="text-muted">Click the button to add company details</small>
                             </div>
 
                             <!-- Hidden fields for company details -->
@@ -281,12 +334,9 @@
                             <input type="hidden" name="area" id="areaField">
                             <input type="hidden" name="location" id="locationField">
 
-                            <div class="col-md-12 mb-3">
-                                <label class="form-label">Purpose / Work Summary *</label>
-                                <textarea class="form-control" name="purpose" rows="3" required></textarea>
-                            </div>
 
-                            <div class="col-md-3 mb-3">
+
+                            <div class="mb-3 col-md-3">
                                 <label class="form-label">Transport</label>
                                 <select class="form-select" name="transport">
                                     <option value="">Select Transport</option>
@@ -299,17 +349,17 @@
                                 </select>
                             </div>
 
-                            <div class="col-md-2 mb-3">
+                            <div class="mb-3 col-md-3">
                                 <label class="form-label">Cost (Tk)</label>
-                                <input type="number" class="form-control" name="cost" step="0.01" min="0">
+                                <input type="number" class="rounded form-control" name="cost" step="0.01" min="0">
                             </div>
 
-                            <div class="col-md-2 mb-3">
+                            <div class="mb-3 col-md-3">
                                 <label class="form-label">Value (Tk)</label>
-                                <input type="number" class="form-control" name="value" step="0.01" min="0">
+                                <input type="number" class="rounded form-control" name="value" step="0.01" min="0">
                             </div>
 
-                            <div class="col-md-2 mb-3">
+                            <div class="mb-3 col-md-3">
                                 <label class="form-label">Value Status</label>
                                 <select class="form-select" name="value_status">
                                     <option value="">Select Status</option>
@@ -319,56 +369,63 @@
                                     <option value="lost">Lost</option>
                                 </select>
                             </div>
-
-                            <div class="col-md-12 mb-3">
+                            <div class="mb-3 col-md-6">
+                                <label class="form-label">Purpose / Work Summary *</label>
+                                <textarea class="rounded form-control" name="purpose" rows="3" required></textarea>
+                            </div>
+                            <div class="mb-3 col-md-6">
                                 <label class="form-label">Additional Comments</label>
-                                <textarea class="form-control" name="comments" rows="3"></textarea>
+                                <textarea class="rounded form-control" name="comments" rows="3"></textarea>
                             </div>
                         </div>
                     </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" onclick="saveMovement()">Save</button>
-                    <button type="button" class="btn btn-outline-primary" onclick="saveAndAddAnother()">Save & Add Another</button>
+                <div class="border-0 modal-footer">
+                    <button type="button" class="px-5 py-3 rounded-0 btn btn-primary" onclick="saveMovement()">Save</button>
+                    <button type="button" class="px-5 py-3 rounded-0 btn btn-success" onclick="saveAndAddAnother()">Save & Add Another</button>
                 </div>
             </div>
         </div>
     </div>
-
     <!-- Company Details Modal -->
     <div class="modal fade" id="companyDetailsModal" tabindex="-1" aria-labelledby="companyDetailsModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
+                <!-- <div class="modal-header">
                     <h5 class="modal-title" id="companyDetailsModalLabel">Company Details</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div> -->
+                <div class="py-3 modal-header" style="background:linear-gradient(135deg,#0d6efd,#6610f2); color:white !important">
+                    <h5 class="text-white modal-title" id="addMovementModalLabel">Company Details</h5>
+                    <button type="button" class="text-white btn" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="fas fa-xmark"></i>
+                    </button>
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-12 mb-3">
+                        <div class="mb-3 col-md-12">
                             <label class="form-label">Company Name *</label>
-                            <input type="text" class="form-control" id="companyName" placeholder="Enter company name" required>
+                            <input type="text" class="rounded form-control" id="companyName" placeholder="Enter company name" required>
                         </div>
 
-                        <div class="col-md-6 mb-3">
+                        <div class="mb-3 col-md-6">
                             <label class="form-label">Contact Person *</label>
-                            <input type="text" class="form-control" id="contactPerson" placeholder="Enter contact person name" required>
+                            <input type="text" class="rounded form-control" id="contactPerson" placeholder="Enter contact person name" required>
                         </div>
 
-                        <div class="col-md-6 mb-3">
+                        <div class="mb-3 col-md-6">
                             <label class="form-label">Contact Number *</label>
-                            <input type="text" class="form-control" id="contactNumber" placeholder="Enter contact number" required>
+                            <input type="text" class="rounded form-control" id="contactNumber" placeholder="Enter contact number" required>
                         </div>
 
-                        <div class="col-md-6 mb-3">
+                        <div class="mb-3 col-md-6">
                             <label class="form-label">Area *</label>
-                            <input type="text" class="form-control" id="area" placeholder="Enter area" required>
+                            <input type="text" class="rounded form-control" id="area" placeholder="Enter area" required>
                         </div>
 
-                        <div class="col-md-6 mb-3">
+                        <div class="mb-3 col-md-6">
                             <label class="form-label">Location *</label>
-                            <select class="form-control" id="location">
+                            <select class="rounded form-control" id="location">
                                 <option value="">Select Location</option>
                                 <option value="Office">Office</option>
                                 <option value="Client">Client</option>
@@ -378,14 +435,13 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" onclick="saveCompanyDetails()">Save Company Details</button>
+                <div class="border-0 modal-footer">
+                    <button type="button" class="px-5 py-3 rounded-0 btn btn-primary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="px-5 py-3 rounded-0 btn btn-success" onclick="saveCompanyDetails()">Save Company Details</button>
                 </div>
             </div>
         </div>
     </div>
-
     <!-- JS for clickable rows and form functionality -->
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -399,7 +455,7 @@
                     row.style.backgroundColor = index % 2 === 0 ? '#f8f9fa' : '#ffffff';
                 });
                 row.addEventListener("click", function(e) {
-                    if(e.target.tagName.toLowerCase() !== 'a' && !e.target.closest('a')) {
+                    if (e.target.tagName.toLowerCase() !== 'a' && !e.target.closest('a')) {
                         window.location.href = this.dataset.href;
                     }
                 });
@@ -421,7 +477,7 @@
             const hours = now.getHours().toString().padStart(2, '0');
             const minutes = now.getMinutes().toString().padStart(2, '0');
             const timeString = `${hours}:${minutes}`;
-            
+
             document.getElementById(fieldId).value = timeString;
             calculateDuration();
         }
@@ -432,25 +488,25 @@
             const endTime = document.getElementById('end_time')?.value;
             const durationField = document.getElementById('duration');
             const durationDisplay = document.getElementById('duration_display');
-            
+
             if (startTime && endTime) {
                 const start = new Date('1970-01-01T' + startTime + ':00');
                 const end = new Date('1970-01-01T' + endTime + ':00');
-                
+
                 if (end < start) {
                     end.setDate(end.getDate() + 1);
                 }
-                
+
                 const diffMs = end - start;
                 const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
                 const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-                
-                const durationString = 
-                    diffHours.toString().padStart(2, '0') + ':' + 
+
+                const durationString =
+                    diffHours.toString().padStart(2, '0') + ':' +
                     diffMinutes.toString().padStart(2, '0') + ':00';
-                
-                if(durationField) durationField.value = durationString;
-                if(durationDisplay) durationDisplay.value = `${diffHours}h ${diffMinutes}m`;
+
+                if (durationField) durationField.value = durationString;
+                if (durationDisplay) durationDisplay.value = `${diffHours}h ${diffMinutes}m`;
             }
         }
 
@@ -557,17 +613,18 @@
 
         // Handle modal form submission success
         @if(session('success'))
-            @if(session('modal_success'))
-                // If this was a modal submission, close the modal and refresh the page
-                var modal = bootstrap.Modal.getInstance(document.getElementById('addMovementModal'));
-                if(modal) {
-                    modal.hide();
-                }
-                setTimeout(() => {
-                    window.location.reload();
-                }, 100);
-            @endif
+        @if(session('modal_success'))
+        // If this was a modal submission, close the modal and refresh the page
+        var modal = bootstrap.Modal.getInstance(document.getElementById('addMovementModal'));
+        if (modal) {
+            modal.hide();
+        }
+        setTimeout(() => {
+            window.location.reload();
+        }, 100);
+        @endif
         @endif
     </script>
+
 </div>
 @endsection
