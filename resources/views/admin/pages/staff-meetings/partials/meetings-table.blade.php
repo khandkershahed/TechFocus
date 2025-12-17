@@ -204,26 +204,19 @@
                         <!-- Actions Column -->
                         <td>
                             <div class="btn-group btn-group-sm" role="group">
-                                        <!-- View Button - HR only -->
-                                            @if(auth()->user()->department == 'hr')
-                                                <a href="{{ route('admin.staff-meetings.show', $meeting) }}" 
-                                                class="btn btn-outline-info" 
-                                                title="View Details"
-                                                data-bs-toggle="tooltip">
-                                                    <i class="fas fa-eye"></i>
-                                                </a>
-                                            @endif
-                                            
-                                            <!-- Edit Button - HR only -->
-                                            @if(auth()->user()->department == 'hr')
-                                                <a href="{{ route('admin.staff-meetings.edit', $meeting) }}" 
-                                                class="btn btn-outline-warning" 
-                                                title="Edit Meeting"
-                                                data-bs-toggle="tooltip">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
-                                            @endif
-
+                                <a href="{{ route('admin.staff-meetings.show', $meeting) }}" 
+                                   class="btn btn-outline-info" 
+                                   title="View Details"
+                                   data-bs-toggle="tooltip">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                
+                                <a href="{{ route('admin.staff-meetings.edit', $meeting) }}" 
+                                   class="btn btn-outline-warning" 
+                                   title="Edit Meeting"
+                                   data-bs-toggle="tooltip">
+                                    <i class="fas fa-edit"></i>
+                                </a>
                                 
                              <!-- I AM PRESENT Button - Regular Actions -->
                                     @if($meeting->status === 'scheduled' && $meeting->date->isToday())
@@ -235,91 +228,93 @@
                                         P
                                     </button>
                                     @endif
-                              <!-- Mark as Completed - HR only -->
-        @if(auth()->user()->department == 'hr' && $meeting->status === 'scheduled')
-            <form action="{{ route('admin.staff-meetings.update-status', $meeting) }}" 
-                  method="POST" 
-                  class="d-inline"
-                  onsubmit="return confirm('Mark this meeting as completed?')">
-                @csrf
-                @method('PUT')
-                <input type="hidden" name="status" value="completed">
-                <button type="submit" 
-                        class="btn btn-outline-success" 
-                        title="Mark as Completed"
-                        data-bs-toggle="tooltip">
-                    <i class="fas fa-check"></i>
-                </button>
-            </form>
-        @endif
-        
-        <!-- Delete Button - HR only -->
-        @if(auth()->user()->department == 'hr')
-            <form action="{{ route('admin.staff-meetings.destroy', $meeting) }}" 
-                  method="POST" 
-                  class="d-inline"
-                  onsubmit="return confirm('Are you sure you want to delete this meeting?')">
-                @csrf
-                @method('DELETE')
-                <button type="submit" 
-                        class="btn btn-outline-danger" 
-                        title="Delete Meeting"
-                        data-bs-toggle="tooltip">
-                    <i class="fas fa-trash"></i>
-                </button>
-            </form>
-        @endif
+                                
+                                @if($meeting->status === 'scheduled')
+                                    <form action="{{ route('admin.staff-meetings.update-status', $meeting) }}" 
+                                          method="POST" 
+                                          class="d-inline"
+                                          onsubmit="return confirm('Mark this meeting as completed?')">
+                                        @csrf
+                                        @method('PUT')
+                                        <input type="hidden" name="status" value="completed">
+                                        <button type="submit" 
+                                                class="btn btn-outline-success" 
+                                                title="Mark as Completed"
+                                                data-bs-toggle="tooltip">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                    </form>
+                                @endif
+                                
+                                <form action="{{ route('admin.staff-meetings.destroy', $meeting) }}" 
+                                      method="POST" 
+                                      class="d-inline"
+                                      onsubmit="return confirm('Are you sure you want to delete this meeting?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" 
+                                            class="btn btn-outline-danger" 
+                                            title="Delete Meeting"
+                                            data-bs-toggle="tooltip">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
                             </div>
                         </td>
                         
-                      <!-- HR Actions Column -->
-<td>
-    @if(auth()->user()->department == 'hr' || auth()->user()->hasRole('hr'))
-        <div class="btn-group btn-group-sm">
-            <!-- Send Reminders -->
-            @if($meeting->canSendReminder())
-                <button type="button" class="btn btn-outline-info" 
-                        onclick="sendReminder('email', {{ $meeting->id }})"
-                        title="Send Email Reminder">
-                    <i class="fas fa-envelope"></i>
-                </button>
-                <button type="button" class="btn btn-outline-success" 
-                        onclick="sendReminder('whatsapp', {{ $meeting->id }})"
-                        title="Send WhatsApp Reminder">
-                    <i class="fab fa-whatsapp"></i>
-                </button>
-            @endif
-            
-            <!-- Generate Links -->
-            @if($meeting->platform == 'online' && !$meeting->meeting_link)
-                <button type="button" class="btn btn-outline-primary"
-                        onclick="generateMeetingLink({{ $meeting->id }})"
-                        title="Generate Meeting Link">
-                    <i class="fas fa-link"></i>
-                </button>
-            @endif
-            
-            <!-- Attendance QR -->
-            <button type="button" class="btn btn-outline-warning"
-                    onclick="generateQRCode({{ $meeting->id }})"
-                    title="Generate Attendance QR Code">
-                <i class="fas fa-qrcode"></i>
-            </button>
-            
-            <!-- Upload Minutes -->
-            @if($meeting->status == 'completed' && !$meeting->meeting_minutes)
-                <a href="{{ route('admin.staff-meetings.show', $meeting) }}#minutes" 
-                   class="btn btn-outline-secondary"
-                   title="Upload Minutes">
-                    <i class="fas fa-file-alt"></i>
-                </a>
-            @endif
-        </div>
-    @else
-        <!-- Show nothing or alternative content for non-HR users -->
-        {{-- <span class="text-muted">HR Actions</span> --}}
-    @endif
-</td>
+                        <!-- HR Actions Column -->
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <!-- Send Reminders -->
+                                @if($meeting->canSendReminder())
+                                    <button type="button" class="btn btn-outline-info" 
+                                            onclick="sendReminder('email', {{ $meeting->id }})"
+                                            title="Send Email Reminder">
+                                        <i class="fas fa-envelope"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-outline-success" 
+                                            onclick="sendReminder('whatsapp', {{ $meeting->id }})"
+                                            title="Send WhatsApp Reminder">
+                                        <i class="fab fa-whatsapp"></i>
+                                    </button>
+                                @endif
+                                
+                                <!-- Generate Links -->
+                                @if($meeting->platform == 'online' && !$meeting->meeting_link)
+                                    <button type="button" class="btn btn-outline-primary"
+                                            onclick="generateMeetingLink({{ $meeting->id }})"
+                                            title="Generate Meeting Link">
+                                        <i class="fas fa-link"></i>
+                                    </button>
+                                @endif
+                                
+                                <!-- Attendance QR -->
+                                <button type="button" class="btn btn-outline-warning"
+                                        onclick="generateQRCode({{ $meeting->id }})"
+                                        title="Generate Attendance QR Code">
+                                    <i class="fas fa-qrcode"></i>
+                                </button>
+                                
+                                <!-- Upload Minutes -->
+                                @if($meeting->status == 'completed' && !$meeting->meeting_minutes)
+                                    <a href="{{ route('admin.staff-meetings.show', $meeting) }}#minutes" 
+                                       class="btn btn-outline-secondary"
+                                       title="Upload Minutes">
+                                        <i class="fas fa-file-alt"></i>
+                                    </a>
+                                @endif
+                                
+                                <!-- I AM PRESENT Button - HR Actions (alternative) -->
+                                {{-- @if($meeting->status === 'scheduled' && $meeting->date->isToday())
+                                <button class="btn btn-primary btn-sm present-btn mark-present-btn" 
+                                        data-meeting-id="{{ $meeting->id }}"
+                                        data-meeting-title="{{ $meeting->title }}"
+                                        title="Mark yourself as present for this meeting">
+                                    <i class="fas fa-check-circle"></i> Present
+                                </button>
+                                @endif --}}
+                            </div>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
