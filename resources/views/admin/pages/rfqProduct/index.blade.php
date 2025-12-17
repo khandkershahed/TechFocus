@@ -432,7 +432,7 @@
                           <!-- Quick status update links -->
                           <li><hr class="dropdown-divider"></li>
                           <li><h6 class="dropdown-header">Quick Status Update</h6></li>
-                          <li>
+                          {{-- <li>
                             <form method="POST" action="/rfq-products/{{ $rfq->id }}/status" style="display: inline;">
                               @csrf
                               @method('PUT')
@@ -441,7 +441,7 @@
                                 <i class="fas fa-clock text-warning me-2"></i> Mark as Pending
                               </button>
                             </form>
-                          </li>
+                          </li> --}}
                           <li>
                             <form method="POST" action="/rfq-products/{{ $rfq->id }}/status" style="display: inline;">
                               @csrf
@@ -452,7 +452,7 @@
                               </button>
                             </form>
                           </li>
-                          <li>
+                          {{-- <li>
                             <form method="POST" action="/rfq-products/{{ $rfq->id }}/status" style="display: inline;">
                               @csrf
                               @method('PUT')
@@ -461,7 +461,7 @@
                                 <i class="fas fa-check-circle text-success me-2"></i> Mark as Closed
                               </button>
                             </form>
-                          </li>
+                          </li> --}}
                           <li>
                             <form method="POST" action="/rfq-products/{{ $rfq->id }}/status" style="display: inline;">
                               @csrf

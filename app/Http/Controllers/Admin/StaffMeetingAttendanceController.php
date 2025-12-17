@@ -11,6 +11,9 @@ use App\Http\Requests\UpdateAttendanceRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use App\Models\Attendance;
+use App\Models\AttendanceRequest;
+
 use Barryvdh\DomPDF\Facade\Pdf;
 use Maatwebsite\Excel\Facades\Excel;
 class StaffMeetingAttendanceController extends Controller
@@ -743,5 +746,489 @@ public function staffDetail($staff, Request $request)
         return $pdf->download($fileName);
     }
 
+    // public function markAttendance()
+    // {
+    //     // Check if admin is authenticated
+    //     if (!auth('admin')->check()) {
+    //         return redirect()->route('admin.login')->with('error', 'Please login first');
+    //     }
+        
+    //     // Get upcoming meetings
+    //     $meetings = StaffMeeting::where('date', '>=', now()->subDays(7))
+    //         ->orderBy('date', 'desc')
+    //         ->get();
+            
+    //     return view('admin.attendance.mark', compact('meetings'));
+    // }
+    
+    /**
+     * Submit attendance request
+     */
+
+    /**
+ * Show approval queue
+ */
+public function approvalQueue()
+{
+    $pendingRequests = \App\Models\AttendanceRequest::with(['meeting', 'staff'])
+        ->where('status', 'pending')
+        ->orderBy('requested_at', 'asc')
+        ->paginate(20);
+    
+    $approvedToday = \App\Models\AttendanceRequest::where('status', 'approved')
+        ->whereDate('approved_at', now()->toDateString())
+        ->count();
+    
+    $rejectedToday = \App\Models\AttendanceRequest::where('status', 'rejected')
+        ->whereDate('approved_at', now()->toDateString())
+        ->count();
+    
+    return view('admin.attendance.approval-queue', compact(
+        'pendingRequests', 
+        'approvedToday', 
+        'rejectedToday'
+    ));
+}
+
+/**
+ * Approve a single request
+ */
+public function approveRequest($id, Request $request)
+{
+    DB::beginTransaction();
+    
+    try {
+        $attendanceRequest = AttendanceRequest::findOrFail($id);
+        $meeting = StaffMeeting::find($attendanceRequest->meeting_id);
+        
+        // Calculate what join_time should be
+        $joinTime = null;
+        
+        // Option 1: Use meeting start time if available
+        if ($meeting && $meeting->date && $meeting->time) {
+            $joinTime = Carbon::parse($meeting->date . ' ' . $meeting->time);
+        } 
+        // Option 2: Use requested time (when button was clicked)
+        else if ($attendanceRequest->requested_at) {
+            $joinTime = $attendanceRequest->requested_at;
+        }
+        // Option 3: Use current time
+        else {
+            $joinTime = now();
+        }
+        
+        // Update the request status
+        $attendanceRequest->update([
+            'status' => 'approved',
+            'approved_by' => Auth::id(),
+            'approved_at' => now(),
+            'admin_notes' => $request->input('notes', '')
+        ]);
+        
+        // Update or create the attendance record
+        $attendance = StaffMeetingAttendance::updateOrCreate(
+            [
+                'meeting_id' => $attendanceRequest->meeting_id,
+                'staff_id' => $attendanceRequest->staff_id
+            ],
+            [
+                'staff_name' => $attendanceRequest->staff->name,
+                'department' => $attendanceRequest->staff->department,
+                'status' => 'present',
+                'requested_at' => $attendanceRequest->requested_at,
+                'join_time' => $joinTime, // Set the correct join time
+                'meeting_start_time' => $meeting && $meeting->date && $meeting->time 
+                    ? Carbon::parse($meeting->date . ' ' . $meeting->time) 
+                    : null,
+                'actual_join_time' => $attendanceRequest->requested_at, // When they actually clicked
+                'requires_approval' => false,
+                'is_approved' => true,
+                'approved_by' => Auth::id(),
+                'approved_at' => now(),
+                'notes' => 'Approved by admin'
+            ]
+        );
+        
+        DB::commit();
+        
+        return response()->json([
+            'success' => true, 
+            'message' => 'Attendance approved successfully!'
+        ]);
+        
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return response()->json([
+            'success' => false, 
+            'message' => 'Error: ' . $e->getMessage()
+        ], 500);
+    }
+}
+
+/**
+ * Reject a single request
+ */
+public function rejectRequest($id, Request $request)
+{
+    try {
+        $attendanceRequest = \App\Models\AttendanceRequest::findOrFail($id);
+        
+        $attendanceRequest->update([
+            'status' => 'rejected',
+            'approved_by' => auth('admin')->id(),
+            'approved_at' => now(),
+            'admin_notes' => $request->input('notes', 'Rejected by admin')
+        ]);
+        
+        // Optionally update attendance record
+        \App\Models\StaffMeetingAttendance::where('meeting_id', $attendanceRequest->meeting_id)
+            ->where('staff_id', $attendanceRequest->staff_id)
+            ->update([
+                'status' => 'absent',
+                'is_approved' => false,
+                'notes' => 'Request rejected: ' . $request->input('notes', '')
+            ]);
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Attendance request rejected.'
+        ]);
+        
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage()
+        ], 500);
+    }
+}
+
+/**
+ * Bulk approve requests
+ */
+public function bulkApprove(Request $request)
+{
+    try {
+        $validated = $request->validate([
+            'request_ids' => 'required|array',
+            'request_ids.*' => 'exists:attendance_requests,id',
+            'notes' => 'nullable|string',
+            'send_notification' => 'boolean'
+        ]);
+        
+        DB::beginTransaction();
+        
+        $approvedCount = 0;
+        
+        foreach ($validated['request_ids'] as $requestId) {
+            $attendanceRequest = \App\Models\AttendanceRequest::find($requestId);
+            
+            if ($attendanceRequest && $attendanceRequest->status === 'pending') {
+                $attendanceRequest->update([
+                    'status' => 'approved',
+                    'approved_by' => auth('admin')->id(),
+                    'approved_at' => now(),
+                    'admin_notes' => $validated['notes'] ?? 'Bulk approved by admin'
+                ]);
+                
+                // Update attendance record
+                \App\Models\StaffMeetingAttendance::where('meeting_id', $attendanceRequest->meeting_id)
+                    ->where('staff_id', $attendanceRequest->staff_id)
+                    ->update([
+                        'status' => 'present',
+                        'requires_approval' => false,
+                        'is_approved' => true,
+                        'approved_by' => auth('admin')->id(),
+                        'approved_at' => now(),
+                        'notes' => 'Bulk approved via admin panel'
+                    ]);
+                
+                $approvedCount++;
+            }
+        }
+        
+        DB::commit();
+        
+        return response()->json([
+            'success' => true,
+            'message' => "Successfully approved {$approvedCount} requests.",
+            'processed' => $approvedCount
+        ]);
+        
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return response()->json([
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage()
+        ], 500);
+    }
+}
+
+/**
+ * Bulk reject requests
+ */
+public function bulkReject(Request $request)
+{
+    try {
+        $validated = $request->validate([
+            'request_ids' => 'required|array',
+            'request_ids.*' => 'exists:attendance_requests,id',
+            'notes' => 'required|string',
+            'send_notification' => 'boolean'
+        ]);
+        
+        $rejectedCount = 0;
+        
+        foreach ($validated['request_ids'] as $requestId) {
+            $attendanceRequest = \App\Models\AttendanceRequest::find($requestId);
+            
+            if ($attendanceRequest && $attendanceRequest->status === 'pending') {
+                $attendanceRequest->update([
+                    'status' => 'rejected',
+                    'approved_by' => auth('admin')->id(),
+                    'approved_at' => now(),
+                    'admin_notes' => $validated['notes'] ?? 'Bulk rejected by admin'
+                ]);
+                
+                $rejectedCount++;
+            }
+        }
+        
+        return response()->json([
+            'success' => true,
+            'message' => "Successfully rejected {$rejectedCount} requests.",
+            'processed' => $rejectedCount
+        ]);
+        
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage()
+        ], 500);
+    }
+}
+
+/**
+ * Get request details
+ */
+public function requestDetails($id)
+{
+    try {
+        $request = \App\Models\AttendanceRequest::with(['meeting', 'staff', 'approver'])
+            ->findOrFail($id);
+        
+        return view('admin.attendance.partials.request-details', compact('request'));
+        
+    } catch (\Exception $e) {
+        return '<div class="alert alert-danger">Error loading request details</div>';
+    }
+}
+    // public function submitRequest(Request $request)
+    // {
+    //     // Use admin guard
+    //     if (!auth('admin')->check()) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Admin not authenticated. Please login.'
+    //         ], 401);
+    //     }
+        
+    //     try {
+    //         $validated = $request->validate([
+    //             'meeting_id' => 'required|exists:staff_meetings,id',
+    //             'staff_id' => 'required|exists:admins,id'
+    //         ]);
+            
+    //         // Verify the staff_id matches the logged-in admin
+    //         $adminId = auth('admin')->id();
+    //         if ($validated['staff_id'] != $adminId) {
+    //             return response()->json([
+    //                 'success' => false,
+    //                 'message' => 'Unauthorized: Staff ID does not match logged-in admin.'
+    //             ], 403);
+    //         }
+            
+    //         // Get admin details
+    //         $admin = Admin::findOrFail($adminId);
+            
+    //         // Check for duplicate pending request
+    //         $existing = AttendanceRequest::where('meeting_id', $validated['meeting_id'])
+    //             ->where('staff_id', $adminId)
+    //             ->where('status', 'pending')
+    //             ->first();
+                
+    //         if ($existing) {
+    //             return response()->json([
+    //                 'success' => false,
+    //                 'message' => 'You already have a pending request for this meeting.'
+    //             ], 422);
+    //         }
+            
+    //         // Check if already attended
+    //         $alreadyAttended = StaffMeetingAttendance::where('meeting_id', $validated['meeting_id'])
+    //             ->where('staff_id', $adminId)
+    //             ->exists();
+                
+    //         if ($alreadyAttended) {
+    //             return response()->json([
+    //                 'success' => false,
+    //                 'message' => 'You have already attended this meeting.'
+    //             ], 422);
+    //         }
+            
+    //         // Create attendance request
+    //         AttendanceRequest::create([
+    //             'meeting_id' => $validated['meeting_id'],
+    //             'staff_id' => $adminId,
+    //             'status' => 'pending',
+    //             'requested_at' => now()
+    //         ]);
+            
+    //         // Create pending attendance record
+    //         StaffMeetingAttendance::create([
+    //             'meeting_id' => $validated['meeting_id'],
+    //             'staff_id' => $adminId,
+    //             'staff_name' => $admin->name,
+    //             'department' => is_array($admin->department) ? implode(', ', $admin->department) : $admin->department,
+    //             'status' => 'absent', // Default until approved
+    //             'requires_approval' => true,
+    //             'is_approved' => false,
+    //             'join_time' => now(),
+    //             'notes' => 'Pending approval - submitted via button'
+    //         ]);
+            
+    //         return response()->json([
+    //             'success' => true,
+    //             'message' => 'Attendance request submitted successfully! Waiting for approval.'
+    //         ]);
+            
+    //     } catch (\Exception $e) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Error: ' . $e->getMessage()
+    //         ], 500);
+    //     }
+    // }
+public function submitRequest(Request $request)
+{
+    try {
+        $validated = $request->validate([
+            'meeting_id' => 'required|exists:staff_meetings,id',
+            'staff_id' => 'required|exists:admins,id'
+        ]);
+        
+        // Get staff details
+        $staff = Admin::findOrFail($validated['staff_id']);
+        $meeting = StaffMeeting::findOrFail($validated['meeting_id']);
+        
+        // Check for existing attendance request
+        $existingRequest = AttendanceRequest::where('meeting_id', $validated['meeting_id'])
+            ->where('staff_id', $validated['staff_id'])
+            ->first();
+        
+        // Check for existing attendance record
+        $existingAttendance = StaffMeetingAttendance::where('meeting_id', $validated['meeting_id'])
+            ->where('staff_id', $validated['staff_id'])
+            ->first();
+        
+        // If already approved
+        if ($existingRequest && $existingRequest->status === 'approved') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Your attendance for this meeting has already been approved!',
+                'type' => 'already_approved',
+                'attendance' => $existingAttendance
+            ], 422);
+        }
+        
+        // If pending request exists
+        if ($existingRequest && $existingRequest->status === 'pending') {
+            return response()->json([
+                'success' => false,
+                'message' => 'You already have a pending attendance request for this meeting!',
+                'type' => 'pending_exists',
+                'request' => $existingRequest
+            ], 422);
+        }
+        
+        // If rejected request exists
+        if ($existingRequest && $existingRequest->status === 'rejected') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Your previous attendance request was rejected. Please contact admin.',
+                'type' => 'rejected_exists'
+            ], 422);
+        }
+        
+        // If attendance already marked (even without request)
+        if ($existingAttendance) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Your attendance for this meeting has already been recorded!',
+                'type' => 'attendance_exists',
+                'attendance' => $existingAttendance
+            ], 422);
+        }
+        
+        // Create attendance request
+        $attendanceRequest = AttendanceRequest::create([
+            'meeting_id' => $validated['meeting_id'],
+            'staff_id' => $validated['staff_id'],
+            'status' => 'pending',
+            'requested_at' => now()
+        ]);
+        
+        // Create pending attendance record
+        StaffMeetingAttendance::create([
+            'meeting_id' => $validated['meeting_id'],
+            'staff_id' => $validated['staff_id'],
+            'staff_name' => $staff->name,
+            'department' => $staff->department,
+            'status' => 'absent', // Default until approved
+            'requested_at' => now(),
+            'join_time' => $meeting->date && $meeting->time 
+                ? Carbon::parse($meeting->date . ' ' . $meeting->time)
+                : now(),
+            'meeting_start_time' => $meeting->date && $meeting->time 
+                ? Carbon::parse($meeting->date . ' ' . $meeting->time)
+                : null,
+            'requires_approval' => true,
+            'is_approved' => false,
+            'notes' => 'Pending admin approval'
+        ]);
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Attendance request submitted successfully! Waiting for approval.',
+            'type' => 'submitted'
+        ]);
+        
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage(),
+            'type' => 'error'
+        ], 500);
+    }
+}
+    /**
+     * Get admin's pending requests
+     */
+    public function myRequests()
+    {
+        // Use admin guard
+        if (!auth('admin')->check()) {
+            return response()->json([], 401);
+        }
+        
+        $adminId = auth('admin')->id();
+        
+        $requests = AttendanceRequest::with('meeting')
+            ->where('staff_id', $adminId)
+            ->where('status', 'pending')
+            ->orderBy('created_at', 'desc')
+            ->get();
+            
+        return response()->json($requests);
+    }
 
 }

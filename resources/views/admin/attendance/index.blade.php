@@ -68,9 +68,9 @@
                                     <th>Date</th>
                                     <th>Status</th>
                                     <th>Join Time</th>
-                                    <th>Leave Time</th>
-                                    <th>Notes</th>
-                                    <th>Approval</th>
+                                    {{-- <th>Leave Time</th> --}}
+                                    {{-- <th>Notes</th> --}}
+                                    {{-- <th>Approval</th> --}}
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -112,14 +112,14 @@
                                             <span class="text-muted">N/A</span>
                                         @endif
                                     </td>
-                                    <td>
+                                    {{-- <td>
                                         @if($attendance->leave_time)
                                             {{ $attendance->leave_time->format('h:i A') }}
                                         @else
                                             <span class="text-muted">N/A</span>
                                         @endif
-                                    </td>
-                                    <td>
+                                    </td> --}}
+                                    {{-- <td>
                                         @if($attendance->notes)
                                             <button type="button" class="btn btn-sm btn-info" 
                                                     data-bs-toggle="popover" 
@@ -128,8 +128,8 @@
                                                 <i class="fas fa-sticky-note"></i>
                                             </button>
                                         @endif
-                                    </td>
-                                    <td class="text-center">
+                                    </td> --}}
+                                    {{-- <td class="text-center">
                                         @if($attendance->requires_approval)
                                             @if($attendance->is_approved)
                                                 <span class="badge bg-success" title="Approved by {{ $attendance->approver->name ?? 'N/A' }}">
@@ -151,7 +151,7 @@
                                         @else
                                             <span class="badge bg-secondary">N/A</span>
                                         @endif
-                                    </td>
+                                    </td> --}}
                                     <td>
                                         <div class="btn-group btn-group-sm">
                                             <a href="{{ route('admin.attendance.show', $attendance) }}" 

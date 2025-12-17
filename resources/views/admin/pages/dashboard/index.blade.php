@@ -11,6 +11,174 @@
                         Dashboard
                     </h1>
                 </div>
+
+                {{-- <!-- Attendance Approval Queue Table -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex justify-content-between align-items-center">
+        <h6 class="m-0 font-weight-bold text-primary">
+            <i class="fas fa-user-clock me-2"></i>Pending Attendance Requests
+            <span class="badge bg-warning ms-2">{{ $pendingRequests->total() }}</span>
+        </h6>
+        <div class="btn-group">
+            <button type="button" class="btn btn-sm btn-outline-primary" onclick="reloadRequests()">
+                <i class="fas fa-sync-alt"></i> Refresh
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-success" onclick="approveAllSelected()">
+                <i class="fas fa-check-double"></i> Approve Selected
+            </button>
+        </div>
+    </div>
+    
+    <div class="card-body">
+        @if($pendingRequests->isEmpty())
+        <div class="text-center py-5">
+            <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+            <h5 class="text-muted">No pending attendance requests</h5>
+            <p class="text-muted">All requests have been processed</p>
+        </div>
+        @else
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover" id="approvalTable" width="100%" cellspacing="0">
+                <thead class="bg-light">
+                    <tr>
+                        <th width="30">
+                            <input type="checkbox" id="selectAll" onchange="toggleSelectAll()">
+                        </th>
+                        <th>Staff Member</th>
+                        <th>Meeting</th>
+                        <th>Date & Time</th>
+                        <th>Department</th>
+                        <th>Requested At</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($pendingRequests as $request)
+                    <tr data-request-id="{{ $request->id }}">
+                        <td>
+                            <input type="checkbox" class="request-checkbox" value="{{ $request->id }}">
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                @if($request->staff->photo)
+                                <img src="{{ asset('storage/' . $request->staff->photo) }}" 
+                                     class="rounded-circle me-2" width="32" height="32" alt="Staff Photo">
+                                @else
+                                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2" 
+                                     style="width: 32px; height: 32px;">
+                                    {{ substr($request->staff->name, 0, 1) }}
+                                </div>
+                                @endif
+                                <div>
+                                    <strong>{{ $request->staff->name }}</strong>
+                                    <div class="small text-muted">{{ $request->staff->email }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <strong>{{ $request->meeting->title }}</strong>
+                            <div class="small text-muted">{{ $request->meeting->description ?? 'No description' }}</div>
+                        </td>
+                        <td>
+                            {{ $request->meeting->date->format('M d, Y') }}
+                            @if($request->meeting->time)
+                            <div class="small text-muted">{{ $request->meeting->time }}</div>
+                            @endif
+                        </td>
+                        <td>
+                            @if(is_array($request->staff->department))
+                                @foreach($request->staff->department as $dept)
+                                    <span class="badge bg-info me-1">{{ $dept }}</span>
+                                @endforeach
+                            @else
+                                <span class="badge bg-secondary">{{ $request->staff->department ?? 'N/A' }}</span>
+                            @endif
+                        </td>
+                        <td>
+                            {{ $request->requested_at->format('M d, Y h:i A') }}
+                            <div class="small text-muted">{{ $request->requested_at->diffForHumans() }}</div>
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-success btn-approve" 
+                                        onclick="approveRequest({{ $request->id }})"
+                                        data-bs-toggle="tooltip" title="Approve">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                <button class="btn btn-danger btn-reject" 
+                                        onclick="rejectRequest({{ $request->id }})"
+                                        data-bs-toggle="tooltip" title="Reject">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                                <button class="btn btn-info btn-view" 
+                                        onclick="viewRequestDetails({{ $request->id }})"
+                                        data-bs-toggle="tooltip" title="View Details">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+            
+            <!-- Pagination -->
+            @if($pendingRequests->hasPages())
+            <div class="d-flex justify-content-between align-items-center mt-3">
+                <div class="text-muted">
+                    Showing {{ $pendingRequests->firstItem() }} to {{ $pendingRequests->lastItem() }} 
+                    of {{ $pendingRequests->total() }} requests
+                </div>
+                <nav>
+                    {{ $pendingRequests->links() }}
+                </nav>
+            </div>
+            @endif
+        </div>
+        @endif
+    </div>
+</div>
+
+<!-- Bulk Actions Modal -->
+<div class="modal fade" id="bulkActionModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Bulk Action</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <textarea id="bulkNotes" class="form-control" rows="3" 
+                          placeholder="Add notes for this action (optional)"></textarea>
+                <div class="form-check mt-3">
+                    <input type="checkbox" class="form-check-input" id="sendNotification">
+                    <label class="form-check-label" for="sendNotification">
+                        Send notification to staff members
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="confirmBulkAction()">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Request Details Modal -->
+<div class="modal fade" id="requestDetailsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Request Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="requestDetailsContent">
+                <!-- Content loaded via AJAX -->
+            </div>
+        </div>
+    </div>
+</div> --}}
                   
                 <div class="d-flex align-items-center gap-2 gap-lg-3">
                     <!-- Add this card to your dashboard -->
@@ -1511,6 +1679,173 @@
                                                        </div>
                                                    </div>
                                                </div>
+                                                               <!-- Attendance Approval Queue Table -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex justify-content-between align-items-center">
+        <h6 class="m-0 font-weight-bold text-primary">
+            <i class="fas fa-user-clock me-2"></i>Pending Attendance Requests
+            <span class="badge bg-warning ms-2">{{ $pendingRequests->total() }}</span>
+        </h6>
+        <div class="btn-group">
+            <button type="button" class="btn btn-sm btn-outline-primary" onclick="reloadRequests()">
+                <i class="fas fa-sync-alt"></i> Refresh
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-success" onclick="approveAllSelected()">
+                <i class="fas fa-check-double"></i> Approve Selected
+            </button>
+        </div>
+    </div>
+    
+    <div class="card-body">
+        @if($pendingRequests->isEmpty())
+        <div class="text-center py-5">
+            <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+            <h5 class="text-muted">No pending attendance requests</h5>
+            <p class="text-muted">All requests have been processed</p>
+        </div>
+        @else
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover" id="approvalTable" width="100%" cellspacing="0">
+                <thead class="bg-light">
+                    <tr>
+                        <th width="30">
+                            <input type="checkbox" id="selectAll" onchange="toggleSelectAll()">
+                        </th>
+                        <th>Staff Member</th>
+                        <th>Meeting</th>
+                        <th>Date & Time</th>
+                        <th>Department</th>
+                        <th>Requested At</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($pendingRequests as $request)
+                    <tr data-request-id="{{ $request->id }}">
+                        <td>
+                            <input type="checkbox" class="request-checkbox" value="{{ $request->id }}">
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                @if($request->staff->photo)
+                                <img src="{{ asset('storage/' . $request->staff->photo) }}" 
+                                     class="rounded-circle me-2" width="32" height="32" alt="Staff Photo">
+                                @else
+                                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2" 
+                                     style="width: 32px; height: 32px;">
+                                    {{ substr($request->staff->name, 0, 1) }}
+                                </div>
+                                @endif
+                                <div>
+                                    <strong>{{ $request->staff->name }}</strong>
+                                    <div class="small text-muted">{{ $request->staff->email }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <strong>{{ $request->meeting->title }}</strong>
+                            <div class="small text-muted">{{ $request->meeting->description ?? 'No description' }}</div>
+                        </td>
+                        <td>
+                            {{ $request->meeting->date->format('M d, Y') }}
+                            @if($request->meeting->time)
+                            <div class="small text-muted">{{ $request->meeting->time }}</div>
+                            @endif
+                        </td>
+                        <td>
+                            @if(is_array($request->staff->department))
+                                @foreach($request->staff->department as $dept)
+                                    <span class="badge bg-info me-1">{{ $dept }}</span>
+                                @endforeach
+                            @else
+                                <span class="badge bg-secondary">{{ $request->staff->department ?? 'N/A' }}</span>
+                            @endif
+                        </td>
+                        <td>
+                            {{ $request->requested_at->format('M d, Y h:i A') }}
+                            <div class="small text-muted">{{ $request->requested_at->diffForHumans() }}</div>
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-success btn-approve" 
+                                        onclick="approveRequest({{ $request->id }})"
+                                        data-bs-toggle="tooltip" title="Approve">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                <button class="btn btn-danger btn-reject" 
+                                        onclick="rejectRequest({{ $request->id }})"
+                                        data-bs-toggle="tooltip" title="Reject">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                                <button class="btn btn-info btn-view" 
+                                        onclick="viewRequestDetails({{ $request->id }})"
+                                        data-bs-toggle="tooltip" title="View Details">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+            
+            <!-- Pagination -->
+            @if($pendingRequests->hasPages())
+            <div class="d-flex justify-content-between align-items-center mt-3">
+                <div class="text-muted">
+                    Showing {{ $pendingRequests->firstItem() }} to {{ $pendingRequests->lastItem() }} 
+                    of {{ $pendingRequests->total() }} requests
+                </div>
+                <nav>
+                    {{ $pendingRequests->links() }}
+                </nav>
+            </div>
+            @endif
+        </div>
+        @endif
+    </div>
+</div>
+
+<!-- Bulk Actions Modal -->
+<div class="modal fade" id="bulkActionModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Bulk Action</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <textarea id="bulkNotes" class="form-control" rows="3" 
+                          placeholder="Add notes for this action (optional)"></textarea>
+                <div class="form-check mt-3">
+                    <input type="checkbox" class="form-check-input" id="sendNotification">
+                    <label class="form-check-label" for="sendNotification">
+                        Send notification to staff members
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="confirmBulkAction()">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Request Details Modal -->
+<div class="modal fade" id="requestDetailsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Request Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="requestDetailsContent">
+                <!-- Content loaded via AJAX -->
+            </div>
+        </div>
+    </div>
+</div>
                 </div>
                 <div class="modal fade" id="kt_modal_add_event" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered mw-650px">
@@ -1762,5 +2097,198 @@
                 document.getElementById('live-clock').innerText = 'Absent Today';
             }
         </script>
-    @endpush
+        <script>
+// Global variables
+let currentAction = null;
+let selectedRequests = [];
+
+// Approve single request
+async function approveRequest(requestId) {
+    if(confirm('Are you sure you want to approve this attendance request?')) {
+        await processRequest(requestId, 'approve', 'Approving...');
+    }
+}
+
+// Reject single request
+async function rejectRequest(requestId) {
+    const notes = prompt('Please provide a reason for rejection:');
+    if(notes !== null) {
+        await processRequest(requestId, 'reject', 'Rejecting...', {notes: notes});
+    }
+}
+
+// Process request (approve/reject)
+async function processRequest(requestId, action, loadingText, data = {}) {
+    const btn = $(`[data-request-id="${requestId}"] .btn-${action}`);
+    const originalText = btn.html();
+    btn.html(`<i class="fas fa-spinner fa-spin"></i>`);
+    btn.prop('disabled', true);
+    
+    try {
+        const response = await fetch(`/admin/attendance/${action}/${requestId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        
+        if(result.success) {
+            // Remove row from table
+            $(`[data-request-id="${requestId}"]`).fadeOut(300, function() {
+                $(this).remove();
+                updateRequestCount();
+            });
+            
+            showToast('success', result.message || 'Request processed successfully!');
+        } else {
+            showToast('error', result.message || 'Error processing request');
+            btn.html(originalText);
+            btn.prop('disabled', false);
+        }
+    } catch(error) {
+        showToast('error', 'Network error. Please try again.');
+        btn.html(originalText);
+        btn.prop('disabled', false);
+    }
+}
+
+// Toggle select all checkboxes
+function toggleSelectAll() {
+    const selectAll = $('#selectAll').prop('checked');
+    $('.request-checkbox').prop('checked', selectAll);
+    updateSelectedCount();
+}
+
+// Update selected requests count
+function updateSelectedCount() {
+    selectedRequests = $('.request-checkbox:checked').map(function() {
+        return $(this).val();
+    }).get();
+    
+    // Update UI if needed
+}
+
+// Approve all selected requests
+function approveAllSelected() {
+    if(selectedRequests.length === 0) {
+        alert('Please select at least one request');
+        return;
+    }
+    
+    currentAction = 'approve';
+    $('#bulkNotes').val('');
+    $('#sendNotification').prop('checked', true);
+    $('#bulkActionModal').modal('show');
+}
+
+// Confirm bulk action
+async function confirmBulkAction() {
+    if(!currentAction || selectedRequests.length === 0) return;
+    
+    const notes = $('#bulkNotes').val();
+    const sendNotification = $('#sendNotification').prop('checked');
+    
+    $('#bulkActionModal').modal('hide');
+    
+    try {
+        const response = await fetch(`/admin/attendance/bulk-${currentAction}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                request_ids: selectedRequests,
+                notes: notes,
+                send_notification: sendNotification
+            })
+        });
+        
+        const result = await response.json();
+        
+        if(result.success) {
+            // Remove all selected rows
+            selectedRequests.forEach(id => {
+                $(`[data-request-id="${id}"]`).remove();
+            });
+            
+            updateRequestCount();
+            showToast('success', `${result.processed} requests ${currentAction}ed successfully!`);
+            
+            // Reset selection
+            selectedRequests = [];
+            $('.request-checkbox').prop('checked', false);
+            $('#selectAll').prop('checked', false);
+        } else {
+            showToast('error', result.message || 'Error processing bulk action');
+        }
+    } catch(error) {
+        showToast('error', 'Network error. Please try again.');
+    }
+}
+
+// View request details
+async function viewRequestDetails(requestId) {
+    try {
+        const response = await fetch(`/admin/attendance/request/${requestId}/details`);
+        const html = await response.text();
+        $('#requestDetailsContent').html(html);
+        $('#requestDetailsModal').modal('show');
+    } catch(error) {
+        showToast('error', 'Error loading request details');
+    }
+}
+
+// Update request count display
+function updateRequestCount() {
+    const count = $('tbody tr').length;
+    $('.badge.bg-warning').text(count);
+    
+    if(count === 0) {
+        // Show empty state
+        $('tbody').html(`
+            <tr>
+                <td colspan="7" class="text-center py-5">
+                    <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                    <h5 class="text-muted">No pending attendance requests</h5>
+                    <p class="text-muted">All requests have been processed</p>
+                </td>
+            </tr>
+        `);
+    }
+}
+
+// Show toast notification
+function showToast(type, message) {
+    // You can use your existing toast system or implement a simple one
+    const toast = $(`<div class="alert alert-${type} alert-dismissible fade show position-fixed" 
+                    style="top: 20px; right: 20px; z-index: 9999;">
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>`);
+    
+    $('body').append(toast);
+    setTimeout(() => toast.remove(), 5000);
+}
+
+// Reload requests
+function reloadRequests() {
+    window.location.reload();
+}
+
+// Initialize tooltips
+document.addEventListener('DOMContentLoaded', function() {
+    $('[data-bs-toggle="tooltip"]').tooltip();
+    
+    // Listen for checkbox changes
+    $('.request-checkbox').on('change', updateSelectedCount);
+});
+</script>
+@endpush
 @endonce

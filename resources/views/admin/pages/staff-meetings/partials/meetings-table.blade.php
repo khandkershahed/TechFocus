@@ -37,6 +37,12 @@
 .btn-outline-success:hover { background-color: #198754; color: white; }
 .btn-outline-danger:hover { background-color: #dc3545; color: white; }
 
+/* Present Button Styles */
+.present-btn {
+    min-width: 100px;
+    white-space: nowrap;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .table-responsive {
@@ -46,6 +52,11 @@
     .btn-group-sm .btn {
         padding: 0.2rem 0.4rem;
         font-size: 0.8rem;
+    }
+    
+    .present-btn {
+        min-width: 80px;
+        font-size: 0.75rem;
     }
 }
 </style>
@@ -193,96 +204,122 @@
                         <!-- Actions Column -->
                         <td>
                             <div class="btn-group btn-group-sm" role="group">
-                                <a href="{{ route('admin.staff-meetings.show', $meeting) }}" 
-                                   class="btn btn-outline-info" 
-                                   title="View Details"
-                                   data-bs-toggle="tooltip">
-                                    <i class="fas fa-eye"></i>
-                                </a>
-                                
-                                <a href="{{ route('admin.staff-meetings.edit', $meeting) }}" 
-                                   class="btn btn-outline-warning" 
-                                   title="Edit Meeting"
-                                   data-bs-toggle="tooltip">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                
-                                @if($meeting->status === 'scheduled')
-                                    <form action="{{ route('admin.staff-meetings.update-status', $meeting) }}" 
-                                          method="POST" 
-                                          class="d-inline"
-                                          onsubmit="return confirm('Mark this meeting as completed?')">
-                                        @csrf
-                                        @method('PUT')
-                                        <input type="hidden" name="status" value="completed">
-                                        <button type="submit" 
-                                                class="btn btn-outline-success" 
-                                                title="Mark as Completed"
+                                        <!-- View Button - HR only -->
+                                            @if(auth()->user()->department == 'hr')
+                                                <a href="{{ route('admin.staff-meetings.show', $meeting) }}" 
+                                                class="btn btn-outline-info" 
+                                                title="View Details"
                                                 data-bs-toggle="tooltip">
-                                            <i class="fas fa-check"></i>
-                                        </button>
-                                    </form>
-                                @endif
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                            @endif
+                                            
+                                            <!-- Edit Button - HR only -->
+                                            @if(auth()->user()->department == 'hr')
+                                                <a href="{{ route('admin.staff-meetings.edit', $meeting) }}" 
+                                                class="btn btn-outline-warning" 
+                                                title="Edit Meeting"
+                                                data-bs-toggle="tooltip">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                            @endif
+
                                 
-                                <form action="{{ route('admin.staff-meetings.destroy', $meeting) }}" 
-                                      method="POST" 
-                                      class="d-inline"
-                                      onsubmit="return confirm('Are you sure you want to delete this meeting?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" 
-                                            class="btn btn-outline-danger" 
-                                            title="Delete Meeting"
+                             <!-- I AM PRESENT Button - Regular Actions -->
+                                    @if($meeting->status === 'scheduled' && $meeting->date->isToday())
+                                    <button class="btn btn-primary btn-sm mark-present-btn" 
+                                            data-meeting-id="{{ $meeting->id }}"
+                                            data-meeting-title="{{ $meeting->title }}"
+                                            title="Mark yourself as present for this meeting"
                                             data-bs-toggle="tooltip">
-                                        <i class="fas fa-trash"></i>
+                                        P
                                     </button>
-                                </form>
+                                    @endif
+                              <!-- Mark as Completed - HR only -->
+        @if(auth()->user()->department == 'hr' && $meeting->status === 'scheduled')
+            <form action="{{ route('admin.staff-meetings.update-status', $meeting) }}" 
+                  method="POST" 
+                  class="d-inline"
+                  onsubmit="return confirm('Mark this meeting as completed?')">
+                @csrf
+                @method('PUT')
+                <input type="hidden" name="status" value="completed">
+                <button type="submit" 
+                        class="btn btn-outline-success" 
+                        title="Mark as Completed"
+                        data-bs-toggle="tooltip">
+                    <i class="fas fa-check"></i>
+                </button>
+            </form>
+        @endif
+        
+        <!-- Delete Button - HR only -->
+        @if(auth()->user()->department == 'hr')
+            <form action="{{ route('admin.staff-meetings.destroy', $meeting) }}" 
+                  method="POST" 
+                  class="d-inline"
+                  onsubmit="return confirm('Are you sure you want to delete this meeting?')">
+                @csrf
+                @method('DELETE')
+                <button type="submit" 
+                        class="btn btn-outline-danger" 
+                        title="Delete Meeting"
+                        data-bs-toggle="tooltip">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </form>
+        @endif
                             </div>
                         </td>
                         
-                        <!-- HR Actions Column -->
-                        <td>
-                            <div class="btn-group btn-group-sm">
-                                <!-- Send Reminders -->
-                                @if($meeting->canSendReminder())
-                                    <button type="button" class="btn btn-outline-info" 
-                                            onclick="sendReminder('email', {{ $meeting->id }})"
-                                            title="Send Email Reminder">
-                                        <i class="fas fa-envelope"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-outline-success" 
-                                            onclick="sendReminder('whatsapp', {{ $meeting->id }})"
-                                            title="Send WhatsApp Reminder">
-                                        <i class="fab fa-whatsapp"></i>
-                                    </button>
-                                @endif
-                                
-                                <!-- Generate Links -->
-                                @if($meeting->platform == 'online' && !$meeting->meeting_link)
-                                    <button type="button" class="btn btn-outline-primary"
-                                            onclick="generateMeetingLink({{ $meeting->id }})"
-                                            title="Generate Meeting Link">
-                                        <i class="fas fa-link"></i>
-                                    </button>
-                                @endif
-                                
-                                <!-- Attendance QR -->
-                                <button type="button" class="btn btn-outline-warning"
-                                        onclick="generateQRCode({{ $meeting->id }})"
-                                        title="Generate Attendance QR Code">
-                                    <i class="fas fa-qrcode"></i>
-                                </button>
-                                
-                                <!-- Upload Minutes -->
-                                @if($meeting->status == 'completed' && !$meeting->meeting_minutes)
-                                    <a href="{{ route('admin.staff-meetings.show', $meeting) }}#minutes" 
-                                       class="btn btn-outline-secondary"
-                                       title="Upload Minutes">
-                                        <i class="fas fa-file-alt"></i>
-                                    </a>
-                                @endif
-                            </div>
-                        </td>
+                      <!-- HR Actions Column -->
+<td>
+    @if(auth()->user()->department == 'hr' || auth()->user()->hasRole('hr'))
+        <div class="btn-group btn-group-sm">
+            <!-- Send Reminders -->
+            @if($meeting->canSendReminder())
+                <button type="button" class="btn btn-outline-info" 
+                        onclick="sendReminder('email', {{ $meeting->id }})"
+                        title="Send Email Reminder">
+                    <i class="fas fa-envelope"></i>
+                </button>
+                <button type="button" class="btn btn-outline-success" 
+                        onclick="sendReminder('whatsapp', {{ $meeting->id }})"
+                        title="Send WhatsApp Reminder">
+                    <i class="fab fa-whatsapp"></i>
+                </button>
+            @endif
+            
+            <!-- Generate Links -->
+            @if($meeting->platform == 'online' && !$meeting->meeting_link)
+                <button type="button" class="btn btn-outline-primary"
+                        onclick="generateMeetingLink({{ $meeting->id }})"
+                        title="Generate Meeting Link">
+                    <i class="fas fa-link"></i>
+                </button>
+            @endif
+            
+            <!-- Attendance QR -->
+            <button type="button" class="btn btn-outline-warning"
+                    onclick="generateQRCode({{ $meeting->id }})"
+                    title="Generate Attendance QR Code">
+                <i class="fas fa-qrcode"></i>
+            </button>
+            
+            <!-- Upload Minutes -->
+            @if($meeting->status == 'completed' && !$meeting->meeting_minutes)
+                <a href="{{ route('admin.staff-meetings.show', $meeting) }}#minutes" 
+                   class="btn btn-outline-secondary"
+                   title="Upload Minutes">
+                    <i class="fas fa-file-alt"></i>
+                </a>
+            @endif
+        </div>
+    @else
+        <!-- Show nothing or alternative content for non-HR users -->
+        {{-- <span class="text-muted">HR Actions</span> --}}
+    @endif
+</td>
                     </tr>
                 @endforeach
             </tbody>
@@ -304,6 +341,45 @@
     </div>
 @endif
 
+<!-- Mark Present Modal -->
+<div class="modal fade" id="markPresentModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-user-check me-2"></i>Mark Attendance
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-4">
+                    <i class="fas fa-check-circle fa-4x text-primary mb-3"></i>
+                    <h4 id="meetingTitleDisplay"></h4>
+                    <p class="text-muted">Are you sure you want to mark yourself as present for this meeting?</p>
+                </div>
+                
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Your attendance request will be sent to the admin for approval.
+                </div>
+                
+                <div class="form-check mt-3">
+                    <input type="checkbox" class="form-check-input" id="confirmAttendance">
+                    <label class="form-check-label" for="confirmAttendance">
+                        I confirm that I will attend this meeting
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="confirmPresentBtn" disabled>
+                    <i class="fas fa-check-circle me-2"></i>Yes, I Am Present
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @push('scripts')
 <script>
 // Initialize tooltips
@@ -323,7 +399,260 @@ $(document).ready(function() {
         $('.filter-input').val('');
         loadMeetings();
     });
+    
+    // Initialize Mark Present functionality
+    initMarkPresent();
 });
+
+// Mark Present functionality
+function initMarkPresent() {
+    // Store current meeting ID
+    let currentMeetingId = null;
+    
+    // Event delegation for dynamically loaded buttons
+    $(document).on('click', '.mark-present-btn', function(e) {
+        e.preventDefault();
+        currentMeetingId = $(this).data('meeting-id');
+        const meetingTitle = $(this).data('meeting-title');
+        
+        // Update modal content
+        $('#meetingTitleDisplay').text(meetingTitle);
+        $('#confirmAttendance').prop('checked', false);
+        $('#confirmPresentBtn').prop('disabled', true);
+        
+        // Show modal
+        $('#markPresentModal').modal('show');
+    });
+    
+    // Enable/disable confirm button based on checkbox
+    $('#confirmAttendance').on('change', function() {
+        $('#confirmPresentBtn').prop('disabled', !$(this).is(':checked'));
+    });
+    
+    // Handle confirm button click
+    $('#confirmPresentBtn').click(function() {
+        if (!currentMeetingId) return;
+        
+        // Get current admin ID
+        const adminId = @json(auth('admin')->id());
+        if (!adminId) {
+            showNotification('error', 'You must be logged in to mark attendance.', {
+                title: 'Authentication Required'
+            });
+            return;
+        }
+        
+        // Disable button and show loading
+        const btn = $(this);
+        const originalText = btn.html();
+        btn.html('<i class="fas fa-spinner fa-spin me-2"></i>Submitting...');
+        btn.prop('disabled', true);
+        
+        // Submit attendance request
+        submitAttendanceRequest(currentMeetingId, adminId, btn, originalText);
+    });
+    
+    // Function to submit attendance request
+    function submitAttendanceRequest(meetingId, staffId, btn, originalText) {
+        const csrfToken = $('meta[name="csrf-token"]').attr('content');
+        
+        if (!csrfToken) {
+            showNotification('error', 'Security token not found. Please refresh the page.', {
+                title: 'Security Error'
+            });
+            btn.html(originalText);
+            btn.prop('disabled', false);
+            return;
+        }
+        
+        $.ajax({
+            url: '{{ route("admin.attendance.submit-request") }}',
+            type: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            },
+            data: {
+                meeting_id: meetingId,
+                staff_id: staffId
+            },
+            success: function(response) {
+                console.log('Attendance submission response:', response);
+                
+                if (response.success) {
+                    // Show success message
+                    showNotification('success', response.message, {
+                        title: 'Success!',
+                        duration: 5000
+                    });
+                    
+                    // Close modal
+                    $('#markPresentModal').modal('hide');
+                    
+                    // Update button to show success state
+                    const meetingBtns = $(`.mark-present-btn[data-meeting-id="${meetingId}"]`);
+                    meetingBtns.each(function() {
+                        $(this).html('<i class="fas fa-check"></i> Requested');
+                        $(this).removeClass('btn-primary').addClass('btn-success');
+                        $(this).prop('disabled', true);
+                        $(this).attr('title', 'Attendance request submitted');
+                    });
+                } else {
+                    // Handle different error types
+                    handleAttendanceError(response, meetingId);
+                }
+            },
+            error: function(xhr) {
+                console.error('Error:', xhr);
+                let errorMessage = 'Network error. Please try again.';
+                
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMessage = xhr.responseJSON.message;
+                } else if (xhr.status === 422) {
+                    errorMessage = 'Validation error. Please check your input.';
+                } else if (xhr.status === 401) {
+                    errorMessage = 'You must be logged in to mark attendance.';
+                }
+                
+                showNotification('error', errorMessage, {
+                    title: 'Submission Failed'
+                });
+            },
+            complete: function() {
+                // Reset confirm button
+                btn.html(originalText);
+                btn.prop('disabled', false);
+            }
+        });
+    }
+    
+    // Function to handle different attendance error types
+    function handleAttendanceError(result, meetingId) {
+        console.log('Attendance error:', result);
+        
+        switch(result.type) {
+            case 'already_approved':
+                showNotification('info', 'Your attendance for this meeting has already been approved.', {
+                    title: 'Already Approved',
+                    icon: 'fas fa-check-circle'
+                });
+                updateButtonToApproved(meetingId);
+                break;
+                
+            case 'pending_exists':
+                showNotification('warning', 'You already have a pending request for this meeting.', {
+                    title: 'Request Pending',
+                    icon: 'fas fa-clock'
+                });
+                updateButtonToPending(meetingId);
+                break;
+                
+            case 'rejected_exists':
+                showNotification('error', 'Your previous request was rejected. Please contact admin.', {
+                    title: 'Request Rejected',
+                    icon: 'fas fa-times-circle'
+                });
+                updateButtonToRejected(meetingId);
+                break;
+                
+            case 'attendance_exists':
+                showNotification('info', 'Attendance already recorded for this meeting.', {
+                    title: 'Already Recorded',
+                    icon: 'fas fa-clipboard-check'
+                });
+                updateButtonToRecorded(meetingId);
+                break;
+                
+            default:
+                showNotification('error', result.message || 'Failed to submit attendance request.', {
+                    title: 'Error',
+                    icon: 'fas fa-exclamation-triangle'
+                });
+        }
+    }
+    
+    // Helper functions to update button states
+    function updateButtonToApproved(meetingId) {
+        const meetingBtns = $(`.mark-present-btn[data-meeting-id="${meetingId}"]`);
+        meetingBtns.each(function() {
+            $(this).html('<i class="fas fa-check-double"></i> Approved');
+            $(this).removeClass('btn-primary').addClass('btn-success');
+            $(this).prop('disabled', true);
+            $(this).attr('title', 'Attendance approved');
+        });
+    }
+    
+    function updateButtonToPending(meetingId) {
+        const meetingBtns = $(`.mark-present-btn[data-meeting-id="${meetingId}"]`);
+        meetingBtns.each(function() {
+            $(this).html('<i class="fas fa-clock"></i> Pending');
+            $(this).removeClass('btn-primary').addClass('btn-warning');
+            $(this).prop('disabled', true);
+            $(this).attr('title', 'Request pending approval');
+        });
+    }
+    
+    function updateButtonToRejected(meetingId) {
+        const meetingBtns = $(`.mark-present-btn[data-meeting-id="${meetingId}"]`);
+        meetingBtns.each(function() {
+            $(this).html('<i class="fas fa-times"></i> Rejected');
+            $(this).removeClass('btn-primary').addClass('btn-danger');
+            $(this).prop('disabled', true);
+            $(this).attr('title', 'Request rejected');
+        });
+    }
+    
+    function updateButtonToRecorded(meetingId) {
+        const meetingBtns = $(`.mark-present-btn[data-meeting-id="${meetingId}"]`);
+        meetingBtns.each(function() {
+            $(this).html('<i class="fas fa-clipboard-check"></i> Recorded');
+            $(this).removeClass('btn-primary').addClass('btn-info');
+            $(this).prop('disabled', true);
+            $(this).attr('title', 'Attendance already recorded');
+        });
+    }
+    
+    // Function to show notifications
+    function showNotification(type, message, options = {}) {
+        const title = options.title || type.charAt(0).toUpperCase() + type.slice(1);
+        const icon = options.icon || 
+            (type === 'success' ? 'fas fa-check-circle' : 
+             type === 'warning' ? 'fas fa-exclamation-triangle' : 
+             type === 'info' ? 'fas fa-info-circle' :
+             'fas fa-times-circle');
+        const duration = options.duration || 3000;
+        
+        // Remove any existing notifications
+        $('.attendance-notification').remove();
+        
+        // Create notification
+        const alertClass = type === 'success' ? 'alert-success' : 
+                          type === 'warning' ? 'alert-warning' :
+                          type === 'info' ? 'alert-info' : 'alert-danger';
+        
+        const notification = $(`
+            <div class="alert ${alertClass} alert-dismissible fade show attendance-notification position-fixed" 
+                 style="top: 20px; right: 20px; z-index: 9999; min-width: 300px; max-width: 400px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                <div class="d-flex align-items-center">
+                    <i class="${icon} fa-lg me-3"></i>
+                    <div class="flex-grow-1">
+                        <h6 class="mb-1 fw-bold">${title}</h6>
+                        <p class="mb-0 small">${message}</p>
+                    </div>
+                    <button type="button" class="btn-close ms-2" data-bs-dismiss="alert"></button>
+                </div>
+            </div>
+        `);
+        
+        $('body').append(notification);
+        
+        // Auto remove after duration
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.remove();
+            }
+        }, duration);
+    }
+}
 
 // Handle pagination clicks
 $(document).on('click', '.pagination a', function(e) {

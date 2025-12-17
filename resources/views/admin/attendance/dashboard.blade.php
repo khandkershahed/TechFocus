@@ -186,7 +186,7 @@
                                     <th>Status</th>
                                     <th>Time</th>
                                     <th>Department</th>
-                                    <th>Approval</th>
+                                    {{-- <th>Approval</th> --}}
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -223,7 +223,7 @@
                                    <td>
                                         {{ collect(json_decode($attendance->department, true))->join(', ') ?: 'N/A' }}
                                     </td>
-                                    <td>
+                                    {{-- <td>
                                         @if($attendance->requires_approval)
                                             @if($attendance->is_approved)
                                                 <span class="badge bg-success">
@@ -249,7 +249,7 @@
                                         @else
                                             <span class="badge bg-secondary">N/A</span>
                                         @endif
-                                    </td>
+                                    </td> --}}
                                     <td>
                                         <div class="btn-group btn-group-sm">
                                             <a href="{{ route('admin.attendance.show', $attendance) }}" 

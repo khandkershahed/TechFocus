@@ -1313,14 +1313,14 @@
                                                     </a>
                                                 </div>
 
-                        <!-- Add New Attendance -->
+                        {{-- <!-- Add New Attendance -->
                         <div class="menu-item">
                             <a class="menu-link {{ Route::current()->getName() == 'admin.attendance.create' ? 'active' : '' }}"
                                 href="{{ route('admin.attendance.create') }}">
                                 <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
                                 <span class="menu-title">Add New Record</span>
                             </a>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
 

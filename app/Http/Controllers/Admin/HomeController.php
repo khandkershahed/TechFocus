@@ -237,13 +237,26 @@ class HomeController extends Controller
     // }
 
 
-
-    public function index()
+public function index()
 {
     $id = Auth::guard('admin')->user()->employee_id;
+    
+    // Get pending attendance requests
+    $pendingRequests = \App\Models\AttendanceRequest::with(['meeting', 'staff'])
+        ->where('status', 'pending')
+        ->orderBy('requested_at', 'asc')
+        ->paginate(10);
+    
+    // Get counts for statistics
+    $approvedToday = \App\Models\AttendanceRequest::where('status', 'approved')
+        ->whereDate('approved_at', now()->toDateString())
+        ->count();
+    
+    $rejectedToday = \App\Models\AttendanceRequest::where('status', 'rejected')
+        ->whereDate('approved_at', now()->toDateString())
+        ->count();
 
-    // Temporarily skip ZKTeco device connection
-    // Instead, use dummy data or leave empty arrays
+    // Your existing data...
     $attendanceToday = [
         'user_id'   => $id,
         'user_name' => Auth::guard('admin')->user()->name ?? 'Admin',
@@ -265,9 +278,7 @@ class HomeController extends Controller
     $attendanceLastMonth = [];
     $lateCounts = [];
     $pendingEditRequests = MovementRecord::where('edit_status', 'pending')->count();
-
-
-    // Default IP for display only
+    
     $deviceip = session('dip', '203.17.65.230');
 
     return view('admin.pages.dashboard.index', [
@@ -276,10 +287,14 @@ class HomeController extends Controller
         'lateCounts'           => $lateCounts,
         'attendanceLastMonths' => $attendanceLastMonth,
         'deviceip'             => $deviceip,
-         'pendingEditRequests' => $pendingEditRequests,
+        'pendingEditRequests'  => $pendingEditRequests,
+        
+        // Add these new variables
+        'pendingRequests'      => $pendingRequests,
+        'approvedToday'        => $approvedToday,
+        'rejectedToday'        => $rejectedToday,
     ]);
 }
-
 
     public function profile()
     {

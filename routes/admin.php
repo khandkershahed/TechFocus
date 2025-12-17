@@ -946,3 +946,54 @@ Route::post('/admin/rfq-products/create-missing', [RfqProductController::class, 
 
 Route::put('/rfq-products/{id}/status', [RfqProductController::class, 'updateStatus'])
     ->name('rfqProducts.updateStatus');
+
+// routes/web.php
+
+// Admin authentication routes (if not already set up)
+Route::prefix('admin')->name('admin.')->group(function () {
+
+    
+    // Protected admin routes
+    Route::middleware(['auth:admin'])->group(function () {
+        // Dashboard 
+        // Attendance routes
+        Route::get('/attendance/mark', [StaffMeetingAttendanceController::class, 'markAttendance'])
+            ->name('attendance.mark');
+        
+        Route::post('/attendance/submit-request', [StaffMeetingAttendanceController::class, 'submitRequest'])
+            ->name('attendance.submit-request');
+        
+        Route::get('/attendance/my-requests', [StaffMeetingAttendanceController::class, 'myRequests'])
+            ->name('attendance.my-requests');
+        
+        // Other admin routes...
+        Route::resource('attendance', StaffMeetingAttendanceController::class)->except(['create', 'store']);
+    });
+});
+// Attendance approval routes
+Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(function () {
+    
+    // Attendance approval queue
+    Route::get('/attendance/approval-queue', [StaffMeetingAttendanceController::class, 'approvalQueue'])
+        ->name('attendance.approval-queue');
+    
+    // Single request approval
+    Route::post('/attendance/approve/{id}', [StaffMeetingAttendanceController::class, 'approveRequest'])
+        ->name('attendance.approve');
+    
+    // Single request rejection
+    Route::post('/attendance/reject/{id}', [StaffMeetingAttendanceController::class, 'rejectRequest'])
+        ->name('attendance.reject');
+    
+    // Bulk approval
+    Route::post('/attendance/bulk-approve', [StaffMeetingAttendanceController::class, 'bulkApprove'])
+        ->name('attendance.bulk-approve');
+    
+    // Bulk rejection
+    Route::post('/attendance/bulk-reject', [StaffMeetingAttendanceController::class, 'bulkReject'])
+        ->name('attendance.bulk-reject');
+    
+    // View request details
+    Route::get('/attendance/request/{id}/details', [StaffMeetingAttendanceController::class, 'requestDetails'])
+        ->name('attendance.request-details');
+});
