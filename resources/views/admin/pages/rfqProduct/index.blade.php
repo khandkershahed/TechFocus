@@ -859,7 +859,6 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('statusUpdateForm').action = '/rfq-products/' + rfqId + '/status';
     };
 });
-
 </script>
 @endpush
 @endsection
