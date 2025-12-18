@@ -138,18 +138,18 @@
                   <a class="px-3 py-2 rounded nav-link {{ $activeTab == 'all' ? 'active' : '' }} rfq-all d-flex justify-content-between align-items-center"
                     href="{{ request()->fullUrlWithQuery(['status' => 'all']) }}"
                    style="background: #f0f4ff; color: #1a3fc0; font-weight: 600;">
-                    <span>Pending</span>
-                     <span class="badge bg-primary rounded-pill pending-count">{{ $totalRfq }}</span>
+                    <span>All RFQ</span>
+                     <span class="badge bg-primary rounded-pill pending-count">{{ $allRfqs->count() }}</span>
                   </a>
                 </li> 
-                {{-- <li class="mb-2 nav-item w-100">
+                <li class="mb-2 nav-item w-100">
                   <a class="px-3 py-2 rounded nav-link {{ $activeTab == 'pending' ? 'active' : '' }} rfq-pending d-flex justify-content-between align-items-center"
                     href="{{ request()->fullUrlWithQuery(['status' => 'pending']) }}"
                     style="background: #f0f4ff; color: #1a3fc0; font-weight: 600;">
                     <span>Pending</span>
                     <span class="badge bg-primary rounded-pill pending-count">{{ $pendingCount }}</span>
                   </a>
-                </li> --}}
+                </li> 
                 <li class="mb-2 nav-item w-100">
                   <a class="px-3 py-2 rounded nav-link {{ $activeTab == 'quoted' ? 'active' : '' }} rfq-quoted d-flex justify-content-between align-items-center"
                     href="{{ request()->fullUrlWithQuery(['status' => 'quoted']) }}"
@@ -203,102 +203,168 @@
   </div>
 
   <!-- RFQ Filter Section -->
-  <div class="px-0 mb-5 row">
-    <div class="col-12 col-lg-8 ps-0">
+  <div class="px-0 mb-4 row">
+    <div class="col-12">
       <div class="shadow-none card rounded-4">
         <div class="p-4 card-body">
-          <div class="row align-items-center">
-            <div class="mb-3 text-center col-lg-3 text-lg-start mb-lg-0">
-              <a href="#allRFQ" class="text-decoration-none">
-                <span class="d-block fw-bold fs-5">RFQ Filtered</span>
-                <span class="small text-muted">
-                  @if($activeTab == 'all')
-                    All RFQs ({{ $totalRfq }})
-                  @elseif($activeTab == 'pending')
-                    Pending RFQs ({{ $pendingCount }})
-                  @elseif($activeTab == 'quoted')
-                    Quoted RFQs ({{ $quotedCount }})
-                  @elseif($activeTab == 'failed')
-                    Lost RFQs ({{ $lostCount }})
-                  @endif
-                </span>
-              </a>
-            </div>
-            <div class="col-lg-9">
-              <div class="row g-2">
-                <div class="col-12 col-md-6 col-lg-3">
-                  <select id="filterCountry" name="country" class="form-select filter-select"
-                    data-control="select2" data-placeholder="Country">
-                    <option></option>
-                    @foreach($countries as $country)
-                    <option value="{{ $country }}" {{ $currentCountry == $country ? 'selected' : '' }}>
-                      {{ $country }}
-                    </option>
-                    @endforeach
-                  </select>
-                </div>
-                <div class="col-12 col-md-6 col-lg-3">
-                  <select id="filterSalesman" name="salesman" class="form-select filter-select"
-                    data-control="select2" data-placeholder="Salesman">
-                    <option></option>
-                    @foreach($salesmen as $salesman)
-                    <option value="{{ $salesman }}" {{ $currentSalesman == $salesman ? 'selected' : '' }}>
-                      {{ $salesman }}
-                    </option>
-                    @endforeach
-                  </select>
-                </div>
-                <div class="col-12 col-md-6 col-lg-3">
-                  <select id="filterCompany" name="company" class="form-select filter-select"
-                    data-control="select2" data-placeholder="Company">
-                    <option></option>
-                    @foreach($companies as $company)
-                    <option value="{{ $company }}" {{ $currentCompany == $company ? 'selected' : '' }}>
-                      {{ $company }}
-                    </option>
-                    @endforeach
-                  </select>
-                </div>
-                <div class="col-12 col-md-6 col-lg-3 position-relative">
-                  <input type="text" id="filterSearch" name="search" class="form-control ps-5"
-                    placeholder="Search RFQ..." value="{{ $currentSearch ?? '' }}">
-                  <i class="fas fa-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
-                  @if($currentSearch)
-                  <button type="button" class="btn btn-sm position-absolute top-50 end-0 translate-middle-y me-2" id="clearSearch">
-                    <i class="fas fa-times text-muted"></i>
-                  </button>
-                  @endif
+          <!-- Filter Form -->
+          <form id="rfqFilterForm" method="GET" action="{{ route('rfqProducts.index') }}" class="filter-form">
+            <!-- Hidden status field to maintain tab state -->
+            <input type="hidden" name="status" value="{{ $currentStatus }}">
+            
+            <div class="row align-items-center">
+              <div class="mb-3 text-center col-lg-2 text-lg-start mb-lg-0">
+                <a href="#allRFQ" class="text-decoration-none">
+                  <span class="d-block fw-bold fs-5">RFQ Filtered</span>
+                  <span class="small text-muted">
+                    @if($activeTab == 'all')
+                      All RFQs ({{ $allRfqs->count() }})
+                    @elseif($activeTab == 'pending')
+                      Pending RFQs ({{ $pendingCount }})
+                    @elseif($activeTab == 'quoted')
+                      Quoted RFQs ({{ $quotedCount }})
+                    @elseif($activeTab == 'failed')
+                      Lost RFQs ({{ $lostCount }})
+                    @endif
+                  </span>
+                </a>
+              </div>
+              <div class="col-lg-10">
+                <div class="row g-2">
+                  <!-- Country Filter -->
+                  <div class="col-12 col-md-6 col-lg-3">
+                    <select id="filterCountry" name="country" class="form-select filter-select"
+                      data-control="select2" data-placeholder="Country">
+                      <option value="">All Countries</option>
+                      @foreach($countries as $country)
+                      <option value="{{ $country }}" {{ $currentCountry == $country ? 'selected' : '' }}>
+                        {{ $country }}
+                      </option>
+                      @endforeach
+                    </select>
+                  </div>
+                  
+                  <!-- Product Filter -->
+                  <div class="col-12 col-md-6 col-lg-3">
+                    <select id="filterProduct" name="product" class="form-select filter-select"
+                      data-control="select2" data-placeholder="Product">
+                      <option value="">All Products</option>
+                      @foreach($products as $product)
+                      <option value="{{ $product }}" {{ $currentProduct == $product ? 'selected' : '' }}>
+                        {{ $product }}
+                      </option>
+                      @endforeach
+                    </select>
+                  </div>
+                  
+                  <!-- Company Filter -->
+                  <div class="col-12 col-md-6 col-lg-3">
+                    <select id="filterCompany" name="company" class="form-select filter-select"
+                      data-control="select2" data-placeholder="Company">
+                      <option value="">All Companies</option>
+                      @foreach($companies as $company)
+                      <option value="{{ $company }}" {{ $currentCompany == $company ? 'selected' : '' }}>
+                        {{ $company }}
+                      </option>
+                      @endforeach
+                    </select>
+                  </div>
+                  
+                  <!-- Search Input -->
+                  <div class="col-12 col-md-6 col-lg-3 position-relative">
+                    <input type="text" id="filterSearch" name="search" class="form-control ps-5"
+                      placeholder="Search RFQ..." value="{{ $currentSearch ?? '' }}">
+                    <i class="fas fa-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+                    @if($currentSearch)
+                    <button type="button" class="btn btn-sm position-absolute top-50 end-0 translate-middle-y me-2" id="clearSearch">
+                      <i class="fas fa-times text-muted"></i>
+                    </button>
+                    @endif
+                  </div>
+                  
+                  <!-- Salesman Filter -->
+                  <div class="col-12 col-md-6 col-lg-3">
+                    <select id="filterSalesman" name="salesman" class="form-select filter-select"
+                      data-control="select2" data-placeholder="Salesman">
+                      <option value="">All Salesmen</option>
+                      @foreach($salesmen as $salesman)
+                      <option value="{{ $salesman }}" {{ $currentSalesman == $salesman ? 'selected' : '' }}>
+                        {{ $salesman }}
+                      </option>
+                      @endforeach
+                    </select>
+                  </div>
+                  
+                  <!-- Year Filter -->
+                  <div class="col-12 col-md-6 col-lg-2">
+                    <select id="filterYear" name="year" class="form-select filter-select" data-control="select2" data-placeholder="Year">
+                      <option value="">All Years</option>
+                      @foreach($years as $year)
+                      <option value="{{ $year }}" {{ $currentYearFilter == $year ? 'selected' : '' }}>{{ $year }}</option>
+                      @endforeach
+                    </select>
+                  </div>
+                  
+                  <!-- Month Filter -->
+                  <div class="col-12 col-md-6 col-lg-2">
+                    <select id="filterMonth" name="month" class="form-select filter-select" data-control="select2" data-placeholder="Month">
+                      <option value="">All Months</option>
+                      @foreach($months as $monthNumber => $monthName)
+                      <option value="{{ $monthNumber }}" {{ $currentMonthFilter == $monthNumber ? 'selected' : '' }}>
+                        {{ $monthName }}
+                      </option>
+                      @endforeach
+                    </select>
+                  </div>
+                  
+                  <!-- Clear All Filters Button -->
+                  <div class="col-12 col-md-12 col-lg-2">
+                    <a href="{{ route('rfqProducts.index', ['status' => $currentStatus]) }}" 
+                       class="btn btn-outline-secondary w-100" 
+                       id="clearAllFilters">
+                      <i class="fas fa-times me-1"></i> Clear All
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
+          </form>
+          
+          <!-- Active Filters Display -->
+          @if($currentCountry || $currentProduct || $currentCompany || $currentSearch || $currentSalesman || $currentYearFilter || $currentMonthFilter)
+          <div class="mt-3 p-3 bg-light rounded">
+            <div class="d-flex align-items-center justify-content-between">
+              <div>
+                <small class="text-muted">Active Filters:</small>
+                @if($currentCountry)
+                <span class="badge bg-primary me-2">Country: {{ $currentCountry }}</span>
+                @endif
+                @if($currentProduct)
+                <span class="badge bg-success me-2">Product: {{ $currentProduct }}</span>
+                @endif
+                @if($currentCompany)
+                <span class="badge bg-info me-2">Company: {{ $currentCompany }}</span>
+                @endif
+                @if($currentSearch)
+                <span class="badge bg-warning me-2">Search: {{ $currentSearch }}</span>
+                @endif
+                @if($currentSalesman)
+                <span class="badge bg-secondary me-2">Salesman: {{ $currentSalesman }}</span>
+                @endif
+                @if($currentYearFilter)
+                <span class="badge bg-dark me-2">Year: {{ $currentYearFilter }}</span>
+                @endif
+                @if($currentMonthFilter)
+                <span class="badge bg-dark me-2">Month: {{ $months[$currentMonthFilter] }}</span>
+                @endif
+              </div>
+              <a href="{{ route('rfqProducts.index', ['status' => $currentStatus]) }}" 
+                 class="text-danger clear-filters-btn">
+                <i class="fas fa-times-circle me-1"></i> Clear All
+              </a>
+            </div>
           </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-12 col-lg-4 pe-0">
-      <div class="shadow-none card rounded-4">
-        <div class="flex-wrap p-4 row card-body d-flex justify-content-between align-items-center">
-          <div class="flex-grow-1 col-12 col-md-6 col-lg-4">
-            <select id="filterYear" name="year" class="form-select filter-select" data-control="select2" data-placeholder="Year">
-              @foreach($years as $year)
-              <option value="{{ $year }}" {{ request('year', $currentYear) == $year ? 'selected' : '' }}>{{ $year }}</option>
-              @endforeach
-            </select>
-          </div>
-          <div class="flex-grow-1 col-12 col-md-6 col-lg-4">
-            <select id="filterMonth" name="month" class="form-select filter-select" data-control="select2" data-placeholder="Month">
-              @foreach($months as $monthNumber => $monthName)
-              <option value="{{ $monthNumber }}" {{ request('month', $currentMonth) == $monthNumber ? 'selected' : '' }}>
-                {{ $monthName }}
-              </option>
-              @endforeach
-            </select>
-          </div>
-          <div class="flex-grow-1 col-12 col-md-6 col-lg-4">
-            <a href="https://techfocusltd.com/admin/archived/rfq" class="text-center btn btn-outline-primary flex-grow-1 w-100">
-              Archived <i class="fas fa-arrow-right"></i>
-            </a>
-          </div>
+          @endif
         </div>
       </div>
     </div>
@@ -342,9 +408,9 @@
                         <div class="col-md-6 col-12 text-end pe-0">
                           @if($isUrgent)
                          <div class="mb-1 d-flex align-items-center justify-content-end fs-7 notif-yellow">
-    <i class="fas fa-bell fa-shake me-1 notif-yellow"></i>
-    {{ sprintf('%02d', $daysDiff) }} Day{{ $daysDiff > 1 ? 's' : '' }}
-</div>
+                              <i class="fas fa-bell fa-shake me-1 notif-yellow"></i>
+                              {{ sprintf('%02d', $daysDiff) }} Day{{ $daysDiff > 1 ? 's' : '' }}
+                          </div>
 
                           @else
                           <div class="mb-1 d-flex align-items-center justify-content-end fs-7 text-success">
@@ -361,13 +427,6 @@
                             <button class="btn btn-sm btn-primary" style="background-color: #296088">
                               Quote
                             </button>
-                            {{-- <!-- Status Update Button - SIMPLIFIED -->
-                            <button type="button" class="btn btn-sm btn-warning" 
-                                data-bs-toggle="modal" 
-                                data-bs-target="#statusUpdateModal"
-                                onclick="document.getElementById('modalRfqId').value = '{{ $rfq->id }}'; document.getElementById('status').value = '{{ $rfq->status ?? 'pending' }}'; document.getElementById('statusUpdateForm').action = '/rfq-products/{{ $rfq->id }}/status';">
-                                <i class="fas fa-sync-alt me-1"></i> Status
-                            </button> --}}
                           </div>
                         </div>
                       </div>
@@ -432,7 +491,7 @@
                           <!-- Quick status update links -->
                           <li><hr class="dropdown-divider"></li>
                           <li><h6 class="dropdown-header">Quick Status Update</h6></li>
-                          {{-- <li>
+                           <li>
                             <form method="POST" action="/rfq-products/{{ $rfq->id }}/status" style="display: inline;">
                               @csrf
                               @method('PUT')
@@ -441,7 +500,7 @@
                                 <i class="fas fa-clock text-warning me-2"></i> Mark as Pending
                               </button>
                             </form>
-                          </li> --}}
+                          </li> 
                           <li>
                             <form method="POST" action="/rfq-products/{{ $rfq->id }}/status" style="display: inline;">
                               @csrf
@@ -452,16 +511,6 @@
                               </button>
                             </form>
                           </li>
-                          {{-- <li>
-                            <form method="POST" action="/rfq-products/{{ $rfq->id }}/status" style="display: inline;">
-                              @csrf
-                              @method('PUT')
-                              <input type="hidden" name="status" value="closed">
-                              <button type="submit" class="dropdown-item" onclick="return confirm('Mark as Closed?')">
-                                <i class="fas fa-check-circle text-success me-2"></i> Mark as Closed
-                              </button>
-                            </form>
-                          </li> --}}
                           <li>
                             <form method="POST" action="/rfq-products/{{ $rfq->id }}/status" style="display: inline;">
                               @csrf
@@ -604,16 +653,26 @@
             @endif
           </h4>
           <p class="mb-4 text-muted">
-            @if($activeTab == 'all')
-              There are no RFQs to display with the current filters.
-            @elseif($activeTab == 'pending')
-              There are no pending RFQs to display.
-            @elseif($activeTab == 'quoted')
-              There are no quoted RFQs to display.
-            @elseif($activeTab == 'failed')
-              There are no lost RFQs to display.
+            @if($currentCountry || $currentProduct || $currentCompany || $currentSearch || $currentSalesman || $currentYearFilter || $currentMonthFilter)
+              No RFQs match your filter criteria. Try adjusting your filters.
+            @else
+              @if($activeTab == 'all')
+                There are no RFQs to display.
+              @elseif($activeTab == 'pending')
+                There are no pending RFQs to display.
+              @elseif($activeTab == 'quoted')
+                There are no quoted RFQs to display.
+              @elseif($activeTab == 'failed')
+                There are no lost RFQs to display.
+              @endif
             @endif
           </p>
+          @if($currentCountry || $currentProduct || $currentCompany || $currentSearch || $currentSalesman || $currentYearFilter || $currentMonthFilter)
+          <a href="{{ route('rfqProducts.index', ['status' => $currentStatus]) }}" 
+             class="btn btn-primary">
+            <i class="fas fa-times me-1"></i> Clear Filters
+          </a>
+          @endif
         </div>
       </div>
       @endif
@@ -669,21 +728,12 @@
 
 @push('scripts')
 <script>
-// Simple function for modal - inline onclick handles most of it
-function setModalValues(rfqId, currentStatus) {
-    document.getElementById('modalRfqId').value = rfqId;
-    document.getElementById('status').value = currentStatus || 'pending';
-    document.getElementById('statusUpdateForm').action = '/rfq-products/' + rfqId + '/status';
-}
-
-// Keep only the filter functionality
 document.addEventListener('DOMContentLoaded', function() {
-    // Original filter functionality only
+    // Country search filter
     const searchInput = document.getElementById('searchCountryQuery');
     const countryList = document.getElementById('countryList');
     const noResults = document.getElementById('noResults');
 
-    // Country search filter
     if (searchInput && countryList) {
         searchInput.addEventListener('keyup', function() {
             const query = this.value.toLowerCase().trim();
@@ -705,88 +755,111 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Filter elements
-    const filterCountry = document.getElementById('filterCountry');
-    const filterSalesman = document.getElementById('filterSalesman');
-    const filterCompany = document.getElementById('filterCompany');
-    const filterSearch = document.getElementById('filterSearch');
-    const filterYear = document.getElementById('filterYear');
-    const filterMonth = document.getElementById('filterMonth');
+    // Filter form handling
+    const filterForm = document.getElementById('rfqFilterForm');
     const clearSearchBtn = document.getElementById('clearSearch');
-
-    // Update filters
-    function updateFilters() {
-        // Get current status from URL or default to 'all'
+    const clearAllFiltersBtn = document.getElementById('clearAllFilters');
+    
+    // Function to submit form automatically
+    function autoSubmitForm() {
+        // Update the hidden status field to maintain tab state
         const urlParams = new URLSearchParams(window.location.search);
         const currentStatus = urlParams.get('status') || 'all';
+        document.querySelector('input[name="status"]').value = currentStatus;
         
-        const filters = {
-            status: currentStatus,
-            country: filterCountry?.value || '',
-            salesman: filterSalesman?.value || '',
-            company: filterCompany?.value || '',
-            search: filterSearch?.value || '',
-            year: filterYear?.value || '',
-            month: filterMonth?.value || ''
-        };
-
-        // Remove empty filters
-        Object.keys(filters).forEach(key => {
-            if (!filters[key]) delete filters[key];
-        });
-
-        showLoading();
-
-        // Submit form with filters
-        const form = document.createElement('form');
-        form.method = 'GET';
-        form.action = window.location.pathname;
-        
-        Object.keys(filters).forEach(key => {
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = key;
-            input.value = filters[key];
-            form.appendChild(input);
-        });
-        
-        document.body.appendChild(form);
-        form.submit();
+        // Submit the form
+        filterForm.submit();
     }
-
-    // Loading indicator
-    function showLoading() {
-        const mainContent = document.querySelector('.container-fluid');
-        if (mainContent) {
-            mainContent.innerHTML = `<div class="py-5 text-center">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                    <p class="mt-2">Applying filters...</p>
-                </div>`;
-        }
-    }
-
-    // Attach change events to filters
-    [filterCountry, filterSalesman, filterCompany, filterYear, filterMonth].forEach(el => {
-        if (el) el.addEventListener('change', updateFilters);
+    
+    // Auto-submit on filter change
+    const filterSelects = document.querySelectorAll('.filter-select');
+    filterSelects.forEach(select => {
+        select.addEventListener('change', function() {
+            autoSubmitForm();
+        });
     });
-
-    if (filterSearch) {
-        let searchTimeout;
-        filterSearch.addEventListener('input', function() {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(updateFilters, 500);
-        });
-    }
-
+    
+    // Clear search button
     if (clearSearchBtn) {
         clearSearchBtn.addEventListener('click', function() {
-            if (filterSearch) filterSearch.value = '';
-            updateFilters();
+            const searchInput = document.getElementById('filterSearch');
+            if (searchInput) {
+                searchInput.value = '';
+                autoSubmitForm();
+            }
         });
     }
+    
+    // Clear all filters button
+    if (clearAllFiltersBtn) {
+        clearAllFiltersBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Get current status from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const currentStatus = urlParams.get('status') || 'all';
+            
+            // Redirect to base URL with only status parameter
+            window.location.href = "{{ route('rfqProducts.index') }}" + "?status=" + currentStatus;
+        });
+    }
+    
+    // Search input with debounce
+    const searchInputField = document.getElementById('filterSearch');
+    let searchTimeout;
+    
+    if (searchInputField) {
+        searchInputField.addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            
+            searchTimeout = setTimeout(() => {
+                autoSubmitForm();
+            }, 500); // 500ms delay for search input
+        });
+    }
+    
+    // Tab click handling - update form status
+    document.querySelectorAll('.rfq-tabs .nav-link').forEach(tab => {
+        tab.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Get status from href
+            const url = new URL(this.href);
+            const status = url.searchParams.get('status') || 'all';
+            
+            // Update hidden status field
+            document.querySelector('input[name="status"]').value = status;
+            
+            // Submit form
+            filterForm.submit();
+        });
+    });
+    
+    // Initialize Select2 if available
+    if (typeof $.fn.select2 !== 'undefined') {
+        $('.filter-select').select2({
+            theme: 'bootstrap-5',
+            width: '100%'
+        });
+        
+        // Also trigger change on select2 change
+        $('.filter-select').on('select2:select', function() {
+            autoSubmitForm();
+        });
+        
+        $('.filter-select').on('select2:clear', function() {
+            autoSubmitForm();
+        });
+    }
+    
+    // Status modal function
+    window.setModalValues = function(rfqId, currentStatus) {
+        document.getElementById('modalRfqId').value = rfqId;
+        document.getElementById('status').value = currentStatus || 'pending';
+        document.getElementById('statusUpdateForm').action = '/rfq-products/' + rfqId + '/status';
+    };
 });
+
 </script>
 @endpush
 @endsection

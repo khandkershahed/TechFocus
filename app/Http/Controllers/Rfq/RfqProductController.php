@@ -105,6 +105,7 @@ public function index(Request $request)
     $company = $request->get('company');
     $search = $request->get('search');
     $status = $request->get('status', 'pending'); // Default to pending tab
+    $product = $request->get('product');
 
     // Base query for RFQs
     $rfqQuery = Rfq::query();
@@ -135,6 +136,23 @@ public function index(Request $request)
               ->orWhere('name', 'like', "%{$search}%")
               ->orWhere('email', 'like', "%{$search}%");
         });
+    }
+
+    if ($product) {
+        $rfqQuery->whereHas('rfqProducts', function($q) use ($product) {
+            $q->whereHas('product', function($q2) use ($product) {
+                $q2->where('name', 'like', "%{$product}%");
+            })->orWhere('additional_product_name', 'like', "%{$product}%");
+        });
+    }
+    
+    // Apply year and month filters
+    if ($request->filled('year')) {
+        $rfqQuery->whereYear('created_at', $request->get('year'));
+        
+        if ($request->filled('month')) {
+            $rfqQuery->whereMonth('created_at', $request->get('month'));
+        }
     }
     
     // Get ALL RFQs for the "All" view
@@ -186,6 +204,9 @@ public function index(Request $request)
         $displayRfqs = $lostRfqs;
         $activeTab = 'failed'; // Note: tab ID is 'failed' but status is 'lost'
     }
+
+    // Get products for filter dropdown
+    $products = Product::orderBy('name')->pluck('name');
         
     return view('admin.pages.rfqProduct.index', [
         // Dashboard counts (unfiltered - for dashboard display)
@@ -210,6 +231,7 @@ public function index(Request $request)
         'countries' => $countries,
         'salesmen'  => $salesmen,
         'companies' => $companies,
+        'products'  => $products,
         
         // RFQ by country (filtered - update this too)
         'rfqByCountry'  => $rfqByCountry,
@@ -228,7 +250,6 @@ public function index(Request $request)
         // Original variables (keep if needed elsewhere)
         'rfqProducts'   => RfqProduct::with(['rfq', 'product'])->paginate(10),
         'rfqs'          => Rfq::all(),
-        'products'      => Product::all(),
         'brands'        => Brand::all(),
         
         // Current filter values (for UI)
@@ -236,6 +257,9 @@ public function index(Request $request)
         'currentSalesman' => $salesman,
         'currentCompany' => $company,
         'currentSearch' => $search,
+        'currentProduct' => $product,
+        'currentYearFilter' => $request->get('year', ''),
+        'currentMonthFilter' => $request->get('month', ''),
     ]);
 }
 
@@ -258,7 +282,7 @@ public function filter(Request $request)
     }
     
     if ($company = $request->get('company')) {
-        $query->where('company_name', 'like', "%{$company}%");
+        $query->where('company_name', $company);
     }
     
     if ($search = $request->get('search')) {
@@ -268,6 +292,14 @@ public function filter(Request $request)
               ->orWhere('company_name', 'like', "%{$search}%")
               ->orWhere('name', 'like', "%{$search}%")
               ->orWhere('email', 'like', "%{$search}%");
+        });
+    }
+    
+    if ($product = $request->get('product')) {
+        $query->whereHas('rfqProducts', function($q) use ($product) {
+            $q->whereHas('product', function($q2) use ($product) {
+                $q2->where('name', 'like', "%{$product}%");
+            })->orWhere('additional_product_name', 'like', "%{$product}%");
         });
     }
     
@@ -320,6 +352,7 @@ public function filter(Request $request)
         'lostCount' => $lostCount
     ]);
 }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -398,9 +431,7 @@ public function filter(Request $request)
             'brands'     => Brand::all(),
         ]);
     }
-/**
- * Update RFQ status.
- */
+
 /**
  * Update RFQ status.
  */
@@ -480,6 +511,7 @@ private function calculateProgress($status)
     
     return $progressMap[$status] ?? 20;
 }
+
     /**
      * Update the specified resource in storage.
      */
