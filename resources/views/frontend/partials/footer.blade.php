@@ -23,14 +23,40 @@
                 </ul>
             </div>
 
-            <div class="col-lg-3">
-                <div class="social-icons-btn d-flex justify-content-end">
-                    <a class="icons twitter" href="https://www.x.com/ngenit"><i class="fa-brands fa-twitter"></i></a>
-                    <a class="icons facebook" href="https://www.facebook.com/ngenitltd/"><i class="fa-brands fa-facebook-f"></i></a>
-                    <a class="icons instagram" href="https://www.instagram.com/ngenitltd"><i class="fa-brands fa-instagram"></i></a>
-                    <a class="icons linkedin" href="https://www.linkedin.com/company/ngenitltd/"><i class="fa-brands fa-linkedin-in"></i></a>
-                </div>
-            </div>
+<div class="col-lg-3">
+    <div class="social-icons-btn d-flex justify-content-end gap-2">
+
+        {{-- Twitter --}}
+        <a class="icons twitter {{ empty(optional($site)->twitter_url) ? 'disabled' : '' }}"
+           href="{{ !empty(optional($site)->twitter_url) ? $site->twitter_url : 'javascript:void(0)' }}"
+           target="{{ !empty(optional($site)->twitter_url) ? '_blank' : '' }}">
+            <i class="fa-brands fa-twitter"></i>
+        </a>
+
+        {{-- Facebook --}}
+        <a class="icons facebook {{ empty(optional($site)->facebook_url) ? 'disabled' : '' }}"
+           href="{{ !empty(optional($site)->facebook_url) ? $site->facebook_url : 'javascript:void(0)' }}"
+           target="{{ !empty(optional($site)->facebook_url) ? '_blank' : '' }}">
+            <i class="fa-brands fa-facebook-f"></i>
+        </a>
+
+        {{-- Instagram --}}
+        <a class="icons instagram {{ empty(optional($site)->instagram_url) ? 'disabled' : '' }}"
+           href="{{ !empty(optional($site)->instagram_url) ? $site->instagram_url : 'javascript:void(0)' }}"
+           target="{{ !empty(optional($site)->instagram_url) ? '_blank' : '' }}">
+            <i class="fa-brands fa-instagram"></i>
+        </a>
+
+        {{-- LinkedIn --}}
+        <a class="icons linkedin {{ empty(optional($site)->linkedin_url) ? 'disabled' : '' }}"
+           href="{{ !empty(optional($site)->linkedin_url) ? $site->linkedin_url : 'javascript:void(0)' }}"
+           target="{{ !empty(optional($site)->linkedin_url) ? '_blank' : '' }}">
+            <i class="fa-brands fa-linkedin-in"></i>
+        </a>
+
+    </div>
+</div>
+
 
         </div>
     </div>
