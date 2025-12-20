@@ -646,10 +646,6 @@ public function brandList()
         return view('frontend.pages.test.industryTestDetails');
     }
 
-    public function privacyPolicy()
-{
-    return view('frontend.pages.privacy-policy');
-}
 
 }
 

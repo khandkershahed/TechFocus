@@ -773,7 +773,25 @@
                                 <span class="menu-title">Terms & Policy</span>
                             </a>
                         </div>
-                        <div class="menu-item">
+                           <div class="menu-item">
+                            <a class="menu-link {{ Route::current()->getName() == 'admin.terms-and-policy.index' ? 'active' : '' }}"
+                                href="{{ route('admin.terms-and-policy.index') }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title">Terms & Policy</span>
+                            </a>
+                        </div>
+                    <div class="menu-item">
+                                <a class="menu-link {{ Route::current()->getName() == 'admin.privacy-policy.index' ? 'active' : '' }}"
+                                    href="{{ route('admin.privacy-policy.index') }}">
+                                    <span class="menu-bullet">
+                                        <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">Privacy Policy</span>
+                                </a>
+                            </div>
+                 <div class="menu-item">
                             <a class="menu-link {{ in_array(Route::current()->getName(), ['admin.company.index', 'admin.company.create', 'admin.company.edit']) ? 'active' : '' }}"
                                 href="{{ route('admin.company.index') }}">
                                 <span class="menu-bullet">
@@ -1312,6 +1330,7 @@
                                                         @endif
                                                     </a>
                                                 </div>
+                                                {{-- Add this to your sidebar navigation --}}
 
                         {{-- <!-- Add New Attendance -->
                         <div class="menu-item">

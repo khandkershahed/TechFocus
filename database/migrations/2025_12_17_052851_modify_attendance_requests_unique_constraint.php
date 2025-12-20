@@ -3,30 +3,34 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
-    public function up(): void
-    {
-        Schema::table('attendance_requests', function (Blueprint $table) {
-            // Remove the problematic unique constraint
-            $table->dropUnique('unique_pending_request');
-            
-            // Add a new constraint that only applies to pending requests
-            // We'll create a unique index that includes status in the condition
-            $table->unique(['meeting_id', 'staff_id'], 'unique_active_request');
-            
-            // Or simpler: just add a unique constraint for pending status only
-            // We'll handle this at application level instead
-        });
-    }
+   public function up(): void
+{
+    Schema::table('attendance_requests', function (Blueprint $table) {
 
-    public function down(): void
-    {
-        Schema::table('attendance_requests', function (Blueprint $table) {
-            $table->dropUnique('unique_active_request');
-            // Re-add the old constraint if needed
-            $table->unique(['meeting_id', 'staff_id', 'status'], 'unique_pending_request');
-        });
-    }
+        // Drop old index safely if exists
+        $indexes = DB::select("
+            SHOW INDEX FROM attendance_requests 
+            WHERE Key_name = 'unique_pending_request'
+        ");
+
+        if (!empty($indexes)) {
+            $table->dropUnique('unique_pending_request');
+        }
+
+        // ❌ DO NOT add new unique constraint
+        // Pending uniqueness must be handled in code
+    });
+}
+
+public function down(): void
+{
+    Schema::table('attendance_requests', function (Blueprint $table) {
+        // Nothing to restore
+    });
+}
+
 };

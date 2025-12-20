@@ -35,7 +35,7 @@ use App\Http\Controllers\Admin\HrPolicyController;
 use App\Http\Controllers\Admin\IndustryController;
 use App\Http\Controllers\Admin\UserRoleController;
 use App\Http\Controllers\Rfq\RfqProductController;
-
+use App\Http\Controllers\PrivacyPolicyController;
 use App\Http\Controllers\Admin\AboutPageController;
 use App\Http\Controllers\Admin\AttributeController;
 use App\Http\Controllers\Admin\BioMetricController;
@@ -511,8 +511,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:admin', 'verified'])->
 
 // Admin Brand Management Routes
 Route::prefix('admin')->name('admin.')->middleware(['auth:admin'])->group(function () {
-    // ... other routes
-    
+
     // Brand Routes
     Route::get('/brands/pending', [BrandController::class, 'pending'])->name('brands.pending');
     Route::post('/brands/{id}/approve', [BrandController::class, 'approve'])->name('brands.approve');
@@ -996,4 +995,42 @@ Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(functi
     // View request details
     Route::get('/attendance/request/{id}/details', [StaffMeetingAttendanceController::class, 'requestDetails'])
         ->name('attendance.request-details');
+});
+//privacy and policy 
+Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(function (){
+    
+    
+    // Privacy Policy Management Routes
+    Route::prefix('privacy-policy')->name('privacy-policy.')->group(function () {
+        // List all policies
+        Route::get('/', [PrivacyPolicyController::class, 'adminIndex'])
+            ->name('index');
+        
+        // Create new policy
+        Route::get('/create', [PrivacyPolicyController::class, 'create'])
+            ->name('create');
+        
+        // Store new policy
+        Route::post('/', [PrivacyPolicyController::class, 'store'])
+            ->name('store');
+        
+        // Edit policy
+        Route::get('/{privacyPolicy}/edit', [PrivacyPolicyController::class, 'edit'])
+            ->name('edit');
+        
+        // Update policy
+        Route::put('/{privacyPolicy}', [PrivacyPolicyController::class, 'update'])
+            ->name('update');
+        
+        // Delete policy
+        Route::delete('/{privacyPolicy}', [PrivacyPolicyController::class, 'destroy'])
+            ->name('destroy');
+        
+        // Quick Actions (Optional)
+        Route::post('/{privacyPolicy}/activate', [PrivacyPolicyController::class, 'activate'])
+            ->name('activate');
+        
+        Route::post('/{privacyPolicy}/duplicate', [PrivacyPolicyController::class, 'duplicate'])
+            ->name('duplicate');
+    });
 });

@@ -85,7 +85,7 @@
 
                 <ul class="d-flex gap-4 list-unstyled mb-2">
                     <li><a class="text-white" href="{{ route('terms') }}">Terms & Conditions</a></li>
-                    <li><a class="text-white" href="{{ route('privacy.policy') }}">Privacy Policy</a></li>
+                    <li><a class="text-white" href="{{ route('privacy-policy') }}">Privacy Policy</a></li>
                     <li><a class="text-white" href="{{ route('manage.cookies') }}">Manage Cookies</a></li>
                 </ul>
 

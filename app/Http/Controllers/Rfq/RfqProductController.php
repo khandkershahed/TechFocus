@@ -104,7 +104,7 @@ public function index(Request $request)
     $salesman = $request->get('salesman');
     $company = $request->get('company');
     $search = $request->get('search');
-    $status = $request->get('status', 'pending'); // Default to pending tab
+    $status = $request->get('status', 'allrfq'); // Default to pending tab
     $product = $request->get('product');
 
     // Base query for RFQs

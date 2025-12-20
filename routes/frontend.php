@@ -19,7 +19,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Models\User;
 use App\Http\Controllers\Admin\UserListController;
 use App\Http\Controllers\admin\TermsAndPolicyController;
-
+use App\Http\Controllers\PrivacyPolicyController;
 use App\Http\Controllers\Principal\Auth\PrincipalAuthController;
 use App\Http\Controllers\Principal\Auth\EmailVerificationController;
 use App\Http\Controllers\Principal\PrincipalDashboardController;
@@ -332,10 +332,10 @@ Route::get('/manage-cookies', function () {
     return view('frontend.pages.manage-cookies');
 })->name('manage.cookies');
 
-// Privacy Policy Route
-Route::get('/privacy-policy', function () {
-    return view('frontend.pages.privacy-policy');
-})->name('privacy.policy');
+// // Privacy Policy Route
+// Route::get('/privacy-policy', function () {
+//     return view('frontend.pages.privacy-policy');
+// })->name('privacy.policy');
 
 
 
@@ -366,3 +366,7 @@ Route::prefix('principal')
         Route::get('/dashboard/overview', [PrincipalDashboardController::class, 'overview'])
             ->name('dashboard.overview');        
     });
+Route::get('/privacy-policy', [PrivacyPolicyController::class, 'index'])
+    ->name('privacy-policy');
+
+Route::get('/privacy', [PrivacyPolicyController::class, 'index']); // Alternative URL
