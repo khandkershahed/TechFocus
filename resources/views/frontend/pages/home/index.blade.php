@@ -48,6 +48,11 @@
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
         }
+        
+        /* Loading spinner for RFQ buttons */
+        .fa-spinner {
+            margin-right: 8px;
+        }
     </style>
 
     <!-- SECTION 1: BANNER -->
@@ -334,14 +339,19 @@
 
                                                 <!-- BUTTONS -->
                                                 <div class="gap-2 mt-auto mb-4 d-flex justify-content-between">
-                                                    <a href="{{ route('product.details', ['id' => optional($product->brand)->slug, 'slug' => optional($product)->slug]) }}" 
+                                                     <a href="{{ route('product.details', ['id' => optional($product->brand)->slug, 'slug' => optional($product)->slug]) }}" 
                                                        class="btn btn-outline-primary flex-fill">
                                                         Ask For Price
                                                     </a>
-                                                    <a href="{{ route('product.details', ['id' => optional($product->brand)->slug, 'slug' => optional($product)->slug]) }}" 
-                                                       class="btn btn-primary flex-fill">
+                                                    
+                                                    <button class="btn btn-primary flex-fill add-to-rfq-btn"
+                                                            data-product-id="{{ $product->id }}"
+                                                            data-product-name="{{ $product->name }}"
+                                                            data-product-sku="{{ $product->sku_code ?? '' }}"
+                                                            data-product-brand="{{ optional($product->brand)->name ?? '' }}"
+                                                            data-product-thumbnail="{{ $product->thumbnail }}">
                                                         + Add RFQ
-                                                    </a>
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
@@ -942,6 +952,11 @@
     </div>
 
     @push('scripts')
+        <!-- jQuery -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <!-- SweetAlert2 -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        
         <script>
             document.addEventListener("DOMContentLoaded", function() {
                 var accordions = document.querySelectorAll('.accordion');
@@ -953,6 +968,95 @@
                             bootstrap.Collapse.getInstance(currentlyOpen).hide();
                         }
                     });
+                });
+            });
+
+            $(document).ready(function() {
+                console.log('%c[RFQ System Initialized for Home Page]', 'color: green; font-weight: bold;');
+
+                function handleAjaxError(xhr) {
+                    let message = 'Something went wrong. Please try again.';
+                    if (xhr.status === 419) {
+                        message = 'Session expired. Reloading...';
+                        Swal.fire({ 
+                            icon: 'warning', 
+                            title: 'Session Expired', 
+                            text: message, 
+                            showConfirmButton: false, 
+                            timer: 1500, 
+                            willClose: () => location.reload() 
+                        });
+                        return;
+                    }
+                    if (xhr.status === 500) message = 'Server error occurred.';
+                    else if (xhr.responseJSON?.message) message = xhr.responseJSON.message;
+                    Swal.fire({ icon: 'error', title: 'Error', text: message });
+                }
+
+                // Add to RFQ for both buttons
+                $('.add-to-rfq-btn').off('click').on('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation(); // Prevent card link navigation
+                    
+                    const button = $(this);
+                    const productId = button.data('product-id');
+                    const productName = button.data('product-name');
+                    const productSku = button.data('product-sku');
+                    const productBrand = button.data('product-brand');
+                    const productThumbnail = button.data('product-thumbnail');
+                    const originalHtml = button.html();
+
+                    button.html('<i class="fa fa-spinner fa-spin"></i> Processing...').prop('disabled', true);
+
+                    $.ajax({
+                        url: '{{ route("cart.add") }}',
+                        method: 'POST',
+                        data: { 
+                            _token: '{{ csrf_token() }}', 
+                            product_id: productId, 
+                            quantity: 1, 
+                            is_rfq: true 
+                        },
+                        success: function(res) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Added to RFQ!',
+                                text: 'Redirecting to quotation form...',
+                                showConfirmButton: false,
+                                timer: 1200,
+                                willClose: () => {
+                                    window.location.href = res.redirect_url || '{{ route("rfq") }}';
+                                }
+                            });
+                        },
+                        error: function(xhr) {
+                            // If AJAX fails, redirect directly to RFQ page with parameters
+                            const rfqUrl = '{{ route("rfq") }}' +
+                                '?product_id=' + productId +
+                                '&product_name=' + encodeURIComponent(productName) +
+                                '&product_sku=' + encodeURIComponent(productSku) +
+                                '&product_brand=' + encodeURIComponent(productBrand) +
+                                '&product_thumbnail=' + encodeURIComponent(productThumbnail) +
+                                '&source=home_page&direct=true';
+                            
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Redirecting to RFQ',
+                                text: 'Adding product to quotation form...',
+                                showConfirmButton: false,
+                                timer: 1500,
+                                willClose: () => window.location.href = rfqUrl
+                            });
+                        },
+                        complete: function() { 
+                            button.html(originalHtml).prop('disabled', false); 
+                        }
+                    });
+                });
+
+                // Prevent card link from being clicked when button is clicked
+                $('.url-box .card .add-to-rfq-btn').on('click', function(e) {
+                    e.stopPropagation();
                 });
             });
         </script>
