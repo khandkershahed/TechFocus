@@ -9,10 +9,14 @@ return new class extends Migration
 {
     public function up(): void
     {
-        DB::statement("
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+
+        DB::statement('
             ALTER TABLE attendance_requests
-            DROP CONSTRAINT unique_pending_request
-        ");
+            DROP INDEX unique_pending_request
+        ');
+
+        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 
     public function down(): void
