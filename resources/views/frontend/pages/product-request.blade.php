@@ -8,12 +8,12 @@
     <div class="px-0 container-fluid">
         <div class="overflow-hidden ban_img position-relative">
             <img
-                src="{{ asset('img/TechFocus-Catalog-Page-Banner-(1920x525).png') }}"
+                src="{{ asset('frontend/images/request.png') }}"
                 class="img-fluid w-100"
                 alt="Catalog Banner"
-                style="height: 475px; object-fit: cover;"
+                style="height: 380px; object-fit: cover;"
                 loading="lazy"
-                onerror="this.onerror=null;this.src='{{ asset('frontend/images/no-banner(1920-330).png') }}';">
+                onerror="this.onerror=null;this.src='{{ asset('frontend/images/request.png') }}';">
 
             <!-- Optional overlay -->
             <div class="top-0 position-absolute start-0 w-100 h-100"
@@ -28,8 +28,8 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-10">
-                <h2 class="my-5 text-center fw-light" style="color:#444;">
-                    Request price options
+                <h2 class="my-5 text-center fw-bold" style="color:#444;">
+                    Request Price Options
                 </h2>
 
                 <div class="row g-4">
