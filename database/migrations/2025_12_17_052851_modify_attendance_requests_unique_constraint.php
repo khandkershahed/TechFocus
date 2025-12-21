@@ -1,22 +1,23 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
     public function up(): void
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+        // 1. Add replacement index for FK
+        DB::statement('
+            CREATE INDEX attendance_requests_meeting_id_idx
+            ON attendance_requests (meeting_id)
+        ');
 
+        // 2. Drop the unique constraint
         DB::statement('
             ALTER TABLE attendance_requests
             DROP INDEX unique_pending_request
         ');
-
-        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 
     public function down(): void
