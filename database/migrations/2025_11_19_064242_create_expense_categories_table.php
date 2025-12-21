@@ -10,8 +10,8 @@ return new class extends Migration
      * Run the migrations.
      *
      * @return void
-     */
-    public function up()
+    */
+    public function up() 
     {
         Schema::create('expense_categories', function (Blueprint $table) {
             $table->id();
