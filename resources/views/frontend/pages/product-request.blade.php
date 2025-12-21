@@ -1,69 +1,133 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Request Product Price</title>
-    <!-- Add your CSS links here if needed -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-    <div class="container mt-5">
+@extends('frontend.master')
+@section('metadata')
+@endsection
+@section('content')
+
+<!-- ================= HERO BANNER ================= -->
+<section class="ban_sec section_one">
+    <div class="px-0 container-fluid">
+        <div class="overflow-hidden ban_img position-relative">
+            <img
+                src="{{ asset('frontend/images/request.png') }}"
+                class="img-fluid w-100"
+                alt="Catalog Banner"
+                style="height: 380px; object-fit: cover;"
+                loading="lazy"
+                onerror="this.onerror=null;this.src='{{ asset('frontend/images/request.png') }}';">
+
+            <!-- Optional overlay -->
+            <div class="top-0 position-absolute start-0 w-100 h-100"
+                style="background: linear-gradient(180deg, rgba(0,0,0,.35), rgba(0,0,0,.05));">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ================= REQUEST PRICE ================= -->
+<section class="pb-5 request-price-section bg-light">
+    <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="text-center">Request Product Price</h3>
-                    </div>
-                    <div class="card-body">
-                        <!-- Static HTML form - no dynamic data needed -->
-                        <form action="#" method="POST">
-                            @csrf
-                            <div class="mb-3">
-                                <label for="name" class="form-label">Your Name</label>
-                                <input type="text" class="form-control" id="name" name="name" required>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="email" class="form-label">Email Address</label>
-                                <input type="email" class="form-control" id="email" name="email" required>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="product" class="form-label">Product Name/Number</label>
-                                <input type="text" class="form-control" id="product" name="product" 
-                                       value="4004" readonly> <!-- Pre-filled with your product code -->
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="quantity" class="form-label">Quantity</label>
-                                <input type="number" class="form-control" id="quantity" name="quantity" min="1" required>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="message" class="form-label">Additional Notes</label>
-                                <textarea class="form-control" id="message" name="message" rows="3"></textarea>
-                            </div>
-                            
-                            <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-primary">Submit Request</button>
-                                <a href="{{ url()->previous() }}" class="btn btn-outline-secondary">Cancel</a>
-                            </div>
-                        </form>
-                        
-                        <!-- Optional: Add some static help text -->
-                        <div class="mt-4 text-muted">
-                            <p class="small">
-                                <strong>Note:</strong> This is a price request form. Our team will contact you within 24 hours with pricing information.
-                            </p>
+            <div class="col-lg-10">
+                <h2 class="my-5 text-center fw-bold" style="color:#444;">
+                    Request Price Options
+                </h2>
+
+                <div class="row g-4">
+                    <!-- ================= FORM ================= -->
+                    <div class="col-md-9">
+                        <div class="p-4 bg-white shadow-sm p-md-5 rounded-3 h-100">
+                            <form action="#" method="POST">
+                                @csrf
+                                <div class="mb-4">
+                                    <label class="mb-1 form-label small text-muted">
+                                        Your email <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="email"
+                                        class="border-0 form-control rounded-2 bg-light"
+                                        placeholder="john.doe@mail.com"
+                                        required>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="mb-1 form-label small text-muted">
+                                        Your project
+                                    </label>
+                                    <textarea rows="4"
+                                              class="form-control rounded-2 border-light-subtle"
+                                              style="resize:none;">Hello,
+I am interested in the following product: belt conveyor.
+I would like to learn more about your prices and options.
+Thank you in advance.</textarea>
+                                </div>
+                                <div class="mb-4">
+                                    <p class="mb-2 small text-muted">I would also like to:</p>
+                                    <div class="mb-2 form-check">
+                                        <input class="form-check-input" type="checkbox" id="documentation">
+                                        <label class="pt-1 form-check-label small" for="documentation">
+                                            Receive documentation
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="contact">
+                                        <label class="pt-1 form-check-label small" for="contact">
+                                            Be contacted by telephone
+                                        </label>
+                                    </div>
+                                </div>
+                                <button type="submit"
+                                    class="p-3 py-2 text-white btn fw-semibold"
+                                    style="background:#f79433;border-radius:6px;">
+                                    Send request
+                                </button>
+                            </form>
                         </div>
                     </div>
+                    <!-- ================= PRODUCT INFO ================= -->
+                    <div class="col-md-3">
+                        <div class="gap-4 d-flex flex-column">
+                            <div class="p-4 bg-white shadow-sm rounded-3">
+                                <p class="mb-3 small text-muted">
+                                    Your request concerns:
+                                </p>
+                                <div class="mb-3 text-center">
+                                    <img src="https://img.directindustry.com/images_di/photo-mg/58734-20973186.jpg"
+                                        class="rounded img-fluid"
+                                        alt="Belt Conveyor">
+                                </div>
+                                <h6 class="mb-1 text-uppercase fw-bold small text-muted">
+                                    Belt Conveyor
+                                </h6>
+                                <p class="mb-3 small text-muted">TS 1600-105</p>
+                                <img src="https://img.directindustry.com/images_di/logo-p/L58734.gif"
+                                    class="img-fluid"
+                                    style="max-height:40px;"
+                                    alt="Brand Logo">
+                            </div>
+                            <div class="p-4 bg-white shadow-sm rounded-3">
+                                <p class="mb-1 small text-muted">Sold by:</p>
+                                <h6 class="mb-1 fw-bold" style="color:#333;">
+                                    TechFocus System GmbH
+                                </h6>
+                                <p class="mb-0 small text-muted">
+                                    <i class="bi bi-geo-alt-fill text-warning"></i> Bangladesh
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ================= FOOTER TEXT ================= -->
+                <div class="mt-4">
+                    <p class="small text-muted" style="line-height:1.6;">
+                        TechFocus Group protects your privacy. When you request an RFQ, quote,
+                        documentation, prices and options, please refer to
+                        <a href="#" class="text-decoration-none">our Privacy Policy</a> and
+                        <a href="#" class="text-decoration-none">terms of use</a>.
+                    </p>
                 </div>
             </div>
         </div>
     </div>
-    
-    <!-- Add your JS scripts here if needed -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+</section>
+@endsection
+
+@push('scripts')
+@endpush
