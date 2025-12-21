@@ -45,7 +45,10 @@ public function homePage()
     // Get featured products for section two if homepage data exists
     $featuredProducts = collect();
     if ($homePage && $homePage->section_two_products) {
-        $featuredProducts = Product::whereIn('id', $homePage->section_two_products)->get();
+        $featuredProducts = Product::whereIn('id', $homePage->section_two_products)
+            ->inRandomOrder() // Randomize the order
+            ->take(4) // Limit to only 4 products
+            ->get();
     }
 
     // Get news trends for section four if homepage data exists
@@ -76,7 +79,7 @@ public function homePage()
         'news_trends'       => NewsTrend::where('type', 'trends')->limit(4)->get(),
         'solutions'         => SolutionDetail::latest()->limit(4)->get(),
         'homePage'          => $homePage,
-        'featuredProducts'  => $featuredProducts,
+        'featuredProducts'  => $featuredProducts, // Now contains only 4 random products
         'sectionFourNews'   => $sectionFourNews,
     ];
 
