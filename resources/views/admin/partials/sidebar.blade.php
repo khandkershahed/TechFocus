@@ -773,15 +773,7 @@
                                 <span class="menu-title">Terms & Policy</span>
                             </a>
                         </div>
-                           <div class="menu-item">
-                            <a class="menu-link {{ Route::current()->getName() == 'admin.terms-and-policy.index' ? 'active' : '' }}"
-                                href="{{ route('admin.terms-and-policy.index') }}">
-                                <span class="menu-bullet">
-                                    <span class="bullet bullet-dot"></span>
-                                </span>
-                                <span class="menu-title">Terms & Policy</span>
-                            </a>
-                        </div>
+                       
                     <div class="menu-item">
                                 <a class="menu-link {{ Route::current()->getName() == 'admin.privacy-policy.index' ? 'active' : '' }}"
                                     href="{{ route('admin.privacy-policy.index') }}">
