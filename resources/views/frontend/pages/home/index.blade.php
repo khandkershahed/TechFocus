@@ -356,11 +356,11 @@
                                                 <div class="gap-2 mt-auto mb-4 d-flex justify-content-between">
                                                    <!-- Change this button in your home page -->
                                              <a href="{{ route('product.request.form') }}" 
-                                                class="btn btn-outline-primary flex-fill">
+                                                class="btn btn-outline-primary flex-fill rounded-0">
                                                     Ask For Price
                                                 </a>
                                                                                                         
-                                                    <button class="btn btn-primary flex-fill add-to-rfq-btn"
+                                                    <button class="btn btn-primary flex-fill add-to-rfq-btn rounded-0"
                                                             data-product-id="{{ $product->id }}"
                                                             data-product-name="{{ $product->name }}"
                                                             data-product-sku="{{ $product->sku_code ?? '' }}"
