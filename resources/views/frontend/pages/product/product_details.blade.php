@@ -95,11 +95,6 @@
         box-shadow: 0 8px 20px rgba(13, 110, 253, 0.1);
     }
 
-    /* Card Hover Effects */
-    .bg-white:hover {
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-    }
-
     /* Responsive Adjustments */
     @media (max-width: 768px) {
         .container {
@@ -119,9 +114,9 @@
 </style>
 
 <!-- Main Product Container -->
-<div class="container py-5">
+<div class="container px-0 py-2">
     <!-- Product Details Card -->
-    <div class="mb-5 overflow-hidden bg-white shadow-sm rounded-4">
+    <div class="mb-4 overflow-hidden bg-white ">
         <div class="row g-0">
             <!-- Product Images Section -->
             <div class="p-4 col-lg-6 col-md-12">
@@ -309,10 +304,9 @@
             </div>
         </div>
     </div>
-
     <!-- Product Details Tabs -->
     @if(!empty($product->specification) || !empty($product->overview))
-    <div class="overflow-hidden bg-white shadow-sm rounded-4">
+    <div class="mb-5 overflow-hidden bg-white">
         <div class="border-bottom">
             <ul class="border-0 nav nav-tabs" id="productTabs" role="tablist">
                 @if(!empty($product->specification))
@@ -371,7 +365,7 @@
 
 <!-- Related Products Section (Optional - Add if you have related products) -->
 @if(isset($relatedProducts) && $relatedProducts->count() > 0)
-<div class="container mb-5">
+<div class="container px-0 py-2 mb-5">
     <div class="mb-4 d-flex justify-content-between align-items-center">
         <h3 class="fw-bold">Related Products</h3>
         <a href="{{ route('category', $product->category->slug ?? '#') }}" class="text-primary text-decoration-none">

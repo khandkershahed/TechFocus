@@ -29,7 +29,7 @@
                                             <span class="text-primary">My</span> Techfocus
                                         </h2>
                                     </a>
-                                    <div class="p-3 mt-2 bg-white border rounded shadow-sm popover__content position-absolute end-0" style="min-width: 220px; z-index: 1000;">
+                                    <div class="p-3 bg-white border rounded shadow-sm popover__content position-absolute end-0" style="min-width: 220px; z-index: 1000;">
                                         @auth
                                         <form method="POST" action="{{ route('logout') }}">
                                             @csrf
