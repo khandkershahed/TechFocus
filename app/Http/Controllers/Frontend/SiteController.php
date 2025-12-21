@@ -206,27 +206,6 @@ public function homePage()
         return view('frontend.pages.solution.solution_details', $data);
     }
 
-    // public function category($slug)
-    // {
-    //     $data = [
-    //         'category' => Category::with('children')->where('slug', $slug)->first(),
-    //     ];
-    //     return view('frontend.pages.category.category', $data);
-    // }
-//     public function category($slug)
-// {
-//     $category = Category::with('children')->where('slug', $slug)->firstOrFail();
-
-//     // Fetch products related to this category
-//     $products = $category->products()->latest()->get(); // adjust query as needed
-
-//     // Pass data to view
-//     return view('frontend.pages.category.category', [
-//         'category' => $category,
-//         'products' => $products,
-//         'subcategories' => $category->children, 
-//     ]);
-// }
 public function category($slug)
 {
     $category = Category::with('children')->where('slug', $slug)->first();
@@ -271,36 +250,7 @@ private function getAllCategoryIds($category)
     return $ids;
 }
 
-    // public function filterProducts($slug)
-    // {
-    //     $category = Category::where('slug', $slug)->first();
 
-    //     if (!$category) {
-    //         Session::flash('error', 'Category not found.');
-    //         return redirect()->back();
-    //     }
-
-    //     $categoryId = (string) $category->id;
-
-    //     $products = Product::whereJsonContains('category_id', [$categoryId])
-    //         ->orWhereRaw('JSON_UNQUOTE(category_id) LIKE ?', ['%"' . $categoryId . '"%'])
-    //         ->paginate(16);
-
-    //     //    dd($products);
-
-    //     // if ($products->isEmpty()) {
-    //     //     Session::flash('warning', 'No Products Found for this Category');
-    //     //     return redirect()->back();
-    //     // }
-
-    //     $data = [
-    //         'category' => $category,
-    //         'products' => $products,
-    //         'brands'   => Brand::latest()->get(),
-    //     ];
-
-    //     return view('frontend.pages.shop.filterProducts', $data);
-    // }
 public function filterProducts(Request $request, $slug)
 {
     // Get category by slug
@@ -357,9 +307,6 @@ public function filterProducts(Request $request, $slug)
         'brands'   => Brand::latest()->get(),
     ]);
 }
-
-
-
 
     private $termsAndPolicyRepository;
     private $faqRepository;
@@ -423,11 +370,6 @@ public function brandList()
 
     return view('frontend.pages.brand.brand_list', $data);
 }
-
-    // public function service()
-    // {
-    //     return view('frontend.pages.service.service');
-    // }
 
     public function sourcingGuide()
     {
@@ -645,7 +587,4 @@ public function brandList()
     {
         return view('frontend.pages.test.industryTestDetails');
     }
-
-
 }
-
