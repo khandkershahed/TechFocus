@@ -7,7 +7,7 @@
         position: -webkit-sticky;
         position: sticky;
         top: 0;
-        z-index: 1020;
+        z-index: 1030;
         transition: all 0.3s;
     }
 

@@ -428,7 +428,7 @@
 
 .swiper-slide {
   width: 100%;
-  height: 525px;
+  /* height: 525px; */
   text-align: center;
   font-size: var(--header-font-size);
   background: var(--white);

@@ -48,10 +48,21 @@
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
         }
-        
-        /* Loading spinner for RFQ buttons */
-        .fa-spinner {
-            margin-right: 8px;
+       .product-title-wrapper {
+            min-height: 80px;
+            overflow: hidden;
+        }
+
+        .product-code-wrapper {
+            min-height: 48px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            gap: 4px;
+        }
+
+        .product-title {
+            line-height: 1.4;
         }
         
         /* Already added button style */
@@ -66,7 +77,6 @@
             border-color: #1e7e34 !important;
         }
     </style>
-
     <!-- SECTION 1: BANNER -->
     <div class="swiper bannerSwiper">
         <div class="swiper-wrapper">
@@ -83,7 +93,6 @@
         </div>
         <div class="swiper-pagination"></div>
     </div>
-
     <!-- SECTION 2: CONTENT MENU -->
     <div class="container p-0 my-3">
         <div class="mt-2 mb-2">
@@ -93,7 +102,6 @@
                     $columns = 3;
                     $chunks = $sortedCategories->chunk(ceil($sortedCategories->count() / $columns));
                 @endphp
-
                 <div class="px-0 col-lg-12 px-lg-0">
                     <div class="container">
                         <div class="pt-3 row">
@@ -158,15 +166,14 @@
                     </div>
                 </div>
             </div>
-
             <!-- SECTION 3: DYNAMIC HERO SECTION ONE -->
             @if($homePage && $homePage->section_one_title)
                 <div class="mx-1 my-5 bg-white row what-we-do"
                      style="background-position: center;
                             background-size: cover;
                             background-repeat: no-repeat;
-                            background-image: url('{{ $homePage->section_one_image ? asset('storage/home-page/image/' . $homePage->section_one_image) : 'https://www.riverbed.com/riverbed-wp-content/uploads/2022/12/lady-with-laptop.png' }}')">
-                    
+                            background-image: url('{{ $homePage->section_one_image ? asset('storage/home-page/image/' . $homePage->section_one_image) : 'https://www.riverbed.com/riverbed-wp-content/uploads/2022/12/lady-with-laptop.png' }}')"
+                            >
                     <div class="p-5 mb-3 col-lg-12">
                         <div class="row align-items-center">
                             <div class="col-lg-6 col-sm-12">
@@ -199,7 +206,6 @@
                     </div>
                 </div>
             @endif
-
             <!-- SECTION 4: DYNAMIC SOLUTIONS SECTION -->
             @if ($homePage && $homePage->section_solutions_name && $solutions->count() > 0)
                 <div class="row">
@@ -278,7 +284,6 @@
                     </div>
                 </div>
             @endif
-
             <!-- SECTION 5: FEATURED PRODUCTS -->
             @if ($homePage && $homePage->section_two_name && $featuredProducts->count() > 0)
                 <div class="row">
@@ -290,14 +295,12 @@
                         </div>
                     </div>
                 </div>
-                
                 <div class="row">
                     @foreach ($featuredProducts as $product)
                         <div class="mb-4 col-lg-3 col-12">
                             <a href="{{ route('product.details', ['id' => optional($product->brand)->slug, 'slug' => optional($product)->slug]) }}" 
                                class="text-decoration-none h-100">
-                                
-                                <div class="url-box h-100 d-flex">
+                                <div class="url-box h-100">
                                     <div class="overflow-hidden border-0 card rounded-0">
                                         <!-- CARD HEADER -->
                                         <div class="bg-white border-0 card-header d-flex justify-content-between align-items-center home-logo">
@@ -310,37 +313,37 @@
                                                      style="height: 30px;"
                                                      alt="{{ optional($product->brand)->title }}"
                                                      loading="lazy"
-                                                     onerror="this.onerror=null; this.src='{{ asset('https://www.techfocusltd.com/storage/brand/logo/Schneider-Electric-logo_1OzdzFNM.png') }}';" />
+                                                     onerror="this.onerror=null; 
+                                                     this.src='{{ asset('https://www.techfocusltd.com/storage/brand/logo/Schneider-Electric-logo_1OzdzFNM.png') }}';" />
                                             </div>
                                         </div>
-
                                         <!-- CARD BODY -->
-                                        <div class="p-0 card-body d-flex flex-column flex-fill">
+                                        <div class="p-0 card-body d-flex flex-column">
                                             <!-- PRODUCT IMAGE -->
-                                            <div class="flex-shrink-0 mb-2">
+                                            <div class="mb-2">
                                                 <img class="img-fluid h-product-img" 
-                                                     src="{{ $product->thumbnail }}" />
+                                                    src="{{ $product->thumbnail }}" />
                                             </div>
 
-                                            <!-- PRODUCT TITLE & CODES -->
-                                            <div class="px-3 flex-fill d-flex flex-column">
-                                                <h6 class="pt-3 mb-2 product-title" 
-                                                    style="min-height: 80px; 
-                                                           overflow: hidden; 
-                                                           display: -webkit-box; 
-                                                           -webkit-line-clamp: 3; 
-                                                           -webkit-box-orient: vertical;">
-                                                    {{ Str::words($product->name, 15) }}
-                                                </h6>
+                                            <!-- CONTENT AREA -->
+                                            <div class="px-3 d-flex flex-column flex-grow-1">
+
+                                                <!-- TITLE -->
+                                                <div class="product-title-wrapper">
+                                                    <h6 class="pt-3 mb-2 product-title text-start">
+                                                        {{ Str::words($product->name, 15) }}
+                                                    </h6>
+                                                </div>
 
                                                 <!-- SKU / MF CODES -->
-                                                <div class="gap-1 mb-3 d-flex flex-column">
+                                                <div class="mb-3 product-code-wrapper">
                                                     @if (!empty($product->sku_code))
                                                         <div class="d-flex align-items-center">
                                                             <i class="fa-solid fa-paperclip main-color me-2"></i>
                                                             <span class="tags-text">SKU #{{ $product->sku_code }}</span>
                                                         </div>
                                                     @endif
+
                                                     @if (!empty($product->mf_code))
                                                         <div class="d-flex align-items-center">
                                                             <i class="fa-solid fa-paperclip main-color me-2"></i>
@@ -349,7 +352,7 @@
                                                     @endif
                                                 </div>
 
-                                                <!-- BUTTONS -->
+                                                <!-- BUTTONS (ALWAYS AT BOTTOM) -->
                                                 <div class="gap-2 mt-auto mb-4 d-flex justify-content-between">
                                                    <!-- Change this button in your home page -->
                                              <a href="{{ route('product.request.form') }}" 
@@ -367,6 +370,7 @@
                                                         <span class="btn-added-text d-none"><i class="fas fa-check me-1"></i> Added</span>
                                                     </button>
                                                 </div>
+
                                             </div>
                                         </div>
                                     </div>
@@ -388,7 +392,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="mb-3 border-0 card bg-primary pe-0"
                      style="border-top-right-radius: 40px; 
                             border-bottom-left-radius: 40px; 
@@ -554,7 +557,6 @@
                     </div>
                 </div>
             @endif
-
             <!-- SECTION 7: NEWS & TRENDS -->
             @if ($homePage && $homePage->section_four_name && $sectionFourNews->count() > 0)
                 <div class="mt-3 row">
@@ -566,7 +568,6 @@
                         </div>
                     </div>
                 </div>
-                
                 <div class="row gx-5">
                     @foreach ($sectionFourNews as $news_trend)
                         <div class="col-lg-3 col-md-12">
@@ -585,7 +586,6 @@
                     @endforeach
                 </div>
             @endif
-
             <!-- SECTION 8: QUICK LINKS -->
             @if ($homePage && $homePage->section_five_title)
                 <div class="mx-4 mt-5 mb-3">
@@ -723,7 +723,6 @@
                     </div>
                 </div>
             @endif
-
             <!-- SECTION 11: WHY NEED US SECTION -->
             @if ($homePage && $homePage->section_seven_title)
                 <div>
@@ -736,7 +735,6 @@
                             </div>
                         </div>
                     </div>
-                    
                     <div class="mx-1 mb-5 bg-white row"
                          style="border-top-right-radius: 40px; border-bottom-left-radius: 40px">
                         <div class="p-5 mb-3 col-lg-12">
@@ -964,7 +962,6 @@
             @endif
         </div>
     </div>
-
     @push('scripts')
         <!-- jQuery -->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
