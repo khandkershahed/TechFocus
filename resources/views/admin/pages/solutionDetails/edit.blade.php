@@ -67,53 +67,53 @@
                                             </div>
                                             <div class="fv-row">
                                                 <div class="row">
-@php
-    // Decode JSON, ensure it is always an array
-    $selectedIndustries = json_decode($solutionDetail->industry_id, true);
-    if (!is_array($selectedIndustries)) {
-        $selectedIndustries = $selectedIndustries ? [$selectedIndustries] : [];
-    }
+                                                                @php
+                                                                    // Decode JSON, ensure it is always an array
+                                                                    $selectedIndustries = json_decode($solutionDetail->industry_id, true);
+                                                                    if (!is_array($selectedIndustries)) {
+                                                                        $selectedIndustries = $selectedIndustries ? [$selectedIndustries] : [];
+                                                                    }
 
-    $selectedBrands = json_decode($solutionDetail->brand_id, true);
-    if (!is_array($selectedBrands)) {
-        $selectedBrands = $selectedBrands ? [$selectedBrands] : [];
-    }
-@endphp
+                                                                    $selectedBrands = json_decode($solutionDetail->brand_id, true);
+                                                                    if (!is_array($selectedBrands)) {
+                                                                        $selectedBrands = $selectedBrands ? [$selectedBrands] : [];
+                                                                    }
+                                                                @endphp
 
-<div class="col-lg-6">
-    <div class="fv-row mb-3">
-        <label class="form-label">Industry Name</label>
-        <select class="form-select form-select-solid"
-                name="industry_id[]" id="industrySelect" multiple
-                multiselect-search="true" multiselect-select-all="true"
-                multiselect-max-items="3">
-            @foreach ($industries as $industry)
-                <option value="{{ $industry->id }}"
-                    {{ in_array($industry->id, $selectedIndustries) ? 'selected' : '' }}>
-                    {{ $industry->name }}
-                </option>
-            @endforeach
-        </select>
-        <div class="invalid-feedback"> Please Enter Industry Name.</div>
-    </div>
-</div>
+                                                                <div class="col-lg-6">
+                                                                    <div class="fv-row mb-3">
+                                                                        <label class="form-label">Industry Name</label>
+                                                                        <select class="form-select form-select-solid"
+                                                                                name="industry_id[]" id="industry_id[] " multiple
+                                                                                multiselect-search="true" multiselect-select-all="true"
+                                                                                multiselect-max-items="3" data-control="select2" >
+                                                                            @foreach ($industries as $industry)
+                                                                                <option value="{{ $industry->id }}"
+                                                                                    {{ in_array($industry->id, $selectedIndustries) ? 'selected' : '' }}>
+                                                                                    {{ $industry->name }}
+                                                                                </option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                        <div class="invalid-feedback"> Please Enter Industry Name.</div>
+                                                                    </div>
+                                                                </div>
 
-<div class="col-lg-6">
-    <div class="fv-row mb-3">
-        <label class="form-label">Brand Name</label>
-        <select class="form-select form-select-solid" name="brand_id[]"
-                id="brandSelect" multiple multiselect-search="true"
-                multiselect-select-all="true" multiselect-max-items="3">
-            @foreach ($brands as $brand)
-                <option value="{{ $brand->id }}"
-                    {{ in_array($brand->id, $selectedBrands) ? 'selected' : '' }}>
-                    {{ $brand->title }}
-                </option>
-            @endforeach
-        </select>
-        <div class="invalid-feedback"> Please Enter Brand Name.</div>
-    </div>
-</div>
+                                                                <div class="col-lg-6">
+                                                                    <div class="fv-row mb-3">
+                                                                        <label class="form-label">Brand Name</label>
+                                                                        <select class="form-select form-select-solid" name="brand_id[]"
+                                                                                id="brand_id[]" multiple multiselect-search="true"
+                                                                                multiselect-select-all="true" multiselect-max-items="3" data-control="select2">
+                                                                            @foreach ($brands as $brand)
+                                                                                <option value="{{ $brand->id }}"
+                                                                                    {{ in_array($brand->id, $selectedBrands) ? 'selected' : '' }}>
+                                                                                    {{ $brand->title }}
+                                                                                </option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                        <div class="invalid-feedback"> Please Enter Brand Name.</div>
+                                                                    </div>
+                                                                </div>
 
 
                                                     <div class="col-lg-4">
@@ -1176,8 +1176,7 @@
 @endsection
 
 @push('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-multiselect@0.9.16/dist/js/bootstrap-multiselect.min.js"></script>
+   
     <script>
         $(document).ready(function() {
             // Initialize multi-select

@@ -69,10 +69,10 @@
                                                         <div class="fv-row mb-3">
                                                             <label class="form-label">Industry Name</label>
                                                             <select class="form-select form-select-solid"
-                                                                name="industry_id[]" id="field2" multiple
+                                                                name="industry_id[]" id="industry_id[]" multiple
                                                                 multiselect-search="true" multiselect-select-all="true"
                                                                 multiselect-max-items="3"
-                                                                onchange="console.log(this.selectedOptions)">
+                                                                onchange="console.log(this.selectedOptions)" data-control="select2">
                                                                 @foreach ($industries as $industry)
                                                                     <option value="{{ $industry->id }}">
                                                                         {{ $industry->name }}</option>
@@ -85,9 +85,9 @@
                                                         <div class="fv-row mb-3">
                                                             <label class="form-label">Brand Name</label>
                                                             <select class="form-select form-select-solid" name="brand_id[]"
-                                                                id="field2" multiple multiselect-search="true"
+                                                                id="brand_id[]" multiple multiselect-search="true"
                                                                 multiselect-select-all="true" multiselect-max-items="3"
-                                                                onchange="console.log(this.selectedOptions)">
+                                                                onchange="console.log(this.selectedOptions)" data-control="select2">
                                                                 @foreach ($brands as $brand)
                                                                     <option value="{{ $brand->id }}">{{ $brand->title }}
                                                                     </option>

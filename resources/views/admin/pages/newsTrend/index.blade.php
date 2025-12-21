@@ -68,8 +68,8 @@
                                             <td>
                                                 {{ $newsTrend->author }}
                                             </td>
-                                            <td>
-                                                {{ $newsTrend->addedBy->name }}
+                                           <td>
+                                                {{ $newsTrend->addedBy?->name ?? 'System' }}
                                             </td>
                                             <td>
                                                 {{ ucfirst($newsTrend->type) }}

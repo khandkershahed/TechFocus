@@ -31,8 +31,8 @@
                                     <div class="fv-row mb-3">
                                         <label class="form-label">Brand Name</label>
                                         <select class="form-select form-select-solid form-select-sm" name="brand_id[]"
-                                            id="field2" multiple multiselect-search="true" multiselect-select-all="true"
-                                            multiselect-max-items="2">
+                                            id="brand_id[]" multiple multiselect-search="true" multiselect-select-all="true"
+                                            multiselect-max-items="2" data-control="select2">
                                             @php
                                                 $brandIds = isset($content->brand_id) && is_string($content->brand_id)
                                                         ? json_decode($content->brand_id, true)
@@ -57,7 +57,7 @@
                                     <div class="fv-row mb-3">
                                         <label class="form-label">Category Name</label>
                                         <select class="form-select form-select-solid form-select-sm" name="category_id[]"
-                                            id="field2" multiple multiselect-search="true" multiselect-select-all="true">
+                                            id="category_id[]" multiple multiselect-search="true" multiselect-select-all="true" data-control="select2">
                                             @if (count($categories) > 0)
                                                 @foreach ($categories->whereNull('parent_id') as $category)
                                                     @include('admin.pages.product.partials.edit_category', [
@@ -73,8 +73,8 @@
                                     <div class="fv-row mb-3 mt-1">
                                         <label class="form-label">Industry Name</label>
                                         <select class="form-select form-select-solid form-select-sm" name="industry_id[]"
-                                            id="field2" multiple multiselect-search="true" multiselect-select-all="true"
-                                            multiselect-max-items="2">
+                                            id="industry_id[]" multiple multiselect-search="true" multiselect-select-all="true"
+                                            multiselect-max-items="2" data-control="select2">
                                             @php
                                                 $industryIds =
                                                     isset($content->industry_id) && is_string($content->industry_id)
@@ -95,7 +95,7 @@
                                         <label class="form-label">Solution Name</label>
                                         <select class="form-select form-select-solid form-select-sm" name="solution_id[]"
                                             id="field2" multiple multiselect-search="true" multiselect-select-all="true"
-                                            multiselect-max-items="2">
+                                            multiselect-max-items="2" data-control="select2" >
                                             @php
                                                 $solutionIds =
                                                     isset($content->solution_id) && is_string($content->solution_id)

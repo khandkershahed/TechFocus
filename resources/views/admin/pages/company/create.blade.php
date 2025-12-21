@@ -43,7 +43,7 @@
                                                                                             {{-- Industry --}}
                                                 <div class="col-lg-3 mb-2">
                                                     <label class="form-label required mb-0">Industry</label>
-                                                    <select name="industry[]" class="form-select form-select-solid form-select-sm" multiple>
+                                                    <select name="industry[]" id="industry[]" class="form-select form-select-solid form-select-sm" multiple data-control="select2">
                                                         @foreach (getIndustry() as $industry)
                                                             <option value="{{ $industry->id }}"
                                                                 @if(is_array(old('industry')) && in_array($industry->id, old('industry'))) selected @endif>
@@ -59,7 +59,7 @@
                                                 {{-- Country --}}
                                                 <div class="col-lg-3 mb-2">
                                                     <label class="form-label required mb-0">Country</label>
-                                                    <select name="country[]" class="form-select form-select-solid form-select-sm" multiple>
+                                                    <select name="country[]" id="country[]" class="form-select form-select-solid form-select-sm" multiple data-control="select2">
                                                         @foreach (getAllCountry() as $country)
                                                             <option value="{{ $country->id }}"
                                                                 @if(is_array(old('country')) && in_array($country->id, old('country'))) selected @endif>

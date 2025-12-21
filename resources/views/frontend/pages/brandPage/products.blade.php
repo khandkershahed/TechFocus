@@ -56,53 +56,41 @@
                 </div>
             @endforeach
         </div>
-        <!-- Related Search -->
-        <div class="container">
-            <div class="mt-5 mb-5 row">
-                <div class="p-0 col">
-                    <div class="border-0 shadow-sm card rounded-0">
-                        <div class="card-header rounded-0">
-                            <h4 class="pt-2 text-center">Related Brands</h4>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <ul class="related-items">
-                                        <li class="rounded-pill bg-light">
-                                            <a href="">Rail conveyor</a>
-                                        </li>
-                                        <li class="rounded-pill bg-light">
-                                            <a href="">Belt conveyor</a>
-                                        </li>
-                                        <li class="rounded-pill bg-light">
-                                            <a href="">Transfer conveyor</a>
-                                        </li>
-                                        <li class="rounded-pill bg-light">
-                                            <a href="">Part conveyor</a>
-                                        </li>
-                                        <li class="rounded-pill bg-light">
-                                            <a href="">Compact conveyor</a>
-                                        </li>
-                                        <li class="rounded-pill bg-light">
-                                            <a href="">Assembly line conveyor</a>
-                                        </li>
-                                        <li class="rounded-pill bg-light">
-                                            <a href="">Linear transfer system</a>
-                                        </li>
-                                        <li class="rounded-pill bg-light">
-                                            <a href="">Modular transfer system</a>
-                                        </li>
-                                        <li class="rounded-pill bg-light">
-                                            <a href="">Robot transfer system</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
+      <!-- Related Brands -->
+<div class="container">
+    <div class="mt-5 mb-5 row">
+        <div class="p-0 col">
+            <div class="border-0 shadow-sm card rounded-0">
+                <div class="card-header rounded-0">
+                    <h4 class="pt-2 text-center">Related Brands</h4>
+                </div>
+
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <ul class="related-items d-flex flex-wrap gap-2 list-unstyled">
+
+                                @forelse($relatedBrands as $relatedBrand)
+                                    <li class="rounded-pill bg-light px-3 py-1">
+                                        <a href="{{ route('brand.overview', $relatedBrand->slug) }}"
+                                           class="text-decoration-none text-dark">
+                                            {{ $relatedBrand->title }}
+                                        </a>
+                                    </li>
+                                @empty
+                                    <li>No related brands found</li>
+                                @endforelse
+
+                            </ul>
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
+    </div>
+</div>
+
         <div class="p-3 row">
             <div class="col-lg-12 col-sm-12">
                 <p class="mx-auto text-center sub-color w-75"> *Prices are pre-tax. They exclude delivery charges and

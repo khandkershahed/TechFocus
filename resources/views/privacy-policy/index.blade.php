@@ -3,6 +3,17 @@
 @section('title', (isset($policy->title) ? $policy->title . ' | Techfocus' : 'Privacy Policy | Techfocus'))
 
 @section('content')
+
+<!-- Page Banner -->
+<div class="policy-banner mb-5">
+    <img 
+        src="{{ asset('img/TechFocusTermsandConditionsPageBanner(1920x525).webp') }}" 
+        alt="TechFocus Privacy Policy Banner"
+        class="img-fluid w-100"
+        style="max-height:525px; object-fit:cover;"
+    >
+</div>
+
 <div class="container py-5">
     <div class="row">
         <div class="col-lg-10 mx-auto">
@@ -11,7 +22,7 @@
                 <div class="text-center mb-5">
                     <h1 class="display-4 text-primary mb-3">{{ $policy->title ?? 'Privacy Policy' }}</h1>
                     
-                    @if(($policy->version ?? false) || ($policy->effective_date ?? false))
+                    {{-- @if(($policy->version ?? false) || ($policy->effective_date ?? false))
                     <div class="d-flex justify-content-center align-items-center gap-4 mb-3">
                         @if($policy->version ?? false)
                             <span class="badge badge-info p-2">
@@ -25,7 +36,7 @@
                             </span>
                         @endif
                     </div>
-                    @endif
+                    @endif --}}
                     
                     @if($policy->updated_at ?? false)
                     <p class="text-muted">
@@ -103,7 +114,7 @@
                                 </h5>
                                 <p class="mb-0">
                                     If you have any questions about this Privacy Policy, please contact us at:
-                                    <a href="mailto:privacy@ngenit.com" class="text-primary">privacy@ngenit.com</a>
+                                    <a href="mailto:techfocusltd@gmail.com" class="text-primary">techfocusltd@gmail.com</a>
                                 </p>
                             </div>
                         </div>
@@ -135,7 +146,7 @@
                             <div class="alert alert-light mt-4">
                                 <p class="mb-0">
                                     <strong>Contact Us:</strong> If you have questions about privacy, email us at 
-                                    <a href="mailto:privacy@techfocus.com">privacy@techfocus.com</a>
+                                    <a href="mailto:privacy@techfocus.com">techfocusltd@gmail.com</a>
                                 </p>
                             </div>
                         </div>

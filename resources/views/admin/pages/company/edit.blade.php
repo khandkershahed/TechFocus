@@ -42,10 +42,10 @@
                                 {{-- Industry --}}
                                 <div class="col-lg-3 mb-2">
                                     <label class="form-label mb-0">Industry</label>
-                                    <select name="industry[]" class="form-select form-select-solid form-select-sm" multiple>
+                                    <select name="industry[]" id ="industry[]"class="form-select form-select-solid form-select-sm" multiple  data-control="select2">
                                         @foreach (getIndustry() as $industry)
                                             <option value="{{ $industry->id }}"
-                                                @selected(in_array($industry->id, (array)json_decode($company->industry, true)))>
+                                                @selected(in_array($industry->id, (array)json_decode($company->industry, true))) >
                                                 {{ $industry->name }}
                                             </option>
                                         @endforeach
@@ -55,7 +55,7 @@
                                 {{-- Country --}}
                                 <div class="col-lg-3 mb-2">
                                     <label class="form-label mb-0">Country</label>
-                                    <select name="country[]" class="form-select form-select-solid form-select-sm" multiple>
+                                    <select name="country[]" id ="country[]" class="form-select form-select-solid form-select-sm" multiple data-control="select2">
                                         @foreach (getAllCountry() as $country)
                                             <option value="{{ $country->id }}"
                                                 @selected(in_array($country->id, (array)json_decode($company->country, true)))>
@@ -68,7 +68,7 @@
                                 {{-- Location / Address --}}
                                 <div class="col-lg-3 mb-2">
                                     <label class="form-label mb-0">Location</label>
-                                    <select name="location[]" class="form-select form-select-solid form-select-sm" multiple>
+                                    <select name="location[]" id="location[]" class="form-select form-select-solid form-select-sm" multiple data-control="select2"> 
                                         @foreach (getAddress() as $address)
                                             <option value="{{ $address->id }}"
                                                 @selected(in_array($address->id, (array)json_decode($company->address, true)))>
