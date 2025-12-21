@@ -3,7 +3,7 @@
         position: -webkit-sticky;
         position: sticky;
         top: 0;
-        z-index: 1020;
+        z-index: 1030;
         transition: all 0.3s;
     }
     main {
@@ -17,30 +17,6 @@
                 alt="">
     </div>
 </section>
-
-{{-- <div class="swiper bannerSwiper product-banner">
-    <div class="swiper-wrapper">
-        <div class="swiper-slide">
-            <img src="{{ !empty($brand->brandPage->banner_image) && file_exists(public_path('storage/brand-page/banner-image/' . $brand->brandPage->banner_image)) ? asset('storage/brand-page/banner-image/' . $brand->brandPage->banner_image) : asset('frontend/images/no-banner(1920-330).png') }}"
-                alt="">
-        </div>
-    </div>
-    <div class="swiper-pagination"></div>
-</div> --}}
-{{-- <div class="container">
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="breadcrumbs">
-                <div>
-                    <a href="index.html" class="">Home page</a> &gt;
-                    <span class="txt-mcl active"> Handling - Logistics</span> &gt;
-                    <span class="txt-mcl active"> Conveying</span> &gt;
-                    <span class="txt-mcl active"> Robot transfer system</span>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> --}}
 
 
 <section class="header d-lg-block d-sm-none" id="myHeader">
