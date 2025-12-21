@@ -77,7 +77,7 @@
                                         @if($hasSessionItems)
                                             <!-- Pre-filled products from session -->
                                             @foreach($rfqItems as $index => $product)
-                                            <div data-repeater-item class="mb-3 row g-2 product-item">
+                                            <div data-repeater-item class="mb-3 row g-2 product-item" data-session-index="{{ $index }}">
                                                 <div class="col-lg-1 col-12">
                                                     <button type="button" title="Provide Additional Product Information" 
                                                         class="px-10 border deal-modal-btn btn btn-light btn-sm w-100 me-1 rounded-0" 
@@ -204,7 +204,8 @@
                                                     <div class="d-flex">
                                                         <button type="button" data-repeater-delete 
                                                             class="py-2 border btn btn-danger btn-sm w-100 trash-btn delete-btn ms-1 btn-light" 
-                                                            data-product-id="{{ $product['id'] ?? '' }}">
+                                                            data-product-id="{{ $product['id'] ?? '' }}"
+                                                            data-session-index="{{ $index }}">
                                                             <i class="fas fa-trash"></i>
                                                         </button>
                                                     </div>
@@ -332,9 +333,14 @@
                                     </div>
 
                                     <div class="d-flex justify-content-between align-items-center">
-                                        <button type="button" data-repeater-create class="mt-4 mb-3 rfq-add-btns">
-                                            <i class="fas fa-plus"></i> Add Items
-                                        </button>
+                                        <div>
+                                            <button type="button" data-repeater-create class="mt-4 mb-3 rfq-add-btns">
+                                                <i class="fas fa-plus"></i> Add Items
+                                            </button>
+                                            <button type="button" id="clearAllRfqBtn" class="mt-4 mb-3 ms-2 btn btn-outline-danger btn-sm">
+                                                <i class="fas fa-trash-alt"></i> Clear All
+                                            </button>
+                                        </div>
                                         <div>
                                             <!-- Button to trigger modal -->
                                             <button type="button" class="bg-transparent border-0 modal-text-btn" data-bs-toggle="modal" data-bs-target="#rfqModal">
@@ -1835,6 +1841,142 @@ $(document).ready(function() {
         }
     }
 });
-</script> 
+</script>
 
+<!-- NEW JavaScript for Session Item Removal -->
+<script>
+$(document).ready(function() {
+    // Handle deleting items from session when removing from form
+    $(document).on('click', '.delete-btn[data-session-index]', function(e) {
+        e.preventDefault();
+        
+        const $button = $(this);
+        const sessionIndex = $button.data('session-index');
+        const productId = $button.data('product-id');
+        const $item = $button.closest('[data-repeater-item]');
+        const $list = $item.closest('[data-repeater-list]');
+        const itemCount = $list.find('[data-repeater-item]').length;
+        
+        // If this is a pre-filled item from session, remove it from session
+        if (sessionIndex !== undefined) {
+            $.ajax({
+                url: "{{ route('rfq.remove-item') }}",
+                method: 'POST',
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    session_index: sessionIndex,
+                    product_id: productId
+                },
+                success: function(response) {
+                    console.log('Removed from session:', response);
+                    
+                    // Now remove from DOM
+                    if (itemCount > 1) {
+                        $item.slideUp('fast', function() {
+                            $(this).remove();
+                            updateSerials();
+                        });
+                    } else {
+                        // If last item, clear the form but keep structure
+                        $item.find('.product-name-input').val('');
+                        $item.find('.product-id-input').val('');
+                        $item.find('.qty-input').val(1);
+                        updateSerials();
+                        
+                        // Show message
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'Item Removed',
+                            text: 'Item removed from RFQ. Add new items or submit.',
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+                    }
+                },
+                error: function(xhr) {
+                    console.error('Failed to remove from session');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Failed to remove item. Please try again.',
+                        showConfirmButton: true
+                    });
+                }
+            });
+        } else {
+            // If not a session item, just remove from DOM
+            if (itemCount > 1) {
+                $item.slideUp('fast', function() {
+                    $(this).remove();
+                    updateSerials();
+                });
+            }
+        }
+    });
+    
+    // Handle items added via "Add Items" button (they don't have session data)
+    $(document).on('click', '.delete-btn:not([data-session-index])', function(e) {
+        e.preventDefault();
+        
+        const $item = $(this).closest('[data-repeater-item]');
+        const $list = $item.closest('[data-repeater-list]');
+        const itemCount = $list.find('[data-repeater-item]').length;
+        
+        if (itemCount > 1) {
+            $item.slideUp('fast', function() {
+                $(this).remove();
+                updateSerials();
+            });
+        }
+    });
+    
+    // Update the "Add Items" button to ensure new items don't get session data
+    $(document).on('click', '[data-repeater-create]', function() {
+        setTimeout(function() {
+            const $newItem = $('[data-repeater-item]:last');
+            // Remove any session-index attributes from new items
+            $newItem.removeAttr('data-session-index');
+            $newItem.find('.delete-btn').removeAttr('data-session-index');
+        }, 100);
+    });
+    
+    // Clear all RFQ items
+    $('#clearAllRfqBtn').on('click', function() {
+        Swal.fire({
+            title: 'Clear All RFQ Items?',
+            text: 'This will remove all items from your RFQ list.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, clear all!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Clear session via AJAX
+                $.ajax({
+                    url: "{{ route('rfq.clear-session') }}",
+                    method: 'POST',
+                    data: {
+                        _token: "{{ csrf_token() }}"
+                    },
+                    success: function(response) {
+                        // Remove all items from DOM
+                        $('[data-repeater-list] [data-repeater-item]').remove();
+                        
+                        // Add one empty item
+                        $('[data-repeater-create]').click();
+                        
+                        Swal.fire(
+                            'Cleared!',
+                            'All items have been removed.',
+                            'success'
+                        );
+                    }
+                });
+            }
+        });
+    });
+});
+</script>
 @endsection

@@ -1,4 +1,14 @@
 <!-- Top Bar Start -->
+<style>
+    /* Change text color to white on hover and keep outline effect */
+    .gap-2 a.btn:hover {
+        color: #fff !important;
+        background-color: #0d6efd;
+        /* matches primary color of btn-outline-primary */
+        border-color: #0d6efd;
+        transition: all 0.3s ease;
+    }
+</style>
 <section class="fixed-top main_header">
     <div class="container-fluid d-sm-none d-md-block" style="background-color: var(--secondary-deep-color)">
         <div class="text-white row top-bar" style="background-color: var(--secondary-color)">
@@ -10,106 +20,63 @@
                 <div class="container ps-0">
                     <div class="row ps-0">
                         <div class="col-lg-12 ps-0">
-                            <div class="px-1 d-flex justify-content-end align-items-center">
-
+                            <div class="px-2 d-flex justify-content-end align-items-center">
                                 <!-- My Techfocus -->
-                                <div class="popover__wrapper">
-                                    <a href="#">
+                                <div class="popover__wrapper me-4 position-relative">
+                                    <a href="#" class="text-decoration-none">
                                         <h2 class="mb-1 popover__title fw-bold" data-aos="fade-left">
-                                            <span>
-                                                <i class="fa-solid fa-star-of-life"></i>
-                                                <span class="p-0 m-0" style="color: var(--primary-color)">My</span>
-                                                Techfocus
-                                            </span>
+                                            <i class="fa-solid fa-star-of-life me-1"></i>
+                                            <span class="text-primary">My</span> Techfocus
                                         </h2>
                                     </a>
-                                    <div class="popover__content text-start">
+                                    <div class="p-3 bg-white border rounded shadow-sm popover__content position-absolute end-0" style="min-width: 220px; z-index: 1000;">
                                         @auth
                                         <form method="POST" action="{{ route('logout') }}">
                                             @csrf
-                                            <button type="submit" class="mb-2 btn signin rounded-0">Log Out</button>
+                                            <button type="submit" class="mb-2 btn btn-outline-primary w-100">Log Out</button>
                                         </form>
                                         @else
-                                        <div>
-                                            <div class="mb-2 text-muted">
-                                                Login As:
+                                        <div class="mb-2 text-muted fw-medium">Login As:</div>
+                                        <div class="gap-2 mb-3 d-flex flex-column">
+                                            <a href="{{ route('login') }}" class="text-black btn btn-outline-primary w-100">Client</a>
+                                            <a href="{{ route('partner.login') }}" class="text-black btn btn-outline-primary w-100">Partner</a>
+                                            <a href="{{ route('principal.login') }}" class="text-black btn btn-outline-primary w-100">Principal</a>
+                                        </div>
+                                        <div class="text-muted small">
+                                            <span class="">First time here?</span>
+                                            <div>
+                                                <a href="{{ route('register') }}" class="text-primary">Sign Up</a> or register as
+                                                <a href="{{ route('principal.register') }}" class="text-primary">Principal</a>
                                             </div>
                                         </div>
-                                        <div class="d-flex justify-content-center align-items-center">
-                                            <!-- Client Login/Register -->
-                                            <a href="{{ route('login') }}" class="mb-2 btn btn-sm signin rounded-0 me-2">Client</a>
-                                            <!-- Partner Login/Register -->
-                                            <a href="{{ route('partner.login') }}" class="mb-2 btn-sm btn signin rounded-0 me-2">Partner</a>
-                                            <a href="{{ route('principal.login') }}" class="mb-2 btn-sm btn signin rounded-0 ">Principal</a>
-                                            @endauth
-                                        </div>
-                                        <div class="text-muted">
-                                            First time here?
-                                            <a href="{{ route('register') }}" class="main-color">
-                                                Sign Up</a> or Register as  <a href="{{ route('principal.register') }}" class="main-color">
-                                                principal !</a>
-                                        </div>
+                                        @endauth
 
-                                        <!-- Partner Login/Register -->
-
-
-
-                                        <hr class="text-muted" />
-                                        <ul class="p-0 account text-muted text-start">
-                                            <li>
-                                                <i class="m-2 fa fa-user"></i>
-                                                <a href="{{ route('client.profile') }}" class="">My Profile</a>
+                                        <hr class="my-3" />
+                                        <ul class="m-0 list-unstyled text-muted">
+                                            <li class="mb-2">
+                                                <i class="fa fa-user me-2"></i>
+                                                <a href="{{ route('client.profile') }}" class="text-decoration-none text-muted">My Profile</a>
+                                            </li>
+                                            <li class="mb-2">
+                                                <i class="fa fa-envelope me-2"></i>
+                                                <a href="{{ route('client.subscription') }}" class="text-decoration-none text-muted">My Subscriptions</a>
+                                            </li>
+                                            <li class="mb-2">
+                                                <i class="fa fa-star me-2"></i>
+                                                <a href="{{ route('client.favourites') }}" class="text-decoration-none text-muted">My Favorites</a>
                                             </li>
                                             <li>
-                                                <i class="m-2 fa fa-envelope"></i>
-                                                <a href="{{ route('client.subscription') }}" class="">My
-                                                    Subscriptions</a>
-                                            </li>
-                                            <li>
-                                                <i class="m-2 fa fa-star"></i>
-                                                <a href="{{ route('client.favourites') }}" class="">My
-                                                    Favorites</a>
-                                            </li>
-                                            <li>
-                                                <i class="m-2 fa fa-list"></i>
-                                                <a href="{{ route('client.requests') }}" class="">My Requests</a>
+                                                <i class="fa fa-list me-2"></i>
+                                                <a href="{{ route('client.requests') }}" class="text-decoration-none text-muted">My Requests</a>
                                             </li>
                                         </ul>
-                                        <!-- <hr class="text-muted" />
-                                        <ul class="p-0 account text-muted text-start" style="font-size: 7px">
-                                            <li>
-                                                Sign in to your manufacturer account
-                                                <a target="_blank" class="main-color">Manufacturer account</a>
-                                            </li>
-                                            <li>
-                                                Sign in to your distributor account
-                                                <a target="_blank" class="main-color">Distributor account</a>
-                                            </li>
-                                        </ul> -->
                                     </div>
                                 </div>
+
                                 <!-- RFQ Link -->
-                                <div class="mx-4" data-aos="fade-left">
-                                    <a class="nav-link custom-nav" data-aos="fade-right" href="{{ route('rfq') }}">
-                                        RFQ
-                                    </a>
+                                <div class="me-3" data-aos="fade-left">
+                                    <a href="{{ route('rfq') }}" class="nav-link text-primary fw-semibold">RFQ</a>
                                 </div>
-
-                                <!--  -->
-                                {{-- <div class="dropdown">
-                                    <button class="mx-3 dropdown-toggle" type="button" id="dropdownMenuButton1"
-                                        data-bs-toggle="dropdown" aria-expanded="false" data-aos="fade-left">
-                                        EUR - €
-                                    </button>
-                                    <ul class="dropdown-menu extra-dropdown" aria-labelledby="dropdownMenuButton1">
-                                        <li><a class="dropdown-item top-dropdown" href="#">USD - $</a></li>
-                                        <li><a class="dropdown-item top-dropdown" href="#">EUR - €</a></li>
-                                        <li><a class="dropdown-item top-dropdown" href="#">GBP - £</a></li>
-                                        <li><a class="dropdown-item top-dropdown" href="#">JPY - ¥</a></li>
-                                        <li><a class="dropdown-item top-dropdown" href="#">INR - ₹</a></li>
-                                    </ul>
-                                </div> --}}
-
                             </div>
                         </div>
                     </div>
@@ -130,156 +97,7 @@
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ms-auto">
-                    {{-- <li class="nav-item dropdown">
-                        <a class="nav-link custom-nav dropdown-toggle" href="#" id="navbarDropdown"
-                            role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                            data-aos="fade-right">
-                            Product
-                        </a>
-                        <div class="dropdown-menu menu-dropdown" aria-labelledby="navbarDropdown">
-                            <div class="container">
-                                <div class="my-5 row gx-3">
-                                    <div class="col-lg-3">
-                                        <div>
-                                            <img class="img-fluid header-side-banner"
-                                                src="https://www.kuka.com/-/media/kuka-corporate/images/ir/mitteilungen.jpg?rev=1b1c6d88287d493c9d06716764767b38&w=767&hash=D675CCDCE6BAF6450C5DB2F986F22751"
-                                                alt="">
-                                            <h5 class="pt-3">Products</h5>
-                                            <p>Get an overview on the entire KUKA portfolio from industrial robots to
-                                                complete production lines.</p>
-                                            <div>
-                                                <a href="" class="main-color">
-                                                    Learn More <i class="fa-solid fa-chevron-right ps-1 font-one"></i>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-9">
-                                        <div class="row gx-2">
-                                            <div class="col-lg-4 first-column column-transition">
-                                                <div class="column-header">
-                                                    <div class="pt-0">
-                                                        <a href="#" class="">Industries</a>
-                                                    </div>
-                                                    <div class="pt-4">
-                                                        <a href="#" class="expand-column-first"
-                                                            onclick="toggleColumn('second-column')">Case Studies
-                                                            <i class="fa-solid fa-chevron-right font-one ps-2"></i></a>
-                                                    </div>
-                                                    <div class="pt-4">
-                                                        <a href="#" class="">Automative Industry</a>
-                                                    </div>
-                                                    <div class="pt-4">
-                                                        <a href="#" class="expand-column-first"
-                                                            onclick="toggleColumn('second-column')">Automated
-                                                            House
-                                                            Building<i
-                                                                class="fa-solid fa-chevron-right font-one ps-2"></i></a>
-                                                    </div>
-                                                    <div class="pt-4">
-                                                        <a href="#" class="expand-column-first"
-                                                            onclick="toggleColumn('second-column')">Electronic
-                                                            Industries<i
-                                                                class="fa-solid fa-chevron-right font-one ps-2"></i></a>
-                                                    </div>
-                                                    <div class="pt-4">
-                                                        <a href="#" class="expand-column-first"
-                                                            onclick="toggleColumn('second-column')">Ecommerce &
-                                                            Logistic
-                                                            Service<i
-                                                                class="fa-solid fa-chevron-right font-one ps-2"></i></a>
-                                                    </div>
-                                                    <div class="pt-4">
-                                                        <a href="#" class="expand-column-first"
-                                                            onclick="toggleColumn('second-column')">Helth Care<i
-                                                                class="fa-solid fa-chevron-right font-one ps-2"></i></a>
-                                                    </div>
-                                                    <div class="pt-4">
-                                                        <a href="#" class="expand-column-first"
-                                                            onclick="toggleColumn('second-column')">Consumer
-                                                            Goods
-                                                            Industries<i
-                                                                class="fa-solid fa-chevron-right font-one ps-2"></i></a>
-                                                    </div>
-                                                    <div class="pt-4">
-                                                        <a href="#" class="">Metal Industires<i
-                                                                class="fa-solid fa-chevron-right font-one ps-2"></i></a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-4 second-column column-transition"
-                                                style="display: none;">
-                                                <div class="column-header"
-                                                    style="border-left: 1px solid var(--border-color)">
-                                                    <div class="ps-3">
-                                                        <div class="pt-0">
-                                                            <a href="#" class="">Helthcare</a>
-                                                        </div>
-                                                        <div class="pt-4">
-                                                            <a href="#" class="expand-column-second"
-                                                                onclick="toggleColumn('third-column')">Robots In
-                                                                The
-                                                                Medical Industry<i
-                                                                    class="fa-solid fa-chevron-right font-one ps-2"></i></a>
-                                                        </div>
-                                                        <div class="pt-4">
-                                                            <a href="#" class="">3D Virdtual Showroom</a>
-                                                        </div>
-                                                        <div class="pt-4">
-                                                            <a href="#" class="">Team And Service</a>
-                                                        </div>
-                                                        <div class="pt-4">
-                                                            <a href="#" class="">3D Virdtual Showroom</a>
-                                                        </div>
-                                                        <div class="pt-4">
-                                                            <a href="#" class="expand-column-second"
-                                                                onclick="toggleColumn('third-column')">Current
-                                                                Topics<i
-                                                                    class="fa-solid fa-chevron-right font-one ps-2"></i></a>
-                                                        </div>
-                                                        <div class="pt-4">
-                                                            <a href="#" class="">Swisslog Helthcare</a>
-                                                        </div>
-                                                        <div class="pt-4">
-                                                            <a href="#" class="expand-column-second"
-                                                                onclick="toggleColumn('third-column')">Downloads<i
-                                                                    class="fa-solid fa-chevron-right font-one ps-2"></i></a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-4 third-column column-transition"
-                                                style="display: none;">
-                                                <div class="column-header"
-                                                    style="border-left: 1px solid var(--border-color)">
-                                                    <div class="ps-3">
-                                                        <div class="pt-4">
-                                                            <a href="#" class="">3D Virdtual Showroom</a>
-                                                        </div>
-                                                        <div class="pt-4">
-                                                            <a href="#" class="">Team And Service</a>
-                                                        </div>
-                                                        <div class="pt-4">
-                                                            <a href="#" class="">4D Virdtual Showroom</a>
-                                                        </div>
-                                                        <div class="pt-4">
-                                                            <a href="#" class="">5D Virdtual Showroom</a>
-                                                        </div>
-                                                        <div class="pt-4">
-                                                            <a href="#" class="">6D Virdtual Showroom</a>
-                                                        </div>
-                                                        <div class="pt-4">
-                                                            <a href="#" class="">7D Virdtual Showroom</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </li> --}}
+
                     <li class="nav-item">
                         <a class="nav-link custom-nav" data-aos="fade-right"
                             href="{{ route('homepage') }}">Home</a>
@@ -288,156 +106,7 @@
                         <a class="nav-link custom-nav" data-aos="fade-right"
                             href="{{ route('catalog.all') }}">Catalog</a>
                     </li>
-                    {{-- <li class="nav-item dropdown">
-                        <a class="nav-link custom-nav dropdown-toggle" href="news-trends.html" id="navbarDropdown"
-                            role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                            data-aos="fade-right">
-                            News & Trends
-                        </a>
-                        <div class="dropdown-menu menu-dropdown" aria-labelledby="navbarDropdown">
-                            <div class="container">
-                                <div class="my-5 row gx-3">
-                                    <div class="col-lg-3">
-                                        <div>
-                                            <img class="img-fluid header-side-banner"
-                                                src="https://www.kuka.com/-/media/kuka-corporate/images/ir/mitteilungen.jpg?rev=1b1c6d88287d493c9d06716764767b38&w=767&hash=D675CCDCE6BAF6450C5DB2F986F22751"
-                                                alt="">
-                                            <h5 class="pt-3">Products</h5>
-                                            <p>Get an overview on the entire KUKA portfolio from industrial robots to
-                                                complete production lines.</p>
-                                            <div>
-                                                <a href="" class="main-color">
-                                                    Learn More <i class="fa-solid fa-chevron-right ps-1 font-one"></i>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-9">
-                                        <div class="row gx-2">
-                                            <div class="col-lg-4 first-column column-transition">
-                                                <div class="column-header">
-                                                    <div class="pt-0">
-                                                        <a href="#" class="">Industries</a>
-                                                    </div>
-                                                    <div class="pt-4">
-                                                        <a href="#" class="expand-column-first"
-                                                            onclick="toggleColumn('second-column')">Case Studies
-                                                            <i class="fa-solid fa-chevron-right font-one ps-2"></i></a>
-                                                    </div>
-                                                    <div class="pt-4">
-                                                        <a href="#" class="">Automative Industry</a>
-                                                    </div>
-                                                    <div class="pt-4">
-                                                        <a href="#" class="expand-column-first"
-                                                            onclick="toggleColumn('second-column')">Automated
-                                                            House
-                                                            Building<i
-                                                                class="fa-solid fa-chevron-right font-one ps-2"></i></a>
-                                                    </div>
-                                                    <div class="pt-4">
-                                                        <a href="#" class="expand-column-first"
-                                                            onclick="toggleColumn('second-column')">Electronic
-                                                            Industries<i
-                                                                class="fa-solid fa-chevron-right font-one ps-2"></i></a>
-                                                    </div>
-                                                    <div class="pt-4">
-                                                        <a href="#" class="expand-column-first"
-                                                            onclick="toggleColumn('second-column')">Ecommerce &
-                                                            Logistic
-                                                            Service<i
-                                                                class="fa-solid fa-chevron-right font-one ps-2"></i></a>
-                                                    </div>
-                                                    <div class="pt-4">
-                                                        <a href="#" class="expand-column-first"
-                                                            onclick="toggleColumn('second-column')">Helth Care<i
-                                                                class="fa-solid fa-chevron-right font-one ps-2"></i></a>
-                                                    </div>
-                                                    <div class="pt-4">
-                                                        <a href="#" class="expand-column-first"
-                                                            onclick="toggleColumn('second-column')">Consumer
-                                                            Goods
-                                                            Industries<i
-                                                                class="fa-solid fa-chevron-right font-one ps-2"></i></a>
-                                                    </div>
-                                                    <div class="pt-4">
-                                                        <a href="#" class="">Metal Industires<i
-                                                                class="fa-solid fa-chevron-right font-one ps-2"></i></a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-4 second-column column-transition"
-                                                style="display: none;">
-                                                <div class="column-header"
-                                                    style="border-left: 1px solid var(--border-color)">
-                                                    <div class="ps-3">
-                                                        <div class="pt-0">
-                                                            <a href="#" class="">Helthcare</a>
-                                                        </div>
-                                                        <div class="pt-4">
-                                                            <a href="#" class="expand-column-second"
-                                                                onclick="toggleColumn('third-column')">Robots In
-                                                                The
-                                                                Medical Industry<i
-                                                                    class="fa-solid fa-chevron-right font-one ps-2"></i></a>
-                                                        </div>
-                                                        <div class="pt-4">
-                                                            <a href="#" class="">3D Virdtual Showroom</a>
-                                                        </div>
-                                                        <div class="pt-4">
-                                                            <a href="#" class="">Team And Service</a>
-                                                        </div>
-                                                        <div class="pt-4">
-                                                            <a href="#" class="">3D Virdtual Showroom</a>
-                                                        </div>
-                                                        <div class="pt-4">
-                                                            <a href="#" class="expand-column-second"
-                                                                onclick="toggleColumn('third-column')">Current
-                                                                Topics<i
-                                                                    class="fa-solid fa-chevron-right font-one ps-2"></i></a>
-                                                        </div>
-                                                        <div class="pt-4">
-                                                            <a href="#" class="">Swisslog Helthcare</a>
-                                                        </div>
-                                                        <div class="pt-4">
-                                                            <a href="#" class="expand-column-second"
-                                                                onclick="toggleColumn('third-column')">Downloads<i
-                                                                    class="fa-solid fa-chevron-right font-one ps-2"></i></a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-4 third-column column-transition"
-                                                style="display: none;">
-                                                <div class="column-header"
-                                                    style="border-left: 1px solid var(--border-color)">
-                                                    <div class="ps-3">
-                                                        <div class="pt-4">
-                                                            <a href="#" class="">3D Virdtual Showroom</a>
-                                                        </div>
-                                                        <div class="pt-4">
-                                                            <a href="#" class="">Team And Service</a>
-                                                        </div>
-                                                        <div class="pt-4">
-                                                            <a href="#" class="">4D Virdtual Showroom</a>
-                                                        </div>
-                                                        <div class="pt-4">
-                                                            <a href="#" class="">5D Virdtual Showroom</a>
-                                                        </div>
-                                                        <div class="pt-4">
-                                                            <a href="#" class="">6D Virdtual Showroom</a>
-                                                        </div>
-                                                        <div class="pt-4">
-                                                            <a href="#" class="">7D Virdtual Showroom</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </li> --}}
+
                     <li class="nav-item">
                         <a class="nav-link custom-nav" data-aos="fade-right" href="{{ route('rfq') }}">RFQ</a>
                     </li>
