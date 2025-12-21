@@ -590,4 +590,126 @@ public function brandList()
     {
         return view('frontend.pages.test.industryTestDetails');
     }
+
+  public function searchSuggestions(Request $request)
+    {
+        try {
+            $query = trim($request->input('q', ''));
+
+            // Return empty if query is empty
+            if ($query === '') {
+                return response()->json([]);
+            }
+
+            $suggestions = collect();
+
+            // 1️⃣ Products
+            $products = Product::where('product_status', 'product')
+                ->where('submission_status', 'approved')
+                ->where(function ($q) use ($query) {
+                    $q->where('name', 'LIKE', "{$query}%")
+                      ->orWhere('name', 'LIKE', "% {$query}%")
+                      ->orWhere('name', 'LIKE', "%{$query}%");
+                })
+                ->orderByRaw("
+                    CASE
+                        WHEN name LIKE '{$query}%' THEN 1
+                        WHEN name LIKE '% {$query}%' THEN 2
+                        WHEN name LIKE '%{$query}%' THEN 3
+                        ELSE 4
+                    END
+                ")
+                ->orderByRaw("LENGTH(name)")
+                ->limit(6)
+                ->get(['name', 'slug']);
+
+            foreach ($products as $product) {
+                $suggestions->push([
+                    'type'        => 'product',
+                    'priority'    => 1,
+                    'name'        => $product->name,
+                    'description' => 'Product',
+                    'url'         => route('product.show', $product->slug),
+                    'icon'        => 'fas fa-box'
+                ]);
+            }
+
+            // 2️⃣ Brands
+            $brands = Brand::where(function ($q) use ($query) {
+                    $q->where('title', 'LIKE', "{$query}%")
+                      ->orWhere('title', 'LIKE', "% {$query}%")
+                      ->orWhere('title', 'LIKE', "%{$query}%");
+                })
+                ->orderByRaw("
+                    CASE
+                        WHEN title LIKE '{$query}%' THEN 1
+                        WHEN title LIKE '% {$query}%' THEN 2
+                        WHEN title LIKE '%{$query}%' THEN 3
+                        ELSE 4
+                    END
+                ")
+                ->orderByRaw("LENGTH(title)")
+                ->limit(4)
+                ->get(['title', 'slug']);
+
+            foreach ($brands as $brand) {
+                $suggestions->push([
+                    'type'        => 'brand',
+                    'priority'    => 2,
+                    'name'        => $brand->title,
+                    'description' => 'Brand',
+                    'url'         => route('brand.products', $brand->slug ?? ''),
+                    'icon'        => 'fas fa-tag'
+                ]);
+            }
+
+            // 3️⃣ Categories
+            $categories = Category::where(function ($q) use ($query) {
+                    $q->where('name', 'LIKE', "{$query}%")
+                      ->orWhere('name', 'LIKE', "% {$query}%")
+                      ->orWhere('name', 'LIKE', "%{$query}%");
+                })
+                ->orderByRaw("
+                    CASE
+                        WHEN name LIKE '{$query}%' THEN 1
+                        WHEN name LIKE '% {$query}%' THEN 2
+                        WHEN name LIKE '%{$query}%' THEN 3
+                        ELSE 4
+                    END
+                ")
+                ->orderByRaw("LENGTH(name)")
+                ->limit(4)
+                ->get(['name', 'slug']);
+
+            foreach ($categories as $category) {
+                $suggestions->push([
+                    'type'        => 'category',
+                    'priority'    => 3,
+                    'name'        => $category->name,
+                    'description' => 'Category',
+                    'url'         => route('category', $category->slug),
+                    'icon'        => 'fas fa-folder'
+                ]);
+            }
+
+            // Final sorted suggestions
+            return response()->json(
+                $suggestions
+                    ->sortBy([
+                        ['priority', 'asc'],
+                        ['name', 'asc'],
+                    ])
+                    ->values()
+            );
+
+        } catch (\Throwable $e) {
+            \Log::error('Instant autocomplete failed', [
+                'error' => $e->getMessage()
+            ]);
+
+            return response()->json([]);
+        }
+    }
+
+
 }

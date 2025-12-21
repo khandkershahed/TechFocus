@@ -14,6 +14,7 @@ use App\Http\Controllers\Client\ClientController;
 use App\Http\Controllers\Frontend\PageController;
 use App\Http\Controllers\Frontend\SiteController;
 use App\Http\Controllers\PrivacyPolicyController;
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\UserListController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\Auth\PartnerLoginController;
@@ -380,3 +381,8 @@ Route::get('/product/request/form', function () {
     // Return a static view with your form
     return view('frontend.pages.product-request'); // You can name it whatever you want
 })->name('product.request.form');
+Route::get('/search/suggestions', [Sitecontroller::class, 'searchSuggestions'])->name('search.suggestions');
+Route::get('/product/{slug}', [ProductController::class, 'show'])->name('product.show');
+Route::get('/brand/{slug}', [BrandController::class, 'products'])->name('brand.products');
+Route::get('/category/{slug}', [CategoryController::class, 'products'])->name('category');
+

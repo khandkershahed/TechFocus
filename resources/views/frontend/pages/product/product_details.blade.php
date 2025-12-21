@@ -227,15 +227,10 @@
                 <div class="mb-5">
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <button class="py-3 btn btn-primary w-100 fw-bold add-to-rfq-btn rounded-0"
-                                data-product-id="{{ $product->id }}"
-                                data-product-name="{{ $product->name }}"
-                                data-product-sku="{{ $product->sku_code ?? '' }}"
-                                data-product-brand="{{ $product->brand->name ?? '' }}"
-                                data-product-thumbnail="{{ asset($product->thumbnail) }}">
-                                <i class="fas fa-file-invoice-dollar me-2"></i>
-                                Request Quote
-                            </button>
+                          <a href="{{ route('product.request.form') }}" 
+                                                class="py-3 btn btn-primary w-100 fw-bold rounded-0 d-flex align-items-center justify-content-center text-decoration-none">
+                                                    Ask For Price
+                                                </a>
                         </div>
                         <div class="col-md-6">
                             <button class="py-3 btn btn-outline-primary w-100 fw-bold add-to-rfq-btn rounded-0"
