@@ -64,7 +64,18 @@
         .product-title {
             line-height: 1.4;
         }
-
+        
+        /* Already added button style */
+        .btn-added {
+            background-color: #28a745 !important;
+            border-color: #28a745 !important;
+            color: white !important;
+        }
+        
+        .btn-added:hover {
+            background-color: #218838 !important;
+            border-color: #1e7e34 !important;
+        }
     </style>
     <!-- SECTION 1: BANNER -->
     <div class="swiper bannerSwiper">
@@ -343,15 +354,21 @@
 
                                                 <!-- BUTTONS (ALWAYS AT BOTTOM) -->
                                                 <div class="gap-2 mt-auto mb-4 d-flex justify-content-between">
-                                                    <a href="{{ route('product.details', ['id' => optional($product->brand)->slug, 'slug' => optional($product)->slug]) }}"
-                                                    class="btn btn-outline-primary flex-fill rounded-0">
-                                                        Ask For Price
-                                                    </a>
-
-                                                    <a href="{{ route('product.details', ['id' => optional($product->brand)->slug, 'slug' => optional($product)->slug]) }}"
-                                                    class="btn btn-primary flex-fill rounded-0">
-                                                        + Add RFQ
-                                                    </a>
+                                                   <!-- Change this button in your home page -->
+                                             <a href="{{ route('product.request.form') }}" 
+                                                class="btn btn-outline-primary flex-fill">
+                                                    Ask For Price
+                                                </a>
+                                                                                                        
+                                                    <button class="btn btn-primary flex-fill add-to-rfq-btn"
+                                                            data-product-id="{{ $product->id }}"
+                                                            data-product-name="{{ $product->name }}"
+                                                            data-product-sku="{{ $product->sku_code ?? '' }}"
+                                                            data-product-brand="{{ optional($product->brand)->name ?? '' }}"
+                                                            data-product-thumbnail="{{ $product->thumbnail }}">
+                                                        <span class="btn-text">+ Add RFQ</span>
+                                                        <span class="btn-added-text d-none"><i class="fas fa-check me-1"></i> Added</span>
+                                                    </button>
                                                 </div>
 
                                             </div>
@@ -946,19 +963,252 @@
         </div>
     </div>
     @push('scripts')
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                var accordions = document.querySelectorAll('.accordion');
+        <!-- jQuery -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <!-- SweetAlert2 -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        
+       <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var accordions = document.querySelectorAll('.accordion');
 
-                accordions.forEach(function(accordion) {
-                    accordion.addEventListener('show.bs.collapse', function(event) {
-                        var currentlyOpen = accordion.querySelector('.show');
-                        if (currentlyOpen && currentlyOpen !== event.target) {
-                            bootstrap.Collapse.getInstance(currentlyOpen).hide();
+        accordions.forEach(function(accordion) {
+            accordion.addEventListener('show.bs.collapse', function(event) {
+                var currentlyOpen = accordion.querySelector('.show');
+                if (currentlyOpen && currentlyOpen !== event.target) {
+                    bootstrap.Collapse.getInstance(currentlyOpen).hide();
+                }
+            });
+        });
+    });
+
+    $(document).ready(function() {
+        console.log('%c[RFQ System Initialized for Home Page]', 'color: green; font-weight: bold;');
+        
+        // Store added products in localStorage to track added status
+        let addedProducts = JSON.parse(localStorage.getItem('addedProducts') || '{}');
+        
+        // Update button states based on localStorage
+        updateButtonStates();
+
+        function handleAjaxError(xhr) {
+            let message = 'Something went wrong. Please try again.';
+            if (xhr.status === 419) {
+                message = 'Session expired. Reloading...';
+                Swal.fire({ 
+                    icon: 'warning', 
+                    title: 'Session Expired', 
+                    text: message, 
+                    showConfirmButton: false, 
+                    timer: 1500, 
+                    willClose: () => location.reload() 
+                });
+                return;
+            }
+            if (xhr.status === 500) message = 'Server error occurred.';
+            else if (xhr.responseJSON?.message) message = xhr.responseJSON.message;
+            Swal.fire({ icon: 'error', title: 'Error', text: message });
+        }
+        
+        function updateButtonStates() {
+            $('.add-to-rfq-btn').each(function() {
+                const productId = $(this).data('product-id');
+                if (addedProducts[productId]) {
+                    // Update button to show "Added" state
+                    $(this).addClass('btn-added');
+                    $(this).find('.btn-text').addClass('d-none');
+                    $(this).find('.btn-added-text').removeClass('d-none');
+                } else {
+                    // Update button to show "Add" state
+                    $(this).removeClass('btn-added');
+                    $(this).find('.btn-text').removeClass('d-none');
+                    $(this).find('.btn-added-text').addClass('d-none');
+                }
+            });
+        }
+        
+        function markProductAsAdded(productId) {
+            addedProducts[productId] = true;
+            localStorage.setItem('addedProducts', JSON.stringify(addedProducts));
+            updateButtonStates();
+        }
+        
+        function removeProductFromAdded(productId) {
+            delete addedProducts[productId];
+            localStorage.setItem('addedProducts', JSON.stringify(addedProducts));
+            updateButtonStates();
+        }
+        
+        function clearAllAddedProducts() {
+            addedProducts = {};
+            localStorage.removeItem('addedProducts');
+            updateButtonStates();
+        }
+        
+        function isProductAdded(productId) {
+            return addedProducts[productId] || false;
+        }
+
+        // Add to RFQ for both buttons
+        $('.add-to-rfq-btn').off('click').on('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation(); // Prevent card link navigation
+            
+            const button = $(this);
+            const productId = button.data('product-id');
+            const productName = button.data('product-name');
+            const productSku = button.data('product-sku');
+            const productBrand = button.data('product-brand');
+            const productThumbnail = button.data('product-thumbnail');
+            const originalHtml = button.html();
+            
+            // Check if product is already added
+            if (isProductAdded(productId)) {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Already Added',
+                    text: `${productName} is already in your RFQ list.`,
+                    showConfirmButton: true,
+                    confirmButtonText: 'Go to RFQ',
+                    showCancelButton: true,
+                    cancelButtonText: 'Continue Browsing'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '{{ route("rfq") }}';
+                    }
+                });
+                return;
+            }
+
+            button.html('<i class="fa fa-spinner fa-spin"></i> Processing...').prop('disabled', true);
+
+            $.ajax({
+                url: '{{ route("cart.add") }}',
+                method: 'POST',
+                data: { 
+                    _token: '{{ csrf_token() }}', 
+                    product_id: productId, 
+                    quantity: 1, 
+                    is_rfq: true 
+                },
+                success: function(res) {
+                    // Mark product as added
+                    markProductAsAdded(productId);
+                    
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Added to RFQ!',
+                        html: `<strong>${productName}</strong> has been added to your RFQ list.<br><small>SKU: ${productSku || 'N/A'}</small>`,
+                        showConfirmButton: true,
+                        confirmButtonText: 'View RFQ List',
+                        showCancelButton: true,
+                        cancelButtonText: 'Add More Items',
+                        timer: 3000,
+                        timerProgressBar: true
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = res.redirect_url || '{{ route("rfq") }}';
+                        } else {
+                            // Reset button to show "Added" state
+                            button.html('<i class="fas fa-check me-1"></i> Added').prop('disabled', false);
                         }
                     });
-                });
+                },
+                error: function(xhr) {
+                    // If AJAX fails, redirect directly to RFQ page with parameters
+                    const rfqUrl = '{{ route("rfq") }}' +
+                        '?product_id=' + productId +
+                        '&product_name=' + encodeURIComponent(productName) +
+                        '&product_sku=' + encodeURIComponent(productSku) +
+                        '&product_brand=' + encodeURIComponent(productBrand) +
+                        '&product_thumbnail=' + encodeURIComponent(productThumbnail) +
+                        '&source=home_page&direct=true';
+                    
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Redirecting to RFQ',
+                        text: 'Adding product to quotation form...',
+                        showConfirmButton: false,
+                        timer: 1500,
+                        willClose: () => {
+                            // Mark product as added before redirecting
+                            markProductAsAdded(productId);
+                            window.location.href = rfqUrl;
+                        }
+                    });
+                },
+                complete: function() { 
+                    if (!button.hasClass('btn-added')) {
+                        button.html(originalHtml).prop('disabled', false); 
+                    }
+                }
             });
-        </script>
+        });
+
+        // Prevent card link from being clicked when button is clicked
+        $('.url-box .card .add-to-rfq-btn').on('click', function(e) {
+            e.stopPropagation();
+        });
+        
+        // ============== SYNC WITH RFQ FORM SESSION ==============
+        
+        // Listen for session changes from RFQ form
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'rfqSessionCleared') {
+                clearAllAddedProducts();
+                console.log('RFQ session cleared - resetting all buttons');
+            }
+            
+            if (e.key === 'rfqItemRemoved') {
+                const productId = e.newValue;
+                if (productId) {
+                    removeProductFromAdded(productId);
+                    console.log(`Product ${productId} removed from session - resetting button`);
+                }
+            }
+        });
+        
+        // Custom event listener for RFQ form actions
+        document.addEventListener('rfqSessionCleared', function() {
+            clearAllAddedProducts();
+        });
+        
+        document.addEventListener('rfqItemRemoved', function(e) {
+            const productId = e.detail?.productId;
+            if (productId) {
+                removeProductFromAdded(productId);
+            }
+        });
+        
+        // Check session status on page load
+        $.ajax({
+            url: '{{ route("rfq.get-session-status") }}',
+            method: 'GET',
+            success: function(response) {
+                if (response.success) {
+                    const sessionItems = response.session_items || [];
+                    
+                    // Clear all added products
+                    clearAllAddedProducts();
+                    
+                    // Mark only products that are currently in session
+                    sessionItems.forEach(function(item) {
+                        if (item.id) {
+                            markProductAsAdded(item.id);
+                        }
+                    });
+                    
+                    console.log('Synced with RFQ session:', sessionItems.length, 'items');
+                }
+            },
+            error: function() {
+                console.log('Could not sync with RFQ session');
+            }
+        });
+        
+        // ============== END SYNC ==============
+    });
+</script>
+
     @endpush
 </x-frontend-layout>

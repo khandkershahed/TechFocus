@@ -1,28 +1,29 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CompareController;
 use App\Http\Controllers\Rfq\RfqController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\Admin\BrandController;
-use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\CatalogController;
 use App\Http\Controllers\Admin\ContactController;
+use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Client\ClientController;
 use App\Http\Controllers\Frontend\PageController;
 use App\Http\Controllers\Frontend\SiteController;
+use App\Http\Controllers\PrivacyPolicyController;
+use App\Http\Controllers\Admin\UserListController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\Auth\PartnerLoginController;
 use App\Http\Controllers\Partner\DashboardController;
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Models\User;
-use App\Http\Controllers\Admin\UserListController;
 use App\Http\Controllers\admin\TermsAndPolicyController;
-use App\Http\Controllers\PrivacyPolicyController;
+use App\Http\Controllers\Frontend\ProductRequestController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Principal\Auth\PrincipalAuthController;
-use App\Http\Controllers\Principal\Auth\EmailVerificationController;
 use App\Http\Controllers\Principal\PrincipalDashboardController;
+use App\Http\Controllers\Principal\Auth\EmailVerificationController;
 
 Route::get('/', [SiteController::class, 'homePage'])->name('homepage');
 Route::get('solution/{slug}', [SiteController::class, 'solutionDetails'])->name('solution.details');
@@ -370,3 +371,12 @@ Route::get('/privacy-policy', [PrivacyPolicyController::class, 'index'])
     ->name('privacy-policy');
 
 Route::get('/privacy', [PrivacyPolicyController::class, 'index']); // Alternative URL
+Route::post('/rfq/remove-item', [RfqController::class, 'removeItemFromSession'])->name('rfq.remove-item');
+Route::get('/rfq/get-session-status', [RfqController::class, 'getSessionStatus'])->name('rfq.get-session-status');
+
+
+// Add this to your web.php file
+Route::get('/product/request/form', function () {
+    // Return a static view with your form
+    return view('frontend.pages.product-request'); // You can name it whatever you want
+})->name('product.request.form');

@@ -90,47 +90,88 @@ public function index()
     /**
      * Show the RFQ form with pre-filled product data from session
      */
-    public function create(Request $request)
-    {
-        Log::info('RFQ Create Method Called');
-        Log::info('Request Parameters:', $request->all());
+    // public function create(Request $request)
+    // {
+    //     Log::info('RFQ Create Method Called');
+    //     Log::info('Request Parameters:', $request->all());
         
-        // Get RFQ items from session
-        $rfqItems = $this->getRfqItemsFromSession();
+    //     // Get RFQ items from session
+    //     $rfqItems = $this->getRfqItemsFromSession();
         
-        // If no items in session but there are direct parameters, create a temporary item
-        if (empty($rfqItems) && $request->has('product_id')) {
-            $product = Product::with('brand')->find($request->product_id);
+    //     // If no items in session but there are direct parameters, create a temporary item
+    //     if (empty($rfqItems) && $request->has('product_id')) {
+    //         $product = Product::with('brand')->find($request->product_id);
             
-            if ($product) {
-                $rfqItems = [
-                    $product->id => [
-                        'id' => $product->id,
-                        'name' => $product->name,
-                        'sku_code' => $product->sku_code,
-                        'product_code' => $product->product_code,
-                        'mf_code' => $product->mf_code,
-                        'brand' => $product->brand->name ?? 'N/A',
-                        'thumbnail' => $product->thumbnail,
-                        'quantity' => 1,
-                        'added_at' => now()->timestamp
-                    ]
-                ];
+    //         if ($product) {
+    //             $rfqItems = [
+    //                 $product->id => [
+    //                     'id' => $product->id,
+    //                     'name' => $product->name,
+    //                     'sku_code' => $product->sku_code,
+    //                     'product_code' => $product->product_code,
+    //                     'mf_code' => $product->mf_code,
+    //                     'brand' => $product->brand->name ?? 'N/A',
+    //                     'thumbnail' => $product->thumbnail,
+    //                     'quantity' => 1,
+    //                     'added_at' => now()->timestamp
+    //                 ]
+    //             ];
                 
-                // Store in session for consistency
-                session()->put('rfq_items', $rfqItems);
-                Log::info('Product added to RFQ session from URL parameters:', $rfqItems);
-            }
+    //             // Store in session for consistency
+    //             session()->put('rfq_items', $rfqItems);
+    //             Log::info('Product added to RFQ session from URL parameters:', $rfqItems);
+    //         }
+    //     }
+        
+    //     Log::info('Final RFQ items for display:', $rfqItems);
+        
+    //     return view('frontend.pages.rfq.rfq', [
+    //         'rfqItems' => $rfqItems,
+    //         'source' => $request->get('source', 'direct')
+    //     ]);
+    // }
+public function create(Request $request)
+{
+    Log::info('RFQ Create Method Called');
+    
+    // Get RFQ items from session
+    $rfqItems = $this->getRfqItemsFromSession();
+    
+    // ✅ DO NOT clear session here - we'll handle it differently
+    // session()->forget('rfq_items'); // REMOVE THIS LINE
+    
+    // If no items in session but there are direct parameters, create a temporary item
+    if (empty($rfqItems) && $request->has('product_id')) {
+        $product = Product::with('brand')->find($request->product_id);
+        
+        if ($product) {
+            $rfqItems = [
+                $product->id => [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'sku_code' => $product->sku_code,
+                    'product_code' => $product->product_code,
+                    'mf_code' => $product->mf_code,
+                    'brand' => $product->brand->name ?? 'N/A',
+                    'thumbnail' => $product->thumbnail,
+                    'quantity' => 1,
+                    'added_at' => now()->timestamp
+                ]
+            ];
+            
+            // Store in session for consistency
+            session()->put('rfq_items', $rfqItems);
+            Log::info('Product added to RFQ session from URL parameters:', $rfqItems);
         }
-        
-        Log::info('Final RFQ items for display:', $rfqItems);
-        
-        return view('frontend.pages.rfq.rfq', [
-            'rfqItems' => $rfqItems,
-            'source' => $request->get('source', 'direct')
-        ]);
     }
-
+    
+    Log::info('Final RFQ items for display:', $rfqItems);
+    
+    return view('frontend.pages.rfq.rfq', [
+        'rfqItems' => $rfqItems,
+        'source' => $request->get('source', 'direct')
+    ]);
+}
     /**
      * Get RFQ items from session
      */
@@ -729,5 +770,82 @@ public function destroySession(Request $request)
     session()->forget('rfq_cart');
     return response()->json(['success' => true]);
 }
-
+/**
+ * Remove specific item from RFQ session
+ */
+public function getSessionStatus(Request $request)
+{
+    try {
+        $rfqItems = session()->get('rfq_items', []);
+        
+        return response()->json([
+            'success' => true,
+            'session_items' => $rfqItems,
+            'count' => count($rfqItems)
+        ]);
+        
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to get session status'
+        ]);
+    }
+}
+public function removeItemFromSession(Request $request)
+{
+    try {
+        $productId = $request->input('product_id');
+        $sessionIndex = $request->input('session_index');
+        
+        if (!$productId && $sessionIndex === null) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Product ID or session index is required'
+            ], 400);
+        }
+        
+        $rfqItems = session()->get('rfq_items', []);
+        
+        if ($sessionIndex !== null && isset($rfqItems[$sessionIndex])) {
+            // Remove by session index (for pre-filled items)
+            unset($rfqItems[$sessionIndex]);
+            Log::info('Removed item by session index:', ['index' => $sessionIndex]);
+        } elseif ($productId && isset($rfqItems[$productId])) {
+            // Remove by product ID
+            unset($rfqItems[$productId]);
+            Log::info('Removed item by product ID:', ['product_id' => $productId]);
+        } else {
+            // Try to find by product ID in array values
+            foreach ($rfqItems as $key => $item) {
+                if (isset($item['id']) && $item['id'] == $productId) {
+                    unset($rfqItems[$key]);
+                    Log::info('Found and removed item by ID in array:', ['product_id' => $productId]);
+                    break;
+                }
+            }
+        }
+        
+        // Re-index array to maintain sequential keys
+        $rfqItems = array_values($rfqItems);
+        
+        // Update session
+        session()->put('rfq_items', $rfqItems);
+        
+        Log::info('Updated RFQ session items count:', ['count' => count($rfqItems)]);
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Item removed from RFQ',
+            'rfq_count' => count($rfqItems)
+        ]);
+        
+    } catch (\Exception $e) {
+        Log::error('Remove item from RFQ session error: ' . $e->getMessage());
+        
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to remove item from RFQ'
+        ], 500);
+    }
+}
 }
