@@ -1,8 +1,6 @@
 @extends('frontend.master')
-
 @section('metadata')
 @endsection
-
 @section('content')
 <!-- 🟦 Banner Section -->
 <style>
@@ -63,7 +61,6 @@
         </div>
     </div>
 </section>
-
 <!-- 🟨 Catalogs Section -->
 <div class="container my-5">
     <div class="row">
@@ -193,7 +190,7 @@
                                 data-pdf-url="{{ $catalog->document ? asset('storage/catalog/document/' . $catalog->document) : '' }}">
 
                                 <img src="{{ $catalog->thumbnail ? asset('storage/catalog/thumbnail/' . $catalog->thumbnail) : asset('frontend/images/no-shop-imge.png') }}"
-                                    
+
                                     class="mt-4 card-img-top rounded-top-3"
                                     alt="{{ $catalog->name }}"
                                     style="height:200px; object-fit:cover;"
@@ -283,7 +280,6 @@
     </div>
 </div>
 @endsection
-
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
