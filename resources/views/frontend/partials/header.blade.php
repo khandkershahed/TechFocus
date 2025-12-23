@@ -143,10 +143,284 @@
     </nav>
 </section>
 
-<!-- Mobile Header -->
 <section class="fixed-top mobile_header">
-    <!-- ... keep your mobile HTML unchanged ... -->
+    <div class="container px-0">
+        <div class="mobile_top_bar">
+            <div class="px-1 d-flex justify-content-end align-items-center" data-aos="fade-right">
+                <div class="dropdown">
+                    <button class="dropdown-toggle me-4" type="button" id="dropdownMenuButton1"
+                        data-bs-toggle="dropdown" aria-expanded="false" data-aos="fade-left">
+                        English
+                    </button>
+                    <ul class="dropdown-menu extra-dropdown" aria-labelledby="dropdownMenuButton1">
+                        <li>
+                            <a class="dropdown-item top-dropdown" href="#">English</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item top-dropdown" href="#">France</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item top-dropdown" href="#">Spanish</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item top-dropdown" href="#">German</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item top-dropdown" href="#">Russian</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="dropdown">
+                    <button class="dropdown-toggle me-3" type="button" id="dropdownMenuButton1"
+                        data-bs-toggle="dropdown" aria-expanded="false" data-aos="fade-left">
+                        EUR - €
+                    </button>
+                    <ul class="dropdown-menu extra-dropdown" aria-labelledby="dropdownMenuButton1">
+                        <li>
+                            <a class="dropdown-item top-dropdown" href="#">English</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item top-dropdown" href="#">France</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item top-dropdown" href="#">Spanish</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item top-dropdown" href="#">German</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item top-dropdown" href="#">Russian</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="popover__wrapper me-5" data-aos="fade-left">
+                <a href="#">
+                    <h2 class="mb-1 popover__title fw-bold" data-aos="fade-left">
+                        <span>
+                            <i class="fa-solid fa-star-of-life"></i>
+                            <span class="p-0 m-0" style="color: var(--primary-color)">My</span>
+                            Techfocus
+                        </span>
+                    </h2>
+                </a>
+                <div class="popover__content text-start">
+                    @auth
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="mb-2 btn signin rounded-0">Log Out</button>
+                    </form>
+                    @else
+                    <a href="{{ route('login') }}" class="mb-2 btn signin rounded-0">Log In</a>
+                    <div class="text-muted">
+                        First time here?
+                        <a href="{{ route('register') }}" class="main-color">Sign Up</a>
+                    </div>
+                    @endauth
+                    <hr class="text-muted" />
+                    <ul class="p-0 account text-muted text-start">
+                        <li>
+                            <i class="m-2 fa fa-user"></i>
+                            <a href="{{ route('client.profile') }}" class="">My Profile</a>
+                        </li>
+                        <li>
+                            <i class="m-2 fa fa-envelope"></i>
+                            <a href="{{ route('client.subscription') }}" class="">My
+                                Subscriptions</a>
+                        </li>
+                        <li>
+                            <i class="m-2 fa fa-star"></i>
+                            <a href="{{ route('favorites.index') }}" class="">My Favorites</a>
+                        </li>
+                        <li>
+                            <i class="m-2 fa fa-list"></i>
+                            <a href="{{ route('client.requests') }}" class="">My Requests</a>
+                        </li>
+                    </ul>
+                    <hr class="text-muted" />
+                    <ul class="p-0 account text-muted text-start" style="font-size: 7px">
+                        <li>
+                            Sign in to your manufacturer account
+                            <a target="_blank" class="main-color">Manufacturer account</a>
+                        </li>
+                        <li>
+                            Sign in to your distributor account
+                            <a target="_blank" class="main-color">Distributor account</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="mobile_nav_bar">
+            <div class="text-start">
+                <a class="mb-0 navbar-brand" href="{{ route('homepage') }}" data-aos="fade-right">
+                    <img src="{{ !empty($site->system_logo_white) && file_exists(public_path('storage/webSetting/systemLogoWhite/' . $site->system_logo_white)) ? asset('storage/webSetting/systemLogoWhite/' . $site->system_logo_white) : asset('backend/images/no-image-available.png') }}"
+                        height="60px" alt="TechFocus" style="margin: 7px 6px;" />
+                </a>
+            </div>
+            
+            <div data-aos="fade-left">
+                <!-- Mobile Menu -->
+                <div class="d-flex align-items-center">
+                    <div>
+                        <input type="checkbox" id="menyAvPaa" />
+                        <label id="burger" for="menyAvPaa">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </label>
+                        <nav id="meny">
+                            <div class="" style="z-index: 9999; padding-top: 1rem; padding-left: 28rem;">
+                                <!--Mobile Head -->
+                                <p class="text-danger">
+                                    <a class="navbar-brand" href="{{ route('homepage') }}">
+                                        <img src="{{ !empty($site->system_logo_white) && file_exists(public_path('storage/webSetting/systemLogoWhite/' . $site->system_logo_white)) ? asset('storage/webSetting/systemLogoWhite/' . $site->system_logo_white) : asset('backend/images/no-image-available.png') }}"
+                                            width="200px" height="60px" alt="TechFocus">
+                                    </a>
+                                </p>
+                                <!-- Mobile Menu -->
+                                <ul class="navbar-nav ms-auto">
+                                    <li class="nav-item dropdown" data-aos="fade-right" data-aos-duration="500">
+                                        <a class="nav-link custom-nav dropdown-toggle" href="#"
+                                            id="navbarDropdown" role="button" data-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false">
+                                            Product
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                            <div class="container">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <span class="text-white text-uppercase">Category 1</span>
+                                                        <ul class="nav flex-column">
+                                                            <li class="nav-item">
+                                                                <a class="nav-link custom-nav active"
+                                                                    href="#">Active</a>
+                                                            </li>
+                                                            <li class="nav-item">
+                                                                <a class="nav-link custom-nav" href="#">Link
+                                                                    item</a>
+                                                            </li>
+                                                            <li class="nav-item">
+                                                                <a class="nav-link custom-nav" href="#">Link
+                                                                    item</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <!-- /.col-md-4  -->
+                                                    <div class="col-md-4">
+                                                        <ul class="nav flex-column">
+                                                            <li class="nav-item">
+                                                                <a class="nav-link custom-nav active"
+                                                                    href="#">Active</a>
+                                                            </li>
+                                                            <li class="nav-item">
+                                                                <a class="nav-link custom-nav" href="#">Link
+                                                                    item</a>
+                                                            </li>
+                                                            <li class="nav-item">
+                                                                <a class="nav-link custom-nav" href="#">Link
+                                                                    item</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <!-- /.col-md-4  -->
+                                                    <div class="col-md-4">
+                                                        <a target="_blank"
+                                                            href="#resources/a-beginners-guide-to-hubspot-cms/">
+                                                            <img src="https://i0.wp.com/bootstrapcreative.com/wp-bc/wp-content/uploads/2022/07/beginners-guide-to-hubspot-cms-cover.png?w=200&ssl=1"
+                                                                alt="Web Design Guides" class="img-fluid" />
+                                                        </a>
+                                                        <p class="text-white">Get Free Guides</p>
+                                                    </div>
+                                                    <!-- /.col-md-4  -->
+                                                </div>
+                                            </div>
+                                            <!--  /.container  -->
+                                        </div>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link custom-nav" href="{{ route('catalog.all') }}">Catalog</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link custom-nav" href="{{ route('rfq') }}">RFQ</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link custom-nav" href="{{ route('contact') }}">Contact Us</a>
+                                    </li>
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link custom-nav dropdown-toggle" href="news-trends.html"
+                                            id="navbarDropdown" role="button" data-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false">
+                                            News & Trends
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                            <div class="container">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <span class="text-white text-uppercase">Category 2</span>
+                                                        <ul class="nav flex-column">
+                                                            <li class="nav-item">
+                                                                <a class="nav-link custom-nav active"
+                                                                    href="#">Active</a>
+                                                            </li>
+                                                            <li class="nav-item">
+                                                                <a class="nav-link custom-nav" href="#">Link
+                                                                    item</a>
+                                                            </li>
+                                                            <li class="nav-item">
+                                                                <a class="nav-link custom-nav" href="#">Link
+                                                                    item</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <!-- /.col-md-4  -->
+                                                    <div class="col-md-4">
+                                                        <ul class="nav flex-column">
+                                                            <li class="nav-item">
+                                                                <a class="nav-link custom-nav active"
+                                                                    href="#">Active</a>
+                                                            </li>
+                                                            <li class="nav-item">
+                                                                <a class="nav-link custom-nav" href="#">Link
+                                                                    item</a>
+                                                            </li>
+                                                            <li class="nav-item">
+                                                                <a class="nav-link custom-nav" href="#">Link
+                                                                    item</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <!-- /.col-md-4  -->
+                                                    <div class="col-md-4">
+                                                        <a target="_blank" href="#shop/jake-portfolio-hubspot-theme/">
+                                                            <img src="https://i0.wp.com/bootstrapcreative.com/wp-bc/wp-content/uploads/2022/01/jake-portfolio-cover.jpg?w=200&ssl=1"
+                                                                alt="Portfolio Website Templates" class="img-fluid" />
+                                                        </a>
+                                                        <p class="text-white">
+                                                            Create a Portfolio Website Fast
+                                                        </p>
+                                                    </div>
+                                                    <!-- /.col-md-4  -->
+                                                </div>
+                                            </div>
+                                            <!--  /.container  -->
+                                        </div>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link custom-nav" href="#">E-Magazine</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </nav>
+                    </div>
+
+                </div>
+                <!-- Mobile Menu End-->
+            </div>
+        </div>
+    </div>
 </section>
+
 
 <!-- Optional scripts -->
 <script>

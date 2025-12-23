@@ -29,33 +29,76 @@ class ContactController extends Controller
         ]);
     }
 
+// public function store(ContactRequest $request)
+// {
+//     try {
+//         $contact = Contact::create([
+//             'name' => $request->name,
+//             'email' => $request->email,
+//             'phone' => $request->phone,
+//             'message' => $request->message,
+//             'code' => 'CONTACT-' . strtoupper(uniqid()),
+//             'ip_address' => $request->ip(),
+//             'status' => 'pending'
+//         ]);
+
+//         // No email to admin - just store the contact
+//         \Log::info('New contact received', [
+//             'contact_id' => $contact->id,
+//             'name' => $contact->name,
+//             'email' => $contact->email
+//         ]);
+
+//         return redirect()->back()->with('success', 'Thank you for your message! We will get back to you soon.');
+
+//     } catch (\Exception $e) {
+//         \Log::error('Failed to create contact: ' . $e->getMessage());
+//         return redirect()->back()->with('error', 'Failed to send message. Please try again.')->withInput();
+//     }
+// }
 public function store(ContactRequest $request)
 {
     try {
         $contact = Contact::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'message' => $request->message,
-            'code' => 'CONTACT-' . strtoupper(uniqid()),
+            'name'       => $request->name,
+            'email'      => $request->email,
+            'phone'      => $request->phone,
+            'message'    => $request->message,
+            'code'       => 'CONTACT-' . strtoupper(uniqid()),
             'ip_address' => $request->ip(),
-            'status' => 'pending'
+            'status'     => 'pending',
         ]);
 
-        // No email to admin - just store the contact
         \Log::info('New contact received', [
             'contact_id' => $contact->id,
-            'name' => $contact->name,
-            'email' => $contact->email
+            'name'       => $contact->name,
+            'email'      => $contact->email,
         ]);
 
-        return redirect()->back()->with('success', 'Thank you for your message! We will get back to you soon.');
+        return redirect()->back()->with([
+            'swal' => [
+                'icon'  => 'success',
+                'title' => 'Message Sent!',
+                'text'  => 'Thank you for your message! We will get back to you soon.'
+            ]
+        ]);
 
     } catch (\Exception $e) {
+
         \Log::error('Failed to create contact: ' . $e->getMessage());
-        return redirect()->back()->with('error', 'Failed to send message. Please try again.')->withInput();
+
+        return redirect()->back()
+            ->withInput()
+            ->with([
+                'swal' => [
+                    'icon'  => 'error',
+                    'title' => 'Failed!',
+                    'text'  => 'Failed to send message. Please try again.'
+                ]
+            ]);
     }
 }
+
     public function show($id)
     {
         $contact = $this->contactRepository->findContact($id);

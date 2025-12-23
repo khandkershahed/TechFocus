@@ -134,6 +134,8 @@
 @endsection
 
 @push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
 (() => {
     'use strict'
@@ -149,4 +151,16 @@
     })
 })();
 </script>
+
+@if(session('swal'))
+<script>
+    Swal.fire({
+        icon: "{{ session('swal.icon') }}",
+        title: "{{ session('swal.title') }}",
+        text: "{{ session('swal.text') }}",
+        confirmButtonColor: '#0d6efd'
+    });
+</script>
+@endif
 @endpush
+
