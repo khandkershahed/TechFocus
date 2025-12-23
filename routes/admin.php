@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HR\HRController;
 use App\Http\Controllers\HR\TaskController;
@@ -27,6 +29,7 @@ use App\Http\Controllers\Admin\ExpenseController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\HR\ProjectKpiController;
+use App\Http\Controllers\PrivacyPolicyController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CurrencyController;
 use App\Http\Controllers\Admin\EmployeeController;
@@ -35,7 +38,6 @@ use App\Http\Controllers\Admin\HrPolicyController;
 use App\Http\Controllers\Admin\IndustryController;
 use App\Http\Controllers\Admin\UserRoleController;
 use App\Http\Controllers\Rfq\RfqProductController;
-use App\Http\Controllers\PrivacyPolicyController;
 use App\Http\Controllers\Admin\AboutPageController;
 use App\Http\Controllers\Admin\AttributeController;
 use App\Http\Controllers\Admin\BioMetricController;
@@ -54,6 +56,7 @@ use App\Http\Controllers\Admin\ProductSasController;
 use App\Http\Controllers\Admin\WebSettingController;
 use App\Http\Controllers\Site\DynamicSiteController;
 use App\Http\Controllers\Admin\ExpenseTypeController;
+use App\Http\Controllers\Admin\CookiePolicyController;
 use App\Http\Controllers\Admin\IndustryPageController;
 use App\Http\Controllers\Admin\ProductColorController;
 use App\Http\Controllers\Admin\SolutionCardController;
@@ -92,8 +95,6 @@ use App\Http\Controllers\Admin\PolicyAcknowledgmentController;
 use App\Http\Controllers\Admin\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Admin\StaffMeetingAttendanceController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
-use Illuminate\Http\Request;
-use Barryvdh\DomPDF\Facade\Pdf;
 /*
 |--------------------------------------------------------------------------
 | Admin Routes
@@ -1033,4 +1034,25 @@ Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(functi
         Route::post('/{privacyPolicy}/duplicate', [PrivacyPolicyController::class, 'duplicate'])
             ->name('duplicate');
     });
+});
+// Admin routes
+Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(function (){
+    Route::resource('cookie-policies', CookiePolicyController::class);
+    Route::post('cookie-policies/{cookiePolicy}/toggle-status', 
+        [CookiePolicyController::class, 'toggleStatus'])
+        ->name('cookie-policies.toggle-status');
+});
+
+// Admin Cookie Policy Routes
+Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(function (){
+    Route::resource('cookie-policies',CookiePolicyController::class);
+    
+    // Additional routes
+    Route::post('cookie-policies/{cookiePolicy}/toggle-status', 
+        [CookiePolicyController::class, 'toggleStatus'])
+        ->name('cookie-policies.toggle-status');
+    
+    Route::get('cookie-policies/{cookiePolicy}/preview', 
+        [CookiePolicyController::class, 'preview'])
+        ->name('cookie-policies.preview');
 });

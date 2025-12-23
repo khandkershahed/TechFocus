@@ -773,6 +773,26 @@
                                 <span class="menu-title">Terms & Policy</span>
                             </a>
                         </div>
+                        <div class="menu-item">
+                                <a class="menu-link {{ Str::startsWith(Route::current()->getName(), 'admin.cookie-policies') ? 'active' : '' }}"
+                                    href="{{ route('admin.cookie-policies.index') }}">
+                                    <span class="menu-bullet">
+                                        <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">Manage Cookies</span>
+                                    
+                                    @php
+                                        // Count inactive policies or draft policies (if you have draft status)
+                                        $inactivePolicies = \App\Models\CookiePolicy::where('is_active', false)->count();
+                                    @endphp
+                                    
+                                    @if($inactivePolicies > 0)
+                                        <span class="menu-badge">
+                                            <span class="badge badge-light-warning fw-bold">{{ $inactivePolicies }}</span>
+                                        </span>
+                                    @endif
+                                </a>
+                            </div>
                        
                     <div class="menu-item">
                                 <a class="menu-link {{ Route::current()->getName() == 'admin.privacy-policy.index' ? 'active' : '' }}"
@@ -1322,6 +1342,9 @@
                                                         @endif
                                                     </a>
                                                 </div>
+
+                                                {{-- Cookie Policies Sidebar Menu Item --}}
+
                                                 {{-- Add this to your sidebar navigation --}}
 
                         {{-- <!-- Add New Attendance -->

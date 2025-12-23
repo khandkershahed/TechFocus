@@ -4,10 +4,11 @@ namespace App\Http\Controllers\Frontend;
 
 use Log;
 use App\Models\Contact;
+use App\Models\Country;
 use App\Models\PageBanner;
-use App\Models\TermsAndPolicy;
 use App\Models\Admin\Brand;
 use App\Models\Admin\Banner;
+use App\Models\CookiePolicy;
 use Illuminate\Http\Request;
 use App\Models\Admin\Catalog;
 use App\Models\Admin\Company;
@@ -15,6 +16,7 @@ use App\Models\Admin\Product;
 use App\Models\Admin\Category;
 use App\Models\Admin\HomePage;
 use App\Models\Admin\Industry;
+use App\Models\TermsAndPolicy;
 use App\Models\Admin\AboutPage;
 use App\Models\Admin\NewsTrend;
 use App\Models\Admin\TechGlossy;
@@ -30,7 +32,6 @@ use Illuminate\Support\Facades\Session;
 use App\Repositories\Interfaces\FaqRepositoryInterface;
 use App\Repositories\Interfaces\TermsAndPolicyRepositoryInterface;
 use App\Repositories\Interfaces\DynamicCategoryRepositoryInterface;
-use App\Models\Country;
 
 class SiteController extends Controller
 {
@@ -41,6 +42,15 @@ public function homePage()
 
     // Get dynamic homepage data
     $homePage = HomePage::with(['country'])->first();
+        // Get active cookie policy - check if it exists
+    $cookiePolicy = CookiePolicy::active()->first();
+    
+    // Debug: Log to check
+    \Log::info('Cookie Policy Retrieved:', ['policy' => $cookiePolicy]);
+     $ipAddress = request()->ip();
+    
+    // Log for debugging
+    \Log::info('Home page accessed by IP: ' . $ipAddress);
 
     // Get featured products for section two if homepage data exists
     $featuredProducts = collect();
@@ -79,6 +89,8 @@ public function homePage()
         'news_trends'       => NewsTrend::where('type', 'trends')->limit(4)->get(),
         'solutions'         => SolutionDetail::latest()->limit(4)->get(),
         'homePage'          => $homePage,
+         'user_ip' => $ipAddress, // Optional: pass IP to view for debugging
+         'cookiePolicy'      => $cookiePolicy, 
         'featuredProducts'  => $featuredProducts, // Now contains only 4 random products
         'sectionFourNews'   => $sectionFourNews,
     ];

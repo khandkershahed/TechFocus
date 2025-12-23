@@ -1,82 +1,193 @@
 <x-frontend-layout :title="'Tech Focus Limited'">
     <style>
-        /* Product title with line clamp */
-        .product-title {
-            overflow: hidden;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
+        /* Modal Styling */
+        #cookieModal .modal-content {
+            border-radius: 10px;
         }
-
-        /* Card hover effects */
-        .url-box a:hover .card {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
+        
+        #cookieModal .modal-header {
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
         }
-
-        /* SKU/MF text styling */
-        .tags-text {
-            font-size: 0.875rem;
+        
+        /* Hide modal close button */
+        #cookieModal .modal-header .btn-close {
+            display: none;
+        }
+        
+        /* Policy Content Styling */
+        .cookie-policy-content {
+            line-height: 1.6;
+            font-size: 14px;
+        }
+        
+        .cookie-policy-content h1,
+        .cookie-policy-content h2,
+        .cookie-policy-content h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .cookie-policy-content p {
+            margin-bottom: 15px;
             color: #555;
         }
-
-        /* Consistent card heights */
-        .url-box,
-        .url-box .card {
-            height: 100%;
-        }
-
-        /* Product image scaling */
-        .h-product-img {
-            object-fit: contain;
-            max-height: 180px;
-            width: 100%;
-        }
-
-        /* Enhanced product title clamp */
-        .product-title {
-            overflow: hidden;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-        }
-
-        /* Enhanced hover effect */
-        .url-box:hover .card {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-        }
-       .product-title-wrapper {
-            min-height: 80px;
-            overflow: hidden;
-        }
-
-        .product-code-wrapper {
-            min-height: 48px;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            gap: 4px;
-        }
-
-        .product-title {
-            line-height: 1.4;
+        
+        .cookie-policy-content ul, 
+        .cookie-policy-content ol {
+            margin-bottom: 15px;
+            padding-left: 20px;
         }
         
-        /* Already added button style */
-        .btn-added {
-            background-color: #28a745 !important;
-            border-color: #28a745 !important;
-            color: white !important;
+        .cookie-policy-content li {
+            margin-bottom: 5px;
         }
         
-        .btn-added:hover {
-            background-color: #218838 !important;
-            border-color: #1e7e34 !important;
+        /* Cookie Categories */
+        .cookie-category {
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        
+        .cookie-category.necessary {
+            background-color: #f8f9fa;
+            border-left: 4px solid #007bff;
+        }
+        
+        .cookie-category.analytics {
+            background-color: #e8f5e8;
+            border-left: 4px solid #28a745;
+        }
+        
+        .cookie-category.marketing {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
         }
     </style>
+
+    <!-- Cookie Modal -->
+<div class="modal fade" id="cookieModal" tabindex="-1" aria-labelledby="cookieModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="cookieModalLabel">
+                    <i class="fas fa-cookie-bite me-2"></i>
+                    @if(isset($cookiePolicy) && $cookiePolicy->title)
+                        {{ $cookiePolicy->title }}
+                    @else
+                        Cookie Policy
+                    @endif
+                </h5>
+            </div>
+            <div class="modal-body" style="max-height: 60vh; overflow-y: auto;">
+                @if(isset($cookiePolicy) && $cookiePolicy->content)
+                    <!-- Display content from database -->
+                    <div class="cookie-policy-content">
+                        {!! $cookiePolicy->content !!}
+                        
+                        {{-- <div class="mt-4 pt-3 border-top">
+                            <h6 class="mb-3">Cookie Categories</h6>
+                            
+                            <div class="cookie-category necessary">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1">
+                                            <i class="fas fa-shield-alt text-primary me-2"></i>
+                                            Necessary Cookies
+                                        </h6>
+                                        <p class="small text-muted mb-0">
+                                            Essential for the website to function. Cannot be disabled.
+                                        </p>
+                                    </div>
+                                    <span class="badge bg-primary">Always On</span>
+                                </div>
+                            </div>
+                            
+                            <div class="cookie-category analytics">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1">
+                                            <i class="fas fa-chart-line text-success me-2"></i>
+                                            Analytics Cookies
+                                        </h6>
+                                        <p class="small text-muted mb-0">
+                                            Help us understand how visitors interact with our website.
+                                        </p>
+                                    </div>
+                                    <span class="badge bg-success">Recommended</span>
+                                </div>
+                            </div>
+                            
+                            <div class="cookie-category marketing">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1">
+                                            <i class="fas fa-bullhorn text-warning me-2"></i>
+                                            Marketing Cookies
+                                        </h6>
+                                        <p class="small text-muted mb-0">
+                                            Used for personalized advertising and campaign tracking.
+                                        </p>
+                                    </div>
+                                    <span class="badge bg-warning text-dark">Optional</span>
+                                </div>
+                            </div>
+                        </div> --}}
+                    </div>
+                @else
+                    <!-- Fallback content if no cookie policy in database -->
+                    <div class="cookie-policy-content">
+                        <p>We use cookies to enhance your browsing experience, analyze site traffic, 
+                           and personalize content. By continuing to use our site, you consent to our use of cookies.</p>
+                        
+                        <div class="mt-4 pt-3 border-top">
+                            <h6 class="mb-3">What cookies do we use?</h6>
+                            
+                            <div class="cookie-category necessary">
+                                <h6 class="mb-1">
+                                    <i class="fas fa-shield-alt text-primary me-2"></i>
+                                    Necessary Cookies
+                                </h6>
+                                <p class="small text-muted mb-0">Essential for website functionality</p>
+                            </div>
+                            
+                            <div class="cookie-category analytics">
+                                <h6 class="mb-1">
+                                    <i class="fas fa-chart-line text-success me-2"></i>
+                                    Analytics Cookies
+                                </h6>
+                                <p class="small text-muted mb-0">Help us improve your experience</p>
+                            </div>
+                            
+                            <div class="cookie-category marketing">
+                                <h6 class="mb-1">
+                                    <i class="fas fa-bullhorn text-warning me-2"></i>
+                                    Marketing Cookies
+                                </h6>
+                                <p class="small text-muted mb-0">Personalized advertising</p>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+                
+                {{-- <div class="alert alert-info mt-3">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <small>You can manage your preferences at any time from our Cookie Policy page.</small>
+                </div> --}}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" id="rejectAllBtn">
+                    Reject All
+                </button>
+                <button type="button" class="btn btn-primary" id="acceptAllBtn">
+                    Accept All
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
     <!-- SECTION 1: BANNER -->
     <div class="swiper bannerSwiper">
         <div class="swiper-wrapper">
@@ -962,6 +1073,7 @@
             @endif
         </div>
     </div>
+    
     @push('scripts')
         <!-- jQuery -->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -1209,6 +1321,285 @@
         // ============== END SYNC ==============
     });
 </script>
-
+<script>
+// Cookie Consent System - Complete Debug Version
+$(document).ready(function() {
+    console.log('🚀 Cookie Consent System Initializing...');
+    
+    // Debug: Check what's in localStorage
+    console.log('📦 LocalStorage Check:');
+    console.log('- cookie_consent_choice_made:', localStorage.getItem('cookie_consent_choice_made'));
+    console.log('- cookie_consent_accepted:', localStorage.getItem('cookie_consent_accepted'));
+    console.log('- cookie_consent_rejected:', localStorage.getItem('cookie_consent_rejected'));
+    
+    // Debug: Check cookies
+    console.log('🍪 Browser Cookies:');
+    const cookies = document.cookie.split(';');
+    cookies.forEach(cookie => {
+        const [name, value] = cookie.trim().split('=');
+        console.log(`- ${name}: ${value}`);
+    });
+    
+    // Debug: Check if modal element exists
+    const modalElement = document.getElementById('cookieModal');
+    console.log('🎯 Modal element exists:', !!modalElement);
+    
+    // Function to show cookie modal
+    function showCookieModal() {
+        console.log('🔔 Attempting to show cookie modal...');
+        const modalElement = document.getElementById('cookieModal');
+        
+        if (!modalElement) {
+            console.error('❌ Modal element not found!');
+            return;
+        }
+        
+        try {
+            const cookieModal = new bootstrap.Modal(modalElement);
+            
+            // Show modal with delay to ensure page is loaded
+            setTimeout(() => {
+                console.log('✅ Showing cookie modal now');
+                cookieModal.show();
+                
+                // Check if modal is actually shown
+                modalElement.addEventListener('shown.bs.modal', function() {
+                    console.log('🎉 Cookie modal is now visible to user');
+                });
+            }, 1000); // 1 second delay
+            
+        } catch (error) {
+            console.error('❌ Error creating/showing modal:', error);
+        }
+    }
+    
+    // Check if we should show the modal
+    function shouldShowModal() {
+        // Check localStorage
+        const hasMadeChoice = localStorage.getItem('cookie_consent_choice_made');
+        const hasAccepted = localStorage.getItem('cookie_consent_accepted') === 'true';
+        const hasRejected = localStorage.getItem('cookie_consent_rejected') === 'true';
+        
+        console.log('🔍 Should show modal?');
+        console.log('- Has made choice:', hasMadeChoice);
+        console.log('- Has accepted:', hasAccepted);
+        console.log('- Has rejected:', hasRejected);
+        
+        // Show modal if:
+        // 1. No choice made yet, OR
+        // 2. User rejected (show again on refresh)
+        const shouldShow = !hasMadeChoice || hasRejected;
+        
+        console.log('📊 Decision:', shouldShow ? 'YES, show modal' : 'NO, do not show');
+        
+        return shouldShow;
+    }
+    
+    // Initialize
+    if (shouldShowModal()) {
+        console.log('▶️ Initializing modal display...');
+        showCookieModal();
+    } else {
+        console.log('⏸️ Modal will not be shown (user has accepted cookies)');
+    }
+    
+    // Handle Accept All button
+    $('#acceptAllBtn').click(function() {
+        console.log('✅ User clicked Accept All');
+        const preferences = {
+            necessary: true,
+            analytics: true,
+            marketing: true
+        };
+        
+        saveCookieConsent(true, preferences, 'accept');
+    });
+    
+    // Handle Reject All button
+    $('#rejectAllBtn').click(function() {
+        console.log('❌ User clicked Reject All');
+        const preferences = {
+            necessary: true,
+            analytics: false,
+            marketing: false
+        };
+        
+        saveCookieConsent(false, preferences, 'reject');
+    });
+    
+    // Save cookie consent to database
+    function saveCookieConsent(accepted, preferences, action) {
+        console.log(`💾 Saving cookie consent (${action}) to database...`);
+        
+        const button = $('#' + action + 'AllBtn');
+        const originalText = button.html();
+        
+        // Show loading state
+        button.html('<i class="fas fa-spinner fa-spin me-2"></i>Saving...');
+        button.prop('disabled', true);
+        
+        // Immediately store in localStorage for UX
+        localStorage.setItem('cookie_consent_choice_made', 'true');
+        localStorage.setItem('cookie_consent_accepted', accepted.toString());
+        localStorage.setItem('cookie_consent_rejected', (!accepted).toString());
+        localStorage.setItem('cookie_preferences', JSON.stringify(preferences));
+        localStorage.setItem('cookie_consent_time', new Date().toISOString());
+        
+        console.log('📝 Saved to localStorage:', {
+            accepted: accepted,
+            preferences: preferences
+        });
+        
+        // Send to Laravel backend to save in database
+        $.ajax({
+            url: '{{ route("cookie.consent.store") }}',
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json'
+            },
+            data: JSON.stringify({
+                accepted: accepted,
+                preferences: preferences
+            }),
+            success: function(response) {
+                console.log('✅ Database save successful:', response);
+                
+                // Store the consent token if provided
+                if (response.consent_token) {
+                    localStorage.setItem('cookie_consent_token', response.consent_token);
+                    
+                    // Set cookie with token
+                    document.cookie = `cookie_consent_accepted=${response.consent_token}; max-age=${365 * 24 * 60 * 60}; path=/; samesite=lax`;
+                    console.log('🍪 Set cookie with token:', response.consent_token);
+                }
+                
+                // Hide modal
+                const modalElement = document.getElementById('cookieModal');
+                if (modalElement) {
+                    const cookieModal = bootstrap.Modal.getInstance(modalElement);
+                    if (cookieModal) {
+                        cookieModal.hide();
+                        console.log('🎭 Modal hidden');
+                    }
+                }
+                
+                // Show success message
+                Swal.fire({
+                    icon: 'success',
+                    title: accepted ? 'Cookies Accepted!' : 'Cookies Rejected',
+                    text: accepted ? 
+                        'Thank you! Your preferences have been saved.' :
+                        'Non-essential cookies have been rejected.',
+                    showConfirmButton: false,
+                    timer: 2000
+                }).then(() => {
+                    // Reload to apply cookie settings
+                    console.log('🔄 Reloading page to apply settings...');
+                    location.reload();
+                });
+            },
+            error: function(xhr, status, error) {
+                console.error('❌ Database save failed:', {
+                    status: xhr.status,
+                    error: error,
+                    response: xhr.responseText
+                });
+                
+                // Fallback: Set basic cookies even if database fails
+                if (accepted) {
+                    document.cookie = 'cookie_consent_accepted=true; max-age=2592000; path=/; samesite=lax';
+                } else {
+                    document.cookie = 'cookie_consent_rejected=true; max-age=2592000; path=/; samesite=lax';
+                }
+                
+                // Hide modal
+                const modalElement = document.getElementById('cookieModal');
+                if (modalElement) {
+                    const cookieModal = bootstrap.Modal.getInstance(modalElement);
+                    if (cookieModal) {
+                        cookieModal.hide();
+                    }
+                }
+                
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Preferences Saved Locally',
+                    text: 'Your cookie preferences have been saved in your browser.',
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(() => {
+                    location.reload();
+                });
+            },
+            complete: function() {
+                // Restore button
+                button.html(originalText);
+                button.prop('disabled', false);
+            }
+        });
+    }
+    
+    // Add test buttons for debugging
+    console.log('🛠️ Adding debug buttons...');
+    
+    // // Button to manually show modal
+    // const showBtn = document.createElement('button');
+    // showBtn.innerHTML = '🔔 Show Cookie Modal';
+    // showBtn.style.cssText = 'position:fixed;bottom:60px;right:10px;z-index:9999;background:#007bff;color:white;border:none;padding:8px 12px;border-radius:5px;cursor:pointer;font-size:12px;';
+    // showBtn.onclick = showCookieModal;
+    // document.body.appendChild(showBtn);
+    
+    // // Button to reset consent
+    // const resetBtn = document.createElement('button');
+    // resetBtn.innerHTML = '🔄 Reset Cookie Consent';
+    // resetBtn.style.cssText = 'position:fixed;bottom:10px;right:10px;z-index:9999;background:#dc3545;color:white;border:none;padding:8px 12px;border-radius:5px;cursor:pointer;font-size:12px;';
+    // resetBtn.onclick = function() {
+    //     // Clear localStorage
+    //     localStorage.removeItem('cookie_consent_choice_made');
+    //     localStorage.removeItem('cookie_consent_accepted');
+    //     localStorage.removeItem('cookie_consent_rejected');
+    //     localStorage.removeItem('cookie_preferences');
+    //     localStorage.removeItem('cookie_consent_token');
+    //     localStorage.removeItem('cookie_consent_time');
+        
+    //     // Clear cookies
+    //     document.cookie = 'cookie_consent_accepted=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    //     document.cookie = 'cookie_consent_rejected=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    //     document.cookie = 'cookie_consent_choice_made=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        
+    //     console.log('🧹 All cookie consent data cleared');
+    //     alert('Cookie consent reset. Refreshing page...');
+    //     location.reload();
+    // };
+    // document.body.appendChild(resetBtn);
+    
+    // // Button to check current state
+    // const checkBtn = document.createElement('button');
+    // checkBtn.innerHTML = '📋 Check Consent State';
+    // checkBtn.style.cssText = 'position:fixed;bottom:110px;right:10px;z-index:9999;background:#28a745;color:white;border:none;padding:8px 12px;border-radius:5px;cursor:pointer;font-size:12px;';
+    // checkBtn.onclick = function() {
+    //     console.log('=== CURRENT CONSENT STATE ===');
+    //     console.log('LocalStorage:');
+    //     console.log('- choice_made:', localStorage.getItem('cookie_consent_choice_made'));
+    //     console.log('- accepted:', localStorage.getItem('cookie_consent_accepted'));
+    //     console.log('- rejected:', localStorage.getItem('cookie_consent_rejected'));
+    //     console.log('- token:', localStorage.getItem('cookie_consent_token'));
+    //     console.log('- preferences:', localStorage.getItem('cookie_preferences'));
+        
+    //     console.log('Cookies:');
+    //     document.cookie.split(';').forEach(cookie => {
+    //         const [name, value] = cookie.trim().split('=');
+    //         console.log(`- ${name}: ${value}`);
+    //     });
+        
+    //     alert('Check console for current consent state');
+    // };
+    // document.body.appendChild(checkBtn);
+    
+    console.log('🎉 Cookie consent system ready!');
+});
+</script>
     @endpush
 </x-frontend-layout>

@@ -74,7 +74,7 @@ class Kernel extends HttpKernel
     'check.principal.status' => \App\Http\Middleware\CheckPrincipalStatus::class,
     'scoped.access' => \App\Http\Middleware\CheckScopedAccess::class,
     'share.link' => \App\Http\Middleware\ShareLinkAccess::class,
-    
+    'admin' => \App\Http\Middleware\AdminMiddleware::class,
     
     ];
 }

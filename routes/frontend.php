@@ -3,6 +3,7 @@
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\Frontend\CookieController;
 use App\Http\Controllers\CompareController;
 use App\Http\Controllers\Rfq\RfqController;
 use App\Http\Controllers\FavoriteController;
@@ -382,7 +383,23 @@ Route::get('/product/request/form', function () {
     return view('frontend.pages.product-request'); // You can name it whatever you want
 })->name('product.request.form');
 Route::get('/search/suggestions', [Sitecontroller::class, 'searchSuggestions'])->name('search.suggestions');
-Route::get('/product/{slug}', [ProductController::class, 'show'])->name('product.show');
+// Route::get('/product/{slug}', [ProductController::class, 'show'])->name('product.show');
 // Route::get('/brand/{slug}', [BrandController::class, 'products'])->name('brand.products');
 // Route::get('/category/{slug}', [CategoryController::class, 'products'])->name('category');
 
+// // Frontend cookie routes
+// Route::get('/cookie-policy', [CookieController::class, 'showPolicy'])->name('cookie.policy');
+// Route::get('/cookie/check', [CookieController::class, 'checkConsent'])->name('cookie.check');
+// Route::post('/cookie/consent', [CookieController::class, 'storeConsent'])->name('cookie.consent.store');
+// Route::post('/cookie/preferences', [CookieController::class, 'updatePreferences'])->name('cookie.preferences.update');
+// Route::post('/cookie/revoke', [CookieController::class, 'revokeConsent'])->name('cookie.consent.revoke');
+// Route::get('/cookie/status', [CookieController::class, 'getStatus'])->name('cookie.status');
+// Frontend cookie routes
+Route::get('/cookie-policy', [CookieController::class, 'showPolicy'])->name('cookie.policy');
+Route::get('/manage-cookies', [CookieController::class, 'manage'])->name('manage.cookies');
+Route::post('/save-cookie-preferences', [CookieController::class, 'savePreferences'])->name('cookie.preferences.save');
+Route::get('/cookie/check', [CookieController::class, 'checkConsent'])->name('cookie.check');
+Route::post('/cookie/consent', [CookieController::class, 'storeConsent'])->name('cookie.consent.store');
+Route::post('/cookie/preferences', [CookieController::class, 'updatePreferences'])->name('cookie.preferences.update');
+Route::post('/cookie/revoke', [CookieController::class, 'revokeConsent'])->name('cookie.consent.revoke');
+Route::get('/cookie/status', [CookieController::class, 'getStatus'])->name('cookie.status');
