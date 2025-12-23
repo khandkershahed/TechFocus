@@ -5,8 +5,8 @@
 @section('content')
 <div class="container-fluid">
     <!-- Page Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h3 mb-0 text-gray-800">
+    <div class="mb-4 d-flex justify-content-between align-items-center">
+        <h1 class="mb-0 text-gray-800 h3">
             <i class="fas fa-user me-2"></i>Attendance Details: {{ $staffMember->name }}
         </h1>
         <div>
@@ -22,8 +22,8 @@
     </div>
 
     <!-- Filters -->
-    <div class="card shadow mb-4">
-        <div class="card-header py-3">
+    <div class="mb-4 shadow card">
+        <div class="py-3 card-header">
             <h6 class="m-0 font-weight-bold text-primary">
                 <i class="fas fa-filter me-2"></i>Select Period
             </h6>
@@ -31,7 +31,7 @@
         <div class="card-body">
             <form action="{{ route('admin.attendance.staff-detail', $staffMember->id) }}" method="GET">
                 <div class="row">
-                    <div class="col-md-4 mb-3">
+                    <div class="mb-3 col-md-4">
                         <label class="form-label">Year</label>
                         <select name="year" class="form-control">
                             @foreach($years as $yr)
@@ -42,7 +42,7 @@
                         </select>
                     </div>
                     
-                    <div class="col-md-4 mb-3">
+                    <div class="mb-3 col-md-4">
                         <label class="form-label">Month</label>
                         <select name="month" class="form-control">
                             @foreach($months as $key => $monthName)
@@ -53,7 +53,7 @@
                         </select>
                     </div>
                     
-                    <div class="col-md-4 mb-3 d-flex align-items-end">
+                    <div class="mb-3 col-md-4 d-flex align-items-end">
                         <button type="submit" class="btn btn-primary w-100">
                             <i class="fas fa-search me-2"></i>View Report
                         </button>
@@ -64,76 +64,76 @@
     </div>
 
     <!-- Summary Stats -->
-    <div class="row mb-4">
-        <div class="col-md-3 mb-3">
-            <div class="card border-left-primary shadow h-100">
+    <div class="mb-4 row">
+        <div class="mb-3 col-md-3">
+            <div class="shadow card border-left-primary h-100">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                        <div class="mr-2 col">
+                            <div class="mb-1 text-xs font-weight-bold text-primary text-uppercase">
                                 Total Meetings
                             </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                            <div class="mb-0 text-gray-800 h5 font-weight-bold">
                                 {{ $totalMeetings }}
                             </div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-calendar-alt fa-2x text-gray-300"></i>
+                            <i class="text-gray-300 fas fa-calendar-alt fa-2x"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         
-        <div class="col-md-3 mb-3">
-            <div class="card border-left-success shadow h-100">
+        <div class="mb-3 col-md-3">
+            <div class="shadow card border-left-success h-100">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                        <div class="mr-2 col">
+                            <div class="mb-1 text-xs font-weight-bold text-success text-uppercase">
                                 Present
                             </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                            <div class="mb-0 text-gray-800 h5 font-weight-bold">
                                 {{ $presentCount }}
                             </div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+                            <i class="text-gray-300 fas fa-check-circle fa-2x"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         
-        <div class="col-md-3 mb-3">
-            <div class="card border-left-warning shadow h-100">
+        <div class="mb-3 col-md-3">
+            <div class="shadow card border-left-warning h-100">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                        <div class="mr-2 col">
+                            <div class="mb-1 text-xs font-weight-bold text-warning text-uppercase">
                                 Late
                             </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                            <div class="mb-0 text-gray-800 h5 font-weight-bold">
                                 {{ $lateCount }}
                             </div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-clock fa-2x text-gray-300"></i>
+                            <i class="text-gray-300 fas fa-clock fa-2x"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         
-        <div class="col-md-3 mb-3">
+        <div class="mb-3 col-md-3">
             <div class="card border-left-{{ $attendancePercentage >= 80 ? 'success' : ($attendancePercentage >= 60 ? 'warning' : 'danger') }} shadow h-100">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-uppercase mb-1">
+                        <div class="mr-2 col">
+                            <div class="mb-1 text-xs font-weight-bold text-uppercase">
                                 Attendance %
                             </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                            <div class="mb-0 text-gray-800 h5 font-weight-bold">
                                 {{ $attendancePercentage }}%
                             </div>
                             <div class="mt-2 text-xs">
@@ -141,7 +141,7 @@
                             </div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-chart-line fa-2x text-gray-300"></i>
+                            <i class="text-gray-300 fas fa-chart-line fa-2x"></i>
                         </div>
                     </div>
                 </div>
@@ -150,8 +150,8 @@
     </div>
 
     <!-- Staff Information -->
-    <div class="card shadow mb-4">
-        <div class="card-header py-3">
+    <div class="mb-4 shadow card">
+        <div class="py-3 card-header">
             <h6 class="m-0 font-weight-bold text-primary">
                 <i class="fas fa-id-card me-2"></i>Staff Information
             </h6>
@@ -180,8 +180,8 @@
     </div>
 
     <!-- Attendance Records -->
-    <div class="card shadow">
-        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+    <div class="shadow card">
+        <div class="py-3 card-header d-flex justify-content-between align-items-center">
             <h6 class="m-0 font-weight-bold text-primary">
                 <i class="fas fa-table me-2"></i>Attendance Records - {{ \Carbon\Carbon::create()->month((int) $month)->format('F') }} {{ $year }}
             </h6>
@@ -256,8 +256,8 @@
                 </table>
             </div>
             @else
-            <div class="text-center py-5">
-                <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+            <div class="py-5 text-center">
+                <i class="mb-3 fas fa-calendar-times fa-3x text-muted"></i>
                 <h4 class="text-muted">No attendance records found</h4>
                 <p class="text-muted">No attendance data available for the selected period.</p>
             </div>

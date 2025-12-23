@@ -66,20 +66,22 @@
     <div class="row">
 
         <!-- Sidebar -->
-        <div class="mb-4 bg-white col-lg-2">
-            <h5 class="pt-3 mb-3 fw-bold">Catalogs by</h5>
-            <ul class="gap-2 nav nav-pills flex-column" id="myTab" role="tablist">
-                <li class="nav-item w-100">
-                    <button class="nav-link active " id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button">All</button>
-                </li>
-                @foreach($catalogCategories as $key => $category)
-                <li class="nav-item w-100">
-                    <button class="py-2 nav-link " id="category-item-{{ $key }}-tab" data-bs-toggle="tab" data-bs-target="#category-item-{{ $key }}" type="button">
-                        {{ ucfirst($category) }}
-                    </button>
-                </li>
-                @endforeach
-            </ul>
+        <div class="mb-4 col-lg-2">
+            <div class="px-3 bg-white">
+                <h5 class="pt-3 mb-3 fw-bold">Catalogs by</h5>
+                <ul class="gap-2 pb-3 nav nav-pills flex-column" id="myTab" role="tablist">
+                    <li class="nav-item w-100">
+                        <button class="nav-link active " id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button">All</button>
+                    </li>
+                    @foreach($catalogCategories as $key => $category)
+                    <li class="nav-item w-100">
+                        <button class="py-2 nav-link " id="category-item-{{ $key }}-tab" data-bs-toggle="tab" data-bs-target="#category-item-{{ $key }}" type="button">
+                            {{ ucfirst($category) }}
+                        </button>
+                    </li>
+                    @endforeach
+                </ul>
+            </div>
         </div>
 
         <!-- Content -->

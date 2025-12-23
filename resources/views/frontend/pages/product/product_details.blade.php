@@ -189,7 +189,7 @@
                         <div class="d-flex align-items-center">
                             <i class="fas fa-barcode text-muted me-2"></i>
                             <span class="small">
-                                <strong class="text-dark">SKU:</strong>
+                                <strong class="text-dark">TF:</strong>
                                 <code class="ms-1">{{ $product->sku_code }}</code>
                             </span>
                         </div>
@@ -198,7 +198,7 @@
                         <div class="d-flex align-items-center">
                             <i class="fas fa-fingerprint text-muted me-2"></i>
                             <span class="small">
-                                <strong class="text-dark">MFG:</strong>
+                                <strong class="text-dark">MF:</strong>
                                 <code class="ms-1">{{ $product->mf_code }}</code>
                             </span>
                         </div>
@@ -229,7 +229,7 @@
                         <div class="col-md-6">
                           <a href="{{ route('product.request.form') }}" 
                                                 class="py-3 btn btn-primary w-100 fw-bold rounded-0 d-flex align-items-center justify-content-center text-decoration-none">
-                                                    Ask For Price
+                                                Ask For Price <i class="fas fa-question ms-2"></i>
                                                 </a>
                         </div>
                         <div class="col-md-6">
@@ -239,8 +239,7 @@
                                 data-product-sku="{{ $product->sku_code ?? '' }}"
                                 data-product-brand="{{ $product->brand->name ?? '' }}"
                                 data-product-thumbnail="{{ asset($product->thumbnail) }}">
-                                <i class="fas fa-comments-dollar me-2"></i>
-                                Get Pricing Options
+                                + Add RFQ
                             </button>
                         </div>
                     </div>

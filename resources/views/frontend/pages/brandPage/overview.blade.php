@@ -120,7 +120,8 @@
                                 @if (!empty($brand->brandPage->rowFour->image))
                                     <div class="col-lg-6">
                                         <div class="d-flex justify-content-center align-items-center">
-                                            <img class="shadow-none img-fluid"
+                                            <img class="shadow-none img-fluid rouned-img"
+                                            style="border-radius: 7px 55px 7px 55px;"
                                                 src="{{ asset('storage/row/' . $brand->brandPage->rowFour->image) }}"
                                                 onerror="this.onerror=null;this.src='{{ asset('frontend/images/error-image.avif') }}';"
                                                 alt="" >
@@ -135,6 +136,7 @@
                                 <div class="col-lg-6">
                                     <div class="d-flex justify-content-center align-items-center">
                                         <img class="shadow-none img-fluid"
+                                        style="border-radius: 7px 55px 7px 55px;"
                                             src="{{ asset('storage/row/' . optional($brand->brandPage->rowFive)->image) }}"
                                             onerror="this.onerror=null;this.src='{{ asset('frontend/images/error-image.avif') }}';"
                                             alt="">
@@ -193,6 +195,7 @@
                                 <div class="col-lg-6">
                                     <div class="d-flex justify-content-center align-items-center">
                                         <img class="shadow-none img-fluid"
+                                        style="border-radius: 7px 55px 7px 55px;"
                                             src="{{ asset('storage/row/' . $brand->brandPage->rowSeven->image) }}"
                                             onerror="this.onerror=null;this.src='{{ asset('frontend/images/error-image.avif') }}';"
                                             alt="">
@@ -205,6 +208,7 @@
                                 <div class="col-lg-6">
                                     <div class="d-flex justify-content-center align-items-center">
                                         <img class="shadow-none img-fluid"
+                                        style="border-radius: 7px 55px 7px 55px;"
                                             src="{{ asset('storage/row/' . $brand->brandPage->rowEight->image) }}"
                                             onerror="this.onerror=null;this.src='{{ asset('frontend/images/error-image.avif') }}';"
                                             alt="">
