@@ -395,34 +395,6 @@
                 <div class="me-4">
                     <h1>{{ $aboutPage->section_five_col_one_title }}</h1>
                     <p class="pb-5">{{ $aboutPage->section_five_col_one_description }}</p>
-                    <!-- <div class="d-flex justify-content-start align-items-start">
-                        @if ($aboutPage->section_five_ceo_sign)
-                        <img class="img-fluid" width="200px" src="{{ $aboutPage->section_five_ceo_sign }}"
-                            alt="CEO Signature"
-                            onerror="this.onerror=null;this.src='{{ asset('img/ceo.png') }}';">
-                        @endif
-
-                    </div> -->
-                    <div class="d-flex">
-                        <!-- <div class="p-2 pe-3" style="border-right: 1px solid black">
-                            <h6 class="mb-0 fw-bold">{{ $aboutPage->section_five_ceo_name }}</h6>
-                            <p class="mb-0">{{ $aboutPage->section_five_ceo_designation }}</p>
-                        </div> -->
-                        <!-- <div class="d-flex align-items-center">
-                            @if ($aboutPage->section_five_ceo_facebook_account_link)
-                            <a href="{{ $aboutPage->section_five_ceo_facebook_account_link }}"><i
-                                    class="p-2 fa-brands fa-square-facebook"></i></a>
-                            @endif
-                            @if ($aboutPage->section_five_ceo_twitter_account_link)
-                            <a href="{{ $aboutPage->section_five_ceo_twitter_account_link }}"><i
-                                    class="p-2 fa-brands fa-twitter"></i></a>
-                            @endif
-                            @if ($aboutPage->section_five_ceo_whatsapp_account_link)
-                            <a href="{{ $aboutPage->section_five_ceo_whatsapp_account_link }}"><i
-                                    class="p-2 fa-brands fa-whatsapp"></i></a>
-                            @endif
-                        </div> -->
-                    </div>
                 </div>
             </div>
 
