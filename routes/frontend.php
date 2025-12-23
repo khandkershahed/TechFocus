@@ -383,6 +383,6 @@ Route::get('/product/request/form', function () {
 })->name('product.request.form');
 Route::get('/search/suggestions', [Sitecontroller::class, 'searchSuggestions'])->name('search.suggestions');
 Route::get('/product/{slug}', [ProductController::class, 'show'])->name('product.show');
-Route::get('/brand/{slug}', [BrandController::class, 'products'])->name('brand.products');
-Route::get('/category/{slug}', [CategoryController::class, 'products'])->name('category');
+// Route::get('/brand/{slug}', [BrandController::class, 'products'])->name('brand.products');
+// Route::get('/category/{slug}', [CategoryController::class, 'products'])->name('category');
 
