@@ -336,14 +336,23 @@ public function filterProducts(Request $request, $slug)
         $this->faqRepository = $faqRepository;
         $this->dynamicCategoryRepository = $dynamicCategoryRepository;
     }
+public function terms()
+{
+    // Get active terms and policies
+    $termsAndPolicies = $this->termsAndPolicyRepository->getActiveTermsAndPolicies();
+    
+    // Get banners for terms page - using page_name 'policy' or create 'terms'
+    $banners = PageBanner::where('page_name', 'policy') // or 'terms' if you want separate
+        ->where('status', 'active')
+        ->get();
 
-    public function terms()
-    {
-        // Get active terms and policies, you might want to filter by company or other criteria
-        $termsAndPolicies = $this->termsAndPolicyRepository->getActiveTermsAndPolicies();
-        
-        return view('frontend.pages.others.terms', compact('termsAndPolicies'));
+    // If no specific policy banners found, try to get any active banner
+    if ($banners->isEmpty()) {
+        $banners = PageBanner::where('status', 'active')->get();
     }
+    
+    return view('frontend.pages.others.terms', compact('termsAndPolicies', 'banners'));
+}
 
     public function about()
     {
@@ -722,4 +731,28 @@ public function brandList()
             return response()->json([]);
         }
     }
+    public function manageCookies()
+{
+    // Get active cookie policy
+    $policy = CookiePolicy::active()->first();
+    
+    // Get banners for manage cookies page
+    $banners = PageBanner::where('page_name', 'cookies') // Using new page_name
+        ->where('status', 'active')
+        ->get();
+
+    // If no specific banners found, try policy banners as fallback
+    if ($banners->isEmpty()) {
+        $banners = PageBanner::where('page_name', 'policy')
+            ->where('status', 'active')
+            ->get();
+    }
+    
+    // If still no banners, get any active banner
+    if ($banners->isEmpty()) {
+        $banners = PageBanner::where('status', 'active')->get();
+    }
+    
+    return view('frontend.pages.manage-cookies', compact('policy', 'banners'));
+}
 }

@@ -3,6 +3,31 @@
 @section('title', 'Manage Cookie Preferences')
 
 @section('content')
+
+<!-- Dynamic Banner Section -->
+<div class="container-fluid px-0">
+  @if(isset($banners) && $banners->count() > 0)
+    @foreach($banners as $banner)
+      <div class="p-5 breadcrumb-banner-area" 
+           style="background-image: url('{{ asset('uploads/page_banners/' . $banner->image) }}'); 
+                  background-size: cover; 
+                  background-position: center;
+                  background-repeat: no-repeat;
+                  min-height: 300px;"> 
+            </div>
+          </div>
+        </div>
+      </div>
+    @endforeach
+  @else
+    <!-- Default banner if no dynamic banners -->
+    <div class="p-5 breadcrumb-banner-area"
+      style="background-image: url('{{ asset('/img/TechFocusTermsandConditionsPageBanner(1920x525).webp') }}');
+             min-height: 300px;">
+    </div>
+  @endif
+</div>
+
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-lg-8">
@@ -13,7 +38,9 @@
                     Manage Cookies
                 </h1>
             </div>
-       <!-- Policy Reference -->
+            
+            <!-- Policy Reference -->
+            @if(isset($policy) && $policy)
             <div class="alert alert-info mb-4">
                 <div class="d-flex align-items-center">
                     <i class="fas fa-info-circle fa-lg me-3"></i>
@@ -25,9 +52,6 @@
                 </div>
             </div>
 
-            <div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-10">    
             <!-- Policy Content (Dynamic from Admin) -->
             <div class="card border-0 shadow-lg mb-4">
                 <div class="card-body p-4 p-lg-5">
@@ -41,14 +65,19 @@
                             <i class="fas fa-info-circle me-1"></i>
                             Effective Date: {{ $policy->published_at ? $policy->published_at->format('F d, Y') : 'Not published yet' }}
                         </div>
-                        {{-- <div>
-                            <a href="{{ route('manage.cookies') }}" class="btn btn-outline-primary btn-sm">
-                                <i class="fas fa-sliders-h me-1"></i>Manage Cookie Settings
-                            </a>
-                        </div> --}}
                     </div>
                 </div>
             </div>
+            @else
+            <div class="alert alert-warning">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                No active cookie policy found.
+            </div>
+            @endif
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @push('styles')
@@ -65,6 +94,35 @@
 
 .form-check-input:focus {
     box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Banner styling */
+.breadcrumb-banner-area {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+
+
+.breadcrumb-banner-area > .container {
+    position: relative;
+    z-index: 1;
+}
+
+.banner-content {
+    animation: fadeInUp 0.8s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 </style>
 @endpush

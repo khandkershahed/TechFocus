@@ -43,6 +43,9 @@
                                         <option value="brandlist">Brand List</option>
                                         <option value="faq">FAQ</option>
                                         <option value="category">Category</option>
+                                         <option value="policy">Policy</option>
+                                          <option value="terms">terms</option>
+                                        <option value="cookies">Cookie Management</option>
                                     </select>
                                 </div>
 

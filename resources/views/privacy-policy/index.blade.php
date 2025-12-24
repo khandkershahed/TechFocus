@@ -6,12 +6,26 @@
 
 <!-- Page Banner -->
 <div class="policy-banner mb-5">
-    <img 
-        src="{{ asset('img/TechFocusTermsandConditionsPageBanner(1920x525).webp') }}" 
-        alt="TechFocus Privacy Policy Banner"
-        class="img-fluid w-100"
-        style="max-height:525px; object-fit:cover;"
-    >
+    @if(isset($banners) && $banners->count() > 0)
+        @foreach($banners as $banner)
+            <a href="{{ $banner->banner_link ?? '#' }}" class="d-block banner-link">
+                <img 
+                    src="{{ asset('uploads/page_banners/' . $banner->image) }}" 
+                    alt="{{ $banner->title ?? 'Privacy Policy Banner' }}"
+                    class="img-fluid w-100"
+                    style="max-height:525px; object-fit:cover;"
+                >
+            </a>
+        @endforeach
+    @else
+        <!-- Default banner -->
+        <img 
+            src="{{ asset('img/TechFocusTermsandConditionsPageBanner(1920x525).webp') }}" 
+            alt="TechFocus Privacy Policy Banner"
+            class="img-fluid w-100"
+            style="max-height:525px; object-fit:cover;"
+        >
+    @endif
 </div>
 
 <div class="container py-5">
@@ -203,6 +217,16 @@
     font-weight: 600;
 }
 
+/* Banner styling */
+.policy-banner img {
+    transition: opacity 0.5s ease;
+}
+
+.policy-banner img:hover {
+    opacity: 0.95;
+}
+
+/* Style headings */
 .policy-content h1,
 .section-content h1 {
     font-size: 2rem;
@@ -378,6 +402,10 @@
     
     .card-body {
         padding: 1.5rem !important;
+    }
+    
+    .policy-banner img {
+        max-height: 300px !important;
     }
 }
 

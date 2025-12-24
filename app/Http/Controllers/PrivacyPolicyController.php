@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PageBanner;
+use Illuminate\Http\Request;
 use App\Models\PrivacyPolicy;
 use App\Models\PrivacySection;
-use Illuminate\Http\Request;
 
 class PrivacyPolicyController extends Controller
 {
     // Display privacy policy on frontend
-     public function index()
+       public function index()
     {
         $policy = PrivacyPolicy::where('is_active', true)
             ->with(['sections' => function($query) {
@@ -25,7 +26,12 @@ class PrivacyPolicyController extends Controller
             $policy->sections = collect([]); // Empty collection
         }
 
-        return view('privacy-policy.index', compact('policy'));
+        // Get banners for privacy policy page from PageBanner model - EXACTLY LIKE SiteController
+        $banners = PageBanner::where('page_name', 'policy')
+            ->where('status', 'active')
+            ->get();
+
+        return view('privacy-policy.index', compact('policy', 'banners'));
     }
     // Admin Panel Methods
 
