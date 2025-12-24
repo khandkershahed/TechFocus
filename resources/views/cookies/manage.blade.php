@@ -20,11 +20,11 @@
       </div>
     @endforeach
   @else
-    <!-- Default banner if no dynamic banners -->
+    {{-- <!-- Default banner if no dynamic banners -->
     <div class="p-5 breadcrumb-banner-area"
       style="background-image: url('{{ asset('/img/TechFocusTermsandConditionsPageBanner(1920x525).webp') }}');
              min-height: 300px;">
-    </div>
+    </div> --}}
   @endif
 </div>
 

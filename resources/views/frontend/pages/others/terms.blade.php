@@ -171,16 +171,6 @@
     position: relative;
   }
   
-  .breadcrumb-banner-area::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.4);
-  }
-  
   .breadcrumb-banner-area > .container {
     position: relative;
     z-index: 1;

@@ -342,7 +342,7 @@ public function terms()
     $termsAndPolicies = $this->termsAndPolicyRepository->getActiveTermsAndPolicies();
     
     // Get banners for terms page - using page_name 'policy' or create 'terms'
-    $banners = PageBanner::where('page_name', 'policy') // or 'terms' if you want separate
+    $banners = PageBanner::where('page_name', 'terms') // or 'terms' if you want separate
         ->where('status', 'active')
         ->get();
 
@@ -753,6 +753,6 @@ public function brandList()
         $banners = PageBanner::where('status', 'active')->get();
     }
     
-    return view('frontend.pages.manage-cookies', compact('policy', 'banners'));
+    return view('cookies.manage', compact('policy', 'banners'));
 }
 }
