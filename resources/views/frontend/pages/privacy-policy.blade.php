@@ -38,12 +38,12 @@
                                     <i class="fas fa-code-branch me-2"></i>Version: {{ $policy->version }}
                                 </span>
                             @endif
-                            @if($policy->effective_date)
+                            {{-- @if($policy->effective_date)
                                 <span class="badge bg-success">
                                     <i class="fas fa-calendar-alt me-2"></i>
                                     Effective: {{ \Carbon\Carbon::parse($policy->effective_date)->format('F d, Y') }}
                                 </span>
-                            @endif
+                            @endif --}}
                         </div>
                         @endif
 

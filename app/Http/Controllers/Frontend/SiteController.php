@@ -4,10 +4,11 @@ namespace App\Http\Controllers\Frontend;
 
 use Log;
 use App\Models\Contact;
+use App\Models\Country;
 use App\Models\PageBanner;
-use App\Models\TermsAndPolicy;
 use App\Models\Admin\Brand;
 use App\Models\Admin\Banner;
+use App\Models\CookiePolicy;
 use Illuminate\Http\Request;
 use App\Models\Admin\Catalog;
 use App\Models\Admin\Company;
@@ -15,6 +16,7 @@ use App\Models\Admin\Product;
 use App\Models\Admin\Category;
 use App\Models\Admin\HomePage;
 use App\Models\Admin\Industry;
+use App\Models\TermsAndPolicy;
 use App\Models\Admin\AboutPage;
 use App\Models\Admin\NewsTrend;
 use App\Models\Admin\TechGlossy;
@@ -30,7 +32,6 @@ use Illuminate\Support\Facades\Session;
 use App\Repositories\Interfaces\FaqRepositoryInterface;
 use App\Repositories\Interfaces\TermsAndPolicyRepositoryInterface;
 use App\Repositories\Interfaces\DynamicCategoryRepositoryInterface;
-use App\Models\Country;
 
 class SiteController extends Controller
 {
@@ -41,6 +42,15 @@ public function homePage()
 
     // Get dynamic homepage data
     $homePage = HomePage::with(['country'])->first();
+        // Get active cookie policy - check if it exists
+    $cookiePolicy = CookiePolicy::active()->first();
+    
+    // Debug: Log to check
+    \Log::info('Cookie Policy Retrieved:', ['policy' => $cookiePolicy]);
+     $ipAddress = request()->ip();
+    
+    // Log for debugging
+    \Log::info('Home page accessed by IP: ' . $ipAddress);
 
     // Get featured products for section two if homepage data exists
     $featuredProducts = collect();
@@ -79,6 +89,8 @@ public function homePage()
         'news_trends'       => NewsTrend::where('type', 'trends')->limit(4)->get(),
         'solutions'         => SolutionDetail::latest()->limit(4)->get(),
         'homePage'          => $homePage,
+         'user_ip' => $ipAddress, // Optional: pass IP to view for debugging
+         'cookiePolicy'      => $cookiePolicy, 
         'featuredProducts'  => $featuredProducts, // Now contains only 4 random products
         'sectionFourNews'   => $sectionFourNews,
     ];
@@ -324,14 +336,23 @@ public function filterProducts(Request $request, $slug)
         $this->faqRepository = $faqRepository;
         $this->dynamicCategoryRepository = $dynamicCategoryRepository;
     }
+public function terms()
+{
+    // Get active terms and policies
+    $termsAndPolicies = $this->termsAndPolicyRepository->getActiveTermsAndPolicies();
+    
+    // Get banners for terms page - using page_name 'policy' or create 'terms'
+    $banners = PageBanner::where('page_name', 'terms') // or 'terms' if you want separate
+        ->where('status', 'active')
+        ->get();
 
-    public function terms()
-    {
-        // Get active terms and policies, you might want to filter by company or other criteria
-        $termsAndPolicies = $this->termsAndPolicyRepository->getActiveTermsAndPolicies();
-        
-        return view('frontend.pages.others.terms', compact('termsAndPolicies'));
+    // If no specific policy banners found, try to get any active banner
+    if ($banners->isEmpty()) {
+        $banners = PageBanner::where('status', 'active')->get();
     }
+    
+    return view('frontend.pages.others.terms', compact('termsAndPolicies', 'banners'));
+}
 
     public function about()
     {
@@ -710,6 +731,28 @@ public function brandList()
             return response()->json([]);
         }
     }
+    public function manageCookies()
+{
+    // Get active cookie policy
+    $policy = CookiePolicy::active()->first();
+    
+    // Get banners for manage cookies page
+    $banners = PageBanner::where('page_name', 'cookies') // Using new page_name
+        ->where('status', 'active')
+        ->get();
 
-
+    // If no specific banners found, try policy banners as fallback
+    if ($banners->isEmpty()) {
+        $banners = PageBanner::where('page_name', 'policy')
+            ->where('status', 'active')
+            ->get();
+    }
+    
+    // If still no banners, get any active banner
+    if ($banners->isEmpty()) {
+        $banners = PageBanner::where('status', 'active')->get();
+    }
+    
+    return view('cookies.manage', compact('policy', 'banners'));
+}
 }

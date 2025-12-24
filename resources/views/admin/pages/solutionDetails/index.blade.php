@@ -75,13 +75,13 @@
                                                         class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1">
                                                         <i class="fa-solid fa-pen"></i>
                                                     </a>
-                                                    @if (Auth::guard('admin')->user()->role == 'admin') 
+                                                    {{-- @if (Auth::guard('admin')->user()->role == 'admin')  --}}
                                                         <a href="{{ route('admin.solution-details.destroy', $solutionDetail->id) }}"
                                                             class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1 delete"
                                                             data-kt-docs-table-filter="delete_row">
                                                             <i class="fa-solid fa-trash-can-arrow-up"></i>
                                                         </a>
-                                                    @endif
+                                                    {{-- @endif --}}
                                                 </div>
                                             </td>
                                         </tr>

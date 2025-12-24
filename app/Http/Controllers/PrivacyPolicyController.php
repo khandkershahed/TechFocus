@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PageBanner;
+use Illuminate\Http\Request;
 use App\Models\PrivacyPolicy;
 use App\Models\PrivacySection;
-use Illuminate\Http\Request;
 
 class PrivacyPolicyController extends Controller
 {
     // Display privacy policy on frontend
-    public function index()
+       public function index()
     {
         $policy = PrivacyPolicy::where('is_active', true)
             ->with(['sections' => function($query) {
@@ -18,17 +19,20 @@ class PrivacyPolicyController extends Controller
             ->first();
 
         if (!$policy) {
-            // Fallback to default content
-            $policy = (object)[
-                'title' => 'Privacy Policy',
-                'content' => 'No privacy policy available.',
-                'sections' => []
-            ];
+            // Fallback to default content as an object
+            $policy = new \stdClass();
+            $policy->title = 'Privacy Policy';
+            $policy->content = '<p>No privacy policy available. Please contact the administrator.</p>';
+            $policy->sections = collect([]); // Empty collection
         }
 
-        return view('privacy-policy.index', compact('policy'));
-    }
+        // Get banners for privacy policy page from PageBanner model - EXACTLY LIKE SiteController
+        $banners = PageBanner::where('page_name', 'policy')
+            ->where('status', 'active')
+            ->get();
 
+        return view('privacy-policy.index', compact('policy', 'banners'));
+    }
     // Admin Panel Methods
 
     public function adminIndex()
@@ -54,6 +58,9 @@ class PrivacyPolicyController extends Controller
             'effective_date' => 'nullable|date',
         ]);
 
+        // Clean HTML content
+        $content = $this->cleanPolicyContent($request->content);
+
         // Deactivate all other policies
         if ($request->has('is_active') && $request->is_active) {
             PrivacyPolicy::where('is_active', true)->update(['is_active' => false]);
@@ -61,7 +68,7 @@ class PrivacyPolicyController extends Controller
 
         $policy = PrivacyPolicy::create([
             'title' => $request->title,
-            'content' => $request->content,
+            'content' => $content,
             'version' => $request->version,
             'is_active' => $request->has('is_active'),
             'effective_date' => $request->effective_date,
@@ -75,7 +82,7 @@ class PrivacyPolicyController extends Controller
                         'policy_id' => $policy->id,
                         'section_title' => $section['title'],
                         'section_number' => $section['number'] ?? null,
-                        'section_content' => $section['content'],
+                        'section_content' => $this->cleanPolicyContent($section['content']),
                         'order' => $index,
                     ]);
                 }
@@ -101,6 +108,9 @@ class PrivacyPolicyController extends Controller
             'effective_date' => 'nullable|date',
         ]);
 
+        // Clean HTML content
+        $content = $this->cleanPolicyContent($request->content);
+
         // Deactivate all other policies if activating this one
         if ($request->has('is_active') && $request->is_active) {
             PrivacyPolicy::where('id', '!=', $privacyPolicy->id)
@@ -110,7 +120,7 @@ class PrivacyPolicyController extends Controller
 
         $privacyPolicy->update([
             'title' => $request->title,
-            'content' => $request->content,
+            'content' => $content,
             'version' => $request->version,
             'is_active' => $request->has('is_active'),
             'effective_date' => $request->effective_date,
@@ -128,7 +138,7 @@ class PrivacyPolicyController extends Controller
                         'policy_id' => $privacyPolicy->id,
                         'section_title' => $section['title'],
                         'section_number' => $section['number'] ?? null,
-                        'section_content' => $section['content'],
+                        'section_content' => $this->cleanPolicyContent($section['content']),
                         'order' => $index,
                     ]);
                 }
@@ -145,5 +155,36 @@ class PrivacyPolicyController extends Controller
         
         return redirect()->route('admin.privacy-policy.index')
             ->with('success', 'Privacy Policy deleted successfully.');
+    }
+
+    /**
+     * Clean HTML content by removing empty paragraphs and unnecessary whitespace
+     */
+    private function cleanPolicyContent($content)
+    {
+        if (empty($content)) {
+            return $content;
+        }
+
+        // Remove empty paragraphs with &nbsp;
+        $content = preg_replace('/<p>\s*&nbsp;\s*<\/p>/i', '', $content);
+        
+        // Remove completely empty paragraphs
+        $content = preg_replace('/<p>\s*<\/p>/i', '', $content);
+        
+        // Remove multiple line breaks
+        $content = preg_replace('/\n{3,}/', "\n\n", $content);
+        
+        // Remove trailing/leading spaces in paragraphs
+        $content = preg_replace('/<p>\s*/', '<p>', $content);
+        $content = preg_replace('/\s*<\/p>/', '</p>', $content);
+        
+        // Replace multiple spaces with single space
+        $content = preg_replace('/\s{2,}/', ' ', $content);
+        
+        // Trim the content
+        $content = trim($content);
+        
+        return $content;
     }
 }

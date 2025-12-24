@@ -15,22 +15,40 @@
   }
 </style>
 
+<!-- Dynamic Banner Section -->
 <div class="container-fluid px-0">
-  <div class="p-5 breadcrumb-banner-area"
-    style="background-image: url('{{ asset('/img/TechFocusTermsandConditionsPageBanner(1920x525).webp') }}')">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-12">
-          <div class="breadcrumbs">
-            <div class="text-white fw-bold">
-              <a href="{{ url('/') }}" class="">Home</a> -
-              <span class="txt-mcl">Terms & Conditions</span>
+  @if(isset($banners) && $banners->count() > 0)
+    @foreach($banners as $banner)
+      <div class="p-5 breadcrumb-banner-area" 
+           style="background-image: url('{{ asset('uploads/page_banners/' . $banner->image) }}'); 
+                  background-size: cover; 
+                  background-position: center;
+                  background-repeat: no-repeat;">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="breadcrumbs">
+                <div class="text-white fw-bold">
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+    @endforeach
+  @else
+    <!-- Default banner if no dynamic banners -->
+    <div class="p-5 breadcrumb-banner-area"
+      style="background-image: url('{{ asset('/img/TechFocusTermsandConditionsPageBanner(1920x525).webp') }}')">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="breadcrumbs">
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  @endif
 </div>
 
 <div class="p-0 my-5 container-fluid">
@@ -143,6 +161,34 @@
 
   .card:hover {
     transform: translateY(-2px);
+  }
+  
+  /* Banner styling */
+  .breadcrumb-banner-area {
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+  
+  .breadcrumb-banner-area > .container {
+    position: relative;
+    z-index: 1;
+  }
+  
+  .banner-content {
+    animation: fadeInUp 0.8s ease-out;
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 </style>
 @endsection
