@@ -41,11 +41,11 @@
                             <i class="fas fa-info-circle me-1"></i>
                             Effective Date: {{ $policy->published_at ? $policy->published_at->format('F d, Y') : 'Not published yet' }}
                         </div>
-                        <div>
+                        {{-- <div>
                             <a href="{{ route('manage.cookies') }}" class="btn btn-outline-primary btn-sm">
                                 <i class="fas fa-sliders-h me-1"></i>Manage Cookie Settings
                             </a>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </div>
