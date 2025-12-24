@@ -49,6 +49,7 @@
             transition: all 0.3s ease;
         }
        .product-title-wrapper {
+        height: 80px;
             min-height: 80px;
             overflow: hidden;
         }
