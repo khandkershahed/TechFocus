@@ -793,7 +793,15 @@
                                     @endif
                                 </a>
                             </div>
-                       
+                       <div class="menu-item">
+                                <a class="menu-link {{ Str::startsWith(Route::current()->getName(), 'admin.faq') ? 'active' : '' }}"
+                                    href="{{ route('admin.faq.index') }}">
+                                    <span class="menu-bullet">
+                                        <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">Manage FAQs</span>
+                                </a>
+                            </div>
                     <div class="menu-item">
                                 <a class="menu-link {{ Route::current()->getName() == 'admin.privacy-policy.index' ? 'active' : '' }}"
                                     href="{{ route('admin.privacy-policy.index') }}">

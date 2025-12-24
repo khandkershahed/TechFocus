@@ -722,6 +722,4 @@ public function brandList()
             return response()->json([]);
         }
     }
-
-
 }

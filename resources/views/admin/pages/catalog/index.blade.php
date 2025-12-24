@@ -108,29 +108,28 @@
                                                     <span class="text-muted">No PDF</span>
                                                 @endif
                                             </td>
-                                            <td class="d-flex justify-content-center align-items-center">
-                                                <a href="#"
-                                                    class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
-                                                    data-bs-toggle="modal" data-bs-target="#catalogueViewModal{{ $catalog->id }}">
-                                                    <i class="fa-solid fa-expand"></i>
-                                                </a>
-                                                <a href="{{ route('admin.catalog.edit', $catalog->id) }}"
-                                                    class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1">
-                                                    <i class="fa-solid fa-pen"></i>
-                                                </a>
-                                                   <!-- Delete Button - Fixed Form -->
-                                                      @if (Auth::guard('admin')->user()->role == 'admin') 
-                                                                            <form action="{{ route('admin.catalog.destroy', $catalog->id) }}" method="POST" class="d-inline">
-                                                                                                            @csrf
-                                                                                                            @method('DELETE')
-                                                                                                            <button type="submit" 
-                                                                                                                    class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm delete-btn"
-                                                                                                                    onclick="return confirm('Are you sure you want to delete this catalog?')">
-                                                                                                                <i class="fa-solid fa-trash-can"></i>
-                                                                                                            </button>
-                                                                                                        </form>
-                                                                                                        @endif
-                                             </td>
+                                            <td class="d-flex justify-content-center align-items-center gap-3">
+                                                    <!-- Action buttons remain the same -->
+                                                    <a href="#"
+                                                        class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
+                                                        data-bs-toggle="modal" data-bs-target="#catalogueViewModal{{ $catalog->id }}">
+                                                        <i class="fa-solid fa-expand"></i>
+                                                    </a>
+                                                    <a href="{{ route('admin.catalog.edit', $catalog->id) }}"
+                                                        class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1">
+                                                        <i class="fa-solid fa-pen"></i>
+                                                    </a>
+                                                    <!-- Delete Button - Fixed Form -->
+                                                    <form action="{{ route('admin.catalog.destroy', $catalog->id) }}" method="POST" class="d-inline">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" 
+                                                                class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm delete-btn"
+                                                                onclick="return confirm('Are you sure you want to delete this catalog?')">
+                                                            <i class="fa-solid fa-trash-can"></i>
+                                                        </button>
+                                                    </form>
+                                                </td>
                                         </tr>
 
                                         <!-- View Modal for each catalog -->
