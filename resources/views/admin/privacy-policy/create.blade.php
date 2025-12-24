@@ -68,13 +68,13 @@
                                 <span class="invalid-feedback">{{ $message }}</span>
                             @enderror
                             <small class="form-text text-muted">
-                                This is the main content of your privacy policy. You can also add structured sections below.
+                                Tip: Press "Enter" for new paragraph. Press "Shift+Enter" for line break.
                             </small>
                         </div>
 
                         <hr>
                         
-                        {{-- <div class="form-group">
+                        <div class="form-group">
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <label class="mb-0">Sections (Optional)</label>
                                 <button type="button" class="btn btn-sm btn-success" onclick="addSection()">
@@ -84,7 +84,7 @@
                             <div id="sections-container">
                                 <!-- Sections will be added here dynamically -->
                             </div>
-                        </div> --}}
+                        </div>
 
                         <div class="form-group text-center">
                             <a href="{{ route('admin.privacy-policy.index') }}" class="btn btn-secondary">Cancel</a>
@@ -105,9 +105,22 @@
         min-height: 400px;
         border: 1px solid #e3e6f0 !important;
         border-radius: 0.35rem;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
     }
     .ck.ck-editor {
         margin-bottom: 10px;
+    }
+    .ck-editor__editable p {
+        margin-bottom: 1rem;
+    }
+    .ck-editor__editable h2 {
+        margin-top: 1.5rem;
+        margin-bottom: 1rem;
+    }
+    .ck-editor__editable h3, .ck-editor__editable h4 {
+        margin-top: 1.25rem;
+        margin-bottom: 0.75rem;
     }
     .section-editor .ck-editor__editable {
         min-height: 200px;
@@ -124,6 +137,23 @@ let sectionCounter = 0;
 let mainEditor = null;
 const sectionEditors = {};
 
+// Function to clean HTML content
+function cleanHTMLContent(html) {
+    // Remove empty paragraphs with &nbsp;
+    html = html.replace(/<p>\s*&nbsp;\s*<\/p>/gi, '');
+    // Remove completely empty paragraphs
+    html = html.replace(/<p>\s*<\/p>/gi, '');
+    // Remove multiple line breaks
+    html = html.replace(/\n{3,}/g, '\n\n');
+    // Remove trailing/leading spaces in paragraphs
+    html = html.replace(/<p>\s*/g, '<p>');
+    html = html.replace(/\s*<\/p>/g, '</p>');
+    // Replace multiple spaces with single space
+    html = html.replace(/\s{2,}/g, ' ');
+    
+    return html.trim();
+}
+
 // Initialize main CKEditor
 ClassicEditor
     .create(document.querySelector('#content-editor'), {
@@ -134,25 +164,73 @@ ClassicEditor
                 'link', 'bulletedList', 'numberedList', '|',
                 'alignment', 'outdent', 'indent', '|',
                 'blockQuote', 'insertTable', '|',
-                'undo', 'redo'
+                'undo', 'redo', 'removeFormat'
             ]
         },
         language: 'en',
         licenseKey: '',
+        // Prevent empty paragraphs
+        fillEmptyBlocks: false,
+        // Better paragraph handling
+        heading: {
+            options: [
+                { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+                { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
+                { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
+                { model: 'heading3', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' },
+                { model: 'heading4', view: 'h4', title: 'Heading 4', class: 'ck-heading_heading4' }
+            ]
+        },
+        // Configure paragraph element
+        htmlSupport: {
+            allow: [
+                {
+                    name: /^.*$/,
+                    styles: true,
+                    attributes: true,
+                    classes: true
+                }
+            ]
+        },
+        // Clean up content
+        removePlugins: ['Markdown'],
+        // Configure editor behavior
+        editorConfig: {
+            enterMode: ClassicEditor.ENTER_P,
+            shiftEnterMode: ClassicEditor.ENTER_BR
+        }
     })
     .then(editor => {
         mainEditor = editor;
         
-        // Sync editor content with textarea
+        // Clean content before syncing
         editor.model.document.on('change:data', () => {
-            document.querySelector('#content').value = editor.getData();
+            let content = editor.getData();
+            // Clean the HTML content
+            content = cleanHTMLContent(content);
+            // Update the hidden textarea
+            document.querySelector('#content').value = content;
         });
         
         // Set initial content if exists
         const initialContent = document.querySelector('#content').value;
         if (initialContent) {
-            editor.setData(initialContent);
+            // Clean initial content before setting
+            const cleanedContent = cleanHTMLContent(initialContent);
+            editor.setData(cleanedContent);
+            // Update textarea with cleaned content
+            document.querySelector('#content').value = cleanedContent;
         }
+        
+        // Listen for paste event to clean pasted content
+        editor.editing.view.document.on('clipboardInput', (evt, data) => {
+            setTimeout(() => {
+                let content = editor.getData();
+                content = cleanHTMLContent(content);
+                editor.setData(content);
+                document.querySelector('#content').value = content;
+            }, 100);
+        });
     })
     .catch(error => {
         console.error('Failed to initialize main editor:', error);
@@ -213,6 +291,7 @@ function addSection() {
             .create(document.querySelector(`#section-editor-${sectionCounter}`), {
                 toolbar: {
                     items: [
+                        'heading', '|',
                         'bold', 'italic', 'underline', '|',
                         'bulletedList', 'numberedList', '|',
                         'link', 'blockQuote', '|',
@@ -221,13 +300,40 @@ function addSection() {
                 },
                 language: 'en',
                 licenseKey: '',
+                fillEmptyBlocks: false,
+                htmlSupport: {
+                    allow: [
+                        {
+                            name: /^.*$/,
+                            styles: true,
+                            attributes: true,
+                            classes: true
+                        }
+                    ]
+                },
+                editorConfig: {
+                    enterMode: ClassicEditor.ENTER_P,
+                    shiftEnterMode: ClassicEditor.ENTER_BR
+                }
             })
             .then(editor => {
                 sectionEditors[sectionCounter] = editor;
                 
                 // Sync editor content with textarea
                 editor.model.document.on('change:data', () => {
-                    document.querySelector(`#section-content-${sectionCounter}`).value = editor.getData();
+                    let content = editor.getData();
+                    content = cleanHTMLContent(content);
+                    document.querySelector(`#section-content-${sectionCounter}`).value = content;
+                });
+                
+                // Listen for paste event
+                editor.editing.view.document.on('clipboardInput', (evt, data) => {
+                    setTimeout(() => {
+                        let content = editor.getData();
+                        content = cleanHTMLContent(content);
+                        editor.setData(content);
+                        document.querySelector(`#section-content-${sectionCounter}`).value = content;
+                    }, 100);
                 });
             })
             .catch(error => {
@@ -258,16 +364,29 @@ function removeSection(id) {
 
 // Sync all editors before form submission
 document.getElementById('privacyPolicyForm').addEventListener('submit', function(e) {
-    // Ensure main editor content is synced
+    // Ensure main editor content is synced and cleaned
     if (mainEditor) {
-        document.querySelector('#content').value = mainEditor.getData();
+        let content = mainEditor.getData();
+        content = cleanHTMLContent(content);
+        document.querySelector('#content').value = content;
     }
     
     // Ensure all section editors are synced
     for (const id in sectionEditors) {
         if (sectionEditors[id]) {
-            document.querySelector(`#section-content-${id}`).value = sectionEditors[id].getData();
+            let content = sectionEditors[id].getData();
+            content = cleanHTMLContent(content);
+            document.querySelector(`#section-content-${id}`).value = content;
         }
+    }
+    
+    // Optional: Validate that content is not empty
+    const contentField = document.querySelector('#content');
+    const cleanText = contentField.value.replace(/<[^>]*>/g, '').trim();
+    if (cleanText.length === 0) {
+        e.preventDefault();
+        alert('Policy content cannot be empty. Please enter some content.');
+        return false;
     }
 });
 
